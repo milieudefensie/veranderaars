@@ -1,0 +1,104 @@
+.form-block-wrapper {
+  .form-block {
+    padding: 33px 60px 100px 60px;
+    background: var(--primary-color);
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    min-height: 304px;
+
+    h2 {
+      color: var(--white);
+      font-family: var(--primary-font);
+      font-size: 39px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 110%;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .description {
+      color: var(--white);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%;
+      margin-bottom: 2rem;
+    }
+
+    .left-img {
+      position: absolute;
+      left: 0%;
+      bottom: 0;
+    }
+
+    .form-container-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    form .hs-form-field .input input {
+      color: var(--white);
+
+      &:focus,
+      &:active {
+        border: 1px solid #51921f !important;
+      }
+
+      &:hover {
+        border-color: #51921f !important;
+      }
+    }
+
+    form .hs-form-field .hs-error-msgs.inputs-list label.hs-error-msg {
+      color: var(--white) !important;
+    }
+
+    form .focused {
+      background-color: var(--primary-color);
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .form-block-wrapper {
+    background: var(--primary-color);
+
+    .form-block {
+      padding: 26px 0 100px 0;
+      border-radius: 0;
+      margin: 0;
+
+      h2 {
+        font-size: 29px;
+        line-height: 120%;
+        margin-bottom: 25px;
+      }
+
+      .description {
+        font-size: 16px;
+        margin-bottom: 1.5rem;
+      }
+
+      .left-img {
+        display: none;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .form-block-wrapper {
+    .form-block {
+      padding-bottom: 150px;
+
+      .form-hubspot form .legal-consent-container .hs-richtext {
+        top: 8.5rem;
+      }
+    }
+  }
+}

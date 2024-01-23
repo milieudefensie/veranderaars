@@ -1,0 +1,100 @@
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Taca Pro
+@font-face {
+  font-family: 'TacaPro-Bold';
+  font-weight: 800;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/taca/Taca-Pro-Extrabold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'TacaPro-Bold';
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/taca/Taca-Pro-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'TacaPro-Bold';
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/taca/Taca-Pro.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'TacaPro-Bold';
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/taca/Taca-Pro-Light.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'TacaPro-Bold';
+  font-weight: 200;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/taca/Taca-Pro-Extra Light.woff2') format('woff2');
+}
+
+
+/* Lato */
+@font-face {
+  font-family: 'Lato';
+  font-weight: 800;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/lato/Lato-Black.woff2') format('woff2');
+}
+
+/* Inter Bold */
+@font-face {
+  font-family: 'Lato';
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/lato/Lato-Bold.woff2') format('woff2');
+}
+
+/* Inter Regular */
+@font-face {
+  font-family: 'Lato';
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/lato/Lato-Regular.woff2') format('woff2');
+}
+
+/* Inter Light */
+@font-face {
+  font-family: 'Lato';
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/lato/Lato-Light.woff2') format('woff2');
+}
+
+/* Inter Thin */
+@font-face {
+  font-family: 'Lato';
+  font-weight: 100;
+  font-display: swap;
+  font-style: normal;
+  src: url('/fonts/lato/Lato-Thin.woff2') format('woff2');
+}
+
+:root {
+  --primary-font: 'TacaPro-Bold';
+  --secondary-font: 'Lato';
+}
+
+body {
+  font-family: var(--secondary-font);
+}

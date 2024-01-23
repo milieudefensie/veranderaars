@@ -1,0 +1,41 @@
+.responsive-table {
+  width: 100%;
+  overflow-x: hidden;
+  max-width: 100%;
+  margin: 3rem 0;
+
+  table {
+    border: 0;
+    width: 100%;
+
+    * {
+      color: var(--black);
+      font-family: "Inter";
+      vertical-align: middle;
+    }
+
+    th {
+      padding: 20px;
+      background-color: #EEF5FF;
+      color: var(--primary-color) !important;
+      font-family: "Inter";
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      line-height: 150% !important;
+      text-transform: uppercase;
+    }
+
+    tr {
+      border-bottom: 1px solid #CBDFFE;
+
+      td {
+        padding: 20px;
+        font-family: "Inter";
+        font-size: 16px !important;
+        font-style: normal;
+        font-weight: 500 !important;
+        line-height: 150% !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+.tag {
+  display: inline-block;
+  padding: 2.5px 7px;
+  background: var(--secondary-bg-color);
+  width: fit-content;
+  color: var(--primary-color);
+  font-family: var(--secondary-font);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 135%;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+.tags-list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media screen and (max-width: 992px) {
+  .tag {
+    font-size: 13px;
+  }
+}

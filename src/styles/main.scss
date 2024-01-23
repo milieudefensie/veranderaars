@@ -1,0 +1,13 @@
+// ! Order Matters
+// Bootstrap always bellow reset
+
+//BASICS
+@import "foundation/reset";
+@import "helpers/bootstrap";
+@import "foundation/typography";
+@import "foundation/colors";
+@import "foundation/buttons";
+@import "global.scss";
+
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";

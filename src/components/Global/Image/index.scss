@@ -1,0 +1,23 @@
+.image-wrapper {
+  *:not(img) {
+    width: 100%;
+  }
+
+  .caption {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 10px !important;
+
+    .image-caption {
+      color: var(--black) !important;
+      font-size: 13px !important;
+      line-height: 130% !important;
+    }
+  }
+
+  &.wrapping {
+    float: left;
+    width: 40%;
+  }
+}

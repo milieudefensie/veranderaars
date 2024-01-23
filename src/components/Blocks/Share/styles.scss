@@ -1,0 +1,92 @@
+.share-block {
+  h3 {
+    color: var(--black);
+    font-family: var(--primary-font);
+    font-size: 31px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 40px;
+
+    &::before {
+      content: '';
+      width: 75px;
+      height: 5px;
+      background-color: var(--primary-color-light);
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  .social-icons {
+    margin-bottom: 60px;
+  }
+
+  .ctas {
+    margin-bottom: 32px;
+  }
+
+  .wp-button {
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 5px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    color: var(--primary-color);
+    font-family: var(--primary-font);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+
+    svg rect {
+      fill: var(--secondary-bg-color);
+    }
+
+    &:hover {
+      color: var(--white);
+      background-color: var(--primary-color);
+
+      svg rect {
+        fill: var(--primary-color);
+      }
+
+      svg path {
+        fill: var(--white);
+      }
+    }
+  }
+}
+
+@media screen and (max-width:992px) {
+
+  .share-block {
+    h3 {
+      font-size: 23px;
+      font-style: normal;
+      line-height: 120%;
+      margin-bottom: 26px;
+    }
+
+    .social-icons {
+      margin-bottom: 25px;
+    }
+
+    .wp-button {
+      width: 100%;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+.pagination-container {
+  padding: 0;
+  padding-top: 50px;
+  display: flex;
+  gap: 10px;
+  list-style: none;
+
+  li {
+    color: var(--primary-color);
+    font-family: var(--secondary-font);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    cursor: pointer;
+    padding: 15px 5px;
+
+    &.active {
+      color: var(--black);
+    }
+  }
+
+  .pagination-item {
+    color: var(--primary-color);
+
+    &.dots:hover {
+      background-color: transparent;
+      cursor: default;
+    }
+  }
+}

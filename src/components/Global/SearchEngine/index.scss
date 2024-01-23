@@ -1,0 +1,201 @@
+.search-engine {
+  background: var(--primary-color);
+  width: 100vw;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 129px;
+  overflow-y: scroll;
+  opacity: 0;
+  transition: 0.3s opacity ease-in-out;
+  pointer-events: none;
+  top: 0;
+  z-index: 10;
+
+  label {
+    color: var(--white);
+    font-family: var(--secondary-font);
+    font-size: 61px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 80%;
+    letter-spacing: 1.22px;
+    text-transform: uppercase;
+    margin-bottom: 58px;
+  }
+
+  &--visible {
+    opacity: 1;
+    z-index: 10000;
+    pointer-events: initial;
+    height: 100vh;
+  }
+
+  &__close-icon {
+    position: fixed;
+    top: 34px;
+    right: 42px;
+    cursor: pointer;
+  }
+
+  .content {
+    width: 730px;
+
+    @media (max-width: 992px) {
+      width: 100%;
+    }
+  }
+
+  &__form {
+    width: inherit;
+
+    @media (max-width: 992px) {
+      width: 100%;
+    }
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    border-bottom: 2px solid var(--white);
+  }
+
+  input[type=search] {
+    width: 100%;
+    border-radius: 4px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    border: 0;
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: 0;
+
+    &::placeholder {
+      color: var(--white);
+    }
+
+    &::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      appearance: none;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-image: url('../../Icons/form_remove.png');
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    &.with-value {
+      background-image: none;
+    }
+  }
+
+  .btn-submit {
+    background: none;
+    border: none;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-size: 24px;
+    position: relative;
+    background-position: 100%;
+    background-image: url('../../Icons/Search.svg');
+  }
+
+  &__results {
+    width: inherit;
+    margin-bottom: 248px;
+    background-color: var(--white);
+    border-radius: 4px;
+    display: none;
+    padding: 16px 8px;
+    margin-top: 8px;
+
+    &-list {
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    &-item {
+      &:hover {
+        h6 {
+          color: var(--primary-color);
+        }
+      }
+
+      a {
+        color: var(--black);
+        text-decoration: none;
+      }
+
+      h6 {
+        font-size: 18px;
+        margin-bottom: 0;
+      }
+
+      p {
+        font-size: 12px;
+        font-weight: 500;
+        margin-bottom: 0;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #E5E4F3;
+        ;
+      }
+    }
+
+    &--active {
+      display: block;
+
+      @media (max-width: 992px) {
+        width: 100%;
+      }
+    }
+  }
+
+  &__message {
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 20px;
+  }
+
+  .margin-bottom-hack {
+    opacity: 0;
+  }
+
+  .spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .search-engine {
+    padding: 2rem;
+
+    label {
+      font-size: 35px;
+      line-height: 100%;
+    }
+
+    &__close-icon {
+      right: 1.5rem;
+    }
+
+    .btn-submit {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}

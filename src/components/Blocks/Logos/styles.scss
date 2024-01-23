@@ -1,0 +1,38 @@
+.logos-block {
+  padding: 60px 0;
+
+  h2 {
+    color: var(--black);
+    font-family: var(--secondary-font);
+    font-size: 49px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%;
+    letter-spacing: 0.49px;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 79px;
+  }
+
+  .logo-slider {
+    .slick-track {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+  }
+}
+
+@media screen and (max-width:992px) {
+  .logos-block {
+    padding: 32px 0;
+
+    h2 {
+      font-size: 32px;
+      line-height: 87%;
+      letter-spacing: 0.64px;
+      margin-bottom: 55px;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+.filter-events-wrapper {
+  padding-bottom: 50px;
+
+  .filters {
+    display: flex;
+    align-items: stretch;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  h5 {
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 135%;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .filter-events-wrapper {
+    padding: 0;
+
+    .filters {
+      flex-direction: column;
+    }
+  }
+}

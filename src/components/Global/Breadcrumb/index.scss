@@ -1,0 +1,43 @@
+.breadcrumb {
+  margin-bottom: 115px;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: 8px;
+
+    li {
+      font-size: 16px;
+
+      a {
+        font-family: "Inter";
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      &.active {
+        // color: var(--black);
+      }
+    }
+  }
+
+  &.text-white {
+    * {
+      color: var(--white);
+    }
+
+    ul li a.active {
+      color: var(--white);
+    }
+  }
+}

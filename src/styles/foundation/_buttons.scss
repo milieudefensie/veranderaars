@@ -1,0 +1,88 @@
+// Button Styles
+.btn {
+  transition: 0.15s ease-in-out all;
+  background-color: var(--ct-white);
+
+  color: var(--ct-blue);
+  padding: 9px 22px;
+  border-radius: 26px;
+  border: 2px solid var(--ct-blue);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 150%;
+
+  @media screen and (max-width: 767px) {
+    // width: 100%;
+    // Lol we can talk about this at one point but they're not always in containers, thus this
+    width: auto;
+  }
+
+  @media (max-width: 992px) {
+    font-size: 0.8125rem;
+  }
+
+  &:hover {
+    text-decoration: none;
+    color: var(--ct-white);
+    border-color: var(--ct-dark-blue);
+    background-color: var(--ct-dark-blue);
+  }
+}
+
+// Primary Button Styles
+.btn.btn-primary {
+  color: var(--ct-white);
+  background-color: var(--ct-blue);
+
+  &:hover {
+    border-color: var(--ct-dark-blue);
+    background-color: var(--ct-dark-blue);
+  }
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    padding-left: 10px;
+  }
+}
+
+// Secondary Button Styles
+.btn.btn-secondary {
+  border-color: var(--white);
+  background-color: transparent;
+
+  &:hover {
+    color: #cf3339;
+    background-color: var(--white);
+  }
+}
+
+.btn--large {
+  height: 48px;
+}
+
+.btn--small {
+  font-size: 16px;
+}
+
+@mixin btn {
+  text-transform: uppercase;
+  font-size: 18px;
+  letter-spacing: 1px;
+  font-weight: 900;
+  line-height: 1.361111;
+  padding: 10px 20px !important;
+  transition: 0.15s ease-in-out all;
+  color: var(--white);
+  border-width: 2px;
+  border-radius: 4px;
+  border-style: solid;
+}
+
+@mixin btnPrimary {
+  background-color: var(--psa-magenta);
+  border: none;
+}

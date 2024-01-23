@@ -1,0 +1,71 @@
+.group-card {
+  height: 450px;
+  border-radius: 10px;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  text-decoration: none;
+
+  .image {
+    height: 50%;
+
+    * {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .content {
+    height: 50%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h3 {
+      color: var(--primary-color);
+      font-family: var(--primary-font);
+      font-size: 25px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 120%;
+      margin: 0;
+      padding: 0;
+      text-decoration: none;
+      display: inline-block;
+    }
+  }
+
+  &:hover {
+    background-color: var(--primary-color);
+
+    .content h3 {
+      color: var(--white);
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .tool-card {
+    height: auto;
+    margin-bottom: 19px;
+
+    .image {
+      * {
+        width: 100%;
+      }
+    }
+
+    .content {
+      padding: 15px 25px;
+
+      h3 a {
+        font-size: 29px;
+        margin-bottom: 20px;
+      }
+
+    }
+  }
+}

@@ -1,0 +1,110 @@
+.accordion {
+  margin-top: 50px !important;
+
+  .item {
+    cursor: pointer;
+    padding: 25px !important;
+    margin-bottom: 5px !important;
+    border-radius: 10px;
+    background-color: #F9F8F5;
+
+    .ac-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 !important;
+      padding: 0 !important;
+
+      h3 {
+        color: var(--primary-color) !important;
+        font-family: var(--secondary-font) !important;
+        font-size: 20px !important;
+        font-style: normal;
+        font-weight: 600 !important;
+        line-height: 150% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    }
+
+    .ac-content {
+      display: none;
+    }
+
+    &.active {
+      .ac-title {
+        * {
+          color: var(--black) !important;
+        }
+      }
+
+      .ac-content {
+        display: block;
+        margin-top: 20px !important;
+
+        * {
+          margin: 0;
+          padding: 0;
+          color: var(--black) !important;
+          font-family: var(--secondary-font) !important;
+          font-size: 20px !important;
+          font-style: normal;
+          font-weight: 400 !important;
+          line-height: 140% !important;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .accordion {
+    margin-top: 20px !important;
+
+    .item {
+      padding: 15px !important;
+
+      .ac-title {
+
+        h3,
+        h3 span {
+          font-size: 15px !important;
+          font-weight: 700 !important;
+          line-height: 145% !important;
+          margin: 0 !important;
+        }
+      }
+
+      #ac-content {
+        margin-top: 10px !important;
+      }
+
+      #ac-content * {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 15px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        line-height: 145% !important;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .accordion {
+    padding-top: 0;
+
+    .item {
+      .ac-title {
+
+        h3,
+        h3 span {
+          font-size: 20px;
+          line-height: 110%;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
