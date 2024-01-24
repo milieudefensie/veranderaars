@@ -6,6 +6,7 @@ import Blocks from '../components/Blocks';
 import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
+import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 
 const ListTool = ({ pageContext, data: { page, favicon } }) => {
   const { seo, title, introduction, backgroundColor, heroBackgroundImage, blocks = [] } = page;
@@ -16,13 +17,17 @@ const ListTool = ({ pageContext, data: { page, favicon } }) => {
 
       <WrapperLayout variant="white">
         <HeroBasic
-          title={title}
           image={heroBackgroundImage}
           backgroundColor={backgroundColor}
           responsiveVariant="tools"
+          overlay={false}
         />
-        {introduction && <SimpleText limitedWidth block={{ text: introduction }} extraClassNames="single" />}
-        <Blocks blocks={blocks} />
+
+        <FloatLayout reduceOverlap>
+          <h1 className="main-heading">{title}</h1>
+          {introduction && <SimpleText limitedWidth block={{ text: introduction }} extraClassNames="single" />}
+          <Blocks blocks={blocks} />
+        </FloatLayout>
       </WrapperLayout>
     </Layout>
   );

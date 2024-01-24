@@ -39,9 +39,9 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
       <WrapperLayout variant="white">
-        <HeroBasic image={image} />
+        <HeroBasic image={image} overlay={false} />
 
-        <FloatLayout>
+        <FloatLayout reduceOverlap>
           {listGroup && (
             <div className="pre-header">
               <div className="back-btn">

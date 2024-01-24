@@ -29,10 +29,10 @@ const Tool = ({ pageContext, data: { page, listTool, favicon } }) => {
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
       <WrapperLayout variant="white">
-        <HeroBasic image={heroImage} overlay={showDarkOverlay} />
+        <HeroBasic image={heroImage} overlay={false} />
 
         {/* Main information */}
-        <FloatLayout reduceOverlap={reduceOverlap}>
+        <FloatLayout reduceOverlap>
           <div className="pre-header">
             <div className="back-btn">
               <Link to={listTool}>
@@ -81,8 +81,6 @@ export const PageQuery = graphql`
       title
       slug
       introduction
-      showDarkOverlay
-      reduceOverlap
       heroImage {
         gatsbyImageData
         url

@@ -25,10 +25,11 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
                   'Telefoonnummer mag alleen nummers, +, en haakjes () bevatten.',
               },
             },
-            onFormReady: () => {
-              // Handlers
-              const inputs = document.querySelectorAll('.hs-input');
+            onFormReady: (ctx) => {
+              const { id } = ctx;
 
+              // Handlers
+              const inputs = document.querySelectorAll(`#${id} .hs-input`);
               inputs.forEach((input) => {
                 input.setAttribute('autocomplete', 'off');
               });
@@ -43,7 +44,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
                 });
               });
 
-              document.querySelectorAll('.hs-form-field').forEach((e) => {
+              document.querySelectorAll(`#${id} .hs-form-field`).forEach((e) => {
                 const labelElement = e.querySelector('label');
                 const inputElement = e.querySelector('input');
 
@@ -53,6 +54,12 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
 
                 e.addEventListener('focusin', function () {
                   labelElement?.classList.add('focused');
+
+                  if (e.classList.contains('hs-zip')) {
+                    verifyZipCode(e);
+                  }
+
+                  checkIfFormHasErrors();
                 });
 
                 e.addEventListener('focusout', function () {
@@ -61,8 +68,51 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
                   if (inputElement && inputElement.value.trim() !== '') {
                     labelElement?.classList.add('focused');
                   }
+
+                  if (e.classList.contains('hs-zip')) {
+                    verifyZipCode(e);
+                  }
+
+                  checkIfFormHasErrors();
+                  setTimeout(() => {
+                    checkIfFormHasErrors();
+                  }, 100);
+                });
+
+                e.addEventListener('input', (input) => {
+                  const formWrapper = document.querySelector(`#${id}`);
+                  const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
+                  const hasError = input.target.classList.contains('error');
+                  submitBtn.disabled = hasError;
+
+                  // setTimeout(() => {
+                  //   console.log('SI');
+                  //   const formWrapper = document.querySelector(`#${id}`);
+                  //   const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
+                  //   const hasError = input.target.classList.contains('error') || input.target.value === '';
+
+                  //   console.log({ hasError });
+                  //   submitBtn.disabled = hasError;
+                  // }, 500);
                 });
               });
+
+              // General logic
+              function verifyZipCode(input) {
+                const rawInput = input.querySelector('input');
+                rawInput.addEventListener('input', function () {
+                  rawInput.value = rawInput.value.replace(/\s/g, '');
+                });
+              }
+
+              function checkIfFormHasErrors() {
+                const formWrapper = document.querySelector(`#${id}`);
+                const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
+                const fields = formWrapper.querySelectorAll('input.hs-input');
+
+                const hasError = Array.from(fields).some((input) => input.classList.contains('error'));
+                submitBtn.disabled = hasError;
+              }
 
               // Postal code custom logic
               const zipInput = document.querySelectorAll('.hs_zip');
@@ -71,6 +121,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
 
                 hsZipContainer.addEventListener('input', () => {
                   verifyPostalCode(zipInput, hsZipContainer);
+                  checkIfFormHasErrors();
                 });
               });
 
@@ -89,8 +140,11 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
                   return;
                 }
 
+                const submitBtn = document.querySelector('input[type="submit"].hs-button');
+
                 if (invalidInput) {
                   input.classList.add('invalid', 'error');
+                  submitBtn.disabled = true;
                 } else {
                   input.classList.remove('invalid', 'error');
 
@@ -105,7 +159,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
                   const errorMessage = `
                     <ul class="no-list hs-error-msgs inputs-list" role="alert">
                       <li>
-                        <label class="hs-error-msg hs-main-font-element">Voer een geldige postcode in</label>
+                        <label class="hs-error-msg hs-main-font-element">Voer een geldige postcode in (geen spaties)</label>
                       </li>
                     </ul>
                   `;

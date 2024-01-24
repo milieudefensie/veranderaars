@@ -14,7 +14,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
   const [viewport, setViewport] = useState({
     latitude: 52.25,
     longitude: 4.9041,
-    zoom: 6.65,
+    zoom: 6.5,
     interactive: true,
     scrollZoom: true,
   });
@@ -156,7 +156,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
                 longitude={longitude}
                 latitude={latitude}
                 onClick={() => setSelectedMarker(cluster)}
-                anchor="top"
+                anchor="center"
               >
                 {type === 'group' ? <GroupMarker /> : <CustomMarker />}
               </Marker>

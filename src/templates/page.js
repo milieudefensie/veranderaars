@@ -8,17 +8,7 @@ import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 
 const Page = ({ pageContext, data: { page, favicon } }) => {
-  const {
-    seo,
-    title,
-    introduction,
-    showDarkOverlay = true,
-    reduceOverlap = false,
-    backgroundColor,
-    heroBackgroundImage,
-    blocks = [],
-    floatingLayout = false,
-  } = page;
+  const { seo, title, introduction, backgroundColor, heroBackgroundImage, blocks = [] } = page;
 
   const renderMainContent = () => (
     <>
@@ -26,8 +16,8 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
         <SimpleText
           limitedWidth
           block={{ text: introduction }}
-          container={!floatingLayout}
-          extraClassNames={floatingLayout ? 'introduction' : 'introduction-normal'}
+          container={false}
+          extraClassNames={true ? 'introduction' : 'introduction-normal'}
         />
       )}
       <Blocks blocks={blocks} />
@@ -39,21 +29,12 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
       <div className="inner-page" style={{ backgroundColor: '#FFF' }}>
-        <HeroBasic
-          title={floatingLayout ? '' : title}
-          image={heroBackgroundImage}
-          backgroundColor={backgroundColor}
-          overlay={showDarkOverlay}
-        />
+        <HeroBasic image={heroBackgroundImage} backgroundColor={backgroundColor} overlay={false} />
 
-        {floatingLayout ? (
-          <FloatLayout reduceOverlap={reduceOverlap}>
-            <h1>{title}</h1>
-            {renderMainContent()}
-          </FloatLayout>
-        ) : (
-          <>{renderMainContent()}</>
-        )}
+        <FloatLayout reduceOverlap>
+          <h1>{title}</h1>
+          {renderMainContent()}
+        </FloatLayout>
       </div>
     </Layout>
   );
@@ -72,13 +53,10 @@ export const PageQuery = graphql`
       title
       introduction
       backgroundColor
-      showDarkOverlay
-      reduceOverlap
       heroBackgroundImage {
         url
         gatsbyImageData
       }
-      floatingLayout
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags
       }
