@@ -153,8 +153,8 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
             return (
               <Marker
                 key={cluster.properties.id}
-                longitude={longitude}
                 latitude={latitude}
+                longitude={longitude}
                 onClick={() => setSelectedMarker(cluster)}
                 anchor="center"
               >

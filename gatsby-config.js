@@ -16,6 +16,7 @@ module.exports = {
       options: {
         apiToken: process.env.DATO_API_TOKEN,
         previewMode: process.env.NODE_ENV !== 'production',
+        environment: process.env.DATO_ENVIRONMENT ? process.env.DATO_ENVIRONMENT : '',
         disableLiveReload: false,
       },
     },

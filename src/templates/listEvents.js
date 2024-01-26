@@ -18,7 +18,14 @@ import './list-events.styles.scss';
 const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) => {
   const { title, seo, highlighEvent, blocks = [] } = page;
   const cmsEvents = Array.isArray(allEvents.edges)
-    ? allEvents.edges.map((raw) => ({ ...raw.node, type: 'NATIONAL' }))
+    ? allEvents.edges.map((raw) => ({
+        ...raw.node,
+        coordinates: {
+          latitude: parseFloat(raw.node.coordinates?.latitude?.toFixed(6)),
+          longitude: parseFloat(raw.node.coordinates?.longitude?.toFixed(6)),
+        },
+        type: 'NATIONAL',
+      }))
     : [];
 
   const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null });
@@ -129,11 +136,7 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
                     handleOnApplyNewFilters={(newFilterValues) => setFilterValues(newFilterValues)}
                   />
 
-                  <FloatCta
-                    title="Bekijk lijst"
-                    id="filter-events-list"
-                    isArrowVisible={isArrowVisible}                    
-                  />
+                  <FloatCta title="Bekijk lijst" id="filter-events-list" isArrowVisible={isArrowVisible} />
                 </>
               )}
             </div>

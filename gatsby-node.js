@@ -115,7 +115,6 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: event.node.slug,
               id: event.node.id,
-              // breadcrumb: listPositions?.slug ? { title: listPositions.title, slug: listPositions.slug } : null,
             },
           });
         }
@@ -140,7 +139,6 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: group.node.slug,
               id: group.node.id,
-              // breadcrumb: listPositions?.slug ? { title: listPositions.title, slug: listPositions.slug } : null,
             },
           });
         }
@@ -165,7 +163,6 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: tool.node.slug,
               id: tool.node.id,
-              // breadcrumb: listPositions?.slug ? { title: listPositions.title, slug: listPositions.slug } : null,
             },
           });
         }
