@@ -43,7 +43,7 @@ function Logos({ block }) {
               {item.map((item) => {
                 if (item.externalLink) {
                   return (
-                    <a key={item.id} href={item.externalLink} target="_blank">
+                    <a key={item.id} href={item.externalLink} target="_blank" rel="noreferrer">
                       <ImageWrapper image={item.image} />
                     </a>
                   );

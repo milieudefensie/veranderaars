@@ -13,16 +13,7 @@ import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import './event.styles.scss';
 
 const Tool = ({ pageContext, data: { page, listTool, favicon } }) => {
-  const {
-    seo,
-    title,
-    introduction,
-    showDarkOverlay = true,
-    reduceOverlap = false,
-    heroImage,
-    content,
-    blocks = [],
-  } = page;
+  const { seo, title, introduction, heroImage, content, blocks = [] } = page;
 
   return (
     <Layout heroBgColor={heroImage ? '' : 'green'}>

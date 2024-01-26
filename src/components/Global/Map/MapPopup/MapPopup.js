@@ -19,7 +19,7 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan' }) => {
 
       {image?.url && (
         <div className="image">
-          <img src={image.url} />
+          <img src={image.url} alt={`${title}`} />
         </div>
       )}
 

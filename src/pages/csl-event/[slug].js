@@ -30,7 +30,7 @@ const CSLEventPage = ({ data: { listEvent, favicon }, params }) => {
       try {
         const response = await axios.get('/api/events');
         const fetchedEvents = response.data.events[0].list;
-        const eventBySlug = fetchedEvents.filter((e) => e.slug == slug)[0];
+        const eventBySlug = fetchedEvents.filter((e) => e.slug === slug)[0];
 
         if (eventBySlug) {
           setEvent(eventBySlug);
