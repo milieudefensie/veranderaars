@@ -28,7 +28,7 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
       }))
     : [];
 
-  const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null });
+  const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null, description: null });
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [isArrowVisible, setIsArrowVisible] = useState(true);
 
@@ -67,7 +67,8 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
           filterValues.typeOfEvent === null ||
           filterValues.typeOfEvent === 'All' ||
           (Array.isArray(e.labels) && e.labels.includes(`tag-${filterValues.typeOfEvent}`))
-      );
+      )
+      .filter((e) => filterValues.description === null || e.introduction.includes(filterValues.description));
 
     setFilteredEvents(filteredEvents);
   }, [filterValues, mergedEvents]);
@@ -133,7 +134,9 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
                   <FilterEvents
                     events={filteredEvents}
                     locations={locationOptions}
-                    handleOnApplyNewFilters={(newFilterValues) => setFilterValues(newFilterValues)}
+                    handleOnApplyNewFilters={(newFilterValues) =>
+                      setFilterValues((prev) => ({ ...prev, ...newFilterValues }))
+                    }
                   />
 
                   <FloatCta title="Bekijk lijst" id="filter-events-list" isArrowVisible={isArrowVisible} />

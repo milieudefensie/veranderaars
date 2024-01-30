@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import EventCard from '../../Blocks/HighlightEvent/EventCard';
 import Dropdown from '../Inputs/Dropdown/Dropdown';
-import CtaHandler from '../Cta/CtaHandler';
+import TextInput from '../Inputs/TextInput/TextInput';
 import ListPaginated from '../Pagination/ListPaginated';
 import { MapCountry } from '../../../utils';
 
 import './styles.scss';
 
 const FilterEvents = ({ events = [], locations, handleOnApplyNewFilters }) => {
-  const [location, setLocation] = useState(null);
-  const [typeOfEvent, setTypeOfEvent] = useState(null);
-
   const locationsValues = [
     { label: 'All', value: 'All' },
     { label: 'Online', value: 'online' },
@@ -31,17 +28,24 @@ const FilterEvents = ({ events = [], locations, handleOnApplyNewFilters }) => {
     { label: 'Organiseren', value: 'organiseren' },
   ];
 
-  const handleFilter = () => {
-    handleOnApplyNewFilters({ location, typeOfEvent });
-  };
-
   return (
     <div className="filter-events-wrapper" id="filter-events-list">
       <div className="filters">
-        <Dropdown title="Locaties" options={locationsValues} onSelect={(value) => setLocation(value)} />
-        <Dropdown title="Soort evenement" options={eventsType} onSelect={(value) => setTypeOfEvent(value)} />
-
-        <CtaHandler title="Apply Filter" variant="fill-green" handleOnClick={handleFilter} />
+        <TextInput
+          label="Description"
+          name="description"
+          onChange={(value) => handleOnApplyNewFilters({ description: value })}
+        />
+        <Dropdown
+          title="Locaties"
+          options={locationsValues}
+          onSelect={(value) => handleOnApplyNewFilters({ location: value })}
+        />
+        <Dropdown
+          title="Soort evenement"
+          options={eventsType}
+          onSelect={(value) => handleOnApplyNewFilters({ typeOfEvent: value })}
+        />
       </div>
 
       <div>

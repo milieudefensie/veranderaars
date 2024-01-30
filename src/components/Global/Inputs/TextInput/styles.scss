@@ -1,0 +1,70 @@
+.custom-input-wrapper {
+  .hs-form-field {
+    position: relative;
+
+    label {
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px;
+      text-transform: capitalize;
+      color: #1D1B20 !important;
+
+      position: absolute;
+      top: 17px;
+      left: 16px;
+      pointer-events: none;
+      transition: 0.15s ease-out;
+    }
+
+    .input {
+      input {
+        width: 100%;
+        padding: 16px;
+        border-radius: 4px;
+        border: none;
+        border: 1px solid #1D1B20;
+        background: transparent;
+
+        color: #49454F;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0.5px;
+        outline: none !important;
+
+        &.invalid.error {
+          border-color: #FF0000;
+        }
+
+        &::placeholder {
+          color: var(--white);
+        }
+
+        &:hover {
+          border-color: #3b3b3b !important;
+        }
+
+        &:focus,
+        &:active {
+          border: 1px solid #21578A !important;
+        }
+      }
+    }
+
+    &.focused {
+      label {
+        top: -8px !important;
+        color: var(--primary-color);
+        background-color: var(--secondary-bg-color);
+        font-size: 14px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        line-height: 16px !important;
+        padding: 0 5px !important;
+      }
+    }
+  }
+
+}
