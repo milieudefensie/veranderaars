@@ -91,6 +91,22 @@
   }
 }
 
+@media screen and (max-width: 395px) {
+  .form-block-wrapper.home-form {
+    .form-block {
+      padding-bottom: 110px;
+
+      .form-hubspot {
+        padding-bottom: 1rem;
+      }
+
+      .legal-consent-container .hs-richtext {
+        top: 4.5rem !important;
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 350px) {
   .form-block-wrapper {
     .form-block {

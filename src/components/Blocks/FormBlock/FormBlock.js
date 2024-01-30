@@ -4,11 +4,11 @@ import HubspotForm from '../HubspotForm/HubspotForm';
 
 import './styles.scss';
 
-function FormBlock({ block }) {
+function FormBlock({ block, isHomepage = false }) {
   const { title, description, hubspot } = block;
 
   return (
-    <div className="form-block-wrapper">
+    <div className={`form-block-wrapper ${isHomepage ? 'home-form' : ''}`}>
       <div className="container">
         <div className={`form-block`}>
           <img className="left-img" src={formVector} alt="Form icon" />

@@ -25,7 +25,7 @@
       background-image: url('../../Icons/hero-home-circle.svg');
       background-repeat: no-repeat;
       background-position: top right;
-      min-height: 550px;
+      min-height: 520px;
 
       h1 {
         font-family: var(--primary-font);
@@ -71,7 +71,7 @@
 
   &+div,
   &+section {
-    padding-top: calc(500px) !important;
+    padding-top: calc(450px) !important;
     background-color: var(--secondary-bg-color);
     border-radius: 0 0 60% 60%/20px;
   }
@@ -83,6 +83,26 @@
 
     @media screen and (min-width: 1350px) {
       padding-top: 400px !important;
+    }
+  }
+}
+
+@media (min-width: 1220px) and (max-width: 1460px) {
+  .wrapper-hero {
+
+    &+div,
+    &+section {
+      padding-top: 600px !important;
+    }
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1220px) {
+  .wrapper-hero {
+
+    &+div,
+    &+section {
+      padding-top: 500px !important;
     }
   }
 }
@@ -119,7 +139,7 @@
 
     &+div,
     &+section {
-      padding-top: 650px !important;
+      padding-top: 600px !important;
     }
   }
 }
@@ -134,16 +154,41 @@
 
     &+div,
     &+section {
-      padding-top: 700px !important;
+      padding-top: 650px !important;
     }
   }
 }
 
-@media screen and (max-width: 370px) {
+@media screen and (max-width: 400px) {
   .wrapper-hero {
     .hero-home {
       .form-hubspot.homepage {
-        padding-bottom: 2rem;
+        padding-bottom: 4rem;
+      }
+    }
+
+    &+div,
+    &+section {
+      padding-top: 750px !important;
+    }
+  }
+}
+
+@media screen and (max-width: 355px) {
+  .wrapper-hero {
+
+    &+div,
+    &+section {
+      padding-top: 800px !important;
+    }
+  }
+}
+
+@media screen and (max-width: 330px) {
+  .wrapper-hero {
+    .hero-home {
+      .form-hubspot.homepage {
+        padding-bottom: 5rem;
       }
     }
 
@@ -157,12 +202,8 @@
 @media screen and (max-width: 310px) {
   .wrapper-hero {
     .hero-home {
-      .form-hubspot.homepage {
-        padding-bottom: 3rem;
-      }
-
       .form-hubspot.homepage form .legal-consent-container .hs-richtext {
-        top: 8.5rem;
+        top: 5.5rem !important;
       }
     }
 

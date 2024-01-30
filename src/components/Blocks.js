@@ -10,7 +10,7 @@ import HighlightTools from './Blocks/HighlightTools/HighlightTools';
 import FormBlock from './Blocks/FormBlock/FormBlock';
 import Share from './Blocks/Share/Share';
 
-export default function Blocks({ blocks, usePrimaryHeading = false }) {
+export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage = false }) {
   return (
     <>
       {blocks.map((block, index) => {
@@ -32,7 +32,7 @@ export default function Blocks({ blocks, usePrimaryHeading = false }) {
           case 'DatoCmsHighlightTool':
             return <HighlightTools key={block.id} block={block} />;
           case 'DatoCmsTextHubspotForm':
-            return <FormBlock key={block.id} block={block} />;
+            return <FormBlock key={block.id} block={block} isHomepage={isHomepage} />;
           case 'DatoCmsShare':
             return <Share key={block.id} block={block} />;
 

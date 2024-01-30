@@ -310,7 +310,7 @@
 
       &:has(.hs_error_rollup),
       &:has(.hs-input.invalid.error) {
-        margin-bottom: 1.5rem !important;
+        margin-bottom: 2rem !important;
       }
     }
   }
@@ -384,6 +384,17 @@
   }
 }
 
+// Homepage hide checkbox
+.homepage-md .legal-consent-container .hs-dependent-field {
+  display: none;
+}
+
+@media screen and (min-width: 370px) {
+  .homepage-md .legal-consent-container .hs-richtext {
+    top: 4.5rem !important;
+  }
+}
+
 @media screen and (max-width: 992px) {
   .form-hubspot {
     form {
@@ -393,15 +404,13 @@
       .hs-submit {
         grid-column: initial;
       }
-
-
     }
 
     &.homepage {
 
       &:has(.hs_error_rollup),
       &:has(.hs-input.invalid.error) {
-        padding-bottom: 2.5rem;
+        // padding-bottom: 2.5rem;
       }
     }
   }
@@ -414,11 +423,7 @@
 
       &:has(.hs_error_rollup),
       &:has(.hs-input.invalid.error) {
-        padding-bottom: 4rem;
-      }
-
-      .legal-consent-container .hs-richtext {
-        top: 6.5rem;
+        // padding-bottom: 4rem;
       }
     }
 
@@ -437,16 +442,12 @@
     &.homepage {
       padding-bottom: 7rem;
 
-      form .legal-consent-container .hs-richtext {
-        top: 7.5rem;
-      }
-
       &:has(.hs_error_rollup),
       &:has(.hs-input.invalid.error) {
-        padding-bottom: 5rem;
+        // padding-bottom: 5rem;
 
         form .legal-consent-container .hs-richtext {
-          top: 7.8rem;
+          // top: 7.8rem;
         }
       }
     }
@@ -457,10 +458,6 @@
   .form-hubspot {
     &.homepage {
       padding-bottom: 8rem;
-
-      form .legal-consent-container .hs-richtext {
-        top: 8rem;
-      }
     }
   }
 }
