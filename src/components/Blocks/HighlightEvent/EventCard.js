@@ -1,6 +1,6 @@
 import React from 'react';
 import ImageWrapper from '../../Global/Image/ImageWrapper';
-import { formatDate, formatRelativeDate, truncateText } from '../../../utils';
+import { formatDate, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/TagList';
 import Link from '../../Global/Link/Link';
 

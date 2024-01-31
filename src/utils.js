@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 export const pathToModel = (model = null, slug = '') => {
   if (model === 'basicPage') {
     return `/${slug}`;
@@ -54,34 +56,23 @@ export const formatDate = (rawDate) => {
   }
 
   const date = new Date(rawDate);
+  const options = { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'Europe/Amsterdam' };
+  const newDateString = date.toLocaleDateString('es-ES', options);
 
-  if (isNaN(date.getTime())) {
-    return 'Invalid date';
-  }
-
-  // Get the month name
-  const months = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
-  const monthName = months[date.getMonth()];
-
-  // Get the day and year
-  const day = date.getDate();
-  const year = date.getFullYear();
-
-  // Construct the formatted date string
-  const formattedDate = `${day} ${monthName} ${year}`;
-
-  return formattedDate;
+  return newDateString;
 };
 
-export const formatDateAsYYMMDD = (rawDate) => {
-  const date = new Date(rawDate);
+export const compareIfIsFuture = (event) => {
+  let eventHourStart = event.hourStart; // Formato: 06:00 | 15:00 | 23:30
+  if (eventHourStart.includes('(')) {
+    eventHourStart = eventHourStart.substring(0, 5);
+  }
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const eventDate = DateTime.fromFormat(`${event.rawDate} ${eventHourStart}`, 'yyyy-MM-dd HH:mm', {
+    zone: 'Europe/Amsterdam',
+  });
 
-  const newDateString = `${year}-${month}-${day}`;
-  return newDateString;
+  return eventDate >= DateTime.local();
 };
 
 export const convertTime = (dateTimeString) => {

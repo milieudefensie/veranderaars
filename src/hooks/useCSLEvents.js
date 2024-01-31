@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { convertTime, formatDateAsYYMMDD } from '../utils';
+import { compareIfIsFuture, convertTime, formatDate } from '../utils';
 import axios from 'axios';
 
 function useCSLEvents(cmsEvents) {
@@ -48,7 +48,7 @@ function useCSLEvents(cmsEvents) {
             coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
             region: e.location?.region,
             rawDate: e.start_at,
-            date: formatDateAsYYMMDD(e.start_at),
+            date: formatDate(e.start_at),
             hourStart: convertTime(e.start_at),
             hourEnd: e.end_at ? convertTime(e.end_at) : null,
             introduction: e.description,
@@ -61,12 +61,7 @@ function useCSLEvents(cmsEvents) {
           }));
 
         // Get only future events
-        const currentDate = new Date();
-        const temEvents = [...cmsEvents, ...mappedCSL].filter((event) => {
-          const eventDate = new Date(event.rawDate);
-          return eventDate > currentDate;
-          // return true;
-        });
+        const temEvents = [...cmsEvents, ...mappedCSL].filter(compareIfIsFuture);
 
         const events = temEvents.sort((a, b) => {
           const dateA = new Date(a.rawDate);
