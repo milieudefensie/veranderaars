@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from '../Link/Link';
-import headerLogo from '../../Icons/Logo Component.svg';
+import headerUpdatedLogo from '../../Icons/md-new-logo.svg';
 import { ReactSVG } from 'react-svg';
 import hamburgerIcon from '../../Icons/Hamburguer Icon.svg';
 import wpNavigationIcon from '../../Icons/Whatsapp Navigation.svg';
@@ -106,7 +106,7 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
         <div className="container">
           <div className="top-section">
             <Link className="navbar-brand" to={'/'}>
-              <ReactSVG src={headerLogo} alt="Milieudefensie logo" />
+              <ReactSVG src={headerUpdatedLogo} alt="Milieudefensie logo" />
             </Link>
 
             <div className="actions" style={{ visibility: !expanded ? 'visible' : 'hidden' }}>
