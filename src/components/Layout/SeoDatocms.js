@@ -9,6 +9,8 @@ const SeoDatoCMS = ({ seo, favicon = null, homepage = false, children }) => {
   return (
     <HelmetDatoCms seo={seo} favicon={favicon?.faviconMetaTags}>
       {children}
+
+      <link rel="icon" type="image/x-icon" href="https://www.datocms-assets.com/115430/1707748957-icon.svg"/>
     </HelmetDatoCms>
   );
 };
