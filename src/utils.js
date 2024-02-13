@@ -57,7 +57,7 @@ export const formatDate = (rawDate) => {
 
   const date = new Date(rawDate);
   const options = { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'Europe/Amsterdam' };
-  const newDateString = date.toLocaleDateString('es-ES', options);
+  const newDateString = date.toLocaleDateString('nl-NL', options);
 
   return newDateString;
 };
@@ -150,7 +150,7 @@ export function formatRelativeDate(inputDate) {
 }
 
 function getMonthName(monthIndex) {
-  const months = ['jan', 'feb', 'mar', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+  const months = ['jan', 'feb', 'mrt', 'apr', 'mei', 'juni', 'juli', 'aug', 'sep', 'okt', 'nov', 'dec'];
   return months[monthIndex];
 }
 
