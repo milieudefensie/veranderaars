@@ -1,5 +1,5 @@
 import React from 'react';
-import formVector from '../../Icons/form-vector.svg';
+import formVector from '../../Icons/new-form-icon.svg';
 import HubspotForm from '../HubspotForm/HubspotForm';
 
 import './styles.scss';
@@ -11,8 +11,6 @@ function FormBlock({ block, isHomepage = false }) {
     <div className={`form-block-wrapper ${isHomepage ? 'home-form' : ''}`}>
       <div className="container">
         <div className={`form-block`}>
-          <img className="left-img" src={formVector} alt="Form icon" />
-
           <div className="form-container-content">
             <div className={`row`}>
               {title && (
@@ -20,6 +18,8 @@ function FormBlock({ block, isHomepage = false }) {
                   <h2>{title}</h2>
 
                   {description && <div className="description" dangerouslySetInnerHTML={{ __html: description }} />}
+
+                  <img className="left-img" src={formVector} alt="Form icon" />
                 </div>
               )}
 

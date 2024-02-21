@@ -8,7 +8,6 @@
     z-index: 1;
     background-repeat: no-repeat;
     background-size: cover;
-    border-radius: 0 0 60% 60%/20px;
     background-color: #424242;
 
     .content {
@@ -28,12 +27,13 @@
       min-height: 520px;
 
       h1 {
-        font-family: var(--primary-font);
-        font-size: 49px;
+        font-family: var(--nb-primary-font);
+        font-size: 45px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 400;
         line-height: 110%;
-        color: var(--primary-color);
+        color: var(--dark);
+        text-transform: uppercase;
         margin: 0;
         padding: 0;
         margin-bottom: 26px;
@@ -42,15 +42,15 @@
       .introduction {
         margin: 0;
         padding: 0;
-        margin-bottom: 40px;
+        margin-bottom: 36px;
 
         * {
-          font-family: var(--secondary-font);
-          font-size: 20px;
+          font-family: var(--nb-secondary-font);
+          font-size: 25px;
           font-style: normal;
           font-weight: 400;
-          line-height: 130%;
-          color: var(--primary-color);
+          line-height: 135%;
+          color: var(--dark);
           margin: 0;
           padding: 0;
         }
@@ -72,8 +72,8 @@
   &+div,
   &+section {
     padding-top: calc(450px) !important;
-    background-color: var(--secondary-bg-color);
-    border-radius: 0 0 60% 60%/20px;
+    background-color: var(--nb-bg-light);
+    // border-radius: 0 0 60% 60%/20px;
   }
 
   &+.highlight-event-section.empty {
