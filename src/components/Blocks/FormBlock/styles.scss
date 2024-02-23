@@ -40,8 +40,13 @@
       z-index: 1;
     }
 
+    form .hs-form-field label {
+      color: var(--nb-grey);
+    }
+
     form .hs-form-field .input input {
-      color: var(--white);
+      background-color: var(--white);
+      border: 1px solid var(--dark);
 
       &:focus,
       &:active {
@@ -54,11 +59,29 @@
     }
 
     form .hs-form-field .hs-error-msgs.inputs-list label.hs-error-msg {
-      color: var(--white) !important;
+      color: var(--dark) !important;
     }
 
     form .focused {
-      background-color: var(--primary-color);
+      background-color: var(--nb-primary-color-light);
+    }
+
+    form .hs-submit .actions .hs-button {
+      color: var(--white);
+      background-color: var(--dark);
+
+      &:hover {
+        color: var(--dark);
+        background-color: var(--nb-primary-color-light);
+      }
+    }
+
+    form .legal-consent-container .hs-richtext p {
+      color: var(--dark);
+    }
+
+    form .hs-form-booleancheckbox label * {
+      color: var(--dark) !important;
     }
   }
 }
