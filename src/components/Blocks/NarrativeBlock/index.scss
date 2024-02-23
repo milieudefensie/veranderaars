@@ -46,9 +46,10 @@
 @media screen and (max-width:992px) {
   .component-narrative-block {
     padding-top: 60px;
-    margin-bottom: 57px;
+    padding-bottom: 70px;
 
     h2 {
+      margin-top: 15px;
       margin-bottom: 15px;
 
       span {
@@ -72,6 +73,10 @@
 
     .main-content {
       order: 2;
+    }
+
+    .video-player {
+      margin: 0;
     }
   }
 }
