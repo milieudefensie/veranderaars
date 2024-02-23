@@ -1,6 +1,6 @@
 .hero-basic {
   height: calc(150px + 20vw);
-  background-color: var(--primary-color);
+  background-color: var(--nb-primary-color-light);
   display: flex;
   flex-direction: column;
   align-items: end;
@@ -41,7 +41,7 @@
     background-color: var(--nb-bg-light);
 
     h1 {
-      color: var(--primary-color);
+      color: var(--dark);
     }
   }
 

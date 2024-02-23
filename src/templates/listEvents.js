@@ -98,7 +98,7 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
     <Layout bgColor="secondary-bg" extraClassNames="list-pages">
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="light" responsiveVariant="secondary-bg">
+      <WrapperLayout variant="white" responsiveVariant="secondary-bg">
         <HeroBasic backgroundColor="light" responsiveVariant="event" />
 
         <div className="list-event-wrapper">

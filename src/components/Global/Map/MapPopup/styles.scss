@@ -36,30 +36,30 @@
     h5 {
       margin: 0;
       padding: 0;
-      color: var(--primary-color);
-      font-family: var(--nb-secondary-font);
-      font-size: 15px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 130%;
-    }
-
-    span {
-      color: var(--primary-color);
+      color: var(--dark);
       font-family: var(--nb-secondary-font);
       font-size: 15px;
       font-style: normal;
       font-weight: 400;
-      line-height: 130%;
+      line-height: 120%;
+    }
+
+    span {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 120%;
     }
   }
 
   h2 {
-    color: var(--primary-color);
-    font-family: var(--primary-font);
+    color: var(--dark);
+    font-family: var(--nb-primary-font);
     font-size: 23px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 120%;
     margin: 0;
     padding: 0;

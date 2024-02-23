@@ -6,7 +6,7 @@
   list-style: none;
 
   li {
-    color: var(--primary-color);
+    color: var(--nb-grey);
     font-family: var(--nb-secondary-font);
     font-size: 20px;
     font-style: normal;
@@ -21,7 +21,7 @@
   }
 
   .pagination-item {
-    color: var(--primary-color);
+    color: var(--nb-grey);
 
     &.dots:hover {
       background-color: transparent;

@@ -32,7 +32,7 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
         ctaView.classList.add('hide');
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll);
 
     handleScroll();
@@ -65,7 +65,7 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
     <Layout extraClassNames="list-pages">
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="light">
+      <WrapperLayout variant="white">
         <HeroBasic backgroundColor="light" responsiveVariant="event" />
 
         <div className="list-event-wrapper">

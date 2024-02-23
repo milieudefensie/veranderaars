@@ -9,7 +9,7 @@
       font-family: var(--nb-primary-font);
       font-size: 49px;
       font-style: normal;
-      font-weight: 600;
+      font-weight: 400;
       line-height: 110%;
       margin: 0;
       padding: 0;
@@ -27,7 +27,7 @@
     .brief-information {
       padding: 35px 30px;
       border-radius: 10px;
-      background: var(--secondary-bg-color);
+      background: var(--nb-bg-light);
       margin-bottom: 30px;
 
       display: flex;
@@ -42,18 +42,19 @@
         span {
           margin: 0;
           padding: 0;
-          color: var(--primary-color);
+          color: var(--dark);
           font-family: var(--nb-secondary-font);
           font-size: 20px;
           font-style: normal;
-          font-weight: 700;
-          line-height: 150%;
+          font-weight: 500;
+          line-height: 140%;
           display: flex;
           align-items: center;
           gap: 10px;
 
           a {
-            color: var(--primary-color);
+            color: var(--dark);
+            text-decoration: underline;
           }
         }
       }
@@ -69,19 +70,21 @@
         align-items: center;
         gap: 10px;
 
-        color: var(--primary-color);
-        font-family: var(--primary-font);
-        font-size: 20px;
+        color: var(--dark);
+        font-family: var(--nb-secondary-font);
+        font-size: 18px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 700;
         line-height: 120%;
+
+        border: 2px solid var(--dark);
 
         &:hover {
           color: var(--white);
-          background-color: var(--primary-color);
+          background-color: var(--dark);
 
           svg rect {
-            fill: var(--primary-color);
+            fill: var(--dark);
           }
 
           svg path {
@@ -97,12 +100,12 @@
     }
 
     .introduction {
-      color: var(--primary-color);
+      color: var(--dark);
       font-family: var(--nb-secondary-font);
       font-size: 25px;
       font-style: normal;
-      font-weight: 700;
-      line-height: 135%;
+      font-weight: 500;
+      line-height: 130%;
       margin-bottom: 30px;
     }
 
@@ -163,8 +166,9 @@
       }
 
       a {
-        color: var(--secondary-color);
-        font-family: var(--nb-secondary-font);
+        color: var(--dark);
+        font-weight: 600;
+        line-height: 150%;
       }
 
       * {
@@ -173,7 +177,7 @@
         font-size: 20px;
         font-style: normal;
         font-weight: 400;
-        line-height: 150%;
+        line-height: 140%;
         margin: 0;
         padding: 0;
       }
@@ -189,9 +193,9 @@
       h5,
       h6 {
         color: var(--dark);
-        font-family: var(--primary-font);
+        font-family: var(--nb-primary-font);
         font-style: normal;
-        font-weight: 600;
+        font-weight: 400;
         line-height: 120%;
         margin: 1rem 0;
       }
@@ -223,8 +227,8 @@
         padding-left: 20px;
 
         * {
-          color: var(--primary-color);
-          font-family: var(--primary-font);
+          color: var(--dark);
+          font-family: var(--nb-primary-font);
           font-size: 31px;
           font-style: normal;
           font-weight: 600;
@@ -252,7 +256,7 @@
         font-family: var(--nb-secondary-font);
         font-size: 20px;
         font-style: normal;
-        font-weight: 700;
+        font-weight: 600;
         line-height: 130%;
         text-decoration: none;
       }
@@ -271,7 +275,6 @@
     .external-register {
       display: flex;
       align-items: center;
-      // justify-content: center;
       margin: 1rem 0;
     }
   }

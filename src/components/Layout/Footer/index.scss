@@ -27,7 +27,7 @@
         max-width: 230px;
         color: var(--dark);
         text-align: right;
-        font-family: var(--primary-font);
+        font-family: var(--nb-secondary-font);
         font-size: 20px;
         font-style: normal;
         font-weight: 600;
@@ -39,7 +39,7 @@
       }
 
       &:hover {
-        background: var(--primary-color);
+        background: var(--dark);
 
         span {
           color: var(--white);
@@ -47,7 +47,7 @@
 
         svg {
           rect {
-            fill: var(--primary-color);
+            fill: var(--dark);
           }
 
           path {

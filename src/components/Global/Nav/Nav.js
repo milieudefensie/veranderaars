@@ -148,17 +148,17 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
                 <svg xmlns="http://www.w3.org/2000/svg" width="29" height="28" viewBox="0 0 29 28" fill="none">
                   <path
                     d="M2.83276 2.5L26.1673 25.8345"
-                    stroke="#295F4E"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke="black"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
                     d="M2.83276 25.5L26.1673 2.16548"
-                    stroke="#295F4E"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke="black"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                 </svg>
               </button>

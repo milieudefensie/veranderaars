@@ -26,7 +26,7 @@
     &:hover {
       svg {
         rect {
-          fill: var(--primary-color);
+          fill: var(--dark);
         }
 
         path {
@@ -57,13 +57,9 @@
       padding: 0;
     }
 
-    .wp-button svg g rect {
-      // fill: var(--dark);
-    }
-
     .wp-button svg:hover {
       g rect {
-        fill: var(--primary-color);
+        fill: var(--dark);
       }
     }
   }
@@ -98,7 +94,7 @@
     transform: translateX(100%);
     padding: 37px 205px;
     width: 740px;
-    background-color: var(--primary-color);
+    background-color: var(--white);
     transition: transform 0.25s ease-in-out;
 
     .actions {
@@ -121,12 +117,13 @@
         border: none;
         border-radius: 3px;
         background: var(--white);
-        padding: 4px 10px 10px 10px;
+        padding: 10px;
+        border: 1.5px solid var(--dark);
       }
 
       .wp-button svg:hover {
         g rect {
-          fill: #69BE28;
+          fill: #000;
         }
       }
     }
@@ -145,18 +142,18 @@
       padding: 0;
       margin: 0;
       text-align: right;
-      border-bottom: 2px solid var(--primary-color);
+      border-bottom: 2px solid var(--dark);
 
       &:hover {
-        border-bottom: 2px solid var(--white);
+        border-bottom: 2px solid var(--dark);
       }
 
       a {
-        color: var(--white);
-        font-family: var(--primary-font);
+        color: var(--dark);
+        font-family: var(--nb-primary-font);
         font-size: 39px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 400;
         line-height: 110%;
         text-decoration: none;
       }
