@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
@@ -35,6 +35,11 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
     content,
     tags = [],
   } = page;
+
+  useEffect(() => {
+    const htmlElement = document.documentElement;
+    htmlElement.style.overflow = '';
+  }, []);
 
   return (
     <Layout>

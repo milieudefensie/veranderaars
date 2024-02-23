@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
@@ -33,6 +33,11 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
     tags = [],
     relatedEvents = [],
   } = page;
+
+  useEffect(() => {
+    const htmlElement = document.documentElement;
+    htmlElement.style.overflow = '';
+  }, []);
 
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
