@@ -121,7 +121,7 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
         </FloatLayout>
 
         {/* Related events */}
-        {Array.isArray(relatedEvents) && (
+        {Array.isArray(relatedEvents) && relatedEvents.length > 0 && (
           <div className="related-section">
             <ListHighlightEvent
               block={{
