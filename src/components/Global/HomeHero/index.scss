@@ -24,7 +24,7 @@
       background-image: url('../../Icons/hero-home-circle.svg');
       background-repeat: no-repeat;
       background-position: top right;
-      min-height: 560px;
+      min-height: 510px;
 
       h1 {
         font-family: var(--nb-primary-font);
@@ -46,7 +46,7 @@
 
         * {
           font-family: var(--nb-secondary-font);
-          font-size: 25px;
+          font-size: 20px;
           font-style: normal;
           font-weight: 400;
           line-height: 135%;
@@ -120,18 +120,18 @@
         max-width: 100%;
 
         h1 {
-          font-size: 37px;
+          font-size: 30px;
           line-height: 115%;
-          margin-bottom: 10px;
+          margin-bottom: 12px;
         }
 
         .introduction {
-          margin-bottom: 35px;
+          margin-bottom: 17px;
 
           * {
             color: var(--black);
-            font-size: 19px;
-            line-height: 120%;
+            font-size: 18px;
+            line-height: 130%;
           }
         }
       }
