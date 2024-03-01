@@ -21,10 +21,7 @@
       position: relative;
       z-index: 10;
       top: 300px;
-      // background-image: url('../../Icons/hero-home-circle.svg');
-      // background-repeat: no-repeat;
-      // background-position: top right;
-      min-height: 510px;
+      min-height: calc(140px + 20vw);
 
       h1 {
         font-family: var(--nb-primary-font);
@@ -71,9 +68,8 @@
 
   &+div,
   &+section {
-    padding-top: calc(450px) !important;
+    padding-top: 400px;
     background-color: var(--nb-bg-light);
-    // border-radius: 0 0 60% 60%/20px;
   }
 
   &+.highlight-event-section.empty {
