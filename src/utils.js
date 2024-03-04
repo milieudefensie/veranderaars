@@ -159,3 +159,23 @@ function formatTime(date) {
   const minutes = date.getMinutes().toString().padStart(2, '0');
   return `${hours}:${minutes}`;
 }
+
+export const homepageFormIssues = () => {
+  const heroWrapper = document.querySelector('#hero-homepage');
+  if (!heroWrapper) return;
+
+  const child = heroWrapper.querySelector('.content');
+  const childHeight = child.clientHeight;
+  const hasErrors = child.querySelectorAll('.hs-error-msgs li').length > 0;
+
+  const nextElement = document.querySelector('#hero-homepage + div, #hero-homepage + section');
+
+  if (nextElement) {
+    if (hasErrors) {
+      // nextElement.style.paddingTop = `${childHeight - 220}px`;
+      // return;
+    }
+
+    nextElement.style.paddingTop = `${childHeight - 150}px`;
+  }
+};

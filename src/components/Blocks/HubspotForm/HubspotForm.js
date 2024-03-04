@@ -1,5 +1,6 @@
 import React from 'react';
 import { Script } from 'gatsby';
+import { homepageFormIssues } from '../../../utils';
 
 import './index.scss';
 
@@ -119,29 +120,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
                   const nextElementOfHome = heroHomepage.nextElementSibling;
 
                   if (!nextElementOfHome) return;
-
-                  const deviceWidth = window.innerWidth;
-                  console.log({ deviceWidth });
-
-                  if (deviceWidth < 400) {
-                    nextElementOfHome.style.cssText = 'padding-top: 900px !important;';
-                  } else if (deviceWidth < 767) {
-                    nextElementOfHome.style.cssText = 'padding-top: 800px !important;';
-                  } else if (deviceWidth < 992) {
-                    nextElementOfHome.style.cssText = 'padding-top: 700px !important;';
-                  } else if (deviceWidth < 1200) {
-                    nextElementOfHome.style.cssText = 'padding-top: 550px !important;';
-                  }
-
-                  // if (deviceWidth < 1200) {
-                  //   nextElementOfHome.style.cssText = 'padding-top: 550px !important;';
-                  // } else if (deviceWidth < 992) {
-                  //   nextElementOfHome.style.cssText = 'padding-top: 750px !important;';
-                  // } else if (deviceWidth < 767) {
-                  //   nextElementOfHome.style.cssText = 'padding-top: 800px !important;';
-                  // } else if (deviceWidth < 400) {
-                  //   nextElementOfHome.style.cssText = 'padding-top: 900px !important;';
-                  // }
+                  homepageFormIssues();
                 }
               }
 
