@@ -85,16 +85,6 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
                   const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
                   const hasError = input.target.classList.contains('error');
                   submitBtn.disabled = hasError;
-
-                  // setTimeout(() => {
-                  //   console.log('SI');
-                  //   const formWrapper = document.querySelector(`#${id}`);
-                  //   const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
-                  //   const hasError = input.target.classList.contains('error') || input.target.value === '';
-
-                  //   console.log({ hasError });
-                  //   submitBtn.disabled = hasError;
-                  // }, 500);
                 });
               });
 
