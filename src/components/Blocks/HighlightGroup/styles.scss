@@ -45,24 +45,32 @@
 }
 
 @media screen and (max-width: 992px) {
-  .tool-card {
-    height: auto;
-    margin-bottom: 19px;
+  #groups-list {
+    margin-top: 3rem;
 
-    .image {
-      * {
-        width: 100%;
+    .group-card {
+      height: auto;
+      margin-bottom: 19px;
+
+      .image {
+        * {
+          width: 100%;
+        }
+      }
+
+      .content {
+        padding: 15px 20px;
+
+        h3 {
+          font-size: 25px;
+          margin-bottom: 20px;
+        }
+
       }
     }
 
-    .content {
-      padding: 15px 25px;
-
-      h3 a {
-        font-size: 29px;
-        margin-bottom: 20px;
-      }
-
+    .col-lg-4 {
+      margin-top: 0;
     }
   }
 }
