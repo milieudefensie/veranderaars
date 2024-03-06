@@ -10,7 +10,7 @@
   border: 2px solid var(--dark);
 
   .image {
-    height: 50%;
+    height: 60%;
 
     * {
       width: 100%;
@@ -19,8 +19,8 @@
   }
 
   .content {
-    height: 50%;
-    padding: 30px;
+    height: 40%;
+    padding: 10px 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
