@@ -13,7 +13,7 @@ import Blocks from '../components/Blocks';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 import useCSLEvents from '../hooks/useCSLEvents';
 
-import './list-events.styles.scss';
+import './list-basic.styles.scss';
 
 const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) => {
   const { title, seo, highlighEvent, blocks = [] } = page;
@@ -229,8 +229,41 @@ export const PageQuery = graphql`
         }
       }
       blocks {
+        ... on DatoCmsNarrativeBlock {
+          ...BlockNarrativeBlock
+        }
+        ... on DatoCmsHighlightEvent {
+          ...BlockHighlightEvent
+        }
+        ... on DatoCmsHighlightTool {
+          ...BlockHighlightTools
+        }
         ... on DatoCmsTextHubspotForm {
           ...BlockTextHubspot
+        }
+        ... on DatoCmsTable {
+          ...BlockTable
+        }
+        ... on DatoCmsShare {
+          ...BlockShare
+        }
+        ... on DatoCmsImage {
+          ...BlockImage
+        }
+        ... on DatoCmsEmbedIframe {
+          ...BlockEmbedIframe
+        }
+        ... on DatoCmsAcordion {
+          ...BlockAccordion
+        }
+        ... on DatoCmsVideoBlock {
+          ...BlockVideo
+        }
+        ... on DatoCmsSimpleText {
+          ...BlockText
+        }
+        ... on DatoCmsCta {
+          ...BlockCta
         }
       }
       seo: seoMetaTags {

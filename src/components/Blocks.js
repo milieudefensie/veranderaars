@@ -9,6 +9,9 @@ import ListHighlightEvent from './Blocks/HighlightEvent/ListHighlightEvent';
 import HighlightTools from './Blocks/HighlightTools/HighlightTools';
 import FormBlock from './Blocks/FormBlock/FormBlock';
 import Share from './Blocks/Share/Share';
+import ImageWrapper from './Global/Image/ImageWrapper';
+import EmbedIframe from './Blocks/EmbedIframe/EmbedIframe';
+import Cta from './Global/Cta/Cta';
 
 export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage = false }) {
   return (
@@ -35,6 +38,12 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
             return <FormBlock key={block.id} block={block} isHomepage={isHomepage} />;
           case 'DatoCmsShare':
             return <Share key={block.id} block={block} />;
+          case 'DatoCmsImage':
+            return <ImageWrapper image={block.image} key={block.id} />;
+          case 'DatoCmsEmbedIframe':
+            return <EmbedIframe content={block} key={block.id} />;
+          case 'DatoCmsCta':
+            return <Cta cta={block} key={block.id} />;
 
           default:
             return null;

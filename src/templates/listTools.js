@@ -54,11 +54,41 @@ export const PageQuery = graphql`
         ...GatsbyDatoCmsSeoMetaTags
       }
       blocks {
+        ... on DatoCmsNarrativeBlock {
+          ...BlockNarrativeBlock
+        }
+        ... on DatoCmsHighlightEvent {
+          ...BlockHighlightEvent
+        }
         ... on DatoCmsHighlightTool {
           ...BlockHighlightTools
         }
         ... on DatoCmsTextHubspotForm {
           ...BlockTextHubspot
+        }
+        ... on DatoCmsTable {
+          ...BlockTable
+        }
+        ... on DatoCmsShare {
+          ...BlockShare
+        }
+        ... on DatoCmsImage {
+          ...BlockImage
+        }
+        ... on DatoCmsEmbedIframe {
+          ...BlockEmbedIframe
+        }
+        ... on DatoCmsAcordion {
+          ...BlockAccordion
+        }
+        ... on DatoCmsVideoBlock {
+          ...BlockVideo
+        }
+        ... on DatoCmsSimpleText {
+          ...BlockText
+        }
+        ... on DatoCmsCta {
+          ...BlockCta
         }
       }
     }

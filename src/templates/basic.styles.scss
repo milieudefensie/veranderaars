@@ -120,14 +120,6 @@
     }
 
     .content {
-
-      ul,
-      ol {
-        list-style: initial;
-        padding-left: 2rem;
-        margin: 1rem 0;
-      }
-
       table {
         border: 0;
         width: 100%;
@@ -171,15 +163,30 @@
         line-height: 150%;
       }
 
-      * {
+      ul,
+      ol,
+      p,
+      span {
         color: var(--black);
         font-family: var(--nb-secondary-font);
         font-size: 18px;
         font-style: normal;
         font-weight: 400;
         line-height: 140%;
-        margin: 0;
-        padding: 0;
+      }
+
+      ul,
+      ol {
+        padding-left: 2rem;
+        margin: 1rem 0;
+      }
+
+      ul {
+        list-style: disc;
+      }
+
+      ol {
+        list-style: decimal;
       }
 
       em {
@@ -243,6 +250,55 @@
 
       .image-wrapper {
         margin: 1rem 0;
+      }
+
+      // Additional blocks
+      .highlight-event-section {
+        padding-bottom: 50px;
+
+        .header {
+          margin-bottom: 20px;
+        }
+
+        .event-card {
+          padding: 20px;
+        }
+      }
+
+      .highlight-tools-section {
+        padding-bottom: 50px;
+
+        .header {
+          margin-bottom: 20px;
+        }
+
+        .tool-card {
+          .image-wrapper {
+            margin: 0;
+          }
+        }
+      }
+
+      .component-narrative-block {
+        padding: 45px 0;
+
+        h2 span {
+          color: var(--black);
+          font-family: var(--nb-primary-font);
+          font-size: 23px;
+          font-weight: 400;
+          line-height: 110%;
+          display: block;
+        }
+
+        .text-content * {
+          color: var(--dark);
+          font-family: var(--nb-secondary-font);
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 140%;
+        }
       }
     }
 

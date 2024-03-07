@@ -156,7 +156,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
                 latitude={latitude}
                 longitude={longitude}
                 onClick={() => setSelectedMarker(cluster)}
-                anchor="center"
+                anchor="bottom"
               >
                 {type === 'group' ? <GroupMarker /> : <CustomMarker />}
               </Marker>

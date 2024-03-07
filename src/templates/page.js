@@ -64,17 +64,8 @@ export const PageQuery = graphql`
         ... on DatoCmsNarrativeBlock {
           ...BlockNarrativeBlock
         }
-        ... on DatoCmsAcordion {
-          ...BlockAccordion
-        }
-        ... on DatoCmsSimpleText {
-          ...BlockText
-        }
-        ... on DatoCmsVideoBlock {
-          ...BlockVideo
-        }
-        ... on DatoCmsTable {
-          ...BlockTable
+        ... on DatoCmsHighlightEvent {
+          ...BlockHighlightEvent
         }
         ... on DatoCmsHighlightTool {
           ...BlockHighlightTools
@@ -82,8 +73,26 @@ export const PageQuery = graphql`
         ... on DatoCmsTextHubspotForm {
           ...BlockTextHubspot
         }
+        ... on DatoCmsTable {
+          ...BlockTable
+        }
         ... on DatoCmsShare {
           ...BlockShare
+        }
+        ... on DatoCmsImage {
+          ...BlockImage
+        }
+        ... on DatoCmsEmbedIframe {
+          ...BlockEmbedIframe
+        }
+        ... on DatoCmsAcordion {
+          ...BlockAccordion
+        }
+        ... on DatoCmsVideoBlock {
+          ...BlockVideo
+        }
+        ... on DatoCmsSimpleText {
+          ...BlockText
         }
       }
     }
