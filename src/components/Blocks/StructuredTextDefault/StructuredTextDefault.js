@@ -43,8 +43,18 @@ const StructuredTextDefault = ({ content }) => {
             return <Accordion items={record.items} key={record.id} />;
           case 'DatoCmsSimpleText':
             return <SimpleText key={record.id} block={record} />;
-          case 'DatoCmsCta':
-            return <Cta cta={record} key={record.id} />;
+
+          case 'DatoCmsBlockCta':
+            const alignment = { left: 'flex-start', center: 'center', right: 'flex-end' };
+
+            return (
+              <div
+                key={record.id}
+                style={{ display: 'flex', justifyContent: record?.alignment ? alignment[record.alignment] : '' }}
+              >
+                <Cta cta={record} />
+              </div>
+            );
 
           default:
             return null;

@@ -87,8 +87,8 @@ export const PageQuery = graphql`
         ... on DatoCmsSimpleText {
           ...BlockText
         }
-        ... on DatoCmsCta {
-          ...BlockCta
+        ... on DatoCmsBlockCta {
+          ...BlockCustomCta
         }
       }
     }

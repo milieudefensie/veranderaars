@@ -542,10 +542,11 @@ export const PageQuery = graphql`
               thumbnailUrl
             }
           }
-          ... on DatoCmsCta {
+          ... on DatoCmsBlockCta {
             id: originalId
             title
             isButton
+            alignment
             link {
               ... on DatoCmsGlobalLink {
                 id

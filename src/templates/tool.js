@@ -110,8 +110,8 @@ export const PageQuery = graphql`
         ... on DatoCmsSimpleText {
           ...BlockText
         }
-        ... on DatoCmsCta {
-          ...BlockCta
+        ... on DatoCmsBlockCta {
+          ...BlockCustomCta
         }
       }
       content {
@@ -494,10 +494,11 @@ export const PageQuery = graphql`
               thumbnailUrl
             }
           }
-          ... on DatoCmsCta {
+          ... on DatoCmsBlockCta {
             id: originalId
             title
             isButton
+            alignment
             link {
               ... on DatoCmsGlobalLink {
                 id

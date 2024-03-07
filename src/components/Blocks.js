@@ -42,8 +42,17 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
             return <ImageWrapper image={block.image} key={block.id} />;
           case 'DatoCmsEmbedIframe':
             return <EmbedIframe content={block} key={block.id} />;
-          case 'DatoCmsCta':
-            return <Cta cta={block} key={block.id} />;
+          case 'DatoCmsBlockCta':
+            const alignment = { left: 'flex-start', center: 'center', right: 'flex-end' };
+
+            return (
+              <div
+                key={block.id}
+                style={{ display: 'flex', justifyContent: block?.alignment ? alignment[block.alignment] : '' }}
+              >
+                <Cta cta={block} />
+              </div>
+            );
 
           default:
             return null;

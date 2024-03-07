@@ -549,11 +549,12 @@ export const DatoCMS = graphql`
     }
   }
 
-  fragment BlockCta on DatoCmsCta {
+  fragment BlockCustomCta on DatoCmsBlockCta {
     __typename
     id: originalId
     title
     isButton
+    alignment
     link {
       ... on DatoCmsGlobalLink {
         id

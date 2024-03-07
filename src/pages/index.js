@@ -89,6 +89,9 @@ export const HomeQuery = graphql`
         ... on DatoCmsSimpleText {
           ...BlockText
         }
+        ... on DatoCmsBlockCta {
+          ...BlockCustomCta
+        }
       }
     }
   }
