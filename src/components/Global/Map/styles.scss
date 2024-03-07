@@ -80,7 +80,27 @@
 
 @media screen and (max-width: 992px) {
   .map-wrapper {
-    display: none;
+
+    h3 {
+      display: none;
+    }
+
+    .map {
+      .mapboxgl-map {
+        position: relative;
+        height: 272px !important;
+
+        .mobile-view-map {
+          position: absolute;
+          bottom: 12px;
+          right: 13px;
+        }
+
+        .mapboxgl-control-container {
+          display: none;
+        }
+      }
+    }
 
     &.mobile {
       display: block;
@@ -126,6 +146,10 @@
           width: 100%;
           border-radius: 0;
           margin: 0;
+
+          .mapboxgl-control-container {
+            display: block;
+          }
 
           .mapboxgl-canvas-container canvas {
             width: 100% !important;

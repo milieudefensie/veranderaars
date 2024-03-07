@@ -6,7 +6,6 @@ import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import Map from '../components/Global/Map/Map';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import ListGroupBlock from '../components/Blocks/HighlightGroup/ListGroups';
-import CtaHandler from '../components/Global/Cta/CtaHandler';
 import Blocks from '../components/Blocks';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 
@@ -71,11 +70,6 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
         <div className="list-event-wrapper">
           <div className="container">
             <h1>{title}</h1>
-
-            {/* Mobile button */}
-            <div className="mobile-view-map mb-4">
-              <CtaHandler title={'Map View'} isPrimaryButton handleOnClick={() => setMobileShowMap((prev) => !prev)} />
-            </div>
 
             {/* Map */}
             <Map

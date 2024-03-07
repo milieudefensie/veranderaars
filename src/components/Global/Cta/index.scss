@@ -70,6 +70,12 @@
       border-color: var(--secondary-color);
     }
   }
+
+  &.with-handler {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 @media screen and (max-width: 992px) {

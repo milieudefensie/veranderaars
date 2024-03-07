@@ -8,7 +8,6 @@ import Map from '../components/Global/Map/Map';
 import FilterEvents from '../components/Global/FilterEvents/FilterEvents';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import Spinner from '../components/Global/Spinner/Spinner';
-import CtaHandler from '../components/Global/Cta/CtaHandler';
 import Blocks from '../components/Blocks';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 import useCSLEvents from '../hooks/useCSLEvents';
@@ -104,17 +103,6 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
         <div className="list-event-wrapper">
           <div className="container">
             {title && <h1>{title}</h1>}
-
-            {/* Mobile button */}
-            {!isLoading && (
-              <div className="mobile-view-map mb-4">
-                <CtaHandler
-                  title={'Map View'}
-                  isPrimaryButton
-                  handleOnClick={() => setMobileShowMap((prev) => !prev)}
-                />
-              </div>
-            )}
 
             {highlighEvent && (
               <div className="highlighted-event-wrapper">
