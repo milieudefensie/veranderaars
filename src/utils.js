@@ -55,11 +55,26 @@ export const formatDate = (rawDate) => {
     return 'Invalid date';
   }
 
-  const date = new Date(rawDate);
-  const options = { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'Europe/Amsterdam' };
-  const newDateString = date.toLocaleDateString('nl-NL', options);
+  const date = DateTime.fromJSDate(new Date(rawDate)).setZone('Europe/Amsterdam');
+  const today = DateTime.now().setZone('Europe/Amsterdam');
+  const tomorrow = today.plus({ days: 1 });
 
-  return newDateString;
+  if (date.hasSame(today, 'day')) {
+    return 'Vandaag';
+  } else if (date.hasSame(tomorrow, 'day')) {
+    return 'Morgen';
+  } else {
+    if (date.year === today.year) {
+      return date.toLocaleString({ month: 'short', day: '2-digit', timeZone: 'Europe/Amsterdam' }).replace('-', ' ');
+    }
+
+    return date.toLocaleString({
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      timeZone: 'Europe/Amsterdam',
+    });
+  }
 };
 
 export const compareIfIsFuture = (event) => {
