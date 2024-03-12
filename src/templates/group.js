@@ -41,28 +41,31 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
     htmlElement.style.overflow = '';
   }, []);
 
+  const groupHasCoordinates = coordinates && coordinates.latitude && coordinates.longitude;
   const maxDistanceInKilometers = 50;
-  const nearbyEvents = allEvents.edges
-    .map((e) => e.node)
-    .filter((e) => e.coordinates && e.coordinates.latitude && e.coordinates.longitude)
-    .filter(compareIfIsFuture)
-    .filter((event) => {
-      return (
-        haversine(
-          coordinates.latitude,
-          coordinates.longitude,
-          event.coordinates.latitude,
-          event.coordinates.longitude
-        ) <= maxDistanceInKilometers
-      );
-    })
-    .slice(0, 3)
-    .sort((a, b) => {
-      const dateA = new Date(a.rawDate);
-      const dateB = new Date(b.rawDate);
+  const nearbyEvents = groupHasCoordinates
+    ? allEvents.edges
+        .map((e) => e.node)
+        .filter((e) => e.coordinates && e.coordinates.latitude && e.coordinates.longitude)
+        .filter(compareIfIsFuture)
+        .filter((event) => {
+          return (
+            haversine(
+              coordinates.latitude,
+              coordinates.longitude,
+              event.coordinates.latitude,
+              event.coordinates.longitude
+            ) <= maxDistanceInKilometers
+          );
+        })
+        .slice(0, 3)
+        .sort((a, b) => {
+          const dateA = new Date(a.rawDate);
+          const dateB = new Date(b.rawDate);
 
-      return dateA - dateB;
-    });
+          return dateA - dateB;
+        })
+    : [];
 
   const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
   const hasRelatedEvents = related || nearbyEvents.length > 0;
