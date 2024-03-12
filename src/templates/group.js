@@ -61,7 +61,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
             ) <= maxDistanceInKilometers
           );
         })
-        .slice(0, 30)
+        .slice(0, 3)
     : [];
 
   const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
