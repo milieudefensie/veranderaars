@@ -16,7 +16,9 @@ import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
-import { compareIfIsFuture, haversine } from '../utils';
+import { haversine, mapCmsEvents } from '../utils';
+import useCSLEvents from '../hooks/useCSLEvents';
+import Spinner from '../components/Global/Spinner/Spinner';
 
 import './basic.styles.scss';
 
@@ -41,13 +43,14 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
     htmlElement.style.overflow = '';
   }, []);
 
+  const cmsEvents = mapCmsEvents(allEvents);
+  const { mergedEvents, status } = useCSLEvents(cmsEvents);
+  const isLoading = status === 'loading';
+
   const groupHasCoordinates = coordinates && coordinates.latitude && coordinates.longitude;
   const maxDistanceInKilometers = 50;
   const nearbyEvents = groupHasCoordinates
-    ? allEvents.edges
-        .map((e) => e.node)
-        .filter((e) => e.coordinates && e.coordinates.latitude && e.coordinates.longitude)
-        .filter(compareIfIsFuture)
+    ? mergedEvents
         .filter((event) => {
           return (
             haversine(
@@ -58,13 +61,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
             ) <= maxDistanceInKilometers
           );
         })
-        .slice(0, 3)
-        .sort((a, b) => {
-          const dateA = new Date(a.rawDate);
-          const dateB = new Date(b.rawDate);
-
-          return dateA - dateB;
-        })
+        .slice(0, 30)
     : [];
 
   const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
@@ -76,7 +73,6 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
 
       <WrapperLayout variant="white">
         <HeroBasic image={image} overlay={false} />
-
         <FloatLayout reduceOverlap>
           {listGroup && (
             <div className="pre-header">
@@ -157,16 +153,22 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
         </FloatLayout>
 
         {/* Related events */}
-        {hasRelatedEvents && (
-          <div className="related-section">
-            <ListHighlightEvent
-              block={{
-                sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
-                cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
-                items: related ? relatedEvents : nearbyEvents,
-              }}
-            />
+        {isLoading ? (
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <Spinner />
           </div>
+        ) : (
+          hasRelatedEvents && (
+            <div className="related-section">
+              <ListHighlightEvent
+                block={{
+                  sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
+                  cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
+                  items: related ? relatedEvents : nearbyEvents,
+                }}
+              />
+            </div>
+          )
         )}
       </WrapperLayout>
     </Layout>

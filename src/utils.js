@@ -191,3 +191,16 @@ export const haversine = (lat1, lon1, lat2, lon2) => {
   const distancia = R * c;
   return distancia;
 };
+
+export const mapCmsEvents = (allEvents) => {
+  return Array.isArray(allEvents.edges)
+    ? allEvents.edges.map((raw) => ({
+        ...raw.node,
+        coordinates: {
+          latitude: parseFloat(raw.node.coordinates?.latitude?.toFixed(6)),
+          longitude: parseFloat(raw.node.coordinates?.longitude?.toFixed(6)),
+        },
+        type: 'NATIONAL',
+      }))
+    : [];
+};
