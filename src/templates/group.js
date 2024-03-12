@@ -44,7 +44,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
   const maxDistanceInKilometers = 50;
   const nearbyEvents = allEvents.edges
     .map((e) => e.node)
-    .filter((e) => e.coordinates)
+    .filter((e) => e.coordinates && e.coordinates.latitude && e.coordinates.longitude)
     .filter(compareIfIsFuture)
     .filter((event) => {
       return (
