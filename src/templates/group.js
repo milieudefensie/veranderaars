@@ -16,10 +16,11 @@ import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
+import { compareIfIsFuture, haversine } from '../utils';
 
 import './basic.styles.scss';
 
-const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) => {
+const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent, favicon } }) => {
   const {
     seo,
     title,
@@ -30,6 +31,7 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
     email,
     whatsappGroup,
     organizer,
+    coordinates,
     tags = [],
     relatedEvents = [],
   } = page;
@@ -38,6 +40,32 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
     const htmlElement = document.documentElement;
     htmlElement.style.overflow = '';
   }, []);
+
+  const maxDistanceInKilometers = 50;
+  const nearbyEvents = allEvents.edges
+    .map((e) => e.node)
+    .filter((e) => e.coordinates)
+    .filter(compareIfIsFuture)
+    .filter((event) => {
+      return (
+        haversine(
+          coordinates.latitude,
+          coordinates.longitude,
+          event.coordinates.latitude,
+          event.coordinates.longitude
+        ) <= maxDistanceInKilometers
+      );
+    })
+    .slice(0, 3)
+    .sort((a, b) => {
+      const dateA = new Date(a.rawDate);
+      const dateB = new Date(b.rawDate);
+
+      return dateA - dateB;
+    });
+
+  const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
+  const hasRelatedEvents = related || nearbyEvents.length > 0;
 
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
@@ -126,13 +154,13 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
         </FloatLayout>
 
         {/* Related events */}
-        {Array.isArray(relatedEvents) && relatedEvents.length > 0 && (
+        {hasRelatedEvents && (
           <div className="related-section">
             <ListHighlightEvent
               block={{
-                sectionTitle: 'Evenementen van deze groep',
+                sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
                 cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
-                items: relatedEvents,
+                items: related ? relatedEvents : nearbyEvents,
               }}
             />
           </div>
@@ -159,6 +187,40 @@ export const PageQuery = graphql`
       id
       slug
     }
+    allEvents: allDatoCmsEvent {
+      edges {
+        node {
+          id
+          slug
+          title
+          externalLink
+          introduction
+          date
+          rawDate: date
+          hourStart
+          hourEnd
+          onlineEvent
+          region
+          coordinates {
+            latitude
+            longitude
+          }
+          tags {
+            ... on DatoCmsTag {
+              id
+              title
+            }
+          }
+          image {
+            url
+            gatsbyImageData
+          }
+          model {
+            apiKey
+          }
+        }
+      }
+    }
     page: datoCmsGroup(id: { eq: $id }) {
       id
       title
@@ -178,6 +240,10 @@ export const PageQuery = graphql`
       image {
         gatsbyImageData
         url
+      }
+      coordinates {
+        latitude
+        longitude
       }
       content {
         value
