@@ -6,14 +6,14 @@
 
     h1 {
       color: var(--black);
-      font-family: var(--primary-font);
-      font-size: 49px;
+      font-family: var(--nb-primary-font);
+      font-size: 45px;
       font-style: normal;
-      font-weight: 600;
+      font-weight: 400;
       line-height: 110%;
       margin: 0;
       padding: 0;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     .pre-header {
@@ -27,7 +27,7 @@
     .brief-information {
       padding: 35px 30px;
       border-radius: 10px;
-      background: var(--secondary-bg-color);
+      background: var(--nb-bg-light);
       margin-bottom: 30px;
 
       display: flex;
@@ -42,18 +42,19 @@
         span {
           margin: 0;
           padding: 0;
-          color: var(--primary-color);
-          font-family: var(--secondary-font);
-          font-size: 20px;
+          color: var(--dark);
+          font-family: var(--nb-secondary-font);
+          font-size: 18px;
           font-style: normal;
-          font-weight: 700;
-          line-height: 150%;
+          font-weight: 500;
+          line-height: 140%;
           display: flex;
           align-items: center;
           gap: 10px;
 
           a {
-            color: var(--primary-color);
+            color: var(--dark);
+            text-decoration: underline;
           }
         }
       }
@@ -69,19 +70,21 @@
         align-items: center;
         gap: 10px;
 
-        color: var(--primary-color);
-        font-family: var(--primary-font);
-        font-size: 20px;
+        color: var(--dark);
+        font-family: var(--nb-secondary-font);
+        font-size: 18px;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 700;
         line-height: 120%;
+
+        border: 2px solid var(--dark);
 
         &:hover {
           color: var(--white);
-          background-color: var(--primary-color);
+          background-color: var(--dark);
 
           svg rect {
-            fill: var(--primary-color);
+            fill: var(--dark);
           }
 
           svg path {
@@ -97,34 +100,26 @@
     }
 
     .introduction {
-      color: var(--primary-color);
-      font-family: var(--secondary-font);
-      font-size: 25px;
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 20px;
       font-style: normal;
-      font-weight: 700;
-      line-height: 135%;
-      margin-bottom: 30px;
+      font-weight: 500;
+      line-height: 130%;
+      margin-bottom: 20px;
     }
 
     .alt-introduction {
       color: var(--dark);
-      font-family: var(--secondary-font);
-      font-size: 25px;
+      font-family: var(--nb-secondary-font);
+      font-size: 20px;
       font-style: normal;
       font-weight: 400;
       line-height: 130%;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .content {
-
-      ul,
-      ol {
-        list-style: initial;
-        padding-left: 2rem;
-        margin: 1rem 0;
-      }
-
       table {
         border: 0;
         width: 100%;
@@ -132,7 +127,7 @@
 
         * {
           color: var(--dark);
-          font-family: var(--secondary-font);
+          font-family: var(--nb-secondary-font);
           vertical-align: middle;
         }
 
@@ -140,7 +135,7 @@
           padding: 20px;
           background-color: #EEF5FF;
           color: var(--dark);
-          font-family: var(--secondary-font);
+          font-family: var(--nb-secondary-font);
           font-size: 16px !important;
           font-weight: 700 !important;
           line-height: 150% !important;
@@ -153,7 +148,7 @@
           td {
             padding: 20px;
             color: var(--dark);
-            font-family: var(--secondary-font);
+            font-family: var(--nb-secondary-font);
             font-size: 16px !important;
             font-style: normal;
             font-weight: 500 !important;
@@ -163,19 +158,35 @@
       }
 
       a {
-        color: var(--secondary-color);
-        font-family: var(--secondary-font);
+        color: var(--dark);
+        font-weight: 600;
+        line-height: 150%;
       }
 
-      * {
+      ul,
+      ol,
+      p,
+      span {
         color: var(--black);
-        font-family: var(--secondary-font);
-        font-size: 20px;
+        font-family: var(--nb-secondary-font);
+        font-size: 18px;
         font-style: normal;
         font-weight: 400;
-        line-height: 150%;
-        margin: 0;
-        padding: 0;
+        line-height: 140%;
+      }
+
+      ul,
+      ol {
+        padding-left: 2rem;
+        margin: 1rem 0;
+      }
+
+      ul {
+        list-style: disc;
+      }
+
+      ol {
+        list-style: decimal;
       }
 
       em {
@@ -189,9 +200,9 @@
       h5,
       h6 {
         color: var(--dark);
-        font-family: var(--primary-font);
+        font-family: var(--nb-primary-font);
         font-style: normal;
-        font-weight: 600;
+        font-weight: 400;
         line-height: 120%;
         margin: 1rem 0;
       }
@@ -223,8 +234,8 @@
         padding-left: 20px;
 
         * {
-          color: var(--primary-color);
-          font-family: var(--primary-font);
+          color: var(--dark);
+          font-family: var(--nb-primary-font);
           font-size: 31px;
           font-style: normal;
           font-weight: 600;
@@ -240,6 +251,55 @@
       .image-wrapper {
         margin: 1rem 0;
       }
+
+      // Additional blocks
+      .highlight-event-section {
+        padding-bottom: 50px;
+
+        .header {
+          margin-bottom: 20px;
+        }
+
+        .event-card {
+          padding: 20px;
+        }
+      }
+
+      .highlight-tools-section {
+        padding-bottom: 50px;
+
+        .header {
+          margin-bottom: 20px;
+        }
+
+        .tool-card {
+          .image-wrapper {
+            margin: 0;
+          }
+        }
+      }
+
+      .component-narrative-block {
+        padding: 45px 0;
+
+        h2 span {
+          color: var(--black);
+          font-family: var(--nb-primary-font);
+          font-size: 23px;
+          font-weight: 400;
+          line-height: 110%;
+          display: block;
+        }
+
+        .text-content * {
+          color: var(--dark);
+          font-family: var(--nb-secondary-font);
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 140%;
+        }
+      }
     }
 
     .back-btn {
@@ -249,10 +309,10 @@
         gap: 10px;
 
         color: var(--black);
-        font-family: var(--secondary-font);
+        font-family: var(--nb-secondary-font);
         font-size: 20px;
         font-style: normal;
-        font-weight: 700;
+        font-weight: 600;
         line-height: 130%;
         text-decoration: none;
       }
@@ -271,7 +331,6 @@
     .external-register {
       display: flex;
       align-items: center;
-      // justify-content: center;
       margin: 1rem 0;
     }
   }
@@ -360,8 +419,12 @@
         * {
           font-size: 15px;
           font-style: normal;
-          font-weight: 400;
+          // font-weight: 400;
           line-height: 145%;
+        }
+
+        p {
+          font-size: 15px;
         }
 
         blockquote {

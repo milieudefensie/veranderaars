@@ -8,25 +8,16 @@ import Map from '../components/Global/Map/Map';
 import FilterEvents from '../components/Global/FilterEvents/FilterEvents';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import Spinner from '../components/Global/Spinner/Spinner';
-import CtaHandler from '../components/Global/Cta/CtaHandler';
 import Blocks from '../components/Blocks';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 import useCSLEvents from '../hooks/useCSLEvents';
+import { mapCmsEvents } from '../utils';
 
-import './list-events.styles.scss';
+import './list-basic.styles.scss';
 
 const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) => {
+  const cmsEvents = mapCmsEvents(allEvents);
   const { title, seo, highlighEvent, blocks = [] } = page;
-  const cmsEvents = Array.isArray(allEvents.edges)
-    ? allEvents.edges.map((raw) => ({
-        ...raw.node,
-        coordinates: {
-          latitude: parseFloat(raw.node.coordinates?.latitude?.toFixed(6)),
-          longitude: parseFloat(raw.node.coordinates?.longitude?.toFixed(6)),
-        },
-        type: 'NATIONAL',
-      }))
-    : [];
 
   const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null, description: null });
   const [mobileShowMap, setMobileShowMap] = useState(false);
@@ -98,23 +89,12 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
     <Layout bgColor="secondary-bg" extraClassNames="list-pages">
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="light" responsiveVariant="secondary-bg">
+      <WrapperLayout variant="white" responsiveVariant="secondary-bg">
         <HeroBasic backgroundColor="light" responsiveVariant="event" />
 
         <div className="list-event-wrapper">
           <div className="container">
             {title && <h1>{title}</h1>}
-
-            {/* Mobile button */}
-            {!isLoading && (
-              <div className="mobile-view-map mb-4">
-                <CtaHandler
-                  title={'Map View'}
-                  isPrimaryButton
-                  handleOnClick={() => setMobileShowMap((prev) => !prev)}
-                />
-              </div>
-            )}
 
             {highlighEvent && (
               <div className="highlighted-event-wrapper">
@@ -229,8 +209,41 @@ export const PageQuery = graphql`
         }
       }
       blocks {
+        ... on DatoCmsNarrativeBlock {
+          ...BlockNarrativeBlock
+        }
+        ... on DatoCmsHighlightEvent {
+          ...BlockHighlightEvent
+        }
+        ... on DatoCmsHighlightTool {
+          ...BlockHighlightTools
+        }
         ... on DatoCmsTextHubspotForm {
           ...BlockTextHubspot
+        }
+        ... on DatoCmsTable {
+          ...BlockTable
+        }
+        ... on DatoCmsShare {
+          ...BlockShare
+        }
+        ... on DatoCmsImage {
+          ...BlockImage
+        }
+        ... on DatoCmsEmbedIframe {
+          ...BlockEmbedIframe
+        }
+        ... on DatoCmsAcordion {
+          ...BlockAccordion
+        }
+        ... on DatoCmsVideoBlock {
+          ...BlockVideo
+        }
+        ... on DatoCmsSimpleText {
+          ...BlockText
+        }
+        ... on DatoCmsBlockCta {
+          ...BlockCustomCta
         }
       }
       seo: seoMetaTags {

@@ -120,8 +120,8 @@ export const DatoCMS = graphql`
   }
 
   fragment BlockText on DatoCmsSimpleText {
-    id: originalId
     __typename
+    id: originalId
     text
   }
 
@@ -545,6 +545,73 @@ export const DatoCMS = graphql`
         formId
         region
         portalId
+      }
+    }
+  }
+
+  fragment BlockCustomCta on DatoCmsBlockCta {
+    __typename
+    id: originalId
+    title
+    isButton
+    alignment
+    link {
+      ... on DatoCmsGlobalLink {
+        id
+        label
+        externalUrl
+        content {
+          __typename
+          ... on DatoCmsListTool {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsBasicPage {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsEvent {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsListEvent {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsListGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsTool {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+        }
       }
     }
   }

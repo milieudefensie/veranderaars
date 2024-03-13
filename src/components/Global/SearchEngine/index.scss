@@ -15,7 +15,7 @@
 
   label {
     color: var(--white);
-    font-family: var(--secondary-font);
+    font-family: var(--nb-secondary-font);
     font-size: 61px;
     font-style: normal;
     font-weight: 600;
@@ -124,7 +124,7 @@
     &-item {
       &:hover {
         h6 {
-          color: var(--primary-color);
+          color: var(--dark);
         }
       }
 

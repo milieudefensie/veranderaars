@@ -1,5 +1,6 @@
 .component-narrative-block {
   padding-top: 80px;
+  padding-bottom: 115px;
 
   h2 {
     margin: 0;
@@ -8,10 +9,10 @@
 
     span {
       color: var(--black);
-      font-family: var(--primary-font);
-      font-size: 49px;
+      font-family: var(--nb-primary-font);
+      font-size: 23px;
       font-style: normal;
-      font-weight: 600;
+      font-weight: 400;
       line-height: 110%;
     }
   }
@@ -28,12 +29,12 @@
     }
 
     * {
-      color: var(--third-color);
-      font-family: var(--secondary-font);
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
       font-size: 20px;
       font-style: normal;
       font-weight: 400;
-      line-height: 150%;
+      line-height: 140%;
     }
   }
 
@@ -45,13 +46,14 @@
 @media screen and (max-width:992px) {
   .component-narrative-block {
     padding-top: 60px;
-    margin-bottom: 57px;
+    padding-bottom: 70px;
 
     h2 {
+      margin-top: 15px;
       margin-bottom: 15px;
 
       span {
-        font-size: 37px;
+        font-size: 30px;
         line-height: 115%;
       }
     }
@@ -60,7 +62,7 @@
       margin-bottom: 15px;
 
       * {
-        font-size: 19px;
+        font-size: 18px;
         line-height: 130%;
       }
     }
@@ -71,6 +73,10 @@
 
     .main-content {
       order: 2;
+    }
+
+    .video-player {
+      margin: 0;
     }
   }
 }

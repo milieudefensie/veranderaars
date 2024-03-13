@@ -6,11 +6,10 @@ import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import Map from '../components/Global/Map/Map';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import ListGroupBlock from '../components/Blocks/HighlightGroup/ListGroups';
-import CtaHandler from '../components/Global/Cta/CtaHandler';
 import Blocks from '../components/Blocks';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 
-import './list-events.styles.scss';
+import './list-basic.styles.scss';
 
 const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) => {
   const { seo, title, blocks = [] } = page;
@@ -32,7 +31,7 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
         ctaView.classList.add('hide');
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll);
 
     handleScroll();
@@ -65,17 +64,12 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
     <Layout extraClassNames="list-pages">
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="light">
+      <WrapperLayout variant="white">
         <HeroBasic backgroundColor="light" responsiveVariant="event" />
 
         <div className="list-event-wrapper">
           <div className="container">
             <h1>{title}</h1>
-
-            {/* Mobile button */}
-            <div className="mobile-view-map mb-4">
-              <CtaHandler title={'Map View'} isPrimaryButton handleOnClick={() => setMobileShowMap((prev) => !prev)} />
-            </div>
 
             {/* Map */}
             <Map
@@ -143,8 +137,41 @@ export const PageQuery = graphql`
       title
       slug
       blocks {
+        ... on DatoCmsNarrativeBlock {
+          ...BlockNarrativeBlock
+        }
+        ... on DatoCmsHighlightEvent {
+          ...BlockHighlightEvent
+        }
+        ... on DatoCmsHighlightTool {
+          ...BlockHighlightTools
+        }
         ... on DatoCmsTextHubspotForm {
           ...BlockTextHubspot
+        }
+        ... on DatoCmsTable {
+          ...BlockTable
+        }
+        ... on DatoCmsShare {
+          ...BlockShare
+        }
+        ... on DatoCmsImage {
+          ...BlockImage
+        }
+        ... on DatoCmsEmbedIframe {
+          ...BlockEmbedIframe
+        }
+        ... on DatoCmsAcordion {
+          ...BlockAccordion
+        }
+        ... on DatoCmsVideoBlock {
+          ...BlockVideo
+        }
+        ... on DatoCmsSimpleText {
+          ...BlockText
+        }
+        ... on DatoCmsBlockCta {
+          ...BlockCustomCta
         }
       }
       seo: seoMetaTags {

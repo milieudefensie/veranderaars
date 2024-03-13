@@ -1,14 +1,9 @@
 .footer-container {
   padding: 52px 0;
-  background-color: var(--secondary-bg-color);
+  background-color: var(--nb-bg-light);
 
   a {
-    color: var(--white);
     text-decoration: none;
-
-    &:hover {
-      color: var(--secondary-color);
-    }
   }
 
   .first-row {
@@ -19,6 +14,7 @@
 
     .wp-btn {
       border-radius: 5px;
+      border: 2px solid var(--dark);
       background: var(--white);
       padding: 10px;
       display: flex;
@@ -31,7 +27,7 @@
         max-width: 230px;
         color: var(--dark);
         text-align: right;
-        font-family: var(--primary-font);
+        font-family: var(--nb-secondary-font);
         font-size: 20px;
         font-style: normal;
         font-weight: 600;
@@ -43,7 +39,7 @@
       }
 
       &:hover {
-        background: var(--primary-color);
+        background: var(--dark);
 
         span {
           color: var(--white);
@@ -51,7 +47,7 @@
 
         svg {
           rect {
-            fill: var(--primary-color);
+            fill: var(--dark);
           }
 
           path {
@@ -64,8 +60,8 @@
 
   .columns-links {
     h2 {
-      color: var(--third-color);
-      font-family: var(--secondary-font);
+      color: var(--nb-grey);
+      font-family: var(-nb-secondary-font);
       font-size: 16px;
       font-style: normal;
       font-weight: 700;
@@ -76,15 +72,15 @@
     }
 
     .content {
-      color: var(--third-color);
-      font-family: var(--secondary-font);
+      color: var(--nb-grey);
+      font-family: var(--nb-secondary-font);
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
       line-height: 140%;
 
       a {
-        color: var(--secondary-color);
+        color: var(--dark);
 
         &:hover {
           text-decoration: underline;
@@ -105,8 +101,9 @@
     margin-top: 41px;
 
     a {
-      color: var(--secondary-color);
-      font-family: var(--secondary-font);
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      text-decoration: underline;
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
@@ -114,15 +111,15 @@
 
       &:hover {
         text-decoration: underline;
-        color: var(--secondary-color);
+        // color: var(--secondary-color);
       }
     }
   }
 
   .extra-text {
     span {
-      color: var(--third-color);
-      font-family: var(--secondary-font);
+      color: var(--nb-grey);
+      font-family: var(--nb-secondary-font);
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
@@ -193,7 +190,7 @@
 
     .extra-text span {
       font-size: 15px;
-      line-height: 130%;
+      line-height: 120%;
     }
   }
 }

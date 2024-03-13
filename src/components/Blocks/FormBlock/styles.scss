@@ -1,7 +1,7 @@
 .form-block-wrapper {
   .form-block {
     padding: 33px 60px 100px 60px;
-    background: var(--primary-color);
+    background: var(--nb-primary-color-light);
     position: relative;
     overflow: hidden;
     border-radius: 10px;
@@ -9,16 +9,17 @@
     min-height: 304px;
 
     h2 {
-      color: var(--white);
-      font-family: var(--primary-font);
-      font-size: 39px;
+      color: var(--dark);
+      font-family: var(--nb-primary-font);
+      font-size: 49px;
       font-style: normal;
-      font-weight: 600;
+      font-weight: 400;
       line-height: 110%;
       margin: 0;
       padding: 0;
       position: relative;
       z-index: 1;
+      margin-bottom: 36px;
     }
 
     .description {
@@ -31,9 +32,7 @@
     }
 
     .left-img {
-      position: absolute;
-      left: 0%;
-      bottom: 0;
+      margin-left: 1.3rem;
     }
 
     .form-container-content {
@@ -41,8 +40,13 @@
       z-index: 1;
     }
 
+    form .hs-form-field label {
+      color: var(--nb-grey);
+    }
+
     form .hs-form-field .input input {
-      color: var(--white);
+      background-color: var(--white);
+      border: 1px solid var(--dark);
 
       &:focus,
       &:active {
@@ -55,18 +59,36 @@
     }
 
     form .hs-form-field .hs-error-msgs.inputs-list label.hs-error-msg {
-      color: var(--white) !important;
+      color: var(--dark) !important;
     }
 
     form .focused {
-      background-color: var(--primary-color);
+      background-color: var(--nb-primary-color-light);
+    }
+
+    form .hs-submit .actions .hs-button {
+      color: var(--white);
+      background-color: var(--dark);
+
+      &:hover {
+        color: var(--dark);
+        background-color: var(--nb-primary-color-light);
+      }
+    }
+
+    form .legal-consent-container .hs-richtext p {
+      color: var(--dark);
+    }
+
+    form .hs-form-booleancheckbox label * {
+      color: var(--dark) !important;
     }
   }
 }
 
 @media screen and (max-width: 992px) {
   .form-block-wrapper {
-    background: var(--primary-color);
+    background: var(--nb-primary-color-light);
 
     .form-block {
       padding: 26px 0 100px 0;

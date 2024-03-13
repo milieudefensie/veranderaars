@@ -27,7 +27,7 @@ const FloatCta = ({ title, id, isArrowVisible, isScrollingUp }) => {
         >
           <path
             d="M15.5 7.5L10.5 12.5L5.5 7.5"
-            stroke="white"
+            stroke="#000"
             strokeWidth="3"
             strokeLinecap="square"
             strokeLinejoin="round"

@@ -55,11 +55,26 @@ export const formatDate = (rawDate) => {
     return 'Invalid date';
   }
 
-  const date = new Date(rawDate);
-  const options = { year: 'numeric', month: 'short', day: '2-digit', timeZone: 'Europe/Amsterdam' };
-  const newDateString = date.toLocaleDateString('nl-NL', options);
+  const date = DateTime.fromJSDate(new Date(rawDate)).setZone('Europe/Amsterdam');
+  const today = DateTime.now().setZone('Europe/Amsterdam');
+  const tomorrow = today.plus({ days: 1 });
 
-  return newDateString;
+  if (date.hasSame(today, 'day')) {
+    return 'Vandaag';
+  } else if (date.hasSame(tomorrow, 'day')) {
+    return 'Morgen';
+  } else {
+    if (date.year === today.year) {
+      return date.toLocaleString({ month: 'short', day: '2-digit', timeZone: 'Europe/Amsterdam' }).replace('-', ' ');
+    }
+
+    return date.toLocaleString({
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      timeZone: 'Europe/Amsterdam',
+    });
+  }
 };
 
 export const compareIfIsFuture = (event) => {
@@ -159,3 +174,48 @@ function formatTime(date) {
   const minutes = date.getMinutes().toString().padStart(2, '0');
   return `${hours}:${minutes}`;
 }
+
+export const homepageFormIssues = () => {
+  const heroWrapper = document.querySelector('#hero-homepage');
+  if (!heroWrapper) return;
+
+  const child = heroWrapper.querySelector('.content');
+  const childHeight = child.clientHeight;
+  const hasErrors = child.querySelectorAll('.hs-error-msgs li').length > 0;
+
+  const nextElement = document.querySelector('#hero-homepage + div, #hero-homepage + section');
+
+  if (nextElement) {
+    if (hasErrors) {
+      // nextElement.style.paddingTop = `${childHeight - 220}px`;
+      // return;
+    }
+
+    nextElement.style.paddingTop = `${childHeight - 150}px`;
+  }
+};
+
+export const haversine = (lat1, lon1, lat2, lon2) => {
+  const R = 6371; // Radio de la Tierra en kilómetros
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distancia = R * c;
+  return distancia;
+};
+
+export const mapCmsEvents = (allEvents) => {
+  return Array.isArray(allEvents.edges)
+    ? allEvents.edges.map((raw) => ({
+        ...raw.node,
+        coordinates: {
+          latitude: parseFloat(raw.node.coordinates?.latitude?.toFixed(6)),
+          longitude: parseFloat(raw.node.coordinates?.longitude?.toFixed(6)),
+        },
+        type: 'NATIONAL',
+      }))
+    : [];
+};

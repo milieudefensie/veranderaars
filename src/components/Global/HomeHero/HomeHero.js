@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
+import { homepageFormIssues } from '../../../utils';
 
 import './index.scss';
 
@@ -15,8 +16,22 @@ function HomeHero({ title, subtitle, image, form = null, mobileImage = null }) {
     }
   `;
 
+  useEffect(() => {
+    setTimeout(() => {
+      homepageFormIssues();
+    }, 500);
+
+    window.addEventListener('scroll', homepageFormIssues);
+    window.addEventListener('resize', homepageFormIssues);
+
+    return () => {
+      window.removeEventListener('scroll', homepageFormIssues);
+      window.removeEventListener('resize', homepageFormIssues);
+    };
+  }, []);
+
   return (
-    <div className="wrapper-hero">
+    <div id="hero-homepage" className="wrapper-hero">
       <style scoped>{css}</style>
 
       <div className="hero-home" style={{ backgroundImage: `url(${bgImageUrl})` }}>

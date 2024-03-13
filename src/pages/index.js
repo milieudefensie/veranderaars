@@ -68,6 +68,30 @@ export const HomeQuery = graphql`
         ... on DatoCmsTextHubspotForm {
           ...BlockTextHubspot
         }
+        ... on DatoCmsTable {
+          ...BlockTable
+        }
+        ... on DatoCmsShare {
+          ...BlockShare
+        }
+        ... on DatoCmsImage {
+          ...BlockImage
+        }
+        ... on DatoCmsEmbedIframe {
+          ...BlockEmbedIframe
+        }
+        ... on DatoCmsAcordion {
+          ...BlockAccordion
+        }
+        ... on DatoCmsVideoBlock {
+          ...BlockVideo
+        }
+        ... on DatoCmsSimpleText {
+          ...BlockText
+        }
+        ... on DatoCmsBlockCta {
+          ...BlockCustomCta
+        }
       }
     }
   }

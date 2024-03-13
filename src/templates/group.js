@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
@@ -16,10 +16,13 @@ import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
+import { haversine, mapCmsEvents } from '../utils';
+import useCSLEvents from '../hooks/useCSLEvents';
+import Spinner from '../components/Global/Spinner/Spinner';
 
-import './event.styles.scss';
+import './basic.styles.scss';
 
-const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) => {
+const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent, favicon } }) => {
   const {
     seo,
     title,
@@ -30,9 +33,39 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
     email,
     whatsappGroup,
     organizer,
+    coordinates,
     tags = [],
     relatedEvents = [],
   } = page;
+
+  useEffect(() => {
+    const htmlElement = document.documentElement;
+    htmlElement.style.overflow = '';
+  }, []);
+
+  const cmsEvents = mapCmsEvents(allEvents);
+  const { mergedEvents, status } = useCSLEvents(cmsEvents);
+  const isLoading = status === 'loading';
+
+  const groupHasCoordinates = coordinates && coordinates.latitude && coordinates.longitude;
+  const maxDistanceInKilometers = 50;
+  const nearbyEvents = groupHasCoordinates
+    ? mergedEvents
+        .filter((event) => {
+          return (
+            haversine(
+              coordinates.latitude,
+              coordinates.longitude,
+              event.coordinates.latitude,
+              event.coordinates.longitude
+            ) <= maxDistanceInKilometers
+          );
+        })
+        .slice(0, 3)
+    : [];
+
+  const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
+  const hasRelatedEvents = related || nearbyEvents.length > 0;
 
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
@@ -40,7 +73,6 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
 
       <WrapperLayout variant="white">
         <HeroBasic image={image} overlay={false} />
-
         <FloatLayout reduceOverlap>
           {listGroup && (
             <div className="pre-header">
@@ -121,16 +153,22 @@ const Group = ({ pageContext, data: { page, listGroup, listEvent, favicon } }) =
         </FloatLayout>
 
         {/* Related events */}
-        {Array.isArray(relatedEvents) && (
-          <div className="related-section">
-            <ListHighlightEvent
-              block={{
-                sectionTitle: 'Evenementen van deze groep',
-                cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
-                items: relatedEvents,
-              }}
-            />
+        {isLoading ? (
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <Spinner />
           </div>
+        ) : (
+          hasRelatedEvents && (
+            <div className="related-section">
+              <ListHighlightEvent
+                block={{
+                  sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
+                  cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
+                  items: related ? relatedEvents : nearbyEvents,
+                }}
+              />
+            </div>
+          )
         )}
       </WrapperLayout>
     </Layout>
@@ -154,6 +192,40 @@ export const PageQuery = graphql`
       id
       slug
     }
+    allEvents: allDatoCmsEvent {
+      edges {
+        node {
+          id
+          slug
+          title
+          externalLink
+          introduction
+          date
+          rawDate: date
+          hourStart
+          hourEnd
+          onlineEvent
+          region
+          coordinates {
+            latitude
+            longitude
+          }
+          tags {
+            ... on DatoCmsTag {
+              id
+              title
+            }
+          }
+          image {
+            url
+            gatsbyImageData
+          }
+          model {
+            apiKey
+          }
+        }
+      }
+    }
     page: datoCmsGroup(id: { eq: $id }) {
       id
       title
@@ -174,10 +246,455 @@ export const PageQuery = graphql`
         gatsbyImageData
         url
       }
+      coordinates {
+        latitude
+        longitude
+      }
       content {
         value
         blocks {
           __typename
+          ... on DatoCmsNarrativeBlock {
+            id: originalId
+            preTitle
+            title
+            alignment
+            textContent
+            backgroundColor
+            image {
+              gatsbyImageData(width: 800)
+              alt
+              url
+            }
+            xlImage: image {
+              gatsbyImageData(width: 1200)
+              alt
+              url
+            }
+            imageMobile {
+              gatsbyImageData(width: 500)
+              alt
+              url
+            }
+            video {
+              id
+              source {
+                url
+                thumbnailUrl
+              }
+              preview {
+                gatsbyImageData
+                url
+              }
+            }
+            ctas {
+              ... on DatoCmsCta {
+                id
+                title
+                isButton
+                link {
+                  ... on DatoCmsGlobalLink {
+                    id
+                    content {
+                      ... on DatoCmsListTool {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsBasicPage {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsEvent {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsListEvent {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsListGroup {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsTool {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsGroup {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          ... on DatoCmsHighlightEvent {
+            id: originalId
+            sectionTitle
+            cta {
+              ... on DatoCmsCta {
+                id
+                title
+                isButton
+                link {
+                  ... on DatoCmsGlobalLink {
+                    id
+                    content {
+                      ... on DatoCmsListTool {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsBasicPage {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsEvent {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsListEvent {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsListGroup {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsTool {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsGroup {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            items {
+              ... on DatoCmsEvent {
+                id
+                title
+                slug
+                externalLink
+                introduction
+                date
+                hourStart
+                hourEnd
+                onlineEvent
+                tags {
+                  ... on DatoCmsTag {
+                    id
+                    title
+                  }
+                }
+                image {
+                  gatsbyImageData(width: 900, height: 505)
+                }
+                model {
+                  apiKey
+                }
+              }
+            }
+          }
+          ... on DatoCmsHighlightTool {
+            id: originalId
+            sectionTitle
+            items {
+              ... on DatoCmsToolItem {
+                id
+                title
+                introduction
+                image {
+                  gatsbyImageData(width: 900, height: 505)
+                }
+                icon {
+                  url
+                }
+                iconFontPicker
+                backgroundColor
+                cta {
+                  ... on DatoCmsCta {
+                    id
+                    title
+                    isButton
+                    link {
+                      ... on DatoCmsGlobalLink {
+                        id
+                        content {
+                          ... on DatoCmsListTool {
+                            id
+                            slug
+                            model {
+                              apiKey
+                            }
+                          }
+                          ... on DatoCmsBasicPage {
+                            id
+                            slug
+                            model {
+                              apiKey
+                            }
+                          }
+                          ... on DatoCmsEvent {
+                            id
+                            slug
+                            model {
+                              apiKey
+                            }
+                          }
+                          ... on DatoCmsListEvent {
+                            id
+                            slug
+                            model {
+                              apiKey
+                            }
+                          }
+                          ... on DatoCmsListGroup {
+                            id
+                            slug
+                            model {
+                              apiKey
+                            }
+                          }
+                          ... on DatoCmsTool {
+                            id
+                            slug
+                            model {
+                              apiKey
+                            }
+                          }
+                          ... on DatoCmsGroup {
+                            id
+                            slug
+                            model {
+                              apiKey
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          ... on DatoCmsTextHubspotForm {
+            id: originalId
+            title
+            description
+            hubspot {
+              ... on DatoCmsHubspot {
+                formId
+                region
+                portalId
+              }
+            }
+          }
+          ... on DatoCmsTable {
+            id: originalId
+            table
+          }
+          ... on DatoCmsShare {
+            id: originalId
+            title
+            whatsappGroup
+            socialLinks {
+              ... on DatoCmsSocialLink {
+                id
+                title
+                url
+                socialNetwork
+              }
+            }
+            ctas {
+              ... on DatoCmsCta {
+                id
+                title
+                isButton
+                link {
+                  ... on DatoCmsGlobalLink {
+                    id
+                    label
+                    externalUrl
+                    content {
+                      ... on DatoCmsListTool {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsBasicPage {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsEvent {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsListEvent {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsListGroup {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsTool {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                      ... on DatoCmsGroup {
+                        id
+                        slug
+                        model {
+                          apiKey
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          ... on DatoCmsEmbedIframe {
+            id: originalId
+            iframeCode
+          }
+          ... on DatoCmsVideoBlock {
+            id: originalId
+            video {
+              url
+              thumbnailUrl
+            }
+          }
+          ... on DatoCmsBlockCta {
+            id: originalId
+            title
+            isButton
+            alignment
+            link {
+              ... on DatoCmsGlobalLink {
+                id
+                label
+                externalUrl
+                content {
+                  __typename
+                  ... on DatoCmsListTool {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsBasicPage {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsEvent {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsListEvent {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsListGroup {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsTool {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                  ... on DatoCmsGroup {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
+                }
+              }
+            }
+          }
           ... on DatoCmsImage {
             id: originalId
             image {

@@ -15,7 +15,7 @@ import { convertTime, formatDate } from '../../utils';
 import Spinner from '../../components/Global/Spinner/Spinner';
 import Cta from '../../components/Global/Cta/Cta';
 
-import '../../templates/event.styles.scss';
+import '../../templates/basic.styles.scss';
 
 const CSLEventPage = ({ data: { listEvent, favicon }, params }) => {
   const slug = params.slug;

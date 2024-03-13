@@ -24,9 +24,9 @@
       position: absolute;
       top: 5px;
       right: 30px;
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--white);
+      font-size: 2rem !important;
+      font-weight: 800 !important;
+      color: var(--white) !important;
     }
   }
 

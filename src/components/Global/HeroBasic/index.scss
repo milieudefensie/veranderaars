@@ -1,16 +1,16 @@
 .hero-basic {
   height: calc(150px + 20vw);
-  background-color: var(--primary-color);
+  background-color: var(--nb-primary-color-light);
   display: flex;
   flex-direction: column;
   align-items: end;
   justify-content: end;
   padding-bottom: 65px;
-  border-radius: 0 0 60% 60%/20px;
+  // border-radius: 0 0 60% 60%/20px;
 
   h1 {
     color: var(--white);
-    font-family: var(--primary-font);
+    font-family: var(--nb-primary-font);
     font-size: 61px;
     font-style: normal;
     font-weight: 600;
@@ -38,10 +38,10 @@
   }
 
   &.light {
-    background-color: #E5E3DA;
+    background-color: var(--nb-bg-light);
 
     h1 {
-      color: var(--primary-color);
+      color: var(--dark);
     }
   }
 
