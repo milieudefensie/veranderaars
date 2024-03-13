@@ -38,7 +38,7 @@ const TextInput = ({ label, name, required = false, onChange }) => {
             type="text"
             className="hs-input"
             inputMode="text"
-            autocomplete="off"
+            autoComplete="off"
             value={text}
             onFocus={() => setFocused((prev) => !prev)}
             onChange={(e) => {

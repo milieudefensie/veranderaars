@@ -25,7 +25,7 @@ const GroupMarker = () => {
           fill="#FFA300"
           stroke="black"
         />
-        <g clip-path="url(#clip0_241_4724)">
+        <g clipPath="url(#clip0_241_4724)">
           <path d="M15.2171 12.9783H11V23.2186H15.2171V12.9783Z" fill="black" />
           <path d="M20.5067 12.975H16.2896V23.2154H20.5067V12.975Z" fill="black" />
           <path d="M25.7772 12.975H21.5601V23.2154H25.7772V12.975Z" fill="black" />
