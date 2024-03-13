@@ -57,7 +57,9 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
         (e) =>
           filterValues.typeOfEvent === null ||
           filterValues.typeOfEvent === 'All' ||
-          (Array.isArray(e.labels) && e.labels.includes(`tag-${filterValues.typeOfEvent}`))
+          (Array.isArray(e.labels)
+            ? e.labels.includes(`tag-${filterValues.typeOfEvent}`)
+            : e.tags.map((t) => t.title.toLowerCase()).includes(`${filterValues.typeOfEvent.toLowerCase()}`))
       )
       .filter((e) => filterValues.description === null || e.introduction.includes(filterValues.description));
 
