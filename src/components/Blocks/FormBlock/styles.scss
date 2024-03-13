@@ -111,6 +111,10 @@
       }
     }
   }
+
+  .form-hubspot form .legal-consent-container .inputs-list .hs-form-booleancheckbox label span * {
+    font-size: 13px;
+  }
 }
 
 @media screen and (max-width: 395px) {
@@ -135,7 +139,7 @@
       padding-bottom: 150px;
 
       .form-hubspot form .legal-consent-container .hs-richtext {
-        top: 8.5rem;
+        top: 7rem;
       }
     }
   }
