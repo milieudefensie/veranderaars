@@ -32,6 +32,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
       ];
 
       mapRef.current?.fitBounds(boundingBox);
+      setViewport((prev) => ({ ...prev, zoom: 5.3 }));
     }
   };
 
