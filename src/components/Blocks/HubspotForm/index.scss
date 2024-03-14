@@ -218,6 +218,7 @@
 
     .hs-fieldtype-radio {
       position: initial;
+      grid-column: span 2;
 
       .inputs-list {
         list-style: none;
@@ -232,6 +233,29 @@
 
           .hs-input {
             width: auto;
+          }
+        }
+      }
+    }
+
+    .hs-fieldtype-booleancheckbox {
+      position: initial;
+      grid-column: span 2;
+
+      .inputs-list {
+        list-style: none;
+        padding: 0;
+
+        .hs-form-booleancheckbox {
+          .hs-form-booleancheckbox-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 !important;
+
+            input {
+              width: auto;
+            }
           }
         }
       }
