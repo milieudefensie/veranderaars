@@ -18,12 +18,13 @@ function Layout({ children, bgColor = null, extraClassNames = null, heroBgColor 
       window.TallyConfig = {
         "formId": "mZaLJA",
         "popup": {
-          "width": 300,
-          "hideTitle": true,
+          "width": 250,
           "open": {
             "trigger": "scroll",
-            "scrollPercent": 50
-          }
+            "scrollPercent": 80
+          },
+          "hideTitle": true,
+          "showOnce": true
         }
       };
     `;
