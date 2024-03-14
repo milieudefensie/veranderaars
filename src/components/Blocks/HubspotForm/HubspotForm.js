@@ -28,6 +28,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
             },
             onFormReady: (ctx) => {
               const { id } = ctx;
+              return;
 
               // Handlers
               const inputs = document.querySelectorAll(`#${id} .hs-input`);
