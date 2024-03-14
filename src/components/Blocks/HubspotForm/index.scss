@@ -216,6 +216,27 @@
       }
     }
 
+    .hs-fieldtype-radio {
+      position: initial;
+
+      .inputs-list {
+        list-style: none;
+        padding: 0;
+
+        .hs-form-radio-display {
+          position: initial;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 10px;
+
+          .hs-input {
+            width: auto;
+          }
+        }
+      }
+    }
+
     // Material UI effect
     .hs-form-field label {
       position: absolute;
