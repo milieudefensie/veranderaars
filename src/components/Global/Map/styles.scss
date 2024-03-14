@@ -1,5 +1,9 @@
 .map-wrapper {
   position: relative;
+  min-height: 750px;
+  background-color: var(--nb-bg-light);
+  border-radius: 20px;
+  margin-bottom: 36px;
 
   h3 {
     color: var(--dark);
@@ -27,7 +31,6 @@
       // height: 80dvh !important;
       height: 750px !important;
       border-radius: 20px;
-      margin-bottom: 36px;
 
       .mapboxgl-popup {
         z-index: 10;
@@ -81,6 +84,7 @@
 
 @media screen and (max-width: 992px) {
   .map-wrapper {
+    min-height: auto;
 
     h3 {
       display: none;
