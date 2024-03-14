@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import EventCard from '../../Blocks/HighlightEvent/EventCard';
 import Dropdown from '../Inputs/Dropdown/Dropdown';
 import TextInput from '../Inputs/TextInput/TextInput';
@@ -8,6 +8,8 @@ import { MapCountry } from '../../../utils';
 import './styles.scss';
 
 const FilterEvents = ({ events = [], locations, handleOnApplyNewFilters }) => {
+  const [filterApplied, setFilterApplied] = useState(false);
+
   const locationsValues = [
     { label: 'All', value: 'All' },
     { label: 'Online', value: 'online' },
@@ -34,17 +36,26 @@ const FilterEvents = ({ events = [], locations, handleOnApplyNewFilters }) => {
         <TextInput
           label="Description"
           name="description"
-          onChange={(value) => handleOnApplyNewFilters({ description: value })}
+          onChange={(value) => {
+            handleOnApplyNewFilters({ description: value });
+            setFilterApplied((prev) => !prev);
+          }}
         />
         <Dropdown
           title="Locaties"
           options={locationsValues}
-          onSelect={(value) => handleOnApplyNewFilters({ location: value })}
+          onSelect={(value) => {
+            handleOnApplyNewFilters({ location: value });
+            setFilterApplied((prev) => !prev);
+          }}
         />
         <Dropdown
           title="Soort evenement"
           options={eventsType}
-          onSelect={(value) => handleOnApplyNewFilters({ typeOfEvent: value })}
+          onSelect={(value) => {
+            handleOnApplyNewFilters({ typeOfEvent: value });
+            setFilterApplied((prev) => !prev);
+          }}
         />
       </div>
 
@@ -53,6 +64,7 @@ const FilterEvents = ({ events = [], locations, handleOnApplyNewFilters }) => {
           <ListPaginated
             list={events}
             customPageSize={10}
+            resetPage={filterApplied}
             renderItem={(item) => <EventCard event={item} key={item.id} />}
             extraLogic={() => {
               const targetElement = document.getElementById('filter-events-list');

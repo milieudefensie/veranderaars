@@ -6,6 +6,10 @@
     align-items: stretch;
     gap: 24px;
     margin-bottom: 48px;
+
+    .custom-input-wrapper .hs-form-field.focused label {
+      background-color: var(--white);
+    }
   }
 
   h5 {

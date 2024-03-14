@@ -61,7 +61,12 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
             ? e.labels.includes(`tag-${filterValues.typeOfEvent}`)
             : e.tags.map((t) => t.title.toLowerCase()).includes(`${filterValues.typeOfEvent.toLowerCase()}`))
       )
-      .filter((e) => filterValues.description === null || e.introduction.includes(filterValues.description));
+      .filter(
+        (e) =>
+          filterValues.description === null ||
+          e.title.toLowerCase().includes(filterValues.description.toLowerCase()) ||
+          e.introduction.toLowerCase().includes(filterValues.description.toLowerCase())
+      );
 
     setFilteredEvents(filteredEvents);
   }, [filterValues, mergedEvents]);
