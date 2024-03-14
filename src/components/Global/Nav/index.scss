@@ -336,14 +336,15 @@
     }
 
     .actions {
-      top: -.85rem;
+      top: -.3rem;
 
       .navbar-toggler svg {
-        width: 35px;
+        width: 44px;
+        height: 44px;
       }
 
       .wp-button svg {
-        width: 50px;
+        width: 70px;
       }
     }
   }
@@ -353,11 +354,17 @@
       top: -.85rem;
 
       .navbar-toggler svg {
-        width: 35px;
+        width: 44px;
+        height: 44px;
       }
 
       .wp-button svg {
-        width: 50px;
+        width: 70px !important;
+      }
+
+      .close {
+        width: 44px !important;
+        height: 44px !important;
       }
     }
   }
