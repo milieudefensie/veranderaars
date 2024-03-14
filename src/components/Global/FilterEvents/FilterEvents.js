@@ -4,6 +4,7 @@ import Dropdown from '../Inputs/Dropdown/Dropdown';
 import TextInput from '../Inputs/TextInput/TextInput';
 import ListPaginated from '../Pagination/ListPaginated';
 import { MapCountry } from '../../../utils';
+import searchIcon from '../../Icons/search-icon.svg';
 
 import './styles.scss';
 
@@ -11,7 +12,7 @@ const FilterEvents = ({ events = [], locations, handleOnApplyNewFilters }) => {
   const [filterApplied, setFilterApplied] = useState(false);
 
   const locationsValues = [
-    { label: 'All', value: 'All' },
+    { label: 'Alles', value: 'All' },
     { label: 'Online', value: 'online' },
     ...locations
       .filter((l) => l)
@@ -22,7 +23,7 @@ const FilterEvents = ({ events = [], locations, handleOnApplyNewFilters }) => {
   ];
 
   const eventsType = [
-    { label: 'All', value: 'All' },
+    { label: 'Alles', value: 'All' },
     { label: 'Training', value: 'training' },
     { label: 'Actie', value: 'actie' },
     { label: 'Leden', value: 'leden' },
@@ -34,8 +35,9 @@ const FilterEvents = ({ events = [], locations, handleOnApplyNewFilters }) => {
     <div className="filter-events-wrapper" id="filter-events-list">
       <div className="filters">
         <TextInput
-          label="Description"
+          label="Zoeken"
           name="description"
+          icon={searchIcon}
           onChange={(value) => {
             handleOnApplyNewFilters({ description: value });
             setFilterApplied((prev) => !prev);

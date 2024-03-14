@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './styles.scss';
 
-const TextInput = ({ label, name, required = false, onChange }) => {
+const TextInput = ({ label, name, required = false, onChange, icon = null }) => {
   const inputRef = useRef(null);
 
   const [focus, setFocused] = useState(false);
@@ -29,6 +29,8 @@ const TextInput = ({ label, name, required = false, onChange }) => {
         <label>
           <span>{label}</span>
           {required && <span className="hs-form-required">*</span>}
+
+          {icon ? <img src={icon} alt="Input icon" className="icon" /> : null}
         </label>
 
         <div className="input">
