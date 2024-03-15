@@ -138,7 +138,7 @@ function Footer({ isLanding = false, customLogo = null }) {
             ))}
 
           <div className="col extra-data">
-            <Cta url="https://milieudefensie.nl/" externalTitle="milieudefensie.nl" customVariant="green" />
+            <Cta url="https://milieudefensie.nl/" externalTitle="milieudefensie.nl" customVariant="outlined" />
 
             {/* Extra links */}
             <div className="extra-links">
