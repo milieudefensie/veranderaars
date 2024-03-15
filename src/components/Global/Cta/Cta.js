@@ -15,8 +15,6 @@ export default function Cta({
   const isGreenStyle = cta?.style === 'secondary';
   const isOutlinedStyle = cta?.style === 'outlined';
 
-  console.log({ isPrimaryStyle, isGreenStyle, isOutlinedStyle });
-
   if (off) {
     return (
       <span

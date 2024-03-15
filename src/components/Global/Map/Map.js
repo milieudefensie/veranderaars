@@ -21,9 +21,11 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
   });
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [error, setError] = useState(false);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
 
   const resizeMapOnMobile = () => {
     const isMobile = window.innerWidth <= 992;
+    setIsMobileDevice(isMobile);
 
     if (isMobile) {
       const boundingBox = [
@@ -31,8 +33,9 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
         [7.09205325687, 53.5104033474],
       ];
 
-      mapRef.current?.fitBounds(boundingBox);
-      setViewport((prev) => ({ ...prev, zoom: 5.3 }));
+      // mapRef.current?.fitBounds(boundingBox);
+      setViewport((prev) => ({ ...prev, zoom: 4.5, latitude: 51 }));
+      mapRef.current?.resize();
     }
   };
 
@@ -88,7 +91,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
     points: pins,
     bounds,
     zoom: viewport?.zoom,
-    options: { radius: 75, maxZoom: 20 },
+    options: { radius: isMobileDevice ? 50 : 75, maxZoom: 20 }, // radius 75
   });
 
   return (
