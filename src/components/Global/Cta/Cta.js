@@ -11,14 +11,20 @@ export default function Cta({
   customVariant = null,
   off = false,
 }) {
-  const isCtaPrimaryButton = cta?.isButton || isButton;
+  const isPrimaryStyle = cta?.style === 'primary' || isButton;
+  const isGreenStyle = cta?.style === 'secondary';
+  const isOutlinedStyle = cta?.style === 'outlined';
+
+  console.log({ isPrimaryStyle, isGreenStyle, isOutlinedStyle });
 
   if (off) {
     return (
       <span
-        className={`custom-btn ${isCtaPrimaryButton ? 'custom-btn-primary' : ''} ${cta?.buttonStyle} ${
-          customVariant ? customVariant : ''
-        }`}
+        className={`custom-btn 
+        ${isPrimaryStyle ? 'custom-btn-primary' : ''} 
+        ${isGreenStyle ? 'green' : ''}
+        ${cta?.buttonStyle ? cta.buttonStyle : ''} 
+        ${customVariant ? customVariant : ''}`}
       >
         {externalTitle || cta?.title}
       </span>
@@ -27,9 +33,11 @@ export default function Cta({
 
   return (
     <Link
-      className={`custom-btn ${isCtaPrimaryButton ? 'custom-btn-primary' : ''} ${cta?.buttonStyle} ${
-        customVariant ? customVariant : ''
-      }`}
+      className={`custom-btn         
+      ${isPrimaryStyle ? 'custom-btn-primary' : ''} 
+      ${isGreenStyle ? 'green' : ''} 
+      ${cta?.buttonStyle ? cta.buttonStyle : ''}
+      ${customVariant ? customVariant : ''}`}
       to={cta || url}
       target={url ? '_blank' : ''}
     >

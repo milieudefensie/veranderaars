@@ -203,7 +203,7 @@ export const PageQuery = graphql`
               ... on DatoCmsCta {
                 id
                 title
-                isButton
+                style
                 link {
                   ... on DatoCmsGlobalLink {
                     id
@@ -270,7 +270,7 @@ export const PageQuery = graphql`
               ... on DatoCmsCta {
                 id
                 title
-                isButton
+                style
                 link {
                   ... on DatoCmsGlobalLink {
                     id
@@ -375,7 +375,7 @@ export const PageQuery = graphql`
                   ... on DatoCmsCta {
                     id
                     title
-                    isButton
+                    style
                     link {
                       ... on DatoCmsGlobalLink {
                         id
@@ -469,7 +469,7 @@ export const PageQuery = graphql`
               ... on DatoCmsCta {
                 id
                 title
-                isButton
+                style
                 link {
                   ... on DatoCmsGlobalLink {
                     id
@@ -545,7 +545,7 @@ export const PageQuery = graphql`
           ... on DatoCmsBlockCta {
             id: originalId
             title
-            isButton
+            style
             alignment
             link {
               ... on DatoCmsGlobalLink {

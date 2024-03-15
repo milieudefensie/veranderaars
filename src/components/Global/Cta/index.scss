@@ -40,7 +40,8 @@
 
   &.green {
     padding: 13px 20px;
-    color: var(--dark);
+    color: var(--white) !important;
+    background: var(--dark);
     font-family: var(--nb-secondary-font);
     font-size: 18px;
     font-style: normal;

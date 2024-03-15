@@ -177,7 +177,7 @@ export const DatoCMS = graphql`
       ... on DatoCmsCta {
         id
         title
-        isButton
+        style
         link {
           ... on DatoCmsGlobalLink {
             id
@@ -273,7 +273,7 @@ export const DatoCMS = graphql`
       ... on DatoCmsCta {
         id
         title
-        isButton
+        style
         link {
           ... on DatoCmsGlobalLink {
             id
@@ -357,7 +357,7 @@ export const DatoCMS = graphql`
           ... on DatoCmsCta {
             id
             title
-            isButton
+            style
             link {
               ... on DatoCmsGlobalLink {
                 id
@@ -428,7 +428,7 @@ export const DatoCMS = graphql`
       ... on DatoCmsCta {
         id
         title
-        isButton
+        style
         link {
           ... on DatoCmsGlobalLink {
             id
@@ -553,7 +553,7 @@ export const DatoCMS = graphql`
     __typename
     id: originalId
     title
-    isButton
+    style
     alignment
     link {
       ... on DatoCmsGlobalLink {
