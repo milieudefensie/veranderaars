@@ -240,6 +240,7 @@ export const PageQuery = graphql`
           formId
           region
           portalId
+          columns
         }
       }
       image {
@@ -534,6 +535,7 @@ export const PageQuery = graphql`
                 formId
                 region
                 portalId
+                columns
               }
             }
           }

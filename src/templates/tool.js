@@ -398,6 +398,7 @@ export const PageQuery = graphql`
                 formId
                 region
                 portalId
+                columns
               }
             }
           }

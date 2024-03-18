@@ -4,7 +4,7 @@ import { homepageFormIssues } from '../../../utils';
 
 import './index.scss';
 
-const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
+const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns }) => {
   return (
     <>
       <Script
@@ -176,7 +176,10 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default' }) => {
         onError={(e) => console.error(e)}
       />
 
-      <div id={`hubspotForm-${id}`} className={`form-hubspot ${style ? style : ''}`}></div>
+      <div
+        id={`hubspotForm-${id}`}
+        className={`form-hubspot ${style ? style : ''} ${columns ? `columns-${columns}` : ''}`}
+      ></div>
     </>
   );
 };

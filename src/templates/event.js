@@ -148,6 +148,7 @@ export const PageQuery = graphql`
           formId
           region
           portalId
+          columns
         }
       }
       formBackgroundColor
@@ -446,6 +447,7 @@ export const PageQuery = graphql`
                 formId
                 region
                 portalId
+                columns
               }
             }
           }

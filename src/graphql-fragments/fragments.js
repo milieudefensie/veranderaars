@@ -545,6 +545,7 @@ export const DatoCMS = graphql`
         formId
         region
         portalId
+        columns
       }
     }
   }
