@@ -54,6 +54,7 @@ export const HomeQuery = graphql`
         portalId
         region
         internalName
+        columns
       }
       blocks {
         ... on DatoCmsNarrativeBlock {

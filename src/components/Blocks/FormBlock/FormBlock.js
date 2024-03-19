@@ -30,6 +30,7 @@ function FormBlock({ block, isHomepage = false }) {
                   formId={hubspot.formId}
                   region={hubspot.region}
                   portalId={hubspot.portalId}
+                  columns={hubspot.columns}
                   style="default"
                 />
               </div>
