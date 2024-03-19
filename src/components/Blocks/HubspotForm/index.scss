@@ -550,6 +550,11 @@
       }
     }
 
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
     form .hs-submit .actions .hs-button {
       font-size: 18px;
     }
