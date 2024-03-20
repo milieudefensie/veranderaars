@@ -15,7 +15,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
   const [viewport, setViewport] = useState({
     latitude: 52.25,
     longitude: 4.9041,
-    zoom: 6.5,
+    zoom: 6.65,
     interactive: true,
     scrollZoom: true,
   });
@@ -25,16 +25,19 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
 
   const resizeMapOnMobile = () => {
     const isMobile = window.innerWidth <= 992;
+    const isExtraMobile = window.innerWidth <= 767;
     setIsMobileDevice(isMobile);
 
     if (isMobile) {
-      const boundingBox = [
-        [3.31497114423, 50.803721015],
-        [7.09205325687, 53.5104033474],
-      ];
+      console.log('[MAP] Is mobile');
 
-      // mapRef.current?.fitBounds(boundingBox);
-      setViewport((prev) => ({ ...prev, zoom: 4.5, latitude: 51 }));
+      if (mobileView) {
+        setViewport((prev) => ({ ...prev, zoom: 6.27, longitude: 5.25, latitude: 52.5 }));
+        mapRef.current?.resize();
+        return;
+      }
+
+      setViewport((prev) => ({ ...prev, zoom: isExtraMobile ? 5.6 : 5.4 }));
       mapRef.current?.resize();
     }
   };
