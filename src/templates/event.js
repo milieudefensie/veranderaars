@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
@@ -31,14 +31,21 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
     registrationForm,
     formBackgroundColor,
     whatsappGroup,
+    shareMessage,
     image,
     content,
     tags = [],
   } = page;
 
+  const [shareWpText, setShareWpText] = useState('');
+
   useEffect(() => {
     const htmlElement = document.documentElement;
     htmlElement.style.overflow = '';
+
+    // Share WP
+    const currentURL = encodeURIComponent(window.location.href);
+    setShareWpText(shareMessage ? `https://wa.me/?text=${shareMessage}` : `https://wa.me/?text=${currentURL}`);
   }, []);
 
   return (
@@ -98,8 +105,8 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
               )}
             </div>
 
-            {whatsappGroup && (
-              <a className="wp-button" href={`${whatsappGroup}`} target="_blank" rel="noopener noreferrer">
+            {(shareWpText || whatsappGroup) && (
+              <a className="wp-button" href={shareWpText || whatsappGroup} target="_blank" rel="noopener noreferrer">
                 <span>Deel op WhatsApp</span>
                 <ReactSVG src={wpIcon} alt="Wp icon" />
               </a>
@@ -143,6 +150,7 @@ export const PageQuery = graphql`
       address
       region
       whatsappGroup
+      shareMessage
       registrationForm {
         ... on DatoCmsHubspot {
           formId
