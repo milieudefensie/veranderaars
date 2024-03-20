@@ -105,7 +105,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
               )}
             </div>
 
-            {(shareWpText || whatsappGroup) && (
+            {(shareMessage || whatsappGroup) && (
               <a className="wp-button" href={shareWpText || whatsappGroup} target="_blank" rel="noopener noreferrer">
                 <span>Deel op WhatsApp</span>
                 <ReactSVG src={wpIcon} alt="Wp icon" />
