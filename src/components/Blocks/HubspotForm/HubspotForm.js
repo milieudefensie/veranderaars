@@ -31,9 +31,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
 
               // Handlers
               const inputs = document.querySelectorAll(`#${id} .hs-input`);
-              inputs.forEach((input) => {
-                input.setAttribute('autocomplete', 'off');
-              });
+              inputs.forEach((input) => input.setAttribute('autocomplete', 'off'));
 
               inputs.forEach((input) => {
                 input.addEventListener('input', () => {
@@ -65,6 +63,11 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
 
                 e.addEventListener('focusout', function () {
                   labelElement?.classList.remove('focused');
+
+                  if (inputElement && inputElement.value.trim() == '') {
+                    // console.log('Aca, input vacio...', inputElement);
+                    // inputElement.classList.remove('invalid', 'error');
+                  }
 
                   if (inputElement && inputElement.value.trim() !== '') {
                     labelElement?.classList.add('focused');

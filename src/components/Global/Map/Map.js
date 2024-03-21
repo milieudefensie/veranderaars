@@ -123,6 +123,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
           scrollZoom={false}
           dragRotate={false}
           touchZoomRotate={false}
+          doubleClickZoom
           onError={(err) => {
             console.error('Error loading complex map: ', err.error.message);
             setError((prev) => !prev);
