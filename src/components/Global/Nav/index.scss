@@ -51,7 +51,7 @@
   .actions {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 30px;
 
     button {
       padding: 0;
@@ -223,19 +223,12 @@
     }
 
     .actions {
-      gap: 0;
+      gap: 20px;
       position: relative;
-      top: -.5rem;
     }
   }
 
   #nav-content {
-    .actions {
-      gap: 0;
-      position: relative;
-      top: -.5rem;
-    }
-
     .offcanvas.show {
       width: 85%;
       padding: 0;
@@ -275,23 +268,20 @@
 @media screen and (max-width: 767px) {
   .navbar2 {
     .actions {
-      top: -0.8rem;
-
       .navbar-toggler svg {
         width: 50px;
         height: 100%;
       }
 
       .wp-button svg {
-        width: 70px;
+        width: 50px;
+        height: 49px;
       }
     }
   }
 
   #nav-content {
     .actions {
-      top: -0.8rem;
-
       .navbar-toggler svg {
         width: 50px;
         height: 100%;
@@ -304,10 +294,12 @@
 
     .offcanvas.show {
       .actions {
+        gap: 30px;
+
         .close {
           padding: 10px;
-          width: 34px;
-          height: 30px;
+          // width: 34px;
+          // height: 30px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -328,19 +320,21 @@
 
 @media screen and (max-width: 456px) {
   .navbar2 {
+    padding-top: 0.4rem;
+
     .navbar-brand {
       svg {
         height: 65px;
-        width: 160px;
+        width: 130px;
       }
     }
 
     .actions {
-      top: -.3rem;
+      gap: 10px;
 
       .navbar-toggler svg {
-        width: 44px;
-        height: 44px;
+        // width: 44px;
+        // height: 44px;
       }
 
       .wp-button svg {
@@ -352,6 +346,7 @@
   #nav-content {
     .actions {
       top: -.85rem;
+      padding-right: 19px;
 
       .navbar-toggler svg {
         width: 44px;
@@ -366,6 +361,19 @@
         width: 44px !important;
         height: 44px !important;
       }
+    }
+
+    .offcanvas.show .actions {
+      gap: 20px;
+
+      .wp-button svg {
+        width: 44px !important;
+        height: 44px !important;
+      }
+    }
+
+    .links-container .nav-item a {
+      font-size: 25px !important;
     }
   }
 }
