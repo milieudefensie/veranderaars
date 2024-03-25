@@ -85,6 +85,11 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
   }, [openNavBtnRef]);
 
   useEffect(() => {
+    // const overlay = document.querySelector('.nav-open-overlay');
+    // if (expanded && overlay.classList.contains('open')) {
+    //   console.log('Open overlay...');
+    // }
+
     setNavOpen(expanded);
   }, [expanded]);
 
@@ -109,7 +114,7 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
               <ReactSVG src={headerUpdatedLogo} alt="Milieudefensie logo" />
             </Link>
 
-            <div className="actions" style={{ visibility: !expanded ? 'visible' : 'hidden' }}>
+            <div className="actions">
               <button
                 type="button"
                 data-target="#navNav"

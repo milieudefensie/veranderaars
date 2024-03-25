@@ -36,12 +36,26 @@ function Layout({ children, bgColor = null, extraClassNames = null, heroBgColor 
     };
   }, []);
 
+  useEffect(() => {
+    const overlay = document.querySelector('.nav-open-overlay');
+    if (!navOpen) {
+      overlay.style.opacity = 0;
+
+      setTimeout(() => {
+        overlay.style.zIndex = -1;
+      }, 550);
+    } else {
+      overlay.style.opacity = 1;
+      overlay.style.zIndex = 15;
+    }
+  }, [navOpen]);
+
   return (
     <>
       <Header setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
-      <main id={`${bgColor ? bgColor : ''}`} className={`main-content ${extraClassNames ? extraClassNames : ''}`}>
-        {navOpen && <div className="nav-open-overlay"></div>}
+      <div className={`nav-open-overlay`} />
 
+      <main id={`${bgColor ? bgColor : ''}`} className={`main-content ${extraClassNames ? extraClassNames : ''}`}>
         {children}
       </main>
       <Footer />
