@@ -58,6 +58,7 @@ exports.createPages = ({ graphql, actions }) => {
       listGroups: path.resolve('./src/templates/listGroups.js'),
       tool: path.resolve('./src/templates/tool.js'),
       listTools: path.resolve('./src/templates/listTools.js'),
+      cslEvent: path.resolve('./src/templates/cslEvent.js'),
     };
 
     resolve(
@@ -86,6 +87,14 @@ exports.createPages = ({ graphql, actions }) => {
                 slug
                 title
               }
+            }
+          }
+
+          CSLevents: allExternalEvent {
+            nodes {
+              id
+              slug
+              title
             }
           }
 
@@ -160,6 +169,18 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: event.node.slug,
               id: event.node.id,
+            },
+          });
+        }
+
+        const CSLEvents = result.data.CSLevents.nodes;
+        for (const event of CSLEvents) {
+          createPage({
+            path: `/agenda/${event.slug}`,
+            component: templates.cslEvent,
+            context: {
+              slug: event.slug,
+              id: event.id,
             },
           });
         }
