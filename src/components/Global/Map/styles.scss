@@ -52,16 +52,16 @@
       }
 
       .mapboxgl-popup-close-button {
-        width: 42px;
-        height: 42px;
+        // width: 42px;
+        // height: 42px;
         font-size: 42px;
         color: #141414;
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 0;
         margin: 0;
+        padding: 8px 7px 5px 6px;
       }
     }
 
@@ -184,6 +184,11 @@
             bottom: 115px;
           }
         }
+      }
+
+      .mapboxgl-map .mapboxgl-popup-close-button {
+        font-size: 35px;
+        padding: 8px 5px 5px 8px;
       }
     }
   }
