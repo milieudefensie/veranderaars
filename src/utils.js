@@ -175,6 +175,13 @@ function formatTime(date) {
   return `${hours}:${minutes}`;
 }
 
+export function convertHour(rawDate) {
+  const date = DateTime.fromISO(rawDate).setZone('Europe/Amsterdam');
+  const hour = date.toFormat('HH:mm');
+
+  return hour;
+}
+
 export const homepageFormIssues = () => {
   const heroWrapper = document.querySelector('#hero-homepage');
   if (!heroWrapper) return;

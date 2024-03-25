@@ -1,12 +1,9 @@
 const path = require(`path`);
-require('dotenv').config({
-  path: `.env.${process.env.NODE_ENV}`,
-});
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 // node source from CSL
 exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
-
   const clientId = process.env.CSL_CLIENT_ID;
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
@@ -16,10 +13,10 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 
   const accessToken = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
     method: 'POST',
-      headers: {
-        Authorization: `Basic ${encodedCredentials}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-      },
+    headers: {
+      Authorization: `Basic ${encodedCredentials}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   });
 
   const recievedToken = await accessToken.json();
@@ -28,7 +25,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     method: 'GET',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
   });
 
@@ -44,7 +41,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       },
     });
   }
-}
+};
 
 exports.createPages = ({ graphql, actions }) => {
   const { createPage, createNode } = actions;
