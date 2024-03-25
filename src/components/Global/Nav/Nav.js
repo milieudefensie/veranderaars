@@ -85,11 +85,6 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
   }, [openNavBtnRef]);
 
   useEffect(() => {
-    // const overlay = document.querySelector('.nav-open-overlay');
-    // if (expanded && overlay.classList.contains('open')) {
-    //   console.log('Open overlay...');
-    // }
-
     setNavOpen(expanded);
   }, [expanded]);
 
@@ -117,12 +112,8 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
             <div className="actions">
               <button
                 type="button"
-                data-target="#navNav"
-                aria-expanded="false"
-                aria-controls="navNav"
-                data-toggle="collapse"
-                className="navbar-toggler"
                 aria-label="Toggle navigation"
+                className="navbar-toggler2"
                 onClick={() => handleNavClick()}
                 ref={openNavBtnRef}
               >

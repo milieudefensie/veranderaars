@@ -16,12 +16,13 @@
   }
 
   .close,
-  .navbar-toggler {
+  .navbar-toggler2 {
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.20);
   }
 
-  .navbar-toggler {
+  .navbar-toggler2 {
     border: none;
+    background-color: transparent;
 
     &:hover {
       svg {
@@ -37,7 +38,7 @@
   }
 
   &.green {
-    .navbar-toggler {
+    .navbar-toggler2 {
       &:hover {
         svg {
           rect {
@@ -265,7 +266,7 @@
 @media screen and (max-width: 767px) {
   .navbar2 {
     .actions {
-      .navbar-toggler svg {
+      .navbar-toggler2 svg {
         width: 50px;
         height: 100%;
       }
@@ -279,7 +280,7 @@
 
   #nav-content {
     .actions {
-      .navbar-toggler svg {
+      .navbar-toggler2 svg {
         width: 50px;
         height: 100%;
       }
@@ -329,7 +330,7 @@
     .actions {
       gap: 10px;
 
-      .navbar-toggler svg {
+      .navbar-toggler2 svg {
         // width: 44px;
         // height: 44px;
       }
@@ -345,7 +346,7 @@
       top: -.85rem;
       padding-right: 19px;
 
-      .navbar-toggler svg {
+      .navbar-toggler2 svg {
         width: 44px;
         height: 44px;
       }

@@ -43,7 +43,7 @@ function Layout({ children, bgColor = null, extraClassNames = null, heroBgColor 
 
       setTimeout(() => {
         overlay.style.zIndex = -1;
-      }, 550);
+      }, 750);
     } else {
       overlay.style.opacity = 1;
       overlay.style.zIndex = 15;
