@@ -2,12 +2,13 @@ import React from 'react';
 import TagList from '../../Tag/TagList';
 import { formatDate } from '../../../../utils';
 import Cta from '../../Cta/Cta';
+import Link from '../../Link/Link';
 
 import './styles.scss';
 
 const MapPopup = ({ card, linkTitle = 'Meld je aan' }) => {
-  const { title, date, hourStart, hourEnd, address, image, tags, type, url, externalLink } = card;
-  const isCslEvent = type === 'INTERNATIONAL' || externalLink;
+  const { slug, title, rawDate, hourStart, hourEnd, address, image, tags, type, url, externalLink } = card;
+  const isCslEvent = type === 'CSL';
 
   return (
     <article className="map-popup">
@@ -24,9 +25,9 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan' }) => {
       )}
 
       <div className="metadata">
-        {date && (
+        {rawDate && (
           <h5>
-            {formatDate(date)} | {hourStart} {hourEnd ? ` - ${hourEnd}` : ''}
+            {formatDate(rawDate)} | {hourStart} {hourEnd ? ` - ${hourEnd}` : ''}
           </h5>
         )}
 
@@ -36,6 +37,10 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan' }) => {
       {title && <h2>{title}</h2>}
 
       {isCslEvent ? (
+        <Link to={`/agenda/${slug}`} className="custom-btn custom-btn-primary">
+          Meld je aan
+        </Link>
+      ) : externalLink ? (
         <a
           href={externalLink || url}
           target={`${externalLink ? '' : '_blank'}`}

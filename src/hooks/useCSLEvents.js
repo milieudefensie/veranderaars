@@ -8,51 +8,44 @@ function useCSLEvents(cmsEvents, cslEvents) {
   const [status, setStatus] = useState('idle');
 
   useEffect(() => {
-    async function fetchEvents() {
-      setStatus('loading');
+    setStatus('loading');
 
-      const mappedCSL = [...cmsEvents, ...cslEvents]
-        .filter((e) => !e.cancelled_at)
-        .map((e) => ({
-          id: e.slug.replace(' ', '_'),
-          address: e.location?.query,
-          coordinates: {
-            latitude: e.location?.latitude,
-            longitude: e.location?.longitude,
-          },
-          region: e.location?.region,
-          rawDate: e.start_at,
-          date: formatDate(e.start_at),
-          hourStart: convertTime(e.start_at),
-          hourEnd: e.end_at ? convertTime(e.end_at) : null,
-          introduction: e.description,
-          slug: e.slug,
-          url: e.url,
-          title: e.title,
-          image: { url: e.image_url },
-          type: e.model.apiKey,
-          labels: e.labels || [],
-        }));
+    const mappedCSL = [...cslEvents]
+      .filter((e) => !e.cancelled_at)
+      .map((e) => ({
+        id: e.slug.replace(' ', '_'),
+        address: e.location?.query,
+        coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
+        region: e.location?.region,
+        rawDate: e.start_at,
+        date: formatDate(e.start_at),
+        hourStart: convertTime(e.start_at),
+        hourEnd: e.end_at ? convertTime(e.end_at) : null,
+        introduction: e.description,
+        slug: e.slug,
+        url: e.url,
+        title: e.title,
+        image: { url: e.image_url },
+        labels: e.labels || [],
+        type: e.type,
+      }));
 
-      // Get only future events
-      const temEvents = [...cmsEvents, ...mappedCSL].filter(compareIfIsFuture);
+    // Get only future events
+    const temEvents = [...cmsEvents, ...mappedCSL].filter(compareIfIsFuture);
 
-      const events = temEvents.sort((a, b) => {
-        const dateA = new Date(a.rawDate);
-        const dateB = new Date(b.rawDate);
+    const events = temEvents.sort((a, b) => {
+      const dateA = new Date(a.rawDate);
+      const dateB = new Date(b.rawDate);
 
-        return dateA - dateB;
-      });
+      return dateA - dateB;
+    });
 
-      const uniqueLocations = [...new Set(events.map((event) => event.region))];
+    const uniqueLocations = [...new Set(events.map((event) => event.region))];
 
-      setMergedEvents(events);
-      setFilteredEvents(events);
-      setLocationOptions(uniqueLocations);
-      setStatus('success');
-    }
-
-    fetchEvents();
+    setMergedEvents(events);
+    setFilteredEvents(events);
+    setLocationOptions(uniqueLocations);
+    setStatus('success');
   }, []);
 
   return { mergedEvents, setFilteredEvents, filteredEvents, locationOptions, status };
