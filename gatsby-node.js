@@ -1,8 +1,50 @@
 const path = require(`path`);
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
+// node source from CSL
+exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
+  const clientId = process.env.CSL_CLIENT_ID;
+  const clientSecret = process.env.CSL_CLIENT_SECRET;
+  const cslPath = process.env.CSL_PATH;
+
+  const credentials = `${clientId}:${clientSecret}`;
+  const encodedCredentials = Buffer.from(credentials).toString('base64');
+
+  const accessToken = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${encodedCredentials}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+
+  const recievedToken = await accessToken.json();
+
+  const result = await fetch(`${cslPath}/api/v1/events?access_token=${recievedToken.access_token}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const resultData = await result.json();
+  for (const event of resultData.events) {
+    createNode({
+      ...event,
+      id: event.slug,
+      title: event.title,
+      internal: {
+        type: 'ExternalEvent',
+        contentDigest: createContentDigest(event),
+      },
+    });
+  }
+};
+
 exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions;
+  const { createPage, createNode } = actions;
 
   return new Promise((resolve, reject) => {
     const templates = {
@@ -13,6 +55,7 @@ exports.createPages = ({ graphql, actions }) => {
       listGroups: path.resolve('./src/templates/listGroups.js'),
       tool: path.resolve('./src/templates/tool.js'),
       listTools: path.resolve('./src/templates/listTools.js'),
+      cslEvent: path.resolve('./src/templates/cslEvent.js'),
     };
 
     resolve(
@@ -41,6 +84,14 @@ exports.createPages = ({ graphql, actions }) => {
                 slug
                 title
               }
+            }
+          }
+
+          CSLevents: allExternalEvent {
+            nodes {
+              id
+              slug
+              title
             }
           }
 
@@ -115,6 +166,18 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: event.node.slug,
               id: event.node.id,
+            },
+          });
+        }
+
+        const CSLEvents = result.data.CSLevents.nodes;
+        for (const event of CSLEvents) {
+          createPage({
+            path: `/agenda/${event.slug}`,
+            component: templates.cslEvent,
+            context: {
+              slug: event.slug,
+              id: event.id,
             },
           });
         }

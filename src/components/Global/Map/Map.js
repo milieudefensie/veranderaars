@@ -69,6 +69,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
         cluster: false,
         id: e.id,
         title: e.title,
+        rawDate: e.rawDate,
         date: e.date,
         hourStart: e.hourStart,
         hourEnd: e.hourEnd,

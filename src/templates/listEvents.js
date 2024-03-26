@@ -11,19 +11,24 @@ import Spinner from '../components/Global/Spinner/Spinner';
 import Blocks from '../components/Blocks';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 import useCSLEvents from '../hooks/useCSLEvents';
-import { mapCmsEvents } from '../utils';
+import { mapCmsEvents, mapCslEvents } from '../utils';
 
 import './list-basic.styles.scss';
 
-const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) => {
+const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
+  const cslEvents = mapCslEvents(allCSLEvents);
+
   const { title, seo, highlighEvent, blocks = [] } = page;
 
   const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null, description: null });
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [isArrowVisible, setIsArrowVisible] = useState(true);
 
-  const { mergedEvents, setFilteredEvents, filteredEvents, locationOptions, status } = useCSLEvents(cmsEvents);
+  const { mergedEvents, setFilteredEvents, filteredEvents, locationOptions, status } = useCSLEvents(
+    cmsEvents,
+    cslEvents
+  );
 
   useEffect(() => {
     // Arrow style (up or down)
@@ -90,8 +95,6 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
     };
   }, [mobileShowMap]);
 
-  const isLoading = status === 'loading';
-
   return (
     <Layout bgColor="secondary-bg" extraClassNames="list-pages">
       <SeoDatoCMS seo={seo} favicon={favicon} />
@@ -112,23 +115,15 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
             <div className={`${mobileShowMap ? 'mobile-map' : ''}`}>
               <Map title={title} data={filteredEvents} mobileView={mobileShowMap} setMobileView={setMobileShowMap} />
 
-              {isLoading ? (
-                <div style={{ textAlign: 'center' }}>
-                  <Spinner />
-                </div>
-              ) : (
-                <>
-                  <FilterEvents
-                    events={filteredEvents}
-                    locations={locationOptions}
-                    handleOnApplyNewFilters={(newFilterValues) =>
-                      setFilterValues((prev) => ({ ...prev, ...newFilterValues }))
-                    }
-                  />
+              <FilterEvents
+                events={filteredEvents}
+                locations={locationOptions}
+                handleOnApplyNewFilters={(newFilterValues) =>
+                  setFilterValues((prev) => ({ ...prev, ...newFilterValues }))
+                }
+              />
 
-                  <FloatCta title="Bekijk lijst" id="filter-events-list" isArrowVisible={isArrowVisible} />
-                </>
-              )}
+              <FloatCta title="Bekijk lijst" id="filter-events-list" isArrowVisible={isArrowVisible} />
             </div>
           </div>
 
@@ -183,6 +178,27 @@ export const PageQuery = graphql`
           }
           model {
             apiKey
+          }
+        }
+      }
+    }
+    allCSLEvents: allExternalEvent {
+      edges {
+        node {
+          id: slug
+          slug
+          title
+          description
+          start_at
+          end_at
+          image_url
+          labels
+          location {
+            latitude
+            longitude
+            venue
+            query
+            region
           }
         }
       }

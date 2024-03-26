@@ -7,13 +7,26 @@ import Link from '../../Global/Link/Link';
 import './styles.scss';
 
 const EventCard = ({ event, isHighlighted = false }) => {
-  const { title, introduction, image, date, address, hourStart, hourEnd, tags = [], type, url, externalLink } = event;
-  const isCslEvent = type === 'INTERNATIONAL';
+  const {
+    slug,
+    title,
+    introduction,
+    image,
+    rawDate,
+    address,
+    hourStart,
+    hourEnd,
+    tags = [],
+    type,
+    url,
+    externalLink,
+  } = event;
+  const isCslEvent = type === 'CSL';
 
   const renderContent = () => (
     <>
       <div className="metadata">
-        {date && <span className="date">{formatDate(date)}</span>}
+        {rawDate && <span className="date">{formatDate(rawDate)}</span>}
 
         <div className="venue">
           <span>
@@ -43,7 +56,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
     </>
   );
 
-  if (isCslEvent || externalLink) {
+  if (externalLink) {
     return (
       <a
         href={externalLink || url}
@@ -56,7 +69,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
   }
 
   return (
-    <Link to={event} className={`event-card ${isHighlighted ? 'highlighted' : ''}`}>
+    <Link to={isCslEvent ? `/agenda/${slug}` : event} className={`event-card ${isHighlighted ? 'highlighted' : ''}`}>
       {renderContent()}
     </Link>
   );
