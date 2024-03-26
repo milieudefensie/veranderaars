@@ -16,8 +16,9 @@ import { mapCmsEvents } from '../utils';
 import './list-basic.styles.scss';
 
 const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], favicon } }) => {
-
   const cmsEvents = mapCmsEvents(allEvents);
+  const cslEvents = mapCmsEvents(allCSLEvents);
+
   const { title, seo, highlighEvent, blocks = [] } = page;
 
   const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null, description: null });
@@ -25,7 +26,6 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
   const [isArrowVisible, setIsArrowVisible] = useState(true);
 
   const { mergedEvents, setFilteredEvents, filteredEvents, locationOptions, status } = useCSLEvents(cmsEvents);
-
 
   useEffect(() => {
     // Arrow style (up or down)
@@ -189,30 +189,15 @@ export const PageQuery = graphql`
         }
       }
     }
-    allCSLEvents: allExternalEvent{
-      nodes{
-        title
-        id:slug
-        coordinates: location{
-          latitude
-          longitude
+    allCSLEvents: allExternalEvent {
+      edges {
+        node {
+          id: slug
+          slug
+          title
         }
-        address: location{
-          query
-        }
-        region: location{
-          region
-        }
-        startDate: start_at
-        endDate: end_at
-        introduction: description
-        slug
-        url
-        image: image_url
-        labels
       }
     }
-    
     page: datoCmsListEvent(id: { eq: $id }) {
       id
       title
