@@ -116,6 +116,9 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
                 data={filteredEvents}
                 mobileView={mobileShowMap}
                 setMobileView={setMobileShowMap}
+                extraLogic={() => {
+                  if (!mobileShowMap) setMobileShowMap((prev) => !prev);
+                }}
               />
 
               {isLoading ? (

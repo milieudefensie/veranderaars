@@ -10,7 +10,15 @@ import Cta from '../Cta/Cta';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles.scss';
 
-const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setMobileView, floatButton = null }) => {
+const MapWrapper = ({
+  title,
+  data = [],
+  type = 'event',
+  mobileView = false,
+  setMobileView,
+  floatButton = null,
+  extraLogic = null,
+}) => {
   const mapRef = useRef(null);
 
   const [viewport, setViewport] = useState({
@@ -105,7 +113,13 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
       <div className="map">
         <div className="pre-header">
           <div className="container">
-            <div className="action" onClick={() => setMobileView((prev) => !prev)}>
+            <div
+              className="action"
+              onClick={() => {
+                setMobileView(false);
+                setSelectedMarker(null);
+              }}
+            >
               <span>←</span>
               <span>{type === 'event' ? 'Bekijk lijst' : 'Bekijk lijst'}</span>
             </div>
@@ -165,7 +179,18 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
                 key={cluster.properties.id}
                 latitude={latitude}
                 longitude={longitude}
-                onClick={() => setSelectedMarker(cluster)}
+                onClick={() => {
+                  setSelectedMarker(cluster);
+
+                  // Animation to center marker/popup
+                  const currentZoom = mapRef.current?.getZoom();
+                  const verticalOffset = Math.min(0.1 * currentZoom, 0.25);
+                  mapRef.current?.flyTo({ center: [longitude, latitude - verticalOffset], duration: 1000 });
+
+                  if (extraLogic) {
+                    extraLogic();
+                  }
+                }}
                 anchor="bottom"
               >
                 {type === 'group' ? <GroupMarker /> : <CustomMarker />}
@@ -179,7 +204,12 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
               longitude={selectedMarker.geometry.coordinates[0]}
               latitude={selectedMarker.geometry.coordinates[1]}
               closeOnClick={false}
-              onClose={() => setSelectedMarker(null)}
+              onClose={() => {
+                setSelectedMarker(null);
+                if (extraLogic) {
+                  extraLogic();
+                }
+              }}
             >
               <MapPopup card={selectedMarker.properties} />
             </Popup>

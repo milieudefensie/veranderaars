@@ -44,7 +44,7 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan' }) => {
           Meld je aan
         </a>
       ) : (
-        <Cta cta={{ ...card, title: linkTitle, isButton: true }} />
+        <Cta cta={{ ...card, title: linkTitle, isButton: true, style: 'primary' }} />
       )}
     </article>
   );

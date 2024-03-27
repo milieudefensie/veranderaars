@@ -78,6 +78,9 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
               type="group"
               mobileView={mobileShowMap}
               setMobileView={setMobileShowMap}
+              extraLogic={() => {
+                if (!mobileShowMap) setMobileShowMap((prev) => !prev);
+              }}
             />
 
             {Array.isArray(mappedGroups) && <ListGroupBlock items={mappedGroups} withContainer={false} />}
