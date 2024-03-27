@@ -86,6 +86,12 @@
   }
 }
 
+.inner-page {
+  .form-block-wrapper .form-block .left-img {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 992px) {
   .form-block-wrapper {
     background: var(--nb-primary-color-light);
@@ -114,6 +120,18 @@
 
   .form-hubspot form .legal-consent-container .inputs-list .hs-form-booleancheckbox label span * {
     font-size: 13px;
+  }
+
+  .inner-page .form-block-wrapper {
+    border-radius: 10px;
+    margin-top: 1rem;
+
+    .container {
+      padding-right: var(--bs-gutter-x, 0.75rem);
+      padding-left: var(--bs-gutter-x, 0.75rem);
+      margin-right: auto;
+      margin-left: auto;
+    }
   }
 }
 
