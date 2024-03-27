@@ -17,7 +17,7 @@ import './list-basic.styles.scss';
 
 const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
-  const { title, seo, highlighEvent, blocks = [] } = page;
+  const { title, seo, highlighEvent, buttonOnMap, blocks = [] } = page;
 
   const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null, description: null });
   const [mobileShowMap, setMobileShowMap] = useState(false);
@@ -110,7 +110,13 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
             )}
 
             <div className={`${mobileShowMap ? 'mobile-map' : ''}`}>
-              <Map title={title} data={filteredEvents} mobileView={mobileShowMap} setMobileView={setMobileShowMap} />
+              <Map
+                floatButton={buttonOnMap}
+                title={title}
+                data={filteredEvents}
+                mobileView={mobileShowMap}
+                setMobileView={setMobileShowMap}
+              />
 
               {isLoading ? (
                 <div style={{ textAlign: 'center' }}>
@@ -191,6 +197,9 @@ export const PageQuery = graphql`
       id
       title
       slug
+      buttonOnMap {
+        ...AppCta
+      }
       highlighEvent {
         ... on DatoCmsEvent {
           id

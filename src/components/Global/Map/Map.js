@@ -5,11 +5,12 @@ import CustomMarker from './Marker/Marker';
 import MapPopup from './MapPopup/MapPopup';
 import useSupercluster from 'use-supercluster';
 import CtaHandler from '../Cta/CtaHandler';
+import Cta from '../Cta/Cta';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles.scss';
 
-const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setMobileView }) => {
+const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setMobileView, floatButton = null }) => {
   const mapRef = useRef(null);
 
   const [viewport, setViewport] = useState({
@@ -202,6 +203,13 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
               handleOnClick={() => setMobileView(true)}
             />
           </div>
+
+          {/* Floating button */}
+          {floatButton && (
+            <div className="map-floating-button">
+              <Cta cta={floatButton[0]} />
+            </div>
+          )}
         </Map>
       </div>
     </div>

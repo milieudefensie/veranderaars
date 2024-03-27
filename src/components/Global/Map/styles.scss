@@ -68,6 +68,12 @@
           background-color: transparent !important;
         }
       }
+
+      .map-floating-button {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+      }
     }
 
     .cluster-marker {
@@ -107,6 +113,10 @@
         }
 
         .mapboxgl-control-container {
+          display: none;
+        }
+
+        .map-floating-button {
           display: none;
         }
       }
@@ -187,6 +197,12 @@
 
           .mapboxgl-ctrl-bottom-right {
             bottom: 115px;
+          }
+
+          .map-floating-button {
+            display: block;
+            top: 15px;
+            right: 15px;
           }
         }
       }

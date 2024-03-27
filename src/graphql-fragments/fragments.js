@@ -550,6 +550,69 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment AppCta on DatoCmsCta {
+    id
+    title
+    style
+    link {
+      ... on DatoCmsGlobalLink {
+        id
+        externalUrl
+        content {
+          ... on DatoCmsListTool {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsBasicPage {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsEvent {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsListEvent {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsListGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsTool {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+        }
+      }
+    }
+  }
+
   fragment BlockCustomCta on DatoCmsBlockCta {
     __typename
     id: originalId
