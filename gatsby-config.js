@@ -35,4 +35,7 @@ module.exports = {
     'gatsby-plugin-react-helmet',
     `gatsby-plugin-netlify`,
   ],
+  flags: {
+    PRESERVE_FILE_DOWNLOAD_CACHE: true, // Este es opcional, si tienes cache habilitada
+  },
 };
