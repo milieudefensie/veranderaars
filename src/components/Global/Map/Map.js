@@ -205,7 +205,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
           </div>
 
           {/* Floating button */}
-          {floatButton && (
+          {floatButton && floatButton[0] && (
             <div className="map-floating-button">
               <Cta cta={floatButton[0]} />
             </div>
