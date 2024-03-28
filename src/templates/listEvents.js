@@ -111,6 +111,7 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], favicon } }) =>
 
             <div className={`${mobileShowMap ? 'mobile-map' : ''}`}>
               <Map
+                type="event"
                 floatButton={buttonOnMap}
                 title={title}
                 data={filteredEvents}

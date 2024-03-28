@@ -183,9 +183,12 @@ const MapWrapper = ({
                   setSelectedMarker(cluster);
 
                   // Animation to center marker/popup
-                  const currentZoom = mapRef.current?.getZoom();
-                  const verticalOffset = Math.min(0.1 * currentZoom, 0.25);
-                  mapRef.current?.flyTo({ center: [longitude, latitude - verticalOffset], duration: 1000 });
+                  const px = mapRef.current?.project([longitude, latitude]);
+                  px.y -= 650 / 2;
+                  mapRef.current?.panTo(mapRef.current?.unproject(px), {
+                    animate: true,
+                    duration: 1000,
+                  });
 
                   if (extraLogic) {
                     extraLogic();

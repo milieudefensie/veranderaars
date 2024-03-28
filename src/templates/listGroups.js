@@ -73,9 +73,9 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
 
             {/* Map */}
             <Map
+              type="group"
               title={title}
               data={mappedGroups}
-              type="group"
               mobileView={mobileShowMap}
               setMobileView={setMobileShowMap}
               extraLogic={() => {
