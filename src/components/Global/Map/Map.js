@@ -183,12 +183,14 @@ const MapWrapper = ({
                   setSelectedMarker(cluster);
 
                   // Animation to center marker/popup
-                  const px = mapRef.current?.project([longitude, latitude]);
-                  px.y -= 650 / 2;
-                  mapRef.current?.panTo(mapRef.current?.unproject(px), {
-                    animate: true,
-                    duration: 1000,
-                  });
+                  if (!isMobileDevice) {
+                    const px = mapRef.current?.project([longitude, latitude]);
+                    px.y -= 650 / 2;
+                    mapRef.current?.panTo(mapRef.current?.unproject(px), {
+                      animate: true,
+                      duration: 1000,
+                    });
+                  }
 
                   if (extraLogic) {
                     extraLogic();
