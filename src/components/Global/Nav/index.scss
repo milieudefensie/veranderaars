@@ -227,6 +227,10 @@
   }
 
   #nav-content {
+    .offcanvas.offcanvas-end .offcanvas-body {
+      opacity: 0;
+    }
+
     .offcanvas.show {
       width: 85%;
       padding: 0;
@@ -238,6 +242,8 @@
       }
 
       .offcanvas-body {
+        opacity: 1;
+
         .links-container {
           gap: 25px;
           margin-bottom: 25px;
@@ -329,11 +335,6 @@
 
     .actions {
       gap: 10px;
-
-      .navbar-toggler2 svg {
-        // width: 44px;
-        // height: 44px;
-      }
 
       .wp-button svg {
         width: 70px;
