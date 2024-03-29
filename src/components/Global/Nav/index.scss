@@ -95,7 +95,6 @@
     padding: 37px 205px;
     width: 740px;
     background-color: var(--white);
-    // transition: transform 0.25s ease-in-out;
 
     display: flex;
     align-items: flex-end;
@@ -219,19 +218,30 @@
         height: 60.045px;
       }
     }
-
-    .actions {
-      gap: 20px;
-      position: relative;
-    }
   }
 
   #nav-content {
-    .offcanvas.offcanvas-end .offcanvas-body {
-      opacity: 0;
+    .offcanvas-header .actions {
+      gap: 20px !important;
+
+      .close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .close svg {
+        height: 100%;
+        width: 100%;
+      }
+
+      .wp-button svg {
+        width: 44px !important;
+        height: 44px !important;
+      }
     }
 
-    .offcanvas.show {
+    .offcanvas {
       width: 85%;
       padding: 0;
       padding-top: .5rem;
@@ -241,28 +251,24 @@
         margin-bottom: 50px;
       }
 
-      .offcanvas-body {
-        opacity: 1;
+      .links-container {
+        gap: 25px;
+        margin-bottom: 25px;
+        align-items: flex-end;
+        text-align: right;
 
-        .links-container {
-          gap: 25px;
-          margin-bottom: 25px;
-          align-items: flex-end;
-          text-align: right;
+        .nav-item a {
+          font-size: 29px;
+          line-height: 115%;
+        }
 
-          .nav-item a {
-            font-size: 29px;
-            line-height: 115%;
-          }
+        .nav-item.dropdown .dropdown-menu.open {
+          gap: 12px;
+        }
 
-          .nav-item.dropdown .dropdown-menu.open {
-            gap: 12px;
-          }
-
-          .nav-item.dropdown .dropdown-menu .dropdown-item .dropdown-link {
-            font-size: 19px;
-            line-height: 130%;
-          }
+        .nav-item.dropdown .dropdown-menu .dropdown-item .dropdown-link {
+          font-size: 19px;
+          line-height: 130%;
         }
       }
     }
