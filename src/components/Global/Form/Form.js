@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { navigate } from '@reach/router';
+import { navigate } from 'gatsby';
 
 const Form = ({ event }) => {
   const [formData, setFormData] = useState({ name: "", email: "", postcode: "", slug: event });
@@ -20,8 +20,10 @@ const Form = ({ event }) => {
     });
     const response = await submit.json();
     if(response.status !== 200){
+      // TODO create proper way to manage errors
       alert('error');
     }else{
+      // TODO create thank you page and fix this
       navigate('/agenda/');
     }
   };

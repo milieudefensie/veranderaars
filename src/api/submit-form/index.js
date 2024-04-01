@@ -45,11 +45,11 @@ export default async function handler(req, res) {
           throw new Error('User already registered');
         }
       }
-      res.status(200).json({ status: 200, message: 'OK' });
+      res.json({ status: 200, message: 'OK' });
       return;
     })
   } catch (error) {
-    res.status(500).json({ status: 500, message: error.message})
+    res.json({ status: 500, message: error.message})
     return;
   }
 
