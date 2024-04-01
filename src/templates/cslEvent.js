@@ -13,12 +13,14 @@ import dateIcon from '../components/Icons/calendar-date.svg';
 import hourIcon from '../components/Icons/calendar-hour.svg';
 import locationIcon from '../components/Icons/calendar-location.svg';
 import wpIcon from '../components/Icons/wp-icon.svg';
+import Form from '../components/Global/Form/Form';
 
 import './basic.styles.scss';
 
 const CSLEvent = ({ data: { page, listEvent, favicon } }) => {
   const {
     title,
+    slug,
     image_url,
     description,
     start_at,
@@ -76,7 +78,10 @@ const CSLEvent = ({ data: { page, listEvent, favicon } }) => {
           {title && <h1>{title}</h1>}
 
           {/* Form  */}
-          <div className={`form-wrapper `}>FORM HERE...</div>
+          <div className={`form-wrapper `}>
+            <Form event={slug}/>
+
+          </div>
 
           {/* Brief information */}
           <div className="brief-information">
