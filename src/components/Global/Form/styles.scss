@@ -1,0 +1,135 @@
+.custom-form {
+  display: grid;
+  gap: 16px;
+  row-gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+
+  .form-field {
+    position: relative;
+
+    label {
+      color: #49454F;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px;
+      letter-spacing: 0.5px;
+    }
+
+    .input {
+      input {
+        width: 100%;
+        padding: 16px;
+        border-radius: 4px;
+        border: none;
+        background: transparent;
+        border: 1px solid #79747e;
+        color: #1d1b20;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0.5px;
+        outline: none !important;
+
+        &.error {
+          border-color: #FF0000;
+        }
+
+        &::placeholder {
+          color: var(--white);
+        }
+
+        &:hover {
+          border-color: #3b3b3b !important;
+        }
+
+        &:focus,
+        &:active {
+          border: 1px solid #21578A !important;
+        }
+      }
+    }
+  }
+
+  .form-field label {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    transition: 0.15s ease-out;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+  }
+
+  .focused {
+    top: -8px !important;
+    color: var(--dark);
+    background-color: #fff;
+    font-size: 14px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 16px !important;
+    padding: 0 5px !important;
+  }
+
+  .hs-error-msgs.inputs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li label {
+      font-size: 14px;
+      color: #FF0000;
+      position: unset;
+      font-weight: 400;
+      line-height: 24px;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .send-btn {
+    grid-column: span 3;
+    box-shadow: none !important;
+    background-color: var(--nb-primary-color);
+    border: none;
+    border: 2px solid var(--dark);
+    border-radius: 5px;
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, .35);
+    color: var(--dark);
+    font-family: var(--nb-secondary-font);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    padding: 19px 20px 15px;
+    width: 100%;
+
+    &:hover {
+      background: #ba6900;
+    }
+
+    &.disabled {
+      background-color: gray;
+      color: white;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.error-wrapper {
+  margin-top: 1rem;
+
+  ul {
+    padding-left: 1rem;
+
+    li {
+      font-size: 15px;
+      color: #FF0000;
+      font-weight: 400;
+      line-height: 24px;
+      letter-spacing: 0.5px;
+    }
+  }
+}

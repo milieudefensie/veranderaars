@@ -1,3 +1,4 @@
+const { DateTime } = require('luxon');
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
@@ -19,9 +20,8 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     },
   });
 
-  const recievedToken = await accessToken.json();
-
-  const result = await fetch(`${cslPath}/api/v1/events?access_token=${recievedToken.access_token}`, {
+  const receivedToken = await accessToken.json();
+  const result = await fetch(`${cslPath}/api/v1/events?access_token=${receivedToken.access_token}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -30,11 +30,20 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   });
 
   const resultData = await result.json();
-  for (const event of resultData.events) {
+
+  // Filter events, only render future events
+  const today = DateTime.now().setZone('Europe/Amsterdam');
+  const futureEvents = resultData.events.filter((e) => {
+    const startDate = DateTime.fromISO(e.start_at, { zone: 'Europe/Amsterdam' });
+    return startDate > today;
+  });
+
+  for (const event of futureEvents) {
     createNode({
       ...event,
       id: event.slug,
       title: event.title,
+      labels: event.labels || [],
       internal: {
         type: 'ExternalEvent',
         contentDigest: createContentDigest(event),

@@ -79,8 +79,7 @@ const CSLEvent = ({ data: { page, listEvent, favicon } }) => {
 
           {/* Form  */}
           <div className={`form-wrapper `}>
-            <Form event={slug}/>
-
+            <Form event={slug} />
           </div>
 
           {/* Brief information */}
@@ -169,7 +168,7 @@ export const PageQuery = graphql`
         street_number
         venue
       }
-      labels
+      ## labels
     }
   }
 `;
