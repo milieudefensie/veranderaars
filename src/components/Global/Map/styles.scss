@@ -52,20 +52,21 @@
       }
 
       .mapboxgl-popup-close-button {
-        width: 42px;
-        height: 30px;
+        width: unset;
+        height: unset;
         font-size: 42px;
-        line-height: 40%;
+        line-height: unset;
         color: #141414;
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
         margin: 0;
-        padding: 8px 7px 5px 6px;
+        padding: 8px;
+        line-height: unset;
 
         &:hover {
-          // background-color: transparent !important;
+          background-color: rgb(0 0 0/5%);
         }
       }
 
