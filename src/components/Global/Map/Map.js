@@ -137,8 +137,8 @@ const MapWrapper = ({
           onLoad={(evt) => evt.target.setZoom(viewport.zoom)}
           scrollZoom={false}
           dragRotate={false}
-          // touchZoomRotate={false}
-          touchPitch
+          touchPitch={true}
+          touchZoomRotate={true}
           onError={(err) => {
             console.error('Error loading complex map: ', err.error.message);
             setError((prev) => !prev);
