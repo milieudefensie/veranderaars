@@ -246,6 +246,13 @@ const MapWrapper = ({
             </div>
           )}
         </Map>
+
+        {/* Floating button */}
+        {floatButton && floatButton[0] && (
+          <div className="mobile-map-floating-button">
+            <Cta cta={floatButton[0]} />
+          </div>
+        )}
       </div>
     </div>
   );

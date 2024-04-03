@@ -76,6 +76,10 @@
       }
     }
 
+    .mobile-map-floating-button {
+      display: none;
+    }
+
     .cluster-marker {
       color: var(--white);
       background: var(--dark);
@@ -119,6 +123,11 @@
         .map-floating-button {
           display: none;
         }
+      }
+
+      .mobile-map-floating-button {
+        display: block;
+        margin-top: 1rem;
       }
     }
 
@@ -200,9 +209,7 @@
           }
 
           .map-floating-button {
-            display: block;
-            top: 15px;
-            right: 15px;
+            display: none;
           }
         }
       }

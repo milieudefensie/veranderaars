@@ -30,7 +30,6 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
     address,
     registrationForm,
     formBackgroundColor,
-    whatsappGroup,
     shareMessage,
     image,
     content,
@@ -105,8 +104,8 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
               )}
             </div>
 
-            {(shareMessage || whatsappGroup) && (
-              <a className="wp-button" href={shareWpText || whatsappGroup} target="_blank" rel="noopener noreferrer">
+            {shareMessage && (
+              <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
                 <span>Deel op WhatsApp</span>
                 <ReactSVG src={wpIcon} alt="Wp icon" />
               </a>
@@ -149,7 +148,6 @@ export const PageQuery = graphql`
       hourEnd
       address
       region
-      whatsappGroup
       shareMessage
       registrationForm {
         ... on DatoCmsHubspot {

@@ -90,6 +90,10 @@
   .form-block-wrapper .form-block .left-img {
     display: none;
   }
+
+  .form-block-wrapper .form-block .description {
+    color: var(--dark);
+  }
 }
 
 @media screen and (max-width: 992px) {
