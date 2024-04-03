@@ -141,7 +141,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
                   const errorMessage = `
                     <ul class="no-list hs-error-msgs inputs-list" role="alert">
                       <li>
-                        <label class="hs-error-msg hs-main-font-element">Voer een geldige postcode in (geen spaties)</label>
+                        <label class="hs-error-msg hs-main-font-element">Voer een geldige postcode in</label>
                       </li>
                     </ul>
                   `;
