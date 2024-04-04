@@ -93,109 +93,109 @@ const Form = ({ event }) => {
   return (
     <>
       <form onSubmit={handleSubmit} className="custom-form">
-        <div class="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-          <label className="custom-label" for="firstName">
+        <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+          <label className="custom-label" htmlFor="firstName">
             <span>Voornaam</span>
-            <span class="required">*</span>
+            <span className="required">*</span>
           </label>
 
-          <div class="input">
+          <div className="input">
             <input
               id="firstName"
               name="firstName"
               type="text"
               className={`input ${errors.firstName ? 'error' : ''} `}
               inputMode="text"
-              autocomplete="off"
+              autoComplete="off"
               onChange={handleChange}
             />
           </div>
 
           {errors.firstName && (
-            <ul class="no-list hs-error-msgs inputs-list" role="alert">
+            <ul className="no-list hs-error-msgs inputs-list" role="alert">
               <li>
-                <label class="hs-error-msg hs-main-font-element">{errors.firstName}</label>
+                <label className="hs-error-msg hs-main-font-element">{errors.firstName}</label>
               </li>
             </ul>
           )}
         </div>
 
-        <div class="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-          <label class="custom-label" for="lastName">
+        <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+          <label className="custom-label" htmlFor="lastName">
             <span>Achternaam</span>
-            <span class="required">*</span>
+            <span className="required">*</span>
           </label>
 
-          <div class="input">
+          <div className="input">
             <input
               id="lastName"
               name="lastName"
               type="text"
               className={`input ${errors.lastName ? 'error' : ''} `}
               inputMode="text"
-              autocomplete="off"
+              autoComplete="off"
               onChange={handleChange}
             />
           </div>
 
           {errors.lastName && (
-            <ul class="no-list hs-error-msgs inputs-list" role="alert">
+            <ul className="no-list hs-error-msgs inputs-list" role="alert">
               <li>
-                <label class="hs-error-msg hs-main-font-element">{errors.lastName}</label>
+                <label className="hs-error-msg hs-main-font-element">{errors.lastName}</label>
               </li>
             </ul>
           )}
         </div>
 
-        <div class="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-          <label class="custom-label" for="postcode">
+        <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+          <label className="custom-label" htmlFor="postcode">
             <span>Postcode</span>
-            <span class="required">*</span>
+            <span className="required">*</span>
           </label>
 
-          <div class="input">
+          <div className="input">
             <input
               id="postcode"
               name="postcode"
               type="text"
               className={`input ${errors.postcode ? 'error' : ''} `}
               inputMode="text"
-              autocomplete="off"
+              autoComplete="off"
               onChange={handleChange}
             />
           </div>
 
           {errors.postcode && (
-            <ul class="no-list hs-error-msgs inputs-list" role="alert">
+            <ul className="no-list hs-error-msgs inputs-list" role="alert">
               <li>
-                <label class="hs-error-msg hs-main-font-element">{errors.postcode}</label>
+                <label className="hs-error-msg hs-main-font-element">{errors.postcode}</label>
               </li>
             </ul>
           )}
         </div>
 
-        <div class="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-          <label class="custom-label" for="email">
+        <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+          <label className="custom-label" htmlFor="email">
             <span>E-mail</span>
-            <span class="required">*</span>
+            <span className="required">*</span>
           </label>
 
-          <div class="input">
+          <div className="input">
             <input
               id="email"
               name="email"
               type="text"
               className={`input ${errors.email ? 'error' : ''} `}
               inputMode="text"
-              autocomplete="off"
+              autoComplete="off"
               onChange={handleChange}
             />
           </div>
 
           {errors.email && (
-            <ul class="no-list hs-error-msgs inputs-list" role="alert">
+            <ul className="no-list hs-error-msgs inputs-list" role="alert">
               <li>
-                <label class="hs-error-msg hs-main-font-element">{errors.email}</label>
+                <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
               </li>
             </ul>
           )}

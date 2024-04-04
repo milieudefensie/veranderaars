@@ -149,7 +149,6 @@ export const PageQuery = graphql`
       hourEnd
       address
       region
-      whatsappGroup
       shareMessage
       registrationForm {
         ... on DatoCmsHubspot {

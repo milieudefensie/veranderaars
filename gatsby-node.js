@@ -70,6 +70,13 @@ exports.createPages = ({ graphql, actions }) => {
     resolve(
       graphql(`
         {
+          configuration: datoCmsSiteConfiguration {
+            cslGenericImage {
+              url
+              alt
+            }
+          }
+
           pages: allDatoCmsBasicPage {
             edges {
               node {
@@ -187,6 +194,7 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: event.slug,
               id: event.id,
+              heroImage: result.data.configuration.cslGenericImage,
             },
           });
         }

@@ -17,20 +17,9 @@ import Form from '../components/Global/Form/Form';
 
 import './basic.styles.scss';
 
-const CSLEvent = ({ data: { page, listEvent, favicon } }) => {
-  const {
-    title,
-    slug,
-    image_url,
-    description,
-    start_at,
-    end_at,
-    start_in_zone,
-    end_in_zone,
-    virtual,
-    location,
-    labels = [],
-  } = page;
+const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
+  const { title, slug, image_url, description, start_at, end_at, location } = page;
+  const heroImage = pageContext?.heroImage?.url || image_url;
 
   const [shareWpText, setShareWpText] = useState('');
 
@@ -61,7 +50,7 @@ const CSLEvent = ({ data: { page, listEvent, favicon } }) => {
       </SeoDatoCMS>
 
       <WrapperLayout variant="white">
-        <HeroBasic image={{ url: image_url }} overlay={false} />
+        <HeroBasic image={{ url: heroImage }} overlay={false} external />
 
         <FloatLayout reduceOverlap>
           {listEvent && (
