@@ -136,11 +136,8 @@ const MapWrapper = ({
           onMove={(evt) => setViewport(evt.viewState)}
           onLoad={(evt) => evt.target.setZoom(viewport.zoom)}
           dragRotate={false}
-          //
-          scrollZoom={true}
-          // touchPitch={true}
-          // touchZoomRotate={true}
-          //
+          touchPitch
+          scrollZoom={false} // if enabled, we can use notebook trackpad
           onError={(err) => {
             console.error('Error loading complex map: ', err.error.message);
             setError((prev) => !prev);
