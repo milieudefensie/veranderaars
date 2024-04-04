@@ -31,6 +31,7 @@ const MapWrapper = ({
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [error, setError] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const [scroll, setScroll] = useState(null);
 
   const resizeMapOnMobile = () => {
     const isMobile = window.innerWidth <= 992;
@@ -41,7 +42,7 @@ const MapWrapper = ({
       console.log('[MAP] Is mobile');
 
       if (mobileView) {
-        setViewport((prev) => ({ ...prev, zoom: 6.27, longitude: 5.25, latitude: 52.5 }));
+        setViewport((prev) => ({ ...prev, zoom: 6.26, longitude: 5.5, latitude: 52 }));
         mapRef.current?.resize();
         return;
       }
@@ -51,18 +52,28 @@ const MapWrapper = ({
     }
   };
 
+  const handleOnScroll = () => {
+    if (typeof window !== 'undefined') {
+      const position = window.pageYOffset;
+      setScroll(position);
+    }
+  };
+
   useEffect(() => {
     resizeMapOnMobile();
+
     window.addEventListener('resize', resizeMapOnMobile);
+    window.addEventListener('scroll', handleOnScroll);
 
     return () => {
       window.removeEventListener('resize', resizeMapOnMobile);
+      window.removeEventListener('scroll', handleOnScroll);
       mapRef.current?.remove();
     };
   }, []);
 
   useEffect(() => {
-    if (window) {
+    if (window && !scroll) {
       const scrollToTop = () => window.scrollTo({ top: 0 });
       scrollToTop();
     }
