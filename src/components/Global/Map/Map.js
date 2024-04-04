@@ -135,8 +135,8 @@ const MapWrapper = ({
           }
           onMove={(evt) => setViewport(evt.viewState)}
           onLoad={(evt) => evt.target.setZoom(viewport.zoom)}
+          touchPitch
           dragRotate={false}
-          touchPitch={false}
           touchZoomRotate={false}
           scrollZoom={false} // if enabled, we can use notebook trackpad
           onError={(err) => {
