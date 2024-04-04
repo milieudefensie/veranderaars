@@ -71,6 +71,7 @@ const Form = ({ event }) => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setStatus('idle');
       return;
     }
 
