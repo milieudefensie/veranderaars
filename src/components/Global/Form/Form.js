@@ -28,7 +28,7 @@ const Form = ({ event }) => {
         const isValidPostcode = postcodeRegex.test(value);
         setErrors((prevErrors) => ({
           ...prevErrors,
-          [name]: isValidPostcode ? null : 'Voer een geldige postcode in (geen spaties)',
+          [name]: isValidPostcode ? null : 'Voer een geldige postcode in',
         }));
       }
     }
@@ -50,6 +50,7 @@ const Form = ({ event }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatus('loading');
     const newErrors = {};
 
     Object.keys(formData).forEach((key) => {
@@ -65,7 +66,7 @@ const Form = ({ event }) => {
 
     const postcodeRegex = /^\d{4}\s?[A-Za-z]{2}$/;
     if (!postcodeRegex.test(formData.postcode)) {
-      newErrors.postcode = 'Voer een geldige postcode in (geen spaties)';
+      newErrors.postcode = 'Voer een geldige postcode in';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -73,22 +74,28 @@ const Form = ({ event }) => {
       return;
     }
 
-    const submit = await fetch('/api/submit-form', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const submit = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-    const response = await submit.json();
-    if (submit.status !== 200) {
-      setStatus('fail');
-      setErrorMsg(response.message);
-    } else {
-      navigate('/bedankt-dat-je-komt/');
+      const response = await submit.json();
+      if (submit.status !== 200) {
+        setStatus('fail');
+        setErrorMsg(response.message);
+      } else {
+        navigate('/bedankt-dat-je-komt/');
+      }
+    } catch (error) {
+      setStatus('error');
+      console.error(error);
     }
   };
 
   const hasErrors = Object.values(errors).some((e) => e);
+  const isLoading = status === 'loading';
 
   return (
     <>
@@ -203,9 +210,9 @@ const Form = ({ event }) => {
 
         <input
           type="submit"
-          value="Ik ben er bij!"
+          value={isLoading ? 'Sending...' : 'Ik ben er bij!'}
           className={`send-btn ${hasErrors ? 'disabled' : ''}`}
-          disabled={hasErrors}
+          disabled={hasErrors || isLoading}
         />
       </form>
 

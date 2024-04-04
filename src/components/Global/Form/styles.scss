@@ -2,7 +2,7 @@
   display: grid;
   gap: 16px;
   row-gap: 20px;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
 
   .form-field {
     position: relative;
@@ -90,7 +90,7 @@
   }
 
   .send-btn {
-    grid-column: span 3;
+    grid-column: span 2;
     box-shadow: none !important;
     background-color: var(--nb-primary-color);
     border: none;
@@ -130,6 +130,19 @@
       font-weight: 400;
       line-height: 24px;
       letter-spacing: 0.5px;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .custom-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 1.5rem;
+
+    .send-btn {
+      font-size: 18px;
     }
   }
 }

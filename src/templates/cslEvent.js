@@ -67,7 +67,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
           {title && <h1>{title}</h1>}
 
           {/* Form  */}
-          <div className={`form-wrapper `}>
+          <div className={`form-wrapper`}>
             <Form event={slug} />
           </div>
 
