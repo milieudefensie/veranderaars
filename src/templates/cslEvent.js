@@ -18,7 +18,7 @@ import Form from '../components/Global/Form/Form';
 import './basic.styles.scss';
 
 const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
-  const { title, slug, image_url, description, start_at, end_at, location } = page;
+  const { title, slug, image_url, additional_image_sizes_url, description, start_at, end_at, location } = page;
   const heroImage = pageContext?.heroImage?.url || image_url;
 
   const [shareWpText, setShareWpText] = useState('');
@@ -31,6 +31,11 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     const currentURL = encodeURIComponent(window.location.href);
     setShareWpText(`https://wa.me/?text=${currentURL}`);
   }, []);
+
+  let mainImage = null;
+  if (additional_image_sizes_url) {
+    mainImage = additional_image_sizes_url.find((i) => i.style === 'original');
+  }
 
   return (
     <Layout>
@@ -106,6 +111,12 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             )}
           </div>
 
+          {mainImage?.url && (
+            <div className="image-event">
+              <img src={mainImage.url} alt={title} />
+            </div>
+          )}
+
           {description && (
             <div className="content">
               <p dangerouslySetInnerHTML={{ __html: description }} />
@@ -145,6 +156,10 @@ export const PageQuery = graphql`
       launched_at
       locale
       image_url
+      additional_image_sizes_url {
+        style
+        url
+      }
       location {
         latitude
         longitude
