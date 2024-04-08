@@ -4,6 +4,21 @@ const clientId = process.env.CSL_CLIENT_ID;
 const clientSecret = process.env.CSL_CLIENT_SECRET;
 const allowedOrigins = ['http://localhost:8000', 'https://veranderaars.milieudefensie.nl'];
 
+const ERROR_MSG = {
+  'has already joined event': 'je hebt je al ingeschreven voor dit evenement',
+  "can't be blank": 'dit veld is verplicht',
+  'is not a valid email': 'dit is geen geldig e-mailadres',
+  'is not a valid postal code': 'dit is geen geldige postcode',
+  'must exist': 'sss',
+};
+
+const KEY_ERROR_MSG = {
+  postcode: 'Postcode',
+  first_name: 'Voornaam',
+  last_name: 'Achternaam',
+  email: 'e-mailadres',
+};
+
 export default async function handler(req, res) {
   const origin = req.headers.origin;
   if (!allowedOrigins.includes(origin)) {
@@ -47,7 +62,15 @@ export default async function handler(req, res) {
           if (response.data.errors) {
             const errorMessages = Object.keys(response.data.errors)
               .map((key) => {
-                return `${key === 'email' ? 'User' : `${key}`} ${response.data.errors[key].join(', ')}`;
+                const rawError = response.data.errors[key].join(', ');
+                // console.log({ rawError });
+
+                if (rawError === 'must exist') return null;
+                if (rawError === 'is not a valid postal code' || rawError === 'is not a valid email') {
+                  return `${ERROR_MSG[rawError]}`;
+                }
+
+                return `${KEY_ERROR_MSG[key]} ${ERROR_MSG[response.data.errors[key].join(', ')]}`;
               })
               .join('; ');
 

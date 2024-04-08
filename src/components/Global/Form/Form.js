@@ -221,9 +221,12 @@ const Form = ({ event }) => {
       {status === 'fail' && errorMsg && (
         <div className="error-wrapper">
           <ul>
-            {errorMsg.split(';').map((e) => (
-              <li>{e}</li>
-            ))}
+            {errorMsg
+              .split(';')
+              .filter((str) => str.trim().length) // Avoid empty fields
+              .map((e) => (
+                <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
+              ))}
           </ul>
         </div>
       )}
