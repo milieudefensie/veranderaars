@@ -22,7 +22,7 @@ const KEY_ERROR_MSG = {
 export default async function handler(req, res) {
   const origin = req.headers.origin;
   if (!allowedOrigins.includes(origin)) {
-    return res.status(403).json({ error: 'Access denied' });
+    // return res.status(403).json({ error: 'Access denied' });
   }
 
   const credentials = `${clientId}:${clientSecret}`;
