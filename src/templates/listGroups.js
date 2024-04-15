@@ -176,6 +176,9 @@ export const PageQuery = graphql`
         ... on DatoCmsBlockCta {
           ...BlockCustomCta
         }
+        ... on DatoCmsMap {
+          ...BlockMap
+        }
       }
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags

@@ -57,7 +57,7 @@ function useCSLEvents(cmsEvents) {
             title: e.title,
             image: { url: e.image_url },
             type: 'INTERNATIONAL',
-            labels: e.labels || [],
+            labels: e.labels ? e.labels : [],
           }));
 
         // Get only future events

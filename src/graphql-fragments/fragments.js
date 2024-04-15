@@ -139,6 +139,18 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment BlockMap on DatoCmsMap {
+    __typename
+    id: originalId
+    filterBy {
+      id
+      title
+    }
+    labelsInCsl
+    textOverlayingMap
+    showMap
+  }
+
   fragment BlockNarrativeBlock on DatoCmsNarrativeBlock {
     __typename
     id: originalId
