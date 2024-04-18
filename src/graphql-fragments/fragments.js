@@ -149,6 +149,9 @@ export const DatoCMS = graphql`
     labelsInCsl
     textOverlayingMap
     showMap
+    floatCta {
+      ...AppCta
+    }
   }
 
   fragment BlockNarrativeBlock on DatoCmsNarrativeBlock {
