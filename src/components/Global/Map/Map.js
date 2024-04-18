@@ -73,7 +73,7 @@ const MapWrapper = ({
   }, []);
 
   useEffect(() => {
-    if (window && !scroll) {
+    if (window) {
       const scrollToTop = () => window.scrollTo({ top: 0 });
       scrollToTop();
     }

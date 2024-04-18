@@ -11,7 +11,7 @@ import './styles.scss';
 
 const MapFilter = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
-  const { filterBy, labelsInCsl, textOverlayingMap, showMap, floatCta } = block;
+  const { filterBy, labelsInCsl, textOverlayingMap, showMap, buttonOnMap } = block;
 
   const { allDatoCmsEvent: events } = useStaticQuery(graphql`
     query events {
@@ -86,7 +86,7 @@ const MapFilter = ({ block }) => {
           type="event"
           title={textOverlayingMap}
           data={filteredEvents}
-          floatButton={floatCta}
+          floatButton={buttonOnMap}
           mobileView={mobileShowMap}
           setMobileView={setMobileShowMap}
         />
