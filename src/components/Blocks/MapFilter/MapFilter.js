@@ -11,7 +11,7 @@ import './styles.scss';
 
 const MapFilter = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
-  const { filterBy, labelsInCsl, textOverlayingMap, showMap, buttonOnMap } = block;
+  const { filterBy = {}, labelsInCsl, textOverlayingMap, showMap, buttonOnMap } = block;
 
   const { allDatoCmsEvent: events } = useStaticQuery(graphql`
     query events {
@@ -53,11 +53,14 @@ const MapFilter = ({ block }) => {
     }
   `);
 
-  const cmsEvents = mapCmsEvents(events).filter((e) => e.tags.some((t) => t.id === filterBy.id));
+  const cmsEvents = filterBy.id
+    ? mapCmsEvents(events).filter((e) => e.tags.some((t) => t.id === filterBy.id))
+    : mapCmsEvents(events);
+
   const { mergedEvents, status } = useCSLEvents(cmsEvents);
 
   const filteredEvents = mergedEvents.filter((e) =>
-    e.tags.some((t) => t.id === filterBy.id || t.labels?.includes(labelsInCsl))
+    e.tags.some((t) => t.id === filterBy?.id || t.labels?.includes(labelsInCsl))
   );
 
   useEffect(() => {
