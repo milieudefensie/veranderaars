@@ -83,11 +83,17 @@ export const compareIfIsFuture = (event) => {
     eventHourStart = eventHourStart.substring(0, 5);
   }
 
-  const eventDate = DateTime.fromFormat(`${event.rawDate} ${eventHourStart}`, 'yyyy-MM-dd HH:mm', {
-    zone: 'Europe/Amsterdam',
-  });
+  // CSL EVENTS
+  if (event.type === 'INTERNATIONAL') {
+    const eventDate = DateTime.fromISO(event.rawDate, { zone: 'Europe/Amsterdam' });
+    return eventDate >= DateTime.local();
+  } else {
+    const eventDate = DateTime.fromFormat(`${event.rawDate} ${eventHourStart}`, 'yyyy-MM-dd HH:mm', {
+      zone: 'Europe/Amsterdam',
+    });
 
-  return eventDate >= DateTime.local();
+    return eventDate >= DateTime.local();
+  }
 };
 
 export const convertTime = (dateTimeString) => {

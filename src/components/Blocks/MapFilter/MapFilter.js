@@ -53,15 +53,22 @@ const MapFilter = ({ block }) => {
     }
   `);
 
-  const cmsEvents = filterBy.id
+  const cmsEvents = filterBy?.id
     ? mapCmsEvents(events).filter((e) => e.tags.some((t) => t.id === filterBy.id))
     : mapCmsEvents(events);
 
   const { mergedEvents, status } = useCSLEvents(cmsEvents);
 
-  const filteredEvents = mergedEvents.filter((e) =>
-    e.tags.some((t) => t.id === filterBy?.id || t.labels?.includes(labelsInCsl))
-  );
+  const filteredEvents = mergedEvents.filter((e) => {
+    if (!labelsInCsl && !filterBy?.id) return true;
+
+    const isCSLEvent = e.type === 'INTERNATIONAL';
+    if (isCSLEvent) {
+      return e.labels?.includes(labelsInCsl);
+    }
+
+    return e.tags?.some((t) => t.id === filterBy?.id);
+  });
 
   useEffect(() => {
     const handleWindowResize = () => {
