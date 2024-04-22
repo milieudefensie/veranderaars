@@ -36,6 +36,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
     coordinates,
     tags = [],
     relatedEvents = [],
+    localGroupId,
   } = page;
 
   useEffect(() => {
@@ -67,6 +68,20 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
   const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
   const hasRelatedEvents = related || nearbyEvents.length > 0;
 
+  const hubspotFormSetGroupId = () => {
+    if (!localGroupId) {
+      console.warn('Local group ID not found');
+      return;
+    }
+
+    const localGroupInput = document.querySelector('input[name="local_group_id__voor_formulieren_"]');
+    if (localGroupInput) {
+      localGroupInput.value = localGroupId;
+    } else {
+      console.warn('Local group ID input not found');
+    }
+  };
+
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
       <SeoDatoCMS seo={seo} favicon={favicon} />
@@ -93,7 +108,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
           {/* Form  */}
           {registrationForm && (
             <div className="form-wrapper">
-              <HubspotForm {...registrationForm} style="event" />
+              <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
             </div>
           )}
 
@@ -230,6 +245,7 @@ export const PageQuery = graphql`
       id
       title
       slug
+      localGroupId
       address
       email
       whatsappGroup

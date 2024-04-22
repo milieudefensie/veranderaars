@@ -4,7 +4,7 @@ import { homepageFormIssues } from '../../../utils';
 
 import './index.scss';
 
-const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns }) => {
+const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns, extraLogic = null }) => {
   return (
     <>
       <Script
@@ -152,6 +152,9 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
                   hsZipContainer.appendChild(tempDiv);
                 }
               }
+
+              // Custom logic if needed
+              if (extraLogic) extraLogic();
             },
           });
         }}
