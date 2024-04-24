@@ -195,6 +195,7 @@ export const PageQuery = graphql`
     allCSLEvents: allExternalEvent {
       edges {
         node {
+          __typename
           id: slug
           slug
           title

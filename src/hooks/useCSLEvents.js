@@ -28,6 +28,7 @@ function useCSLEvents(cmsEvents, cslEvents) {
         image: { url: e.image_url },
         labels: e.labels || [],
         type: e.type,
+        model: e.model,
       }));
 
     // Get only future events

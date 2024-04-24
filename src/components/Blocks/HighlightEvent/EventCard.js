@@ -8,21 +8,20 @@ import './styles.scss';
 
 const EventCard = ({ event, isHighlighted = false }) => {
   const {
+    __typename,
     slug,
     title,
     introduction,
     image,
     date,
-    rawDate,
     address,
     hourStart,
     hourEnd,
     tags = [],
-    type,
     url,
     externalLink,
   } = event;
-  const isCslEvent = type === 'CSL';
+  const isCslEvent = __typename === 'ExternalEvent';
 
   const renderContent = () => (
     <>
@@ -70,7 +69,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
   }
 
   return (
-    <Link to={isCslEvent ? `/agenda/${slug}` : event} className={`event-card ${isHighlighted ? 'highlighted' : ''}`}>
+    <Link to={event} className={`event-card ${isHighlighted ? 'highlighted' : ''}`}>
       {renderContent()}
     </Link>
   );

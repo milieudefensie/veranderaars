@@ -254,7 +254,7 @@ exports.createPages = ({ graphql, actions }) => {
         const CSLEvents = result.data.CSLevents.nodes;
         for (const event of CSLEvents) {
           createPage({
-            path: `/agenda/${event.slug}`,
+            path: `/lokaal/${event.slug}`,
             component: templates.cslEvent,
             context: {
               slug: event.slug,

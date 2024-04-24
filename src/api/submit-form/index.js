@@ -82,6 +82,7 @@ export default async function handler(req, res) {
         return;
       });
   } catch (error) {
+    console.log('error: ', error.response);
     res.status(400).json({ message: error.message });
     return;
   }

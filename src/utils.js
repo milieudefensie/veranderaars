@@ -5,6 +5,8 @@ export const pathToModel = (model = null, slug = '') => {
     return `/${slug}`;
   } else if (model === 'event') {
     return `/agenda/${slug}`;
+  } else if (model === 'ExternalEvent') {
+    return `/lokaal/${slug}`;
   } else if (model === 'tool') {
     return `/toolkit/${slug}`;
   } else if (model === 'group') {
@@ -242,6 +244,9 @@ export const mapCslEvents = (events) => {
         coordinates: {
           latitude: parseFloat(raw.node.location?.latitude).toFixed(6),
           longitude: parseFloat(raw.node.location?.longitude).toFixed(6),
+        },
+        model: {
+          apiKey: 'ExternalEvent',
         },
         type: 'CSL',
       }))

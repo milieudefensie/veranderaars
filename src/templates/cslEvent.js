@@ -142,6 +142,7 @@ export const PageQuery = graphql`
       slug
     }
     page: externalEvent(id: { eq: $id }) {
+      __typename
       id
       slug
       title
