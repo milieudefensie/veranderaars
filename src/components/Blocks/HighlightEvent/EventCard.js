@@ -12,6 +12,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
     title,
     introduction,
     image,
+    date,
     rawDate,
     address,
     hourStart,

@@ -156,10 +156,6 @@ export const PageQuery = graphql`
       launched_at
       locale
       image_url
-      additional_image_sizes_url {
-        style
-        url
-      }
       location {
         latitude
         longitude
@@ -172,7 +168,7 @@ export const PageQuery = graphql`
         street_number
         venue
       }
-      ## labels
+      labels
     }
   }
 `;

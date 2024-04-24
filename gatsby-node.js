@@ -4,6 +4,58 @@ require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 // node source from CSL
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions;
+  const externalEvent = `
+    type ExternalEvent implements Node {
+      id: ID!
+      slug: String!
+      title: String!
+      url: String
+      description: String
+      start_at: String
+      end_at: String
+      start_in_zone: String
+      end_in_zone: String
+      time_zone: String
+      virtual: Boolean
+      launched_at: String
+      locale: String
+      host_address: String
+      max_attendees_count: String
+      image_url: String
+      labels: [String!]!
+      internal: Internal
+      location: Location
+      calendar: Calendar      
+    }
+    type Calendar {
+      name: String
+      title: String
+      slug: String
+      url: String
+    }
+    type Location {
+      latitude: String
+      longitude: String
+      postal_code: String
+      country: String
+      region: String
+      locality: String
+      query: String
+      street: String
+      street_number: String
+      venue: String
+      created_at: String
+    }
+    type Internal {
+      type: String!
+      contentDigest: String!
+    }
+  `;
+  createTypes(externalEvent);
+};
+
 exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
   const clientId = process.env.CSL_CLIENT_ID;
   const clientSecret = process.env.CSL_CLIENT_SECRET;
