@@ -530,6 +530,15 @@
     .hs-fieldtype-radio,
     .hs-fieldtype-booleancheckbox {
       grid-column: span 3;
+      position: relative;
+    }
+
+    .hs-fieldtype-radio,
+    .hs-fieldtype-booleancheckbox {
+      label {
+        position: unset;
+        padding: 0 !important;
+      }
     }
   }
 }

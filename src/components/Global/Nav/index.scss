@@ -16,12 +16,13 @@
   }
 
   .close,
-  .navbar-toggler {
+  .navbar-toggler2 {
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.20);
   }
 
-  .navbar-toggler {
+  .navbar-toggler2 {
     border: none;
+    background-color: transparent;
 
     &:hover {
       svg {
@@ -37,7 +38,7 @@
   }
 
   &.green {
-    .navbar-toggler {
+    .navbar-toggler2 {
       &:hover {
         svg {
           rect {
@@ -66,7 +67,6 @@
 }
 
 #nav-content {
-
   .actions {
     display: flex;
     align-items: center;
@@ -95,21 +95,13 @@
     padding: 37px 205px;
     width: 740px;
     background-color: var(--white);
-    transition: transform 0.25s ease-in-out;
 
-    .actions {
-      visibility: hidden;
-    }
-  }
-
-  .offcanvas.show {
     display: flex;
     align-items: flex-end;
-    transform: none;
-    box-shadow: 0px -5px 9px 0px rgba(0, 0, 0, 0.50);
+    transition: transform .4s;
+    transition-timing-function: cubic-bezier(1);
 
     .actions {
-      visibility: visible;
       gap: 20px;
       margin-bottom: 118px;
 
@@ -127,6 +119,11 @@
         }
       }
     }
+  }
+
+  .offcanvas.show {
+    transform: none;
+    box-shadow: 0px -5px 9px 0px rgba(0, 0, 0, 0.50);
   }
 
   // Links
@@ -221,15 +218,30 @@
         height: 60.045px;
       }
     }
-
-    .actions {
-      gap: 20px;
-      position: relative;
-    }
   }
 
   #nav-content {
-    .offcanvas.show {
+    .offcanvas-header .actions {
+      gap: 20px !important;
+
+      .close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .close svg {
+        height: 100%;
+        width: 100%;
+      }
+
+      .wp-button svg {
+        width: 44px !important;
+        height: 44px !important;
+      }
+    }
+
+    .offcanvas {
       width: 85%;
       padding: 0;
       padding-top: .5rem;
@@ -239,26 +251,24 @@
         margin-bottom: 50px;
       }
 
-      .offcanvas-body {
-        .links-container {
-          gap: 25px;
-          margin-bottom: 25px;
-          align-items: flex-end;
-          text-align: right;
+      .links-container {
+        gap: 25px;
+        margin-bottom: 25px;
+        align-items: flex-end;
+        text-align: right;
 
-          .nav-item a {
-            font-size: 29px;
-            line-height: 115%;
-          }
+        .nav-item a {
+          font-size: 29px;
+          line-height: 115%;
+        }
 
-          .nav-item.dropdown .dropdown-menu.open {
-            gap: 12px;
-          }
+        .nav-item.dropdown .dropdown-menu.open {
+          gap: 12px;
+        }
 
-          .nav-item.dropdown .dropdown-menu .dropdown-item .dropdown-link {
-            font-size: 19px;
-            line-height: 130%;
-          }
+        .nav-item.dropdown .dropdown-menu .dropdown-item .dropdown-link {
+          font-size: 19px;
+          line-height: 130%;
         }
       }
     }
@@ -268,7 +278,7 @@
 @media screen and (max-width: 767px) {
   .navbar2 {
     .actions {
-      .navbar-toggler svg {
+      .navbar-toggler2 svg {
         width: 50px;
         height: 100%;
       }
@@ -282,7 +292,7 @@
 
   #nav-content {
     .actions {
-      .navbar-toggler svg {
+      .navbar-toggler2 svg {
         width: 50px;
         height: 100%;
       }
@@ -332,11 +342,6 @@
     .actions {
       gap: 10px;
 
-      .navbar-toggler svg {
-        // width: 44px;
-        // height: 44px;
-      }
-
       .wp-button svg {
         width: 70px;
       }
@@ -348,7 +353,7 @@
       top: -.85rem;
       padding-right: 19px;
 
-      .navbar-toggler svg {
+      .navbar-toggler2 svg {
         width: 44px;
         height: 44px;
       }

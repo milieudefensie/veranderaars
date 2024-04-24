@@ -7,7 +7,6 @@ import EventCard from '../components/Blocks/HighlightEvent/EventCard';
 import Map from '../components/Global/Map/Map';
 import FilterEvents from '../components/Global/FilterEvents/FilterEvents';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
-import Spinner from '../components/Global/Spinner/Spinner';
 import Blocks from '../components/Blocks';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 import useCSLEvents from '../hooks/useCSLEvents';
@@ -19,7 +18,7 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
-  const { title, seo, highlighEvent, blocks = [] } = page;
+  const { title, seo, highlighEvent, buttonOnMap, blocks = [] } = page;
 
   const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null, description: null });
   const [mobileShowMap, setMobileShowMap] = useState(false);
@@ -113,7 +112,18 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
             )}
 
             <div className={`${mobileShowMap ? 'mobile-map' : ''}`}>
-              <Map title={title} data={filteredEvents} mobileView={mobileShowMap} setMobileView={setMobileShowMap} />
+              <Map
+                type="event"
+                floatButton={buttonOnMap}
+                title={title}
+                data={filteredEvents}
+                mobileView={mobileShowMap}
+                setMobileView={setMobileShowMap}
+                extraLogic={() => {
+                  // BUG HERE
+                  if (!mobileShowMap) setMobileShowMap((prev) => !prev);
+                }}
+              />
 
               <FilterEvents
                 events={filteredEvents}
@@ -207,6 +217,9 @@ export const PageQuery = graphql`
       id
       title
       slug
+      buttonOnMap {
+        ...AppCta
+      }
       highlighEvent {
         ... on DatoCmsEvent {
           id
@@ -267,6 +280,9 @@ export const PageQuery = graphql`
         }
         ... on DatoCmsBlockCta {
           ...BlockCustomCta
+        }
+        ... on DatoCmsMap {
+          ...BlockMap
         }
       }
       seo: seoMetaTags {

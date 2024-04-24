@@ -73,11 +73,14 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
 
             {/* Map */}
             <Map
+              type="group"
               title={title}
               data={mappedGroups}
-              type="group"
               mobileView={mobileShowMap}
               setMobileView={setMobileShowMap}
+              extraLogic={() => {
+                if (!mobileShowMap) setMobileShowMap((prev) => !prev);
+              }}
             />
 
             {Array.isArray(mappedGroups) && <ListGroupBlock items={mappedGroups} withContainer={false} />}
@@ -172,6 +175,9 @@ export const PageQuery = graphql`
         }
         ... on DatoCmsBlockCta {
           ...BlockCustomCta
+        }
+        ... on DatoCmsMap {
+          ...BlockMap
         }
       }
       seo: seoMetaTags {

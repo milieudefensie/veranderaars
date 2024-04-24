@@ -52,17 +52,44 @@
       }
 
       .mapboxgl-popup-close-button {
-        width: 42px;
-        height: 42px;
-        font-size: 42px;
-        color: #141414;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 0;
-        margin: 0;
+        // width: unset;
+        // height: unset;
+        // font-size: 42px;
+        // line-height: unset;
+        // color: #141414;
+        // display: flex;
+        // align-items: center;
+        // justify-content: center;
+        // text-align: center;
+        // margin: 0;
+        // padding: 8px;
+        // line-height: unset;
+        // height: 42px !important;
+        // padding-bottom: 18px;
+
+        all: initial;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 4px 8px;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgb(0 0 0/5%) !important;
+        }
       }
+
+      .map-floating-button {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+      }
+    }
+
+    .mobile-map-floating-button {
+      display: none;
     }
 
     .cluster-marker {
@@ -104,6 +131,15 @@
         .mapboxgl-control-container {
           display: none;
         }
+
+        .map-floating-button {
+          display: none;
+        }
+      }
+
+      .mobile-map-floating-button {
+        display: block;
+        margin-top: 1rem;
       }
     }
 
@@ -118,8 +154,8 @@
 
       .pre-header {
         display: block;
-        background: var(--secondary-bg-color);
-        border-bottom: 2px solid var(--primary-color);
+        background: var(--nb-bg-light);
+        border-bottom: 2px solid var(--dark);
 
         .action {
           display: flex;
@@ -183,7 +219,16 @@
           .mapboxgl-ctrl-bottom-right {
             bottom: 115px;
           }
+
+          .map-floating-button {
+            display: none;
+          }
         }
+      }
+
+      .mapboxgl-map .mapboxgl-popup-close-button {
+        font-size: 35px;
+        padding: 8px 5px 5px 8px;
       }
     }
   }

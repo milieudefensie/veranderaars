@@ -109,15 +109,11 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
               <ReactSVG src={headerUpdatedLogo} alt="Milieudefensie logo" />
             </Link>
 
-            <div className="actions" style={{ visibility: !expanded ? 'visible' : 'hidden' }}>
+            <div className="actions">
               <button
                 type="button"
-                data-target="#navNav"
-                aria-expanded="false"
-                aria-controls="navNav"
-                data-toggle="collapse"
-                className="navbar-toggler"
                 aria-label="Toggle navigation"
+                className="navbar-toggler2"
                 onClick={() => handleNavClick()}
                 ref={openNavBtnRef}
               >

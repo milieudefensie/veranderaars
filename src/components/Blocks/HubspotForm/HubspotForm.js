@@ -4,7 +4,7 @@ import { homepageFormIssues } from '../../../utils';
 
 import './index.scss';
 
-const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns }) => {
+const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns, extraLogic = null }) => {
   return (
     <>
       <Script
@@ -53,28 +53,14 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
 
                 e.addEventListener('focusin', function () {
                   labelElement?.classList.add('focused');
-
-                  if (e.classList.contains('hs-zip')) {
-                    verifyZipCode(e);
-                  }
-
                   checkIfFormHasErrors();
                 });
 
                 e.addEventListener('focusout', function () {
                   labelElement?.classList.remove('focused');
 
-                  if (inputElement && inputElement.value.trim() == '') {
-                    // console.log('Aca, input vacio...', inputElement);
-                    // inputElement.classList.remove('invalid', 'error');
-                  }
-
                   if (inputElement && inputElement.value.trim() !== '') {
                     labelElement?.classList.add('focused');
-                  }
-
-                  if (e.classList.contains('hs-zip')) {
-                    verifyZipCode(e);
                   }
 
                   checkIfFormHasErrors();
@@ -92,13 +78,6 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
               });
 
               // General logic
-              function verifyZipCode(input) {
-                const rawInput = input.querySelector('input');
-                rawInput.addEventListener('input', function () {
-                  rawInput.value = rawInput.value.replace(/\s/g, '');
-                });
-              }
-
               function checkIfFormHasErrors() {
                 const formWrapper = document.querySelector(`#${id}`);
                 const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
@@ -129,8 +108,8 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
               });
 
               function verifyPostalCode(input, hsZipContainer) {
-                const zipValue = input.value.trim();
-                const zipRegex = /^\d{4}[a-zA-Z]{2}$/;
+                const zipValue = input.value;
+                const zipRegex = /^\d{4}\s?[a-zA-Z]{2}$/;
                 const errorContainer = hsZipContainer.querySelector('.hs-error-msgs');
 
                 const invalidInput = !zipRegex.test(zipValue);
@@ -162,7 +141,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
                   const errorMessage = `
                     <ul class="no-list hs-error-msgs inputs-list" role="alert">
                       <li>
-                        <label class="hs-error-msg hs-main-font-element">Voer een geldige postcode in (geen spaties)</label>
+                        <label class="hs-error-msg hs-main-font-element">Voer een geldige postcode in</label>
                       </li>
                     </ul>
                   `;
@@ -173,6 +152,9 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns 
                   hsZipContainer.appendChild(tempDiv);
                 }
               }
+
+              // Custom logic if needed
+              if (extraLogic) extraLogic();
             },
           });
         }}

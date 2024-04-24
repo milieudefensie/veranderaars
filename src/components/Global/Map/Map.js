@@ -5,11 +5,20 @@ import CustomMarker from './Marker/Marker';
 import MapPopup from './MapPopup/MapPopup';
 import useSupercluster from 'use-supercluster';
 import CtaHandler from '../Cta/CtaHandler';
+import Cta from '../Cta/Cta';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles.scss';
 
-const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setMobileView }) => {
+const MapWrapper = ({
+  title,
+  data = [],
+  type = 'event',
+  mobileView = false,
+  setMobileView,
+  floatButton = null,
+  extraLogic = null,
+}) => {
   const mapRef = useRef(null);
 
   const [viewport, setViewport] = useState({
@@ -22,6 +31,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [error, setError] = useState(false);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const [scroll, setScroll] = useState(null);
 
   const resizeMapOnMobile = () => {
     const isMobile = window.innerWidth <= 992;
@@ -32,7 +42,7 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
       console.log('[MAP] Is mobile');
 
       if (mobileView) {
-        setViewport((prev) => ({ ...prev, zoom: 6.27, longitude: 5.25, latitude: 52.5 }));
+        setViewport((prev) => ({ ...prev, zoom: 6.26, longitude: 5.5, latitude: 52 }));
         mapRef.current?.resize();
         return;
       }
@@ -42,12 +52,22 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
     }
   };
 
+  const handleOnScroll = () => {
+    if (typeof window !== 'undefined') {
+      const position = window.pageYOffset;
+      setScroll(position);
+    }
+  };
+
   useEffect(() => {
     resizeMapOnMobile();
+
     window.addEventListener('resize', resizeMapOnMobile);
+    window.addEventListener('scroll', handleOnScroll);
 
     return () => {
       window.removeEventListener('resize', resizeMapOnMobile);
+      window.removeEventListener('scroll', handleOnScroll);
       mapRef.current?.remove();
     };
   }, []);
@@ -105,7 +125,13 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
       <div className="map">
         <div className="pre-header">
           <div className="container">
-            <div className="action" onClick={() => setMobileView((prev) => !prev)}>
+            <div
+              className="action"
+              onClick={() => {
+                setMobileView(false);
+                setSelectedMarker(null);
+              }}
+            >
               <span>←</span>
               <span>{type === 'event' ? 'Bekijk lijst' : 'Bekijk lijst'}</span>
             </div>
@@ -121,10 +147,10 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
           }
           onMove={(evt) => setViewport(evt.viewState)}
           onLoad={(evt) => evt.target.setZoom(viewport.zoom)}
-          scrollZoom={false}
           dragRotate={false}
-          // touchZoomRotate={false}
           touchPitch
+          touchZoomRotate
+          scrollZoom={false} // if enabled, we can use notebook trackpad
           onError={(err) => {
             console.error('Error loading complex map: ', err.error.message);
             setError((prev) => !prev);
@@ -165,7 +191,23 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
                 key={cluster.properties.id}
                 latitude={latitude}
                 longitude={longitude}
-                onClick={() => setSelectedMarker(cluster)}
+                onClick={() => {
+                  setSelectedMarker(cluster);
+
+                  // Animation to center marker/popup
+                  if (!isMobileDevice) {
+                    const px = mapRef.current?.project([longitude, latitude]);
+                    px.y -= 650 / 2;
+                    mapRef.current?.panTo(mapRef.current?.unproject(px), {
+                      animate: true,
+                      duration: 1000,
+                    });
+                  }
+
+                  if (extraLogic) {
+                    extraLogic();
+                  }
+                }}
                 anchor="bottom"
               >
                 {type === 'group' ? <GroupMarker /> : <CustomMarker />}
@@ -179,7 +221,12 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
               longitude={selectedMarker.geometry.coordinates[0]}
               latitude={selectedMarker.geometry.coordinates[1]}
               closeOnClick={false}
-              onClose={() => setSelectedMarker(null)}
+              onClose={() => {
+                setSelectedMarker(null);
+                if (extraLogic) {
+                  extraLogic();
+                }
+              }}
             >
               <MapPopup card={selectedMarker.properties} />
             </Popup>
@@ -203,7 +250,21 @@ const MapWrapper = ({ title, data = [], type = 'event', mobileView = false, setM
               handleOnClick={() => setMobileView(true)}
             />
           </div>
+
+          {/* Floating button */}
+          {floatButton && floatButton[0] && (
+            <div className="map-floating-button">
+              <Cta cta={floatButton[0]} />
+            </div>
+          )}
         </Map>
+
+        {/* Floating button */}
+        {floatButton && floatButton[0] && (
+          <div className="mobile-map-floating-button">
+            <Cta cta={floatButton[0]} />
+          </div>
+        )}
       </div>
     </div>
   );

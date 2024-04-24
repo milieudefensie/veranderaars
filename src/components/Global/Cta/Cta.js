@@ -29,6 +29,10 @@ export default function Cta({
     );
   }
 
+  if (cta?.externalUrl) {
+    return <a href={'/' + cta.externalUrl}>{externalTitle || cta.title}</a>;
+  }
+
   return (
     <Link
       className={`custom-btn         

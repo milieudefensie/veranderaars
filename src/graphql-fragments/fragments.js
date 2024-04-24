@@ -139,6 +139,21 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment BlockMap on DatoCmsMap {
+    __typename
+    id: originalId
+    filterBy {
+      id
+      title
+    }
+    labelsInCsl
+    textOverlayingMap
+    showMap
+    buttonOnMap {
+      ...AppCta
+    }
+  }
+
   fragment BlockNarrativeBlock on DatoCmsNarrativeBlock {
     __typename
     id: originalId
@@ -545,6 +560,69 @@ export const DatoCMS = graphql`
         region
         portalId
         columns
+      }
+    }
+  }
+
+  fragment AppCta on DatoCmsCta {
+    id
+    title
+    style
+    link {
+      ... on DatoCmsGlobalLink {
+        id
+        externalUrl
+        content {
+          ... on DatoCmsListTool {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsBasicPage {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsEvent {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsListEvent {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsListGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsTool {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+        }
       }
     }
   }

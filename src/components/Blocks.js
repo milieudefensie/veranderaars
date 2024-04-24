@@ -12,6 +12,7 @@ import Share from './Blocks/Share/Share';
 import ImageWrapper from './Global/Image/ImageWrapper';
 import EmbedIframe from './Blocks/EmbedIframe/EmbedIframe';
 import Cta from './Global/Cta/Cta';
+import MapFilter from './Blocks/MapFilter/MapFilter';
 
 export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage = false }) {
   return (
@@ -53,6 +54,9 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
                 <Cta cta={block} />
               </div>
             );
+
+          case 'DatoCmsMap':
+            return <MapFilter key={block.id} block={block} />;
 
           default:
             return null;

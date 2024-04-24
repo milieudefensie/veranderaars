@@ -26,7 +26,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
   const renderContent = () => (
     <>
       <div className="metadata">
-        {rawDate && <span className="date">{formatDate(rawDate)}</span>}
+        {date && <span className="date">{isCslEvent ? date : formatDate(date)}</span>}
 
         <div className="venue">
           <span>

@@ -1,0 +1,35 @@
+.map-filter-block {
+  .map-wrapper {
+    background-color: transparent;
+    margin: 0;
+    margin: 2rem 0;
+
+    .pre-header {
+      display: none !important;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .map-filter-block {
+
+    &.mobile-show {
+
+      .map-wrapper {
+        margin: 0;
+
+        .pre-header {
+          margin-bottom: 0;
+          display: flex !important;
+
+          .container {
+            margin-right: auto;
+            margin-left: auto;
+            padding-right: var(--bs-gutter-x, 0.75rem);
+            padding-left: var(--bs-gutter-x, 0.75rem);
+          }
+        }
+      }
+    }
+  }
+}
