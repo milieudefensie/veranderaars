@@ -116,6 +116,27 @@
       cursor: not-allowed;
     }
   }
+
+  .legal-consent-container {
+    grid-column: span 2;
+
+    p {
+      color: var(--nb-grey);
+      font-family: var(--nb-secondary-font);
+      font-size: 13px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 130%;
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      color: var(--dark);
+      font-weight: 600;
+      text-decoration: none;
+    }
+  }
 }
 
 .error-wrapper {

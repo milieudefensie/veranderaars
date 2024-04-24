@@ -215,6 +215,14 @@ const Form = ({ event }) => {
           className={`send-btn ${hasErrors ? 'disabled' : ''}`}
           disabled={hasErrors || isLoading}
         />
+
+        <div className="legal-consent-container">
+          <p>
+            Als we je mogen mailen, dan houden we je op de hoogte over onze beweging en acties bij jou in de buurt. Als
+            je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze{' '}
+            <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy">privacybepaling</a> voor alle details.
+          </p>
+        </div>
       </form>
 
       {/* Error messages */}
