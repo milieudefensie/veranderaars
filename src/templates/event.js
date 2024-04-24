@@ -176,7 +176,6 @@ export const PageQuery = graphql`
           __typename
           ... on DatoCmsNarrativeBlock {
             id: originalId
-            preTitle
             title
             alignment
             textContent

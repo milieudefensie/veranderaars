@@ -142,7 +142,6 @@ export const DatoCMS = graphql`
   fragment BlockNarrativeBlock on DatoCmsNarrativeBlock {
     __typename
     id: originalId
-    preTitle
     title
     alignment
     textContent
