@@ -19,37 +19,50 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
-
   const receivedToken = await accessToken.json();
-  const result = await fetch(`${cslPath}/api/v1/events?access_token=${receivedToken.access_token}`, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
 
-  const resultData = await result.json();
+  // Fetch all CSL events + create nodes
+  let currentPage = 1;
+  let totalPages = 1;
 
-  // Filter events, only render future events
-  const today = DateTime.now().setZone('Europe/Amsterdam');
-  const futureEvents = resultData.events.filter((e) => {
-    const startDate = DateTime.fromISO(e.start_at, { zone: 'Europe/Amsterdam' });
-    return startDate > today;
-  });
+  do {
+    const result = await fetch(
+      `${cslPath}/api/v1/events?access_token=${receivedToken.access_token}&page=${currentPage}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const resultData = await result.json();
 
-  for (const event of futureEvents) {
-    createNode({
-      ...event,
-      id: event.slug,
-      title: event.title,
-      labels: event.labels || [],
-      internal: {
-        type: 'ExternalEvent',
-        contentDigest: createContentDigest(event),
-      },
+    const today = DateTime.now().setZone('Europe/Amsterdam');
+    const futureEvents = resultData.events.filter((e) => {
+      const startDate = DateTime.fromISO(e.start_at, { zone: 'Europe/Amsterdam' });
+      return startDate > today;
     });
-  }
+
+    for (const event of futureEvents) {
+      console.log('[CSL Source] Creating: ', event.title);
+
+      createNode({
+        ...event,
+        id: event.slug,
+        title: event.title,
+        labels: event.labels || [],
+        internal: {
+          type: 'ExternalEvent',
+          contentDigest: createContentDigest(event),
+        },
+      });
+    }
+
+    const meta = resultData.meta;
+    totalPages = meta.total_pages;
+    currentPage = meta.next_page;
+  } while (currentPage);
 };
 
 exports.createPages = ({ graphql, actions }) => {

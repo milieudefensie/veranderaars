@@ -210,7 +210,7 @@ export const PageQuery = graphql`
           start_at
           end_at
           image_url
-          ## labels
+          labels
           location {
             latitude
             longitude
