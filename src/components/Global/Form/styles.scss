@@ -137,6 +137,46 @@
       text-decoration: none;
     }
   }
+
+  .form-field-checkbox {
+    grid-column: span 2;
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #79747e;
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      outline: none;
+    }
+
+    fieldset {
+
+      legend {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0.5px;
+        color: #49454F;
+        margin-bottom: 0;
+      }
+
+      .opt {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        label {
+          color: #6f6f6e;
+          font-size: 13px;
+          font-weight: 400;
+          line-height: 150%;
+          letter-spacing: 0.5px;
+        }
+      }
+    }
+  }
 }
 
 .error-wrapper {

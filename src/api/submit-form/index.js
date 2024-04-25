@@ -36,7 +36,8 @@ export default async function handler(req, res) {
 
   try {
     const attendeeInfo = req.body;
-    const { slug, firstName, lastName, email, postcode } = attendeeInfo;
+    const { slug, firstName, lastName, email, postcode, consent_email } = attendeeInfo;
+    const consentAccepted = consent_email === 'yes';
 
     const body = {
       attendee: {
@@ -46,8 +47,9 @@ export default async function handler(req, res) {
         last_name: lastName,
         email: email,
         postcode: postcode,
-        email_opt_in_type_external_id: 'external',
-        join_organisation: true,
+        // email_opt_in_type_external_id: 'external',
+        email_opt_in_type_external_id: consentAccepted ? 'hubspot_form_consent' : 'hubspot_form_no_consent',
+        join_organisation: false,
       },
     };
 
@@ -63,7 +65,6 @@ export default async function handler(req, res) {
             const errorMessages = Object.keys(response.data.errors)
               .map((key) => {
                 const rawError = response.data.errors[key].join(', ');
-                // console.log({ rawError });
 
                 if (rawError === 'must exist') return null;
                 if (rawError === 'is not a valid postal code' || rawError === 'is not a valid email') {

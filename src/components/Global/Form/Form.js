@@ -6,7 +6,14 @@ import './styles.scss';
 const Form = ({ event }) => {
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', postcode: '', slug: event });
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    postcode: '',
+    consent_email: null,
+    slug: event,
+  });
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -207,6 +214,22 @@ const Form = ({ event }) => {
               </li>
             </ul>
           )}
+        </div>
+
+        <div className="form-field-checkbox" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+          <fieldset>
+            <legend>Ik wil emails ontvangen over de beweging</legend>
+
+            <div className="opt">
+              <input type="radio" id="consent_email_yes" name="consent_email" value="yes" onChange={handleChange} />
+              <label for="consent_email_yes">Yes</label>
+            </div>
+
+            <div className="opt">
+              <input type="radio" id="consent_email_no" name="consent_email" value="no" onChange={handleChange} />
+              <label for="consent_email_no">No</label>
+            </div>
+          </fieldset>
         </div>
 
         <input
