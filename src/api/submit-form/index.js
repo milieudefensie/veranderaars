@@ -9,7 +9,8 @@ const ERROR_MSG = {
   "can't be blank": 'dit veld is verplicht',
   'is not a valid email': 'dit is geen geldig e-mailadres',
   'is not a valid postal code': 'dit is geen geldige postcode',
-  'must exist': 'sss',
+  'must exist': '',
+  'is al aangemeld voor de activiteit': 'Je hebt je al aangemeld voor dit evenement',
 };
 
 const KEY_ERROR_MSG = {
@@ -47,7 +48,6 @@ export default async function handler(req, res) {
         last_name: lastName,
         email: email,
         postcode: postcode,
-        // email_opt_in_type_external_id: 'external',
         email_opt_in_type_external_id: consentAccepted ? 'hubspot_form_consent' : 'hubspot_form_no_consent',
         join_organisation: false,
       },
@@ -69,6 +69,10 @@ export default async function handler(req, res) {
                 if (rawError === 'must exist') return null;
                 if (rawError === 'is not a valid postal code' || rawError === 'is not a valid email') {
                   return `${ERROR_MSG[rawError]}`;
+                }
+
+                if (rawError === 'is al aangemeld voor de activiteit') {
+                  return 'Je hebt je al aangemeld voor dit evenement';
                 }
 
                 return `${KEY_ERROR_MSG[key]} ${ERROR_MSG[response.data.errors[key].join(', ')]}`;
