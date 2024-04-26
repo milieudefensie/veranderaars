@@ -242,8 +242,8 @@ export const mapCslEvents = (events) => {
     ? events.edges.map((raw) => ({
         ...raw.node,
         coordinates: {
-          latitude: parseFloat(raw.node.location?.latitude).toFixed(6),
-          longitude: parseFloat(raw.node.location?.longitude).toFixed(6),
+          latitude: parseFloat(parseFloat(raw.node.location?.latitude).toFixed(6)),
+          longitude: parseFloat(parseFloat(raw.node.location?.longitude).toFixed(6)),
         },
         model: {
           apiKey: 'ExternalEvent',

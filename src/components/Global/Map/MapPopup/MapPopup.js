@@ -37,7 +37,7 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan' }) => {
       {title && <h2>{title}</h2>}
 
       {isCslEvent ? (
-        <Link to={`/agenda/${slug}`} className="custom-btn custom-btn-primary">
+        <Link to={`/lokaal/${slug}`} className="custom-btn custom-btn-primary">
           Meld je aan
         </Link>
       ) : externalLink ? (

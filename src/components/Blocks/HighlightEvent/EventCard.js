@@ -9,7 +9,7 @@ import './styles.scss';
 const EventCard = ({ event, isHighlighted = false }) => {
   const {
     __typename,
-    slug,
+    type,
     title,
     introduction,
     image,
@@ -21,7 +21,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
     url,
     externalLink,
   } = event;
-  const isCslEvent = __typename === 'ExternalEvent';
+  const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
 
   const renderContent = () => (
     <>

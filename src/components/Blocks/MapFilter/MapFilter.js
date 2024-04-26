@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import MapWrapper from '../../Global/Map/Map';
 import { graphql, useStaticQuery } from 'gatsby';
-import { mapCmsEvents } from '../../../utils';
+import { mapCmsEvents, mapCslEvents } from '../../../utils';
 import ListPaginated from '../../Global/Pagination/ListPaginated';
 import EventCard from '../HighlightEvent/EventCard';
 import useCSLEvents from '../../../hooks/useCSLEvents';
-import Spinner from '../../Global/Spinner/Spinner';
 
 import './styles.scss';
 
@@ -13,8 +12,29 @@ const MapFilter = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const { filterBy = {}, labelsInCsl, textOverlayingMap, showMap, buttonOnMap } = block;
 
-  const { allDatoCmsEvent: events } = useStaticQuery(graphql`
+  const { allDatoCmsEvent: events, cslEvents } = useStaticQuery(graphql`
     query events {
+      cslEvents: allExternalEvent {
+        edges {
+          node {
+            id
+            slug
+            title
+            description
+            start_at
+            end_at
+            image_url
+            labels
+            location {
+              latitude
+              longitude
+              venue
+              query
+              region
+            }
+          }
+        }
+      }
       allDatoCmsEvent {
         edges {
           node {
@@ -53,16 +73,14 @@ const MapFilter = ({ block }) => {
     }
   `);
 
-  const cmsEvents = filterBy?.id
-    ? mapCmsEvents(events).filter((e) => e.tags.some((t) => t.id === filterBy.id))
-    : mapCmsEvents(events);
-
-  const { mergedEvents, status } = useCSLEvents(cmsEvents);
+  const cmsEvents = mapCmsEvents(events);
+  const cslEventsMapped = mapCslEvents(cslEvents);
+  const { mergedEvents } = useCSLEvents(cmsEvents, cslEventsMapped);
 
   const filteredEvents = mergedEvents.filter((e) => {
     if (!labelsInCsl && !filterBy?.id) return true;
 
-    const isCSLEvent = e.type === 'INTERNATIONAL';
+    const isCSLEvent = e.type === 'CSL';
     if (isCSLEvent) {
       return e.labels?.includes(labelsInCsl);
     }
@@ -102,26 +120,20 @@ const MapFilter = ({ block }) => {
         />
       )}
 
-      {status === 'loading' ? (
-        <div style={{ textAlign: 'center' }}>
-          <Spinner />
-        </div>
-      ) : (
-        <div id="filter-events-list">
-          <ListPaginated
-            list={filteredEvents}
-            customPageSize={10}
-            renderItem={(item) => <EventCard event={item} key={item.id} />}
-            extraLogic={() => {
-              const targetElement = document.getElementById('filter-events-list');
+      <div id="filter-events-list">
+        <ListPaginated
+          list={filteredEvents}
+          customPageSize={10}
+          renderItem={(item) => <EventCard event={item} key={item.id} />}
+          extraLogic={() => {
+            const targetElement = document.getElementById('filter-events-list');
 
-              if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-          />
-        </div>
-      )}
+            if (targetElement) {
+              targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };
