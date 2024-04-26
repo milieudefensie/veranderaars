@@ -52,6 +52,8 @@
     width: 100%;
     height: calc(150px + 20vw);
   }
+
+  &.external-img {}
 }
 
 @media screen and (max-width:992px) {

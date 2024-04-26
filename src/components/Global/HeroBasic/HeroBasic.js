@@ -1,14 +1,21 @@
 import React from 'react';
 import './index.scss';
 
-function HeroBasic({ title, image = null, backgroundColor = null, responsiveVariant, overlay = true }) {
+function HeroBasic({
+  title,
+  image = null,
+  backgroundColor = null,
+  responsiveVariant,
+  overlay = true,
+  external = false,
+}) {
   const heroBgImage = image?.url ? `url(${image.url})` : undefined;
 
   return (
     <div
       className={`hero-basic ${backgroundColor ? backgroundColor : ''} ${heroBgImage ? 'with-bg-image' : ''} ${
         responsiveVariant ? responsiveVariant : ''
-      }`}
+      } ${external ? 'external-img' : ''}`}
       style={{ backgroundImage: heroBgImage }}
     >
       <div className="container">

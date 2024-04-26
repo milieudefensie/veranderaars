@@ -16,13 +16,12 @@ import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
-import { haversine, mapCmsEvents } from '../utils';
+import { haversine, mapCmsEvents, mapCslEvents } from '../utils';
 import useCSLEvents from '../hooks/useCSLEvents';
-import Spinner from '../components/Global/Spinner/Spinner';
 
 import './basic.styles.scss';
 
-const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent, favicon } }) => {
+const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], listGroup, listEvent, favicon } }) => {
   const {
     seo,
     title,
@@ -45,8 +44,8 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
   }, []);
 
   const cmsEvents = mapCmsEvents(allEvents);
-  const { mergedEvents, status } = useCSLEvents(cmsEvents);
-  const isLoading = status === 'loading';
+  const cslEvents = mapCslEvents(allCSLEvents);
+  const { mergedEvents } = useCSLEvents(cmsEvents, cslEvents);
 
   const groupHasCoordinates = coordinates && coordinates.latitude && coordinates.longitude;
   const maxDistanceInKilometers = 50;
@@ -168,22 +167,16 @@ const Group = ({ pageContext, data: { page, allEvents = [], listGroup, listEvent
         </FloatLayout>
 
         {/* Related events */}
-        {isLoading ? (
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <Spinner />
+        {hasRelatedEvents && (
+          <div className="related-section">
+            <ListHighlightEvent
+              block={{
+                sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
+                cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
+                items: related ? relatedEvents : nearbyEvents,
+              }}
+            />
           </div>
-        ) : (
-          hasRelatedEvents && (
-            <div className="related-section">
-              <ListHighlightEvent
-                block={{
-                  sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
-                  cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
-                  items: related ? relatedEvents : nearbyEvents,
-                }}
-              />
-            </div>
-          )
         )}
       </WrapperLayout>
     </Layout>
@@ -206,6 +199,28 @@ export const PageQuery = graphql`
     listEvent: datoCmsListEvent {
       id
       slug
+    }
+    allCSLEvents: allExternalEvent {
+      edges {
+        node {
+          __typename
+          id: slug
+          slug
+          title
+          description
+          start_at
+          end_at
+          image_url
+          labels
+          location {
+            latitude
+            longitude
+            venue
+            query
+            region
+          }
+        }
+      }
     }
     allEvents: allDatoCmsEvent {
       edges {

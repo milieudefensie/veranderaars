@@ -5,6 +5,8 @@ export const pathToModel = (model = null, slug = '') => {
     return `/${slug}`;
   } else if (model === 'event') {
     return `/agenda/${slug}`;
+  } else if (model === 'ExternalEvent') {
+    return `/lokaal/${slug}`;
   } else if (model === 'tool') {
     return `/toolkit/${slug}`;
   } else if (model === 'group') {
@@ -83,17 +85,19 @@ export const compareIfIsFuture = (event) => {
     eventHourStart = eventHourStart.substring(0, 5);
   }
 
-  // CSL EVENTS
-  if (event.type === 'INTERNATIONAL') {
-    const eventDate = DateTime.fromISO(event.rawDate, { zone: 'Europe/Amsterdam' });
-    return eventDate >= DateTime.local();
-  } else {
-    const eventDate = DateTime.fromFormat(`${event.rawDate} ${eventHourStart}`, 'yyyy-MM-dd HH:mm', {
+  if (event.type === 'CSL') {
+    // 2024-03-29T09:00:00Z
+    const eventDate = DateTime.fromFormat(`${event.rawDate}`, "yyyy-MM-dd'T'HH:mm:ss'Z'", {
       zone: 'Europe/Amsterdam',
     });
-
     return eventDate >= DateTime.local();
   }
+
+  const eventDate = DateTime.fromFormat(`${event.rawDate} ${eventHourStart}`, 'yyyy-MM-dd HH:mm', {
+    zone: 'Europe/Amsterdam',
+  });
+
+  return eventDate >= DateTime.local();
 };
 
 export const convertTime = (dateTimeString) => {
@@ -181,6 +185,13 @@ function formatTime(date) {
   return `${hours}:${minutes}`;
 }
 
+export function convertHour(rawDate) {
+  const date = DateTime.fromISO(rawDate).setZone('Europe/Amsterdam');
+  const hour = date.toFormat('HH:mm');
+
+  return hour;
+}
+
 export const homepageFormIssues = () => {
   const heroWrapper = document.querySelector('#hero-homepage');
   if (!heroWrapper) return;
@@ -222,6 +233,22 @@ export const mapCmsEvents = (allEvents) => {
           longitude: parseFloat(raw.node.coordinates?.longitude?.toFixed(6)),
         },
         type: 'NATIONAL',
+      }))
+    : [];
+};
+
+export const mapCslEvents = (events) => {
+  return Array.isArray(events.edges)
+    ? events.edges.map((raw) => ({
+        ...raw.node,
+        coordinates: {
+          latitude: parseFloat(raw.node.location?.latitude).toFixed(6),
+          longitude: parseFloat(raw.node.location?.longitude).toFixed(6),
+        },
+        model: {
+          apiKey: 'ExternalEvent',
+        },
+        type: 'CSL',
       }))
     : [];
 };
