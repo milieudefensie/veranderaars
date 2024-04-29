@@ -50,6 +50,7 @@ export default async function handler(req, res) {
         postcode: postcode,
         email_opt_in_type_external_id: consentAccepted ? 'hubspot_form_consent' : 'hubspot_form_no_consent',
         join_organisation: false,
+        locale: 'nl',
       },
     };
 
@@ -62,6 +63,7 @@ export default async function handler(req, res) {
           throw new Error('Error');
         } else {
           if (response.data.errors) {
+            console.log(response.data.errors);
             const errorMessages = Object.keys(response.data.errors)
               .map((key) => {
                 const rawError = response.data.errors[key].join(', ');
@@ -75,8 +77,16 @@ export default async function handler(req, res) {
                   return 'Je hebt je al aangemeld voor dit evenement';
                 }
 
-                return `${KEY_ERROR_MSG[key]} ${ERROR_MSG[response.data.errors[key].join(', ')]}`;
+                const k1 = KEY_ERROR_MSG[key];
+                const k2 = ERROR_MSG[response.data.errors[key].join(', ')];
+                if (k1 && k2) {
+                  // return `${KEY_ERROR_MSG[key]} ${ERROR_MSG[response.data.errors[key].join(', ')]}`;
+                  return `${k1} ${k2}`;
+                } else {
+                  return 'Er is een fout opgetreden. Probeer het later opnieuw.';
+                }
               })
+              .filter(Boolean)
               .join('; ');
 
             throw new Error(errorMessages);
