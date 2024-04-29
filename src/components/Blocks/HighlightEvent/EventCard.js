@@ -13,6 +13,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
     title,
     introduction,
     image,
+    image_url,
     date,
     address,
     hourStart,
@@ -48,9 +49,9 @@ const EventCard = ({ event, isHighlighted = false }) => {
         <span className="custom-btn custom-btn-primary">Meld je aan</span>
       </div>
 
-      {(image?.gatsbyImageData || image?.url) && (
+      {(image?.gatsbyImageData || image?.url || image_url) && (
         <div className="image">
-          <ImageWrapper image={image} />
+          <ImageWrapper image={image || image_url} />
         </div>
       )}
     </>

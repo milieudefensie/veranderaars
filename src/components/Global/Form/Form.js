@@ -222,12 +222,12 @@ const Form = ({ event }) => {
 
             <div className="opt">
               <input type="radio" id="consent_email_yes" name="consent_email" value="yes" onChange={handleChange} />
-              <label htmlFor="consent_email_yes">Yes</label>
+              <label htmlFor="consent_email_yes">Ja</label>
             </div>
 
             <div className="opt">
               <input type="radio" id="consent_email_no" name="consent_email" value="no" onChange={handleChange} />
-              <label htmlFor="consent_email_no">No</label>
+              <label htmlFor="consent_email_no">Nee</label>
             </div>
           </fieldset>
         </div>

@@ -249,6 +249,9 @@ export const mapCslEvents = (events) => {
           apiKey: 'ExternalEvent',
         },
         type: 'CSL',
+        image: {
+          url: raw.node.image_url,
+        },
       }))
     : [];
 };

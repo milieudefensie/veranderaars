@@ -37,6 +37,8 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     mainImage = additional_image_sizes_url.find((i) => i.style === 'original');
   }
 
+  // console.log({ image_url, additional_image_sizes_url });
+
   return (
     <Layout>
       <SeoDatoCMS favicon={favicon}>
