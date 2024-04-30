@@ -97,6 +97,9 @@ export const PageQuery = graphql`
         ... on DatoCmsMap {
           ...BlockMap
         }
+        ... on DatoCmsBlockCta {
+          ...BlockCustomCta
+        }
       }
     }
   }

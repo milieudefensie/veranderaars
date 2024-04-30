@@ -219,9 +219,10 @@
       }
 
       .introduction {
-        font-size: 15px;
-        line-height: 130%;
-        margin-bottom: 15px;
+        font-size: 15px !important;
+        line-height: 130% !important;
+        margin-bottom: 15px !important;
+        font-weight: 400 !important;
       }
     }
   }

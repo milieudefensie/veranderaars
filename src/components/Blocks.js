@@ -49,7 +49,11 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
             return (
               <div
                 key={block.id}
-                style={{ display: 'flex', justifyContent: block?.alignment ? alignment[block.alignment] : '' }}
+                style={{
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  justifyContent: block?.alignment ? alignment[block.alignment] : '',
+                }}
               >
                 <Cta cta={block} />
               </div>
