@@ -149,6 +149,7 @@ export const DatoCMS = graphql`
     labelsInCsl
     textOverlayingMap
     showMap
+    showList
     buttonOnMap {
       ...AppCta
     }

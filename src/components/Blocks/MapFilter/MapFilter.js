@@ -10,7 +10,7 @@ import './styles.scss';
 
 const MapFilter = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
-  const { filterBy = {}, labelsInCsl, textOverlayingMap, showMap, buttonOnMap } = block;
+  const { filterBy = {}, labelsInCsl, textOverlayingMap, showMap, showList, buttonOnMap } = block;
 
   const { allDatoCmsEvent: events, cslEvents } = useStaticQuery(graphql`
     query events {
@@ -120,20 +120,22 @@ const MapFilter = ({ block }) => {
         />
       )}
 
-      <div id="filter-events-list">
-        <ListPaginated
-          list={filteredEvents}
-          customPageSize={10}
-          renderItem={(item) => <EventCard event={item} key={item.id} />}
-          extraLogic={() => {
-            const targetElement = document.getElementById('filter-events-list');
+      {showList && (
+        <div id="filter-events-list">
+          <ListPaginated
+            list={filteredEvents}
+            customPageSize={10}
+            renderItem={(item) => <EventCard event={item} key={item.id} />}
+            extraLogic={() => {
+              const targetElement = document.getElementById('filter-events-list');
 
-            if (targetElement) {
-              targetElement.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
-        />
-      </div>
+              if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
