@@ -222,7 +222,7 @@ export const PageQuery = graphql`
         }
       }
     }
-    allEvents: allDatoCmsEvent {
+    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true } }) {
       edges {
         node {
           id

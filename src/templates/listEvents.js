@@ -157,7 +157,7 @@ export const PageQuery = graphql`
         ...GatsbyDatoCmsFaviconMetaTags
       }
     }
-    allEvents: allDatoCmsEvent {
+    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true } }) {
       edges {
         node {
           id

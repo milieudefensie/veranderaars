@@ -35,7 +35,7 @@ const MapFilter = ({ block }) => {
           }
         }
       }
-      allDatoCmsEvent {
+      allDatoCmsEvent(filter: { closeEvent: { ne: true } }) {
         edges {
           node {
             id
