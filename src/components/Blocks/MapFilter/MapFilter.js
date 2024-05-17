@@ -10,6 +10,7 @@ import './styles.scss';
 
 const MapFilter = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
+  const [mobileDevice, setMobileDevice] = useState(false);
   const { filterBy = {}, labelsInCsl, textOverlayingMap, showMap, showList, buttonOnMap } = block;
 
   const { allDatoCmsEvent: events, cslEvents } = useStaticQuery(graphql`
@@ -91,11 +92,17 @@ const MapFilter = ({ block }) => {
   useEffect(() => {
     const handleWindowResize = () => {
       const htmlElement = document.documentElement;
+      const navbar = document.querySelector('.navbar2');
+      setMobileDevice(window.innerWidth < 992);
 
       if (mobileShowMap && window.innerWidth < 992) {
         htmlElement.style.overflow = 'hidden';
+        navbar.style.backgroundColor = 'var(--nb-bg-light)';
+        navbar.style.height = '85px';
       } else {
         htmlElement.style.overflow = '';
+        navbar.style.backgroundColor = 'transparent';
+        navbar.style.height = 'auto';
       }
     };
 
@@ -107,6 +114,12 @@ const MapFilter = ({ block }) => {
     };
   }, [mobileShowMap]);
 
+  const handleOnMobile = () => {
+    if (mobileDevice) {
+      setMobileShowMap((prev) => !prev);
+    }
+  };
+
   return (
     <div className={`map-filter-block ${mobileShowMap ? 'mobile-show' : ''}`}>
       {showMap && (
@@ -117,6 +130,7 @@ const MapFilter = ({ block }) => {
           floatButton={buttonOnMap}
           mobileView={mobileShowMap}
           setMobileView={setMobileShowMap}
+          extraLogic={handleOnMobile}
         />
       )}
 
