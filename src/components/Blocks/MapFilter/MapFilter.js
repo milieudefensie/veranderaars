@@ -116,7 +116,7 @@ const MapFilter = ({ block }) => {
 
   const handleOnMobile = () => {
     if (mobileDevice) {
-      setMobileShowMap((prev) => !prev);
+      setMobileShowMap(true);
     }
   };
 
