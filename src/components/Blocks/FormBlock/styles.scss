@@ -98,6 +98,7 @@
 
 @media screen and (max-width: 992px) {
   .form-block-wrapper {
+    border-radius: 10px;
     background: var(--nb-primary-color-light);
 
     .container {
@@ -126,6 +127,10 @@
       .left-img {
         display: none;
       }
+    }
+
+    &.home-form {
+      border-radius: 0;
     }
   }
 
