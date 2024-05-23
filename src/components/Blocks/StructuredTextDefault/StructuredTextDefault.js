@@ -12,6 +12,11 @@ import FormBlock from '../FormBlock/FormBlock';
 import Cta from '../../Global/Cta/Cta';
 import SimpleText from '../SimpleText/SimpleText';
 import Share from '../Share/Share';
+import CountDown from '../Countdown/Countdown';
+import BlockCtaList from '../CtaList/CtaList';
+import BlockCtaIconsList from '../CtaIconsList/CtaIconsList';
+import ImageGallery from '../ImageGallery/ImageGallery';
+import Columns from '../Columns/Columns';
 
 const StructuredTextDefault = ({ content }) => {
   return (
@@ -40,10 +45,9 @@ const StructuredTextDefault = ({ content }) => {
           case 'DatoCmsVideoBlock':
             return <Video content={record} key={record.id} />;
           case 'DatoCmsAcordion':
-            return <Accordion items={record.items} key={record.id} />;
+            return <Accordion variant={record.colorVariant} items={record.items} key={record.id} />;
           case 'DatoCmsSimpleText':
             return <SimpleText key={record.id} block={record} />;
-
           case 'DatoCmsBlockCta':
             const alignment = { left: 'flex-start', center: 'center', right: 'flex-end' };
 
@@ -55,6 +59,17 @@ const StructuredTextDefault = ({ content }) => {
                 <Cta cta={record} />
               </div>
             );
+
+          case 'DatoCmsCountdown':
+            return <CountDown key={record.id} block={record} />;
+          case 'DatoCmsCtaList':
+            return <BlockCtaList key={record.id} block={record} />;
+          case 'DatoCmsCtaIconsList':
+            return <BlockCtaIconsList key={record.id} block={record} />;
+          case 'DatoCmsImageGallery':
+            return <ImageGallery key={record.id} block={record} />;
+          case 'DatoCmsColumn':
+            return <Columns key={record.id} block={record} />;
 
           default:
             return null;

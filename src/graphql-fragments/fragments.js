@@ -256,6 +256,7 @@ export const DatoCMS = graphql`
   fragment BlockAccordion on DatoCmsAcordion {
     __typename
     id: originalId
+    colorVariant
     items {
       title
       text
@@ -266,6 +267,7 @@ export const DatoCMS = graphql`
     __typename
     id: originalId
     image {
+      url
       gatsbyImageData
       title
     }
@@ -625,6 +627,128 @@ export const DatoCMS = graphql`
           }
         }
       }
+    }
+  }
+
+  fragment BlockColumns on DatoCmsColumn {
+    __typename
+    id: originalId
+    firstColumn {
+      __typename
+      ... on DatoCmsBlockCta {
+        ...BlockCustomCta
+      }
+      ... on DatoCmsSimpleText {
+        ...BlockText
+      }
+    }
+    secondColumn {
+      __typename
+      ... on DatoCmsBlockCta {
+        ...BlockCustomCta
+      }
+      ... on DatoCmsSimpleText {
+        ...BlockText
+      }
+    }
+  }
+
+  fragment BlockCountdown on DatoCmsCountdown {
+    __typename
+    id: originalId
+    headline
+    successMessage
+    date
+    colorVariant
+  }
+
+  fragment BlockCtaList on DatoCmsCtaList {
+    __typename
+    id: originalId
+    ctaItems: items {
+      ...BlockCustomCta
+    }
+  }
+
+  fragment BlockCtaIconsList on DatoCmsCtaIconsList {
+    __typename
+    id: originalId
+    iconsItems: items {
+      ... on DatoCmsCtaWithIcon {
+        id
+        label
+        introduction
+        icon {
+          url
+          alt
+        }
+        colorVariant
+        link {
+          id
+          label
+          externalUrl
+          content {
+            ... on DatoCmsListTool {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+            ... on DatoCmsBasicPage {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+            ... on DatoCmsEvent {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+            ... on DatoCmsListEvent {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+            ... on DatoCmsListGroup {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+            ... on DatoCmsTool {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+            ... on DatoCmsGroup {
+              id
+              slug
+              model {
+                apiKey
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  fragment BlockImageGallery on DatoCmsImageGallery {
+    __typename
+    id: originalId
+    headline
+    imageItems: items {
+      ...BlockImage
     }
   }
 

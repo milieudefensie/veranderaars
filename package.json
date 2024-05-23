@@ -52,6 +52,7 @@
     "react-mapbox-gl": "^5.1.1",
     "react-slick": "0.29.0",
     "react-svg": "^16.1.28",
+    "react-timer-hook": "^3.0.7",
     "sass": "1.69.3",
     "slick-carousel": "^1.8.1",
     "supercluster": "^8.0.1",

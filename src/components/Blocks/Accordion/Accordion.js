@@ -4,7 +4,7 @@ import accordionClose from '../../Icons/accordion_close.svg';
 
 import './index.scss';
 
-function Accordion({ items, renderCustomTitle = null, defaultActive = 0 }) {
+function Accordion({ variant, items, renderCustomTitle = null, defaultActive = 0 }) {
   const [activeItem, setActiveItem] = useState(defaultActive);
 
   const handleOnChangeAccordion = (newIndex) => setActiveItem(newIndex);
@@ -12,7 +12,7 @@ function Accordion({ items, renderCustomTitle = null, defaultActive = 0 }) {
   if (items.length === 0) return null;
 
   return (
-    <div className="accordion">
+    <div className={`accordion ${variant ? variant : ''}`}>
       {items.map((item, index) => (
         <div
           key={index}

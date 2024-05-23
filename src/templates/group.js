@@ -286,6 +286,21 @@ export const PageQuery = graphql`
         value
         blocks {
           __typename
+          ... on DatoCmsColumn {
+            ...BlockColumns
+          }
+          ... on DatoCmsCountdown {
+            ...BlockCountdown
+          }
+          ... on DatoCmsCtaList {
+            ...BlockCtaList
+          }
+          ... on DatoCmsCtaIconsList {
+            ...BlockCtaIconsList
+          }
+          ... on DatoCmsImageGallery {
+            ...BlockImageGallery
+          }
           ... on DatoCmsNarrativeBlock {
             id: originalId
             title
@@ -737,6 +752,7 @@ export const PageQuery = graphql`
           }
           ... on DatoCmsAcordion {
             id: originalId
+            colorVariant
             items {
               ... on DatoCmsAcordionItem {
                 id
