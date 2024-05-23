@@ -6,7 +6,6 @@
   align-items: end;
   justify-content: end;
   padding-bottom: 65px;
-  // border-radius: 0 0 60% 60%/20px;
 
   h1 {
     color: var(--white);
@@ -34,7 +33,6 @@
     width: 100%;
     z-index: 0;
     background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 15%);
-    border-radius: 0 0 60% 60%/20px;
   }
 
   &.light {
@@ -52,8 +50,6 @@
     width: 100%;
     height: calc(150px + 20vw);
   }
-
-  &.external-img {}
 }
 
 @media screen and (max-width:992px) {

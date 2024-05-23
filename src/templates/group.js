@@ -36,7 +36,10 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
     tags = [],
     relatedEvents = [],
     localGroupId,
+    alternativeHero = false,
   } = page;
+
+  console.log({ alternativeHero });
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -86,8 +89,8 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
       <WrapperLayout variant="white">
-        <HeroBasic image={image} overlay={false} />
-        <FloatLayout reduceOverlap>
+        <HeroBasic image={image} overlay={alternativeHero || false} alternative={alternativeHero} />
+        <FloatLayout reduceOverlap alternative={alternativeHero}>
           {listGroup && (
             <div className="pre-header">
               <div className="back-btn">
@@ -101,7 +104,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
             </div>
           )}
 
-          {title && <h1>{title}</h1>}
+          {title && <h1 className="title-hero-alternative">{title}</h1>}
           {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
 
           {/* Form  */}
@@ -266,6 +269,7 @@ export const PageQuery = graphql`
       whatsappGroup
       organizer
       introduction
+      alternativeHero
       registrationForm {
         ... on DatoCmsHubspot {
           formId

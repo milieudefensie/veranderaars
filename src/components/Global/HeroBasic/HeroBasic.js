@@ -8,12 +8,13 @@ function HeroBasic({
   responsiveVariant,
   overlay = true,
   external = false,
+  alternative = false,
 }) {
   const heroBgImage = image?.url ? `url(${image.url})` : undefined;
 
   return (
     <div
-      className={`hero-basic ${backgroundColor ? backgroundColor : ''} ${heroBgImage ? 'with-bg-image' : ''} ${
+      className={`hero-basic ${alternative ? 'alternative' : ''} ${backgroundColor ? backgroundColor : ''} ${heroBgImage ? 'with-bg-image' : ''} ${
         responsiveVariant ? responsiveVariant : ''
       } ${external ? 'external-img' : ''}`}
       style={{ backgroundImage: heroBgImage }}
