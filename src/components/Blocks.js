@@ -13,6 +13,11 @@ import ImageWrapper from './Global/Image/ImageWrapper';
 import EmbedIframe from './Blocks/EmbedIframe/EmbedIframe';
 import Cta from './Global/Cta/Cta';
 import MapFilter from './Blocks/MapFilter/MapFilter';
+import CountDown from './Blocks/Countdown/Countdown';
+import BlockCtaList from './Blocks/CtaList/CtaList';
+import BlockCtaIconsList from './Blocks/CtaIconsList/CtaIconsList';
+import ImageGallery from './Blocks/ImageGallery/ImageGallery';
+import Columns from './Blocks/Columns/Columns';
 
 export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage = false }) {
   return (
@@ -61,6 +66,16 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
 
           case 'DatoCmsMap':
             return <MapFilter key={block.id} block={block} />;
+          case 'DatoCmsCountdown':
+            return <CountDown key={block.id} block={block} />;
+          case 'DatoCmsCtaList':
+            return <BlockCtaList key={block.id} block={block} />;
+          case 'DatoCmsCtaIconsList':
+            return <BlockCtaIconsList key={block.id} block={block} />;
+          case 'DatoCmsImageGallery':
+            return <ImageGallery key={block.id} block={block} />;
+          case 'DatoCmsColumn':
+            return <Columns key={block.id} block={block} />;
 
           default:
             return null;

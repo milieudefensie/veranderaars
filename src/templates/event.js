@@ -632,6 +632,24 @@ export const PageQuery = graphql`
               }
             }
           }
+          ... on DatoCmsMap {
+            ...BlockMap
+          }
+          ... on DatoCmsColumn {
+            ...BlockColumns
+          }
+          ... on DatoCmsCountdown {
+            ...BlockCountdown
+          }
+          ... on DatoCmsCtaList {
+            ...BlockCtaList
+          }
+          ... on DatoCmsCtaIconsList {
+            ...BlockCtaIconsList
+          }
+          ... on DatoCmsImageGallery {
+            ...BlockImageGallery
+          }
         }
       }
       seo: seoMetaTags {

@@ -17,6 +17,7 @@ import BlockCtaList from '../CtaList/CtaList';
 import BlockCtaIconsList from '../CtaIconsList/CtaIconsList';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Columns from '../Columns/Columns';
+import MapFilter from '../MapFilter/MapFilter';
 
 const StructuredTextDefault = ({ content }) => {
   return (
@@ -70,6 +71,8 @@ const StructuredTextDefault = ({ content }) => {
             return <ImageGallery key={record.id} block={record} />;
           case 'DatoCmsColumn':
             return <Columns key={record.id} block={record} />;
+          case 'DatoCmsMap':
+            return <MapFilter key={record.id} block={record} />;
 
           default:
             return null;

@@ -290,6 +290,9 @@ export const PageQuery = graphql`
         value
         blocks {
           __typename
+          ... on DatoCmsMap {
+            ...BlockMap
+          }
           ... on DatoCmsColumn {
             ...BlockColumns
           }

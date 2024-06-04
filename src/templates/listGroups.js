@@ -140,6 +140,24 @@ export const PageQuery = graphql`
       title
       slug
       blocks {
+        ... on DatoCmsMap {
+          ...BlockMap
+        }
+        ... on DatoCmsColumn {
+          ...BlockColumns
+        }
+        ... on DatoCmsCountdown {
+          ...BlockCountdown
+        }
+        ... on DatoCmsCtaList {
+          ...BlockCtaList
+        }
+        ... on DatoCmsCtaIconsList {
+          ...BlockCtaIconsList
+        }
+        ... on DatoCmsImageGallery {
+          ...BlockImageGallery
+        }
         ... on DatoCmsNarrativeBlock {
           ...BlockNarrativeBlock
         }

@@ -100,6 +100,21 @@ export const PageQuery = graphql`
         ... on DatoCmsBlockCta {
           ...BlockCustomCta
         }
+        ... on DatoCmsColumn {
+          ...BlockColumns
+        }
+        ... on DatoCmsCountdown {
+          ...BlockCountdown
+        }
+        ... on DatoCmsCtaList {
+          ...BlockCtaList
+        }
+        ... on DatoCmsCtaIconsList {
+          ...BlockCtaIconsList
+        }
+        ... on DatoCmsImageGallery {
+          ...BlockImageGallery
+        }
       }
     }
   }

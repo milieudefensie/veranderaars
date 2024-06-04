@@ -77,6 +77,24 @@ export const PageQuery = graphql`
         url
       }
       blocks {
+        ... on DatoCmsMap {
+          ...BlockMap
+        }
+        ... on DatoCmsColumn {
+          ...BlockColumns
+        }
+        ... on DatoCmsCountdown {
+          ...BlockCountdown
+        }
+        ... on DatoCmsCtaList {
+          ...BlockCtaList
+        }
+        ... on DatoCmsCtaIconsList {
+          ...BlockCtaIconsList
+        }
+        ... on DatoCmsImageGallery {
+          ...BlockImageGallery
+        }
         ... on DatoCmsNarrativeBlock {
           ...BlockNarrativeBlock
         }
@@ -118,6 +136,24 @@ export const PageQuery = graphql`
         value
         blocks {
           __typename
+          ... on DatoCmsMap {
+            ...BlockMap
+          }
+          ... on DatoCmsColumn {
+            ...BlockColumns
+          }
+          ... on DatoCmsCountdown {
+            ...BlockCountdown
+          }
+          ... on DatoCmsCtaList {
+            ...BlockCtaList
+          }
+          ... on DatoCmsCtaIconsList {
+            ...BlockCtaIconsList
+          }
+          ... on DatoCmsImageGallery {
+            ...BlockImageGallery
+          }
           ... on DatoCmsNarrativeBlock {
             id: originalId
             title
