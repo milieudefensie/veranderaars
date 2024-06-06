@@ -83,6 +83,15 @@
     form .hs-form-booleancheckbox label * {
       color: var(--dark) !important;
     }
+    .form-columns-3{
+      display: block;
+      .hs-form-field{
+        width:100%;
+        height:auto;
+        margin-bottom:10px;
+      }
+    
+    }
   }
 }
 

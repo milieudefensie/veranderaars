@@ -29,6 +29,12 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns,
             onFormReady: (ctx) => {
               const { id } = ctx;
 
+              document.querySelectorAll('.form-hubspot form > fieldset').forEach(item =>{
+                if(!item.querySelector('.hs-form-field')){
+                  item.classList.add('full-wrapper')
+                }
+              })
+
               // Handlers
               const inputs = document.querySelectorAll(`#${id} .hs-input`);
               inputs.forEach((input) => input.setAttribute('autocomplete', 'off'));
@@ -159,7 +165,7 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns,
           });
         }}
         onError={(e) => {
-          document.querySelector(`#hubspotForm-${id}`).innerHTML = `Je instellingen blokkeren de weergave van dit formulier. Voeg onze website toe aan de uitzonderingenlijst van je adblocker, browser- of netwerkfilter en vernieuw de pagina`;
+          document.querySelector(`#hubspotForm-${id}`).innerHTML = `<p style="color:red">Je instellingen blokkeren de weergave van dit formulier. Voeg onze website toe aan de uitzonderingenlijst van je adblocker, browser- of netwerkfilter en vernieuw de pagina</p>`;
         }}
       />
 

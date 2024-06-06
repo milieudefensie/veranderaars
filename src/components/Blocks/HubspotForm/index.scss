@@ -380,6 +380,12 @@
       line-height: 16px !important;
       padding: 0 5px !important;
     }
+
+    .full-wrapper{
+      .legal-consent-container .hs-richtext{
+        position:static;
+      }
+    }
   }
 
   &.homepage {
@@ -520,11 +526,20 @@
   // Columns layout
   &.columns-two form {
     grid-template-columns: 1fr 1fr;
+    .full-wrapper {
+      grid-column: span 2;
+      width:100%;
+      max-width:100%;
+    }
   }
 
   &.columns-three form {
     grid-template-columns: 1fr 1fr 1fr;
-
+    .full-wrapper {
+      grid-column: span 3;
+      width:100%;
+      max-width:100%;
+    }
     .legal-consent-container,
     .hs-submit,
     .hs-fieldtype-radio,
