@@ -29,12 +29,6 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns,
             onFormReady: (ctx) => {
               const { id } = ctx;
 
-              document.querySelectorAll('.form-hubspot form > fieldset').forEach(item =>{
-                if(!item.querySelector('.hs-form-field')){
-                  item.classList.add('full-wrapper')
-                }
-              })
-
               // Handlers
               const inputs = document.querySelectorAll(`#${id} .hs-input`);
               inputs.forEach((input) => input.setAttribute('autocomplete', 'off'));

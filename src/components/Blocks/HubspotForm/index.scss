@@ -381,11 +381,6 @@
       padding: 0 5px !important;
     }
 
-    .full-wrapper{
-      .legal-consent-container .hs-richtext{
-        position:static;
-      }
-    }
   }
 
   &.homepage {
@@ -523,23 +518,35 @@
     padding-bottom: 2rem;
   }
 
+  &.columns-default{
+    form{
+      display:block!important;
+      fieldset{
+        max-width:100%;
+        .hs-form-field{
+          margin-bottom:10px;
+        }
+      }
+      .legal-consent-container .hs-richtext{
+        position:static;
+        margin:15px 0;
+      }
+      select{
+        padding:10px;
+        margin:10px 0;
+        width:100%!important;
+      }
+    }
+  }
+
   // Columns layout
   &.columns-two form {
     grid-template-columns: 1fr 1fr;
-    .full-wrapper {
-      grid-column: span 2;
-      width:100%;
-      max-width:100%;
-    }
+
   }
 
   &.columns-three form {
     grid-template-columns: 1fr 1fr 1fr;
-    .full-wrapper {
-      grid-column: span 3;
-      width:100%;
-      max-width:100%;
-    }
     .legal-consent-container,
     .hs-submit,
     .hs-fieldtype-radio,
