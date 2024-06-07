@@ -518,23 +518,38 @@
     padding-bottom: 2rem;
   }
 
-  &.columns-default{
-    form{
-      display:block!important;
-      fieldset{
-        max-width:100%;
-        .hs-form-field{
-          margin-bottom:10px;
+  &.columns-default {
+    form {
+      display: block !important;
+
+      fieldset {
+        max-width: 100%;
+
+        .hs-form-field {
+          margin-bottom: 10px;
         }
       }
-      .legal-consent-container .hs-richtext{
-        position:static;
-        margin:15px 0;
+
+      .legal-consent-container .hs-richtext {
+        position: static;
+        margin: 15px 0;
       }
-      select{
-        padding:10px;
-        margin:10px 0;
-        width:100%!important;
+
+      select {
+        padding: 10px;
+        margin: 10px 0;
+        width: 100% !important;
+      }
+
+      .hs-richtext {
+        color: #000;
+      }
+
+      .hs-fieldtype-select {
+        label {
+          position: unset;
+          color: #000 !important;
+        }
       }
     }
   }
@@ -547,6 +562,7 @@
 
   &.columns-three form {
     grid-template-columns: 1fr 1fr 1fr;
+
     .legal-consent-container,
     .hs-submit,
     .hs-fieldtype-radio,

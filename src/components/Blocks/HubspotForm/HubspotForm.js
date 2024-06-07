@@ -159,7 +159,8 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns,
           });
         }}
         onError={(e) => {
-          document.querySelector(`#hubspotForm-${id}`).innerHTML = `<p style="color:red">Je instellingen blokkeren de weergave van dit formulier. Voeg onze website toe aan de uitzonderingenlijst van je adblocker, browser- of netwerkfilter en vernieuw de pagina</p>`;
+          document.querySelector(`#hubspotForm-${id}`).innerHTML =
+            `<p style="color:red">Je instellingen blokkeren de weergave van dit formulier. Voeg onze website toe aan de uitzonderingenlijst van je adblocker, browser- of netwerkfilter en vernieuw de pagina</p>`;
         }}
       />
 
