@@ -7,7 +7,13 @@ import './index.scss';
 function Accordion({ variant, items, renderCustomTitle = null, defaultActive = 0 }) {
   const [activeItem, setActiveItem] = useState(defaultActive);
 
-  const handleOnChangeAccordion = (newIndex) => setActiveItem(newIndex);
+  const handleOnChangeAccordion = (newIndex) => {
+    if (activeItem === newIndex) {
+      setActiveItem(null);
+      return;
+    }
+    setActiveItem(newIndex);
+  };
 
   if (items.length === 0) return null;
 

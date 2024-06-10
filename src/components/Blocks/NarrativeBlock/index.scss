@@ -55,6 +55,7 @@
     }
 
     .main-content {
+      padding-top: 15px;
       padding-bottom: 40px;
       width: 50%;
     }
@@ -72,6 +73,10 @@
 
       div {
         height: 100%;
+      }
+
+      * {
+        border-radius: 5px 0 0 5px;
       }
     }
   }
