@@ -116,6 +116,11 @@
       strong {
         font-weight: bolder;
       }
+
+      a {
+        color: inherit;
+        text-decoration: underline;
+      }
     }
 
     .alt-introduction {
@@ -134,6 +139,11 @@
       b,
       strong {
         font-weight: bolder;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: underline;
       }
     }
 

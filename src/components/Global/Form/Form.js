@@ -221,12 +221,26 @@ const Form = ({ event }) => {
             <legend>Ik wil emails ontvangen over de beweging</legend>
 
             <div className="opt">
-              <input type="radio" id="consent_email_yes" name="consent_email" value="yes" onChange={handleChange} />
+              <input
+                type="radio"
+                id="consent_email_yes"
+                name="consent_email"
+                value="yes"
+                onChange={handleChange}
+                required
+              />
               <label htmlFor="consent_email_yes">Ja</label>
             </div>
 
             <div className="opt">
-              <input type="radio" id="consent_email_no" name="consent_email" value="no" onChange={handleChange} />
+              <input
+                type="radio"
+                id="consent_email_no"
+                name="consent_email"
+                value="no"
+                onChange={handleChange}
+                required
+              />
               <label htmlFor="consent_email_no">Nee</label>
             </div>
           </fieldset>
