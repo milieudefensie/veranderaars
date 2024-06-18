@@ -35,6 +35,7 @@
     "gatsby-plugin-netlify": "^5.1.1",
     "gatsby-plugin-react-helmet": "^6.12.0",
     "gatsby-plugin-sass": "6.12.1",
+    "gatsby-plugin-schema-snapshot": "^4.13.0",
     "gatsby-plugin-sharp": "5.12.1",
     "gatsby-plugin-sitemap": "6.12.1",
     "gatsby-source-datocms": "5.1.2",

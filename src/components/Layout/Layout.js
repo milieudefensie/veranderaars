@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Slice } from 'gatsby';
 import Header from './Header';
-import Footer from './Footer/Footer';
 
 import '../../styles/main.scss';
 
@@ -52,13 +52,15 @@ function Layout({ children, bgColor = null, extraClassNames = null, heroBgColor 
 
   return (
     <>
-      <Header setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
-      <div className={`nav-open-overlay`} />
+      {/* slice does not work here, because of setNavOpen function and serializable issue */}
+      <Header alias="header" setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
 
+      <div className={`nav-open-overlay`} />
       <main id={`${bgColor ? bgColor : ''}`} className={`main-content ${extraClassNames ? extraClassNames : ''}`}>
         {children}
       </main>
-      <Footer />
+
+      <Slice alias="footer" />
     </>
   );
 }

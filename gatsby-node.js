@@ -118,7 +118,10 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 };
 
 exports.createPages = ({ graphql, actions }) => {
-  const { createPage, createNode } = actions;
+  const { createPage, createSlice } = actions;
+
+  createSlice({ id: `header`, component: require.resolve(`./src/components/Layout/Header.js`) });
+  createSlice({ id: `footer`, component: require.resolve(`./src/components/Layout/Footer/Footer.js`) });
 
   return new Promise((resolve, reject) => {
     const templates = {
