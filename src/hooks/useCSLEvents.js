@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { compareIfIsFuture, convertTime, formatDate } from '../utils';
+import { convertTime, formatDate } from '../utils';
 
 function useCSLEvents(cmsEvents, cslEvents) {
   const [mergedEvents, setMergedEvents] = useState([]);
@@ -10,29 +10,27 @@ function useCSLEvents(cmsEvents, cslEvents) {
   useEffect(() => {
     setStatus('loading');
 
-    const mappedCSL = [...cslEvents]
-      .filter((e) => !e.cancelled_at)
-      .map((e) => ({
-        id: e.slug.replace(' ', '_'),
-        address: e.location?.query,
-        coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
-        region: e.location?.region,
-        rawDate: e.start_at,
-        date: formatDate(e.start_at),
-        hourStart: convertTime(e.start_at),
-        hourEnd: e.end_at ? convertTime(e.end_at) : null,
-        introduction: e.description,
-        slug: e.slug,
-        url: e.url,
-        title: e.title,
-        image: { url: e.image_url },
-        labels: e.labels || [],
-        type: e.type,
-        model: e.model,
-      }));
+    const mappedCSL = [...cslEvents].map((e) => ({
+      id: e.slug.replace(' ', '_'),
+      address: e.location?.query,
+      coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
+      region: e.location?.region,
+      rawDate: e.start_at,
+      date: formatDate(e.start_at),
+      hourStart: convertTime(e.start_at),
+      hourEnd: e.end_at ? convertTime(e.end_at) : null,
+      introduction: e.description,
+      slug: e.slug,
+      url: e.url,
+      title: e.title,
+      image: { url: e.image_url },
+      labels: e.labels || [],
+      type: e.type,
+      model: e.model,
+    }));
 
     // Get only future events
-    const temEvents = [...cmsEvents, ...mappedCSL].filter(compareIfIsFuture);
+    const temEvents = [...cmsEvents, ...mappedCSL];
 
     const events = temEvents.sort((a, b) => {
       const dateA = new Date(a.rawDate);

@@ -15,6 +15,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       description: String
       start_at: String
       end_at: String
+      cancelled_at: String
       start_in_zone: String
       end_in_zone: String
       time_zone: String
@@ -191,6 +192,10 @@ exports.createPages = ({ graphql, actions }) => {
                 id
                 slug
                 title
+                coordinates {
+                  latitude
+                  longitude
+                }
               }
             }
           }
@@ -238,6 +243,7 @@ exports.createPages = ({ graphql, actions }) => {
             component: templates.listEvents,
             context: {
               slug: listEvents.slug,
+              currentDate: new Date().toISOString().split('T')[0],
             },
           });
         }
@@ -287,6 +293,9 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: group.node.slug,
               id: group.node.id,
+              currentDate: new Date().toISOString().split('T')[0],
+              latitude: group.node.coordinates?.latitude,
+              longitude: group.node.coordinates?.longitude,
             },
           });
         }

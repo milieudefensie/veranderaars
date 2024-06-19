@@ -151,13 +151,13 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
 export default ListEvents;
 
 export const PageQuery = graphql`
-  query ListEventById($id: String) {
+  query ListEventById($id: String, $currentDate: Date!) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
       }
     }
-    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true } }) {
+    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true }, date: { gte: $currentDate } }) {
       edges {
         node {
           id
@@ -192,7 +192,7 @@ export const PageQuery = graphql`
         }
       }
     }
-    allCSLEvents: allExternalEvent {
+    allCSLEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
       edges {
         node {
           __typename

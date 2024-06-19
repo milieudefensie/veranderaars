@@ -15,7 +15,7 @@ const MapFilter = ({ block }) => {
 
   const { allDatoCmsEvent: events, cslEvents } = useStaticQuery(graphql`
     query events {
-      cslEvents: allExternalEvent {
+      cslEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
         edges {
           node {
             id

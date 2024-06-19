@@ -39,8 +39,6 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
     alternativeHero = false,
   } = page;
 
-  console.log({ alternativeHero });
-
   useEffect(() => {
     const htmlElement = document.documentElement;
     htmlElement.style.overflow = '';
@@ -83,6 +81,8 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
       console.warn('Local group ID input not found');
     }
   };
+
+  console.log({ pageContext });
 
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
@@ -189,7 +189,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
 export default Group;
 
 export const PageQuery = graphql`
-  query GroupById($id: String) {
+  query GroupById($id: String, $currentDate: Date!) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -203,7 +203,7 @@ export const PageQuery = graphql`
       id
       slug
     }
-    allCSLEvents: allExternalEvent {
+    allCSLEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
       edges {
         node {
           __typename
@@ -225,7 +225,7 @@ export const PageQuery = graphql`
         }
       }
     }
-    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true } }) {
+    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true }, date: { gte: $currentDate } }) {
       edges {
         node {
           id
