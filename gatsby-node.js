@@ -13,7 +13,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       title: String!
       url: String
       description: String
-      start_at: String
+      start_at: Date
       end_at: String
       cancelled_at: String
       start_in_zone: String
@@ -37,8 +37,8 @@ exports.createSchemaCustomization = ({ actions }) => {
       url: String
     }
     type Location {
-      latitude: String
-      longitude: String
+      latitude: Float
+      longitude: Float
       postal_code: String
       country: String
       region: String
@@ -105,6 +105,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         id: event.slug,
         title: event.title,
         labels: event.labels || [],
+        start_at: event.start_at ? new Date(event.start_at).toISOString().split('T')[0] : null,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(event),
@@ -294,8 +295,16 @@ exports.createPages = ({ graphql, actions }) => {
               slug: group.node.slug,
               id: group.node.id,
               currentDate: new Date().toISOString().split('T')[0],
+
+              // latitude
               latitude: group.node.coordinates?.latitude,
+              maxLat: group.node.coordinates?.latitude ? group.node.coordinates.latitude + 1 : null,
+              minLat: group.node.coordinates?.latitude ? group.node.coordinates.latitude - 1 : null,
+
+              // longitude
               longitude: group.node.coordinates?.longitude,
+              maxLon: group.node.coordinates?.longitude ? group.node.coordinates.longitude + 1 : null,
+              minLon: group.node.coordinates?.longitude ? group.node.coordinates.longitude - 1 : null,
             },
           });
         }

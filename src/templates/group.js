@@ -16,7 +16,7 @@ import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
-import { haversine, mapCmsEvents, mapCslEvents } from '../utils';
+import { mapCmsEvents, mapCslEvents } from '../utils';
 import useCSLEvents from '../hooks/useCSLEvents';
 
 import './basic.styles.scss';
@@ -49,21 +49,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
   const { mergedEvents } = useCSLEvents(cmsEvents, cslEvents);
 
   const groupHasCoordinates = coordinates && coordinates.latitude && coordinates.longitude;
-  const maxDistanceInKilometers = 50;
-  const nearbyEvents = groupHasCoordinates
-    ? mergedEvents
-        .filter((event) => {
-          return (
-            haversine(
-              coordinates.latitude,
-              coordinates.longitude,
-              event.coordinates.latitude,
-              event.coordinates.longitude
-            ) <= maxDistanceInKilometers
-          );
-        })
-        .slice(0, 3)
-    : [];
+  const nearbyEvents = groupHasCoordinates ? mergedEvents : [];
 
   const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
   const hasRelatedEvents = related || nearbyEvents.length > 0;
@@ -81,8 +67,6 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
       console.warn('Local group ID input not found');
     }
   };
-
-  console.log({ pageContext });
 
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
@@ -189,7 +173,14 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
 export default Group;
 
 export const PageQuery = graphql`
-  query GroupById($id: String, $currentDate: Date!) {
+  query GroupById(
+    $id: String
+    $currentDate: Date!
+    $maxLat: Float!
+    $minLat: Float!
+    $maxLon: Float!
+    $minLon: Float!
+  ) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -203,7 +194,13 @@ export const PageQuery = graphql`
       id
       slug
     }
-    allCSLEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
+    allCSLEvents: allExternalEvent(
+      filter: {
+        cancelled_at: { eq: null }
+        start_at: { gte: $currentDate }
+        location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
+      }
+    ) {
       edges {
         node {
           __typename
@@ -225,7 +222,13 @@ export const PageQuery = graphql`
         }
       }
     }
-    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true }, date: { gte: $currentDate } }) {
+    allEvents: allDatoCmsEvent(
+      filter: {
+        closeEvent: { ne: true }
+        date: { gte: $currentDate }
+        coordinates: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
+      }
+    ) {
       edges {
         node {
           id
