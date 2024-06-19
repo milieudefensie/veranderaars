@@ -173,14 +173,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
 export default Group;
 
 export const PageQuery = graphql`
-  query GroupById(
-    $id: String
-    $currentDate: Date!
-    $maxLat: Float!
-    $minLat: Float!
-    $maxLon: Float!
-    $minLon: Float!
-  ) {
+  query GroupById($id: String, $currentDate: Date!, $maxLat: Float, $minLat: Float, $maxLon: Float, $minLon: Float) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
