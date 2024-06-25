@@ -15,6 +15,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
     image,
     image_url,
     date,
+    rawDate,
     address,
     hourStart,
     hourEnd,
@@ -22,12 +23,13 @@ const EventCard = ({ event, isHighlighted = false }) => {
     url,
     externalLink,
   } = event;
+
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
 
   const renderContent = () => (
     <>
       <div className="metadata">
-        {date && <span className="date">{isCslEvent ? date : formatDate(date)}</span>}
+        {date && <span className="date">{isCslEvent ? date || rawDate : formatDate(date)}</span>}
 
         <div className="venue">
           <span>
