@@ -18,7 +18,18 @@ import Form from '../components/Global/Form/Form';
 import './basic.styles.scss';
 
 const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
-  const { title, slug, image_url, additional_image_sizes_url, description, start_at, end_at, location } = page;
+  const {
+    title,
+    slug,
+    image_url,
+    additional_image_sizes_url,
+    description,
+    start_at,
+    end_at,
+    start_in_zone,
+    end_in_zone,
+    location,
+  } = page;
   const heroImage = pageContext?.heroImage?.url || image_url;
 
   const [shareWpText, setShareWpText] = useState('');
@@ -79,18 +90,19 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
           {/* Brief information */}
           <div className="brief-information">
             <div className="metadata">
-              {start_at && (
+              {start_in_zone && (
                 <span>
                   <img src={dateIcon} alt="Date icon" />
-                  <span>{formatDate(start_at)}</span>
+                  <span>{formatDate(start_in_zone)}</span>
                 </span>
               )}
 
-              {start_at && (
+              {start_in_zone && (
                 <span>
                   <img src={hourIcon} alt="Hour icon" />
                   <span>
-                    {start_at ? convertHour(start_at) : ''} {end_at ? ` - ${convertHour(end_at)}` : ''}
+                    {start_in_zone ? convertHour(start_in_zone) : ''}{' '}
+                    {end_in_zone ? ` - ${convertHour(end_in_zone)}` : ''}
                   </span>
                 </span>
               )}

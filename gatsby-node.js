@@ -106,6 +106,9 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         title: event.title,
         labels: event.labels || [],
         start_at: event.start_at ? new Date(event.start_at).toISOString().split('T')[0] : null,
+        start_in_zone: event.start_in_zone,
+        end_in_zone: event.end_in_zone,
+        time_zone: event.time_zone,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(event),
