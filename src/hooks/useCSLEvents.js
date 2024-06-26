@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { convertTime, formatDate } from '../utils';
+import { convertTime, formatDate, isEventFuture } from '../utils';
 
 function useCSLEvents(cmsEvents, cslEvents) {
   const [mergedEvents, setMergedEvents] = useState([]);
@@ -31,7 +31,8 @@ function useCSLEvents(cmsEvents, cslEvents) {
 
     // Get only future events
     const temEvents = [...cmsEvents, ...mappedCSL];
-    const futureEvents = temEvents.filter((event) => new Date(event.rawDate) > new Date());
+    const futureEvents = temEvents.filter((event) => isEventFuture(event));
+    console.log(futureEvents);
 
     const events = futureEvents.sort((a, b) => {
       const dateA = new Date(a.rawDate);

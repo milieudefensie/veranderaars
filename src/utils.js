@@ -97,7 +97,28 @@ export const compareIfIsFuture = (event) => {
     zone: 'Europe/Amsterdam',
   });
 
-  return eventDate >= DateTime.local();
+  return (
+    eventDate >=
+    DateTime.local({
+      zone: 'Europe/Amsterdam',
+    })
+  );
+};
+
+export const isEventFuture = (event) => {
+  let eventDate = DateTime.fromISO(event.rawDate).setZone('Europe/Amsterdam');
+
+  if (event.hourStart) {
+    const regex = /\b\d{2}:\d{2}\b/;
+    const initialHour = event.hourStart.match(regex);
+
+    if (initialHour) {
+      const [hour, minute] = initialHour[0].split(':');
+      eventDate = eventDate.set({ hour: Number(hour), minute: Number(minute) });
+    }
+  }
+
+  return eventDate.toMillis() >= DateTime.local({ zone: 'Europe/Amsterdam' }).toMillis();
 };
 
 export const convertTime = (dateTimeString) => {
