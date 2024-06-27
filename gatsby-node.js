@@ -14,6 +14,8 @@ exports.createSchemaCustomization = ({ actions }) => {
       url: String
       description: String
       start_at: Date
+      raw_start: String
+      raw_end: String
       end_at: String
       cancelled_at: String
       start_in_zone: String
@@ -106,6 +108,8 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         title: event.title,
         labels: event.labels || [],
         start_at: event.start_at ? new Date(event.start_at).toISOString().split('T')[0] : null,
+        raw_start: event.start_at,
+        raw_end: event.end_at,
         start_in_zone: event.start_in_zone,
         end_in_zone: event.end_in_zone,
         time_zone: event.time_zone,

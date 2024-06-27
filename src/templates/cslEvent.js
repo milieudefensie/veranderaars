@@ -8,7 +8,7 @@ import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import backBtnIcon from '../components/Icons/back-btn.svg';
 import Link from '../components/Global/Link/Link';
 import { ReactSVG } from 'react-svg';
-import { convertHour, formatDate } from '../utils';
+import { formatDate, formatDateCSL } from '../utils';
 import dateIcon from '../components/Icons/calendar-date.svg';
 import hourIcon from '../components/Icons/calendar-hour.svg';
 import locationIcon from '../components/Icons/calendar-location.svg';
@@ -24,8 +24,8 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     image_url,
     additional_image_sizes_url,
     description,
-    start_at,
-    end_at,
+    raw_start,
+    raw_end,
     start_in_zone,
     end_in_zone,
     location,
@@ -101,8 +101,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
                 <span>
                   <img src={hourIcon} alt="Hour icon" />
                   <span>
-                    {start_in_zone ? convertHour(start_in_zone) : ''}{' '}
-                    {end_in_zone ? ` - ${convertHour(end_in_zone)}` : ''}
+                    {start_in_zone ? formatDateCSL(raw_start) : ''} {raw_end ? ` - ${formatDateCSL(raw_end)}` : ''}
                   </span>
                 </span>
               )}
@@ -160,6 +159,8 @@ export const PageQuery = graphql`
       title
       url
       description
+      raw_start
+      raw_end
       start_at
       end_at
       start_in_zone

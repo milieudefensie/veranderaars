@@ -79,6 +79,16 @@ export const formatDate = (rawDate) => {
   }
 };
 
+export const formatDateCSL = (rawDate) => {
+  const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+  if (!regex.test(rawDate)) {
+    return rawDate;
+  }
+
+  const time = rawDate.substring(11, 16);
+  return time;
+};
+
 export const compareIfIsFuture = (event) => {
   let eventHourStart = event.hourStart; // Formato: 06:00 | 15:00 | 23:30
   if (eventHourStart.includes('(')) {

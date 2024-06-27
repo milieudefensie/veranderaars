@@ -1,6 +1,6 @@
 import React from 'react';
 import ImageWrapper from '../../Global/Image/ImageWrapper';
-import { formatDate, truncateText } from '../../../utils';
+import { formatDate, formatDateCSL, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/TagList';
 import Link from '../../Global/Link/Link';
 
@@ -16,6 +16,8 @@ const EventCard = ({ event, isHighlighted = false }) => {
     image_url,
     date,
     rawDate,
+    rawStartDate,
+    rawEndDate,
     address,
     hourStart,
     hourEnd,
@@ -29,11 +31,12 @@ const EventCard = ({ event, isHighlighted = false }) => {
   const renderContent = () => (
     <>
       <div className="metadata">
-        {date && <span className="date">{isCslEvent ? date || rawDate : formatDate(date)}</span>}
+        {date && <span className="date">{isCslEvent ? formatDateCSL(rawDate) : formatDate(date)}</span>}
 
         <div className="venue">
           <span>
-            {hourStart} {hourEnd ? `- ${hourEnd}` : ''}
+            {isCslEvent ? formatDateCSL(rawStartDate) : hourStart} {!isCslEvent && hourEnd ? `- ${hourEnd}` : ''}
+            {isCslEvent && rawEndDate ? `- ${formatDateCSL(rawEndDate)}` : ''}
           </span>
 
           {address && <span>{address}</span>}
