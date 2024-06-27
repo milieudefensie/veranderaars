@@ -94,7 +94,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     const today = DateTime.now().setZone('Europe/Amsterdam');
     const futureEvents = resultData.events.filter((e) => {
       const startDate = DateTime.fromISO(e.start_at, { zone: 'Europe/Amsterdam' });
-      return startDate > today;
+      return startDate > today && e.launched_at !== null;
     });
 
     for (const event of futureEvents) {
