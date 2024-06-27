@@ -202,6 +202,8 @@ export const PageQuery = graphql`
           title
           description
           start_at
+          raw_start
+          raw_end
           end_at
           image_url
           labels

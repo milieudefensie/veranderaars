@@ -24,6 +24,8 @@ const MapFilter = ({ block }) => {
             description
             start_at
             end_at
+            raw_start
+            raw_end
             image_url
             labels
             location {
