@@ -444,78 +444,11 @@ export const PageQuery = graphql`
           ... on DatoCmsShare {
             id: originalId
             title
-            whatsappGroup
             socialLinks {
               ... on DatoCmsSocialLink {
                 id
-                title
                 url
                 socialNetwork
-              }
-            }
-            ctas {
-              ... on DatoCmsCta {
-                id
-                title
-                style
-                link {
-                  ... on DatoCmsGlobalLink {
-                    id
-                    label
-                    externalUrl
-                    content {
-                      ... on DatoCmsListTool {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsBasicPage {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsEvent {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsListEvent {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsListGroup {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsTool {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsGroup {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                    }
-                  }
-                }
               }
             }
           }
