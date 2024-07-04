@@ -17,6 +17,7 @@ function useCSLEvents(cmsEvents, cslEvents) {
       region: e.location?.region,
       rawStartDate: e.raw_start,
       rawEndDate: e.raw_end,
+      rawDate: e.start_at,
       date: formatDate(e.start_at),
       hourStart: convertTime(e.start_at),
       hourEnd: e.end_at ? convertTime(e.end_at) : null,
