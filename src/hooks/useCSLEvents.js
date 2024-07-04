@@ -21,6 +21,8 @@ function useCSLEvents(cmsEvents, cslEvents) {
       date: formatDate(e.start_at),
       hourStart: convertTime(e.start_at),
       hourEnd: e.end_at ? convertTime(e.end_at) : null,
+      startInZone: e.start_in_zone,
+      endInZone: e.end_in_zone,
       introduction: e.description,
       slug: e.slug,
       url: e.url,

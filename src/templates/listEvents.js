@@ -206,6 +206,8 @@ export const PageQuery = graphql`
           raw_end
           image_url
           labels
+          start_in_zone
+          end_in_zone
           location {
             latitude
             longitude

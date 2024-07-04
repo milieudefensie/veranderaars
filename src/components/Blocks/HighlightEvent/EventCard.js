@@ -18,6 +18,8 @@ const EventCard = ({ event, isHighlighted = false }) => {
     rawDate,
     rawStartDate,
     rawEndDate,
+    startInZone,
+    endInZone,
     address,
     hourStart,
     hourEnd,
@@ -35,8 +37,8 @@ const EventCard = ({ event, isHighlighted = false }) => {
 
         <div className="venue">
           <span>
-            {isCslEvent ? formatDateCSL(rawStartDate) : hourStart} {!isCslEvent && hourEnd ? `- ${hourEnd}` : ''}
-            {isCslEvent && rawEndDate ? `- ${formatDateCSL(rawEndDate)}` : ''}
+            {isCslEvent ? formatDateCSL(startInZone) : hourStart} {!isCslEvent && hourEnd ? `- ${hourEnd}` : ''}
+            {isCslEvent && rawEndDate ? `- ${formatDateCSL(endInZone)}` : ''}
           </span>
 
           {address && <span>{address}</span>}
