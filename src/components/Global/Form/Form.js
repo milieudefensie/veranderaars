@@ -3,7 +3,7 @@ import { navigate } from 'gatsby';
 
 import './styles.scss';
 
-const Form = ({ event }) => {
+const Form = ({ event, withPhoneField = false }) => {
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
   const [formData, setFormData] = useState({
@@ -11,6 +11,7 @@ const Form = ({ event }) => {
     lastName: '',
     email: '',
     postcode: '',
+    phone: '',
     consent_email: null,
     slug: event,
   });
@@ -61,7 +62,7 @@ const Form = ({ event }) => {
     const newErrors = {};
 
     Object.keys(formData).forEach((key) => {
-      if (formData[key] === '') {
+      if (formData[key] === '' && key !== 'phone') {
         newErrors[key] = 'Verplicht veld';
       }
     });
@@ -215,6 +216,35 @@ const Form = ({ event }) => {
             </ul>
           )}
         </div>
+
+        {withPhoneField && (
+          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+            <label className="custom-label" htmlFor="phone">
+              <span>Telefoonnummer</span>
+            </label>
+
+            <div className="input">
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                className={`input ${errors.phone ? 'error' : ''} `}
+                inputMode="tel"
+                autoComplete="off"
+                required={false}
+                onChange={handleChange}
+              />
+            </div>
+
+            {errors.phone && (
+              <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                <li>
+                  <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
+                </li>
+              </ul>
+            )}
+          </div>
+        )}
 
         <div className="form-field-checkbox" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
           <fieldset>

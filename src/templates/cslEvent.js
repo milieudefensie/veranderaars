@@ -29,6 +29,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     start_in_zone,
     end_in_zone,
     location,
+    labels = [],
   } = page;
   const heroImage = pageContext?.heroImage?.url || image_url;
 
@@ -47,6 +48,8 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
   if (additional_image_sizes_url) {
     mainImage = additional_image_sizes_url.find((i) => i.style === 'original');
   }
+
+  const withPhoneField = labels.includes('with_phone_field');
 
   return (
     <Layout>
@@ -84,7 +87,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
           {/* Form  */}
           <div className={`form-wrapper`}>
-            <Form event={slug} />
+            <Form event={slug} withPhoneField={withPhoneField} />
           </div>
 
           {/* Brief information */}

@@ -37,7 +37,7 @@ export default async function handler(req, res) {
 
   try {
     const attendeeInfo = req.body;
-    const { slug, firstName, lastName, email, postcode, consent_email } = attendeeInfo;
+    const { slug, firstName, lastName, email, postcode, phone, consent_email } = attendeeInfo;
     const consentAccepted = consent_email === 'yes';
 
     const body = {
@@ -51,6 +51,7 @@ export default async function handler(req, res) {
         email_opt_in_type_external_id: consentAccepted ? 'hubspot_form_consent' : 'hubspot_form_no_consent',
         join_organisation: false,
         locale: 'nl',
+        phone_number: phone,
       },
     };
 
@@ -60,10 +61,12 @@ export default async function handler(req, res) {
       })
       .then((response) => {
         if (response.status !== 200) {
+          console.log('ERROR 1');
           throw new Error('Error');
         } else {
           if (response.data.errors) {
-            console.log(response.data.errors);
+            console.log('ERROR 2');
+
             const errorMessages = Object.keys(response.data.errors)
               .map((key) => {
                 const rawError = response.data.errors[key].join(', ');
@@ -93,6 +96,7 @@ export default async function handler(req, res) {
           }
         }
 
+        console.log('SUCCESS');
         res.status(200).json({ message: 'OK' });
         return;
       });
