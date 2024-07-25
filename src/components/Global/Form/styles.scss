@@ -2,7 +2,18 @@
   display: grid;
   gap: 16px;
   row-gap: 20px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(6, 1fr);
+
+  .form-field:nth-child(1),
+  .form-field:nth-child(2) {
+    grid-column: span 3;
+  }
+
+  .form-field:nth-child(3),
+  .form-field:nth-child(4),
+  .form-field:nth-child(5) {
+    grid-column: span 2;
+  }
 
   .form-field {
     position: relative;
@@ -90,7 +101,7 @@
   }
 
   .send-btn {
-    grid-column: span 2;
+    grid-column: span 6;
     box-shadow: none !important;
     background-color: var(--nb-primary-color);
     border: none;
@@ -118,7 +129,7 @@
   }
 
   .legal-consent-container {
-    grid-column: span 2;
+    grid-column: span 6;
 
     p {
       color: var(--nb-grey);
@@ -139,7 +150,7 @@
   }
 
   .form-field-checkbox {
-    grid-column: span 2;
+    grid-column: span 6;
 
     input[type="checkbox"] {
       width: 20px;
@@ -161,6 +172,12 @@
         margin-bottom: 3px;
       }
 
+      .options {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
       .opt {
         display: flex;
         align-items: center;
@@ -171,7 +188,7 @@
           color: #000;
           font-size: 16px;
           font-style: normal;
-          font-weight: 500;
+          font-weight: bold;
           line-height: 150%;
         }
 

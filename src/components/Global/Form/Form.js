@@ -263,28 +263,30 @@ const Form = ({ event, inputs = [] }) => {
           <fieldset>
             <legend>Ik wil emails ontvangen over de beweging</legend>
 
-            <div className="opt">
-              <input
-                type="radio"
-                id="consent_email_yes"
-                name="consent_email"
-                value="yes"
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="consent_email_yes">Ja</label>
-            </div>
+            <div className="options">
+              <div className="opt">
+                <input
+                  type="radio"
+                  id="consent_email_yes"
+                  name="consent_email"
+                  value="yes"
+                  onChange={handleChange}
+                  required
+                />
+                <label htmlFor="consent_email_yes">Ja</label>
+              </div>
 
-            <div className="opt">
-              <input
-                type="radio"
-                id="consent_email_no"
-                name="consent_email"
-                value="no"
-                onChange={handleChange}
-                required
-              />
-              <label htmlFor="consent_email_no">Nee</label>
+              <div className="opt">
+                <input
+                  type="radio"
+                  id="consent_email_no"
+                  name="consent_email"
+                  value="no"
+                  onChange={handleChange}
+                  required
+                />
+                <label htmlFor="consent_email_no">Nee</label>
+              </div>
             </div>
           </fieldset>
         </div>
