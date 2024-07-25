@@ -1,5 +1,5 @@
 const { default: puppeteer } = require('puppeteer');
-import chromium from '@sparticuz/chromium';
+const chromium = require('@sparticuz/chromium');
 const { DateTime } = require('luxon');
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
