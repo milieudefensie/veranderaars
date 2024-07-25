@@ -133,13 +133,32 @@
   }
 
   &.highlighted {
-    background-color: var(--primary-color);
+    background-color: var(--nb-primary-color-light);
 
     .metadata .date,
     .metadata .venue span,
     .basic-info h4,
     .basic-info .introduction {
+      color: var(--dark);
+    }
+
+    .tag {
+      color: var(--dark);
+      background: rgba(245, 245, 245, 0.30);
+    }
+
+    .custom-btn-primary {
       color: var(--white);
+      background-color: var(--black);
+    }
+
+    &:hover {
+      background-color: #8FB431;
+
+      .custom-btn-primary {
+        color: var(--black);
+        background-color: transparent;
+      }
     }
   }
 }
