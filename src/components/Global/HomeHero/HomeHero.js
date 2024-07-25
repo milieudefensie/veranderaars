@@ -44,7 +44,7 @@ function HomeHero({ title, subtitle, image, form = null, mobileImage = null }) {
           </div>
         </div>
 
-        <div className="overlay" />
+        {/* <div className="overlay" /> */}
       </div>
     </div>
   );
