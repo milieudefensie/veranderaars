@@ -1,4 +1,5 @@
 const { default: puppeteer } = require('puppeteer');
+import chromium from '@sparticuz/chromium';
 const { DateTime } = require('luxon');
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
@@ -359,20 +360,32 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 };
 
 // Utils
+chromium.setHeadlessMode = true;
+chromium.setGraphicsMode = false;
+
 const scrapingFormInputs = async (event) => {
   const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
   console.log('Start web scraping. URL: ', url);
 
   try {
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath:
+        process.env.CHROME_EXECUTABLE_PATH ||
+        (await chromium.executablePath('/var/task/node_modules/@sparticuz/chromium/bin')),
     });
+
+    // const browser = await puppeteer.launch({
+    //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    // });
     const page = await browser.newPage();
     await page.goto(url);
 
     const inputs = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('.attend-event-form input')).map((input) => input.outerHTML);
     });
+    await browser.close();
 
     return inputs;
   } catch (error) {
