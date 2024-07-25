@@ -2193,6 +2193,14 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.0.tgz#96116f2a912e0c02817345b3c10751069920d553"
   integrity sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==
 
+"@sparticuz/chromium@^126.0.0":
+  version "126.0.0"
+  resolved "https://registry.yarnpkg.com/@sparticuz/chromium/-/chromium-126.0.0.tgz#4383d009c6dae1fb09e6fb9503ce50ac8348ce82"
+  integrity sha512-qqGQmZQj3y0/V2osKswRHbzK4Qe80YHSDnpt6ac51hsY1bMDinMS9Q+eEmcL+re2MEhYN+ykoV9BY8Dyw1Lyjg==
+  dependencies:
+    follow-redirects "^1.15.6"
+    tar-fs "^3.0.6"
+
 "@swc/helpers@^0.4.12":
   version "0.4.36"
   resolved "https://registry.yarnpkg.com/@swc/helpers/-/helpers-0.4.36.tgz#fcfff76ed52c214f357e8e9d3f37b568908072d9"
@@ -5853,6 +5861,11 @@ follow-redirects@^1.14.0, follow-redirects@^1.15.4:
   version "1.15.5"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.5.tgz#54d4d6d062c0fa7d9d17feb008461550e3ba8020"
   integrity sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==
+
+follow-redirects@^1.15.6:
+  version "1.15.6"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.6.tgz#7f815c0cda4249c74ff09e95ef97c23b5fd0399b"
+  integrity sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==
 
 for-each@^0.3.3:
   version "0.3.3"
