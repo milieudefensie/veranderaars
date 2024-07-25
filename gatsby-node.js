@@ -1,4 +1,4 @@
-const { default: puppeteer } = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const chromium = require('@sparticuz/chromium');
 const { DateTime } = require('luxon');
 const path = require(`path`);
@@ -371,9 +371,10 @@ const scrapingFormInputs = async (event) => {
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath:
-        process.env.CHROME_EXECUTABLE_PATH ||
-        (await chromium.executablePath('/var/task/node_modules/@sparticuz/chromium/bin')),
+      executablePath: await chromium.executablePath(),
+      // executablePath:
+      //   process.env.CHROME_EXECUTABLE_PATH ||
+      //   (await chromium.executablePath('/var/task/node_modules/@sparticuz/chromium/bin')),
     });
 
     // const browser = await puppeteer.launch({
