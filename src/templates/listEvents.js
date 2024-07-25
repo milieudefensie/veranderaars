@@ -120,8 +120,9 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
                 mobileView={mobileShowMap}
                 setMobileView={setMobileShowMap}
                 extraLogic={() => {
-                  // BUG HERE
-                  if (!mobileShowMap) setMobileShowMap((prev) => !prev);
+                  if (window !== undefined && window.innerWidth < 992) {
+                    setMobileShowMap((prev) => !prev);
+                  }
                 }}
               />
 
