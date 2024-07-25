@@ -24,12 +24,11 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     image_url,
     additional_image_sizes_url,
     description,
-    raw_start,
     raw_end,
     start_in_zone,
     end_in_zone,
     location,
-    labels = [],
+    inputs = [],
   } = page;
   const heroImage = pageContext?.heroImage?.url || image_url;
 
@@ -48,8 +47,6 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
   if (additional_image_sizes_url) {
     mainImage = additional_image_sizes_url.find((i) => i.style === 'original');
   }
-
-  const withPhoneField = labels.includes('with_phone_field');
 
   return (
     <Layout>
@@ -87,7 +84,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
           {/* Form  */}
           <div className={`form-wrapper`}>
-            <Form event={slug} withPhoneField={withPhoneField} />
+            <Form event={slug} inputs={inputs} />
           </div>
 
           {/* Brief information */}
@@ -187,6 +184,7 @@ export const PageQuery = graphql`
         venue
       }
       labels
+      inputs
     }
   }
 `;

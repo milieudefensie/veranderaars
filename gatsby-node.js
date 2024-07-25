@@ -1,3 +1,4 @@
+const { default: puppeteer } = require('puppeteer');
 const { DateTime } = require('luxon');
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
@@ -28,6 +29,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       max_attendees_count: String
       image_url: String
       labels: [String!]!
+      inputs: [String!]!
       internal: Internal
       location: Location
       calendar: Calendar      
@@ -101,6 +103,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 
     for (const event of futureEvents) {
       console.log('[CSL Source] Creating: ', event.title);
+      const cslInputs = await scrapingFormInputs(event);
 
       createNode({
         ...event,
@@ -113,6 +116,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         start_in_zone: event.start_in_zone,
         end_in_zone: event.end_in_zone,
         time_zone: event.time_zone,
+        inputs: cslInputs || [],
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(event),
@@ -352,4 +356,27 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
       }),
     ],
   });
+};
+
+// Utils
+const scrapingFormInputs = async (event) => {
+  const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
+  console.log('Start web scraping. URL: ', url);
+
+  try {
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.goto(url);
+
+    const inputs = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('.attend-event-form input')).map((input) => input.outerHTML);
+    });
+
+    return inputs;
+  } catch (error) {
+    console.error('Error on scraping:', error);
+    throw error;
+  }
 };
