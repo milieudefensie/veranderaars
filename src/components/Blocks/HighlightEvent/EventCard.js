@@ -16,7 +16,6 @@ const EventCard = ({ event, isHighlighted = false }) => {
     image_url,
     date,
     rawDate,
-    rawStartDate,
     rawEndDate,
     startInZone,
     endInZone,
