@@ -197,10 +197,10 @@ const MapWrapper = ({
                   // Animation to center marker/popup
                   if (!isMobileDevice) {
                     const px = mapRef.current?.project([longitude, latitude]);
-                    px.y -= 650 / 2;
+                    px.y += 120 / 2;
                     mapRef.current?.panTo(mapRef.current?.unproject(px), {
                       animate: true,
-                      duration: 1000,
+                      duration: 500,
                     });
                   }
 
