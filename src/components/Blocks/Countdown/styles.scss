@@ -1,0 +1,98 @@
+#countdown {
+  border-radius: 10px;
+  display: grid;
+  gap: 45px;
+  grid-template-columns: 1fr 1fr;
+  padding: 35px 40px;
+  margin-bottom: 25px;
+
+  h2 {
+    font-size: 31px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    margin: 0;
+  }
+
+  .countdown-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .item-countdown {
+      text-align: center;
+      border-radius: 5px;
+      padding: 12px 7px;
+      background: var(--Zwart, #000);
+      width: 85px;
+
+      color: #FFF;
+      font-family: Poppins;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 110%;
+      text-transform: capitalize;
+
+      span {
+        color: #FFF;
+        font-size: 35px;
+        font-style: normal;
+        font-weight: 800;
+        line-height: 110%;
+        text-transform: uppercase;
+        display: block;
+        margin-top: 3px;
+      }
+    }
+  }
+
+  .success-container {
+    p {
+      margin: 0;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 110%;
+      margin: 0;
+    }
+  }
+
+  &.green {
+    background: var(--M---Green, #A3CD39);
+  }
+
+  &.white {
+    border: 2px solid var(--Zwart, #000);
+    background: var(--M---White, #FFF);
+  }
+
+}
+
+@media screen and (max-width: 992px) {
+  #countdown {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+
+    h2 {
+      font-size: 24px;
+    }
+
+    .countdown-container {
+      gap: 10px;
+
+      .item-countdown {
+        padding: 10px 5px;
+        font-size: 12px;
+        width: auto;
+
+        span {
+          font-size: 30px;
+        }
+      }
+    }
+  }
+}

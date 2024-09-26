@@ -1,0 +1,69 @@
+.map-popup {
+  background: var(--white);
+
+  .close-icon {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    cursor: pointer;
+  }
+
+  .tags {
+    margin-bottom: 15px;
+  }
+
+  .image {
+    height: 150px;
+    margin-bottom: 15px;
+
+    * {
+      height: 100%;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    img {
+      object-fit: cover;
+    }
+  }
+
+  .metadata {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    h5 {
+      margin: 0;
+      padding: 0;
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 120%;
+    }
+
+    span {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 120%;
+    }
+  }
+
+  h2 {
+    color: var(--dark);
+    font-family: var(--nb-primary-font);
+    font-size: 23px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 15px;
+    overflow-wrap: break-word;
+  }
+}

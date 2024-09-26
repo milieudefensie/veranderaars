@@ -1,0 +1,15 @@
+.block-cta-list {
+  margin: 1rem 0;
+
+  .ctas {
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .block-cta-list {
+    .ctas {
+      gap: 15px;
+    }
+  }
+}

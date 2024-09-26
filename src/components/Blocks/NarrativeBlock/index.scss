@@ -1,0 +1,141 @@
+.component-narrative-block {
+  padding-top: 80px;
+  padding-bottom: 115px;
+
+  h2 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+
+    span {
+      color: var(--black);
+      font-family: var(--nb-primary-font);
+      font-size: 23px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 110%;
+    }
+  }
+
+  .text-content {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+
+    p,
+    span {
+      margin: 0;
+      padding: 0;
+    }
+
+    * {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%;
+    }
+  }
+
+  +.component-narrative-block {
+    padding-top: 0px;
+  }
+}
+
+.float-layout {
+  .component-narrative-block {
+    padding: 0 !important;
+    border-radius: 10px;
+    border: 2px solid var(--Zwart, #000);
+
+    .row {
+      width: 100%;
+      align-items: stretch !important;
+    }
+
+    .main-content {
+      padding-top: 15px;
+      padding-bottom: 40px;
+      width: 50%;
+    }
+
+    .img-wrapper-nb {
+      width: 50%;
+
+      .image-wrapper {
+        margin: 0 !important;
+
+        img {
+          object-fit: cover !important;
+        }
+      }
+
+      div {
+        height: 100%;
+      }
+
+      * {
+        border-radius: 5px 0 0 5px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .component-narrative-block {
+    padding-top: 60px;
+    padding-bottom: 70px;
+
+    h2 {
+      margin-top: 15px;
+      margin-bottom: 15px;
+
+      span {
+        font-size: 25px;
+        line-height: 115%;
+      }
+    }
+
+    .text-content {
+      margin-bottom: 15px;
+
+      * {
+        font-size: 15px;
+        line-height: 130%;
+      }
+    }
+
+    .img-wrapper-nb {
+      order: 1;
+    }
+
+    .main-content {
+      order: 2;
+    }
+
+    .video-player {
+      margin: 0;
+    }
+  }
+
+  .float-layout {
+    .component-narrative-block {
+      overflow: hidden;
+
+      .row {
+        margin: 0;
+        flex-direction: column !important;
+
+        .main-content,
+        .img-wrapper-nb {
+          width: 100%;
+        }
+
+        .img-wrapper-nb {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
