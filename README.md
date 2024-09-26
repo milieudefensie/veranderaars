@@ -1,11 +1,14 @@
 <p align="center">
-  <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
+  <a href="https://veranderaars.milieudefensie.nl/">
+    <img alt="Veranderaars" src="https://www.datocms-assets.com/115430/1707734791-group.svg" width="60" />
   </a>
 </p>
 <h1 align="center">
-  Gatsby Minimal Starter
+  Veranderaars Starter
 </h1>
+
+
+<p>This is the official action center platform of Milieudefensie. All rights reserved.</p>
 
 ## 🚀 Quick start,
 
