@@ -81,7 +81,6 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 
   // Fetch all CSL events + create nodes
   let currentPage = 1;
-  let totalPages = 1;
 
   do {
     const result = await fetch(

@@ -19,7 +19,7 @@ function FormBlock({ block, isHomepage = false }) {
 
                   {description && <div className="description" dangerouslySetInnerHTML={{ __html: description }} />}
 
-                  <img className="left-img" src={formVector} alt="Form icon" />
+                  {!description && <img className="left-img" src={formVector} alt="Form icon" />}
                 </div>
               )}
 
