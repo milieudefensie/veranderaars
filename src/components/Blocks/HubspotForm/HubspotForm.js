@@ -158,7 +158,23 @@ const HubspotForm = ({ id, formId, region, portalId, style = 'default', columns,
             },
           });
         }}
-        onError={(e) => {
+        onError={async(e) => {
+          if (window !== undefined) {
+            try {
+              const bodyError = {
+                date: new Date().toISOString(),
+                url: window.location.href,
+                browser: navigator.userAgent,
+              }
+              await fetch('/api/csl-form-errors', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bodyError),
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          }
           document.querySelector(`#hubspotForm-${id}`).innerHTML =
             `<p style="color:red">Je instellingen blokkeren de weergave van dit formulier. Voeg onze website toe aan de uitzonderingenlijst van je adblocker, browser- of netwerkfilter en vernieuw de pagina</p>`;
         }}
