@@ -434,6 +434,7 @@ export const PageQuery = graphql`
                 region
                 portalId
                 columns
+                trackErrors
               }
             }
           }

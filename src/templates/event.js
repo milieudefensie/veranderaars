@@ -155,6 +155,7 @@ export const PageQuery = graphql`
           region
           portalId
           columns
+          trackErrors
         }
       }
       formBackgroundColor
@@ -453,6 +454,7 @@ export const PageQuery = graphql`
                 region
                 portalId
                 columns
+                trackErrors
               }
             }
           }

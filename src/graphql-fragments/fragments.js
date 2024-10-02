@@ -496,6 +496,7 @@ export const DatoCMS = graphql`
         region
         portalId
         columns
+        trackErrors
       }
     }
   }
