@@ -276,6 +276,7 @@ export const PageQuery = graphql`
           region
           portalId
           columns
+          trackErrors
         }
       }
       image {
@@ -588,6 +589,7 @@ export const PageQuery = graphql`
                 region
                 portalId
                 columns
+                trackErrors
               }
             }
           }

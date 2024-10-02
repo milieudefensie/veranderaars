@@ -2,7 +2,6 @@ require('dotenv').config();
 const { google } = require('googleapis');
 
 export default async function handler(req, res) {
-  
   const sheets = google.sheets('v4');
 
   const jwtClient = new google.auth.JWT(
