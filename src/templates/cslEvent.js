@@ -29,6 +29,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     end_in_zone,
     location,
     inputs = [],
+    hiddenAddress = false,
   } = page;
   const heroImage = pageContext?.heroImage?.url || image_url;
 
@@ -107,7 +108,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
                 </span>
               )}
 
-              {location && (
+              {!hiddenAddress && location && (
                 <span>
                   <img src={locationIcon} alt="Location icon" />
                   <span>{location.venue}</span>
@@ -171,6 +172,7 @@ export const PageQuery = graphql`
       launched_at
       locale
       image_url
+      hiddenAddress
       location {
         latitude
         longitude

@@ -25,6 +25,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
     tags = [],
     url,
     externalLink,
+    hiddenAddress = false,
   } = event;
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
@@ -40,7 +41,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
             {isCslEvent && rawEndDate ? `- ${formatDateCSL(endInZone)}` : ''}
           </span>
 
-          {address && <span>{address}</span>}
+          {address && !hiddenAddress && <span>{address}</span>}
         </div>
 
         {Array.isArray(tags) && tags.length > 0 ? <TagList tags={tags} /> : <div className="tags-list" />}

@@ -16,9 +16,11 @@ exports.createSchemaCustomization = ({ actions }) => {
       url: String
       description: String
       start_at: Date
+      start_tz: String
       raw_start: String
       raw_end: String
       end_at: String
+      end_tz: String
       cancelled_at: String
       start_in_zone: String
       end_in_zone: String
@@ -33,7 +35,8 @@ exports.createSchemaCustomization = ({ actions }) => {
       inputs: [String!]!
       internal: Internal
       location: Location
-      calendar: Calendar      
+      calendar: Calendar
+      hiddenAddress: Boolean      
     }
     type Calendar {
       name: String
@@ -67,9 +70,11 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
 
+  // All events (less details)
+  const allEvents = await getAllGoodEvents();
+
   const credentials = `${clientId}:${clientSecret}`;
   const encodedCredentials = Buffer.from(credentials).toString('base64');
-
   const accessToken = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
     method: 'POST',
     headers: {
@@ -79,55 +84,41 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   });
   const receivedToken = await accessToken.json();
 
-  // Fetch all CSL events + create nodes
-  let currentPage = 1;
-
-  do {
-    const result = await fetch(
-      `${cslPath}/api/v1/events?access_token=${receivedToken.access_token}&page=${currentPage}`,
-      {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    const resultData = await result.json();
-
-    const today = DateTime.now().setZone('Europe/Amsterdam');
-    const futureEvents = resultData.events.filter((e) => {
-      const startDate = DateTime.fromISO(e.start_at, { zone: 'Europe/Amsterdam' });
-      return startDate > today && e.launched_at !== null;
+  for (const event of allEvents) {
+    const result = await fetch(`${cslPath}/api/v1/events/${event.slug}?access_token=${receivedToken.access_token}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
     });
+    const { event: eventResponse } = await result.json();
 
-    for (const event of futureEvents) {
-      console.log('[CSL Source] Creating: ', event.title);
-      const cslInputs = await scrapingFormInputs(event);
+    // We will only show events that do not contain the 'hidden' tag.
+    if (Array.isArray(eventResponse.labels) && !eventResponse.labels.includes('hidden')) {
+      console.log('[CSL Source] Creating: ', eventResponse.title);
+      const cslInputs = await scrapingFormInputs(eventResponse);
 
       createNode({
-        ...event,
-        id: event.slug,
-        title: event.title,
-        labels: event.labels || [],
-        start_at: event.start_at ? new Date(event.start_at).toISOString().split('T')[0] : null,
-        raw_start: event.start_at,
-        raw_end: event.end_at,
-        start_in_zone: event.start_in_zone,
-        end_in_zone: event.end_in_zone,
-        time_zone: event.time_zone,
+        ...eventResponse,
+        id: String(event.id),
+        slug: event.slug,
+        title: eventResponse.title,
+        labels: eventResponse.labels || [],
+        start_at: eventResponse.start_at ? new Date(eventResponse.start_at).toISOString().split('T')[0] : null,
+        raw_start: eventResponse.start_at,
+        raw_end: eventResponse.end_at,
+        start_in_zone: eventResponse.start_in_zone,
+        end_in_zone: eventResponse.end_in_zone,
+        time_zone: eventResponse.time_zone,
         inputs: cslInputs || [],
+        hiddenAddress: event.hiddenAddress,
         internal: {
           type: 'ExternalEvent',
-          contentDigest: createContentDigest(event),
+          contentDigest: createContentDigest(eventResponse),
         },
       });
+    } else {
+      console.log(`Event ${event.slug} not created.`);
     }
-
-    const meta = resultData.meta;
-    totalPages = meta.total_pages;
-    currentPage = meta.next_page;
-  } while (currentPage);
+  }
 };
 
 exports.createPages = ({ graphql, actions }) => {
@@ -392,4 +383,39 @@ const scrapingFormInputs = async (event) => {
     console.error('Error on scraping:', error);
     throw error;
   }
+};
+
+// CSL Utils
+const getAllGoodEvents = async () => {
+  const cslPath = process.env.CSL_PATH;
+  const events = [];
+
+  let currentPage = 1;
+  let totalPages = 1;
+
+  do {
+    const result = await fetch(`${cslPath}/api/local.json?page=${currentPage}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    });
+    const resultData = await result.json();
+
+    if (!resultData || !resultData.meta) {
+      throw new Error('Invalid response structure');
+    }
+
+    const today = DateTime.now().setZone('Europe/Amsterdam');
+    const futureEvents = resultData.data.filter((e) => {
+      const startDate = DateTime.fromISO(e.start_at, { zone: 'Europe/Amsterdam' });
+      return startDate > today && e.launched_at !== null;
+    });
+
+    events.push(...futureEvents);
+
+    const meta = resultData.meta;
+    totalPages = meta.total_pages;
+    currentPage += 1;
+  } while (currentPage <= totalPages);
+
+  return events;
 };

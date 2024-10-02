@@ -37,6 +37,7 @@ const MapFilter = ({ block }) => {
               query
               region
             }
+            hiddenAddress
           }
         }
       }
