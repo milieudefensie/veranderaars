@@ -49,7 +49,7 @@ export default async function handler(req, res) {
         email: email,
         postcode: postcode,
         email_opt_in_type_external_id: consentAccepted ? 'hubspot_form_consent' : 'hubspot_form_no_consent',
-        join_organisation: false,
+        join_organisation: true,
         locale: 'nl',
         phone_number: phone,
       },

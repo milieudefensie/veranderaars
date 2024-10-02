@@ -1,0 +1,2271 @@
+### Type definitions saved at 2024-09-26T17:43:10.896Z ###
+
+enum RemoteFileFit {
+  COVER
+  FILL
+  OUTSIDE
+  CONTAIN
+}
+
+enum RemoteFileFormat {
+  AUTO
+  JPG
+  PNG
+  WEBP
+  AVIF
+}
+
+enum RemoteFileLayout {
+  FIXED
+  FULL_WIDTH
+  CONSTRAINED
+}
+
+enum RemoteFilePlaceholder {
+  DOMINANT_COLOR
+  BLURRED
+  TRACED_SVG
+  NONE
+}
+
+enum RemoteFileCropFocus {
+  CENTER
+  TOP
+  RIGHT
+  BOTTOM
+  LEFT
+  ENTROPY
+  EDGES
+  FACES
+}
+
+type RemoteFileResize {
+  width: Int
+  height: Int
+  src: String
+}
+
+"""Remote Interface"""
+interface RemoteFile {
+  id: ID!
+  mimeType: String!
+  filename: String!
+  filesize: Int
+  width: Int
+  height: Int
+  publicUrl: String!
+  resize(
+    width: Int
+    height: Int
+    aspectRatio: Float
+    fit: RemoteFileFit = COVER
+
+    """
+    
+    The image formats to generate. Valid values are AUTO (meaning the same
+    format as the source image), JPG, PNG, WEBP and AVIF.
+    The default value is [AUTO, WEBP, AVIF], and you should rarely need to
+    change this. Take care if you specify JPG or PNG when you do
+    not know the formats of the source images, as this could lead to unwanted
+    results such as converting JPEGs to PNGs. Specifying
+    both PNG and JPG is not supported and will be ignored.
+    """
+    format: RemoteFileFormat = AUTO
+    cropFocus: [RemoteFileCropFocus]
+    quality: Int = 75
+  ): RemoteFileResize
+
+  """
+  Data used in the <GatsbyImage /> component. See https://gatsby.dev/img for more info.
+  """
+  gatsbyImage(
+    """
+    
+    The layout for the image.
+    FIXED: A static image sized, that does not resize according to the screen width
+    FULL_WIDTH: The image resizes to fit its container. Pass a "sizes" option if
+    it isn't going to be the full width of the screen.
+    CONSTRAINED: Resizes to fit its container, up to a maximum width, at which point it will remain fixed in size.
+    
+    """
+    layout: RemoteFileLayout = CONSTRAINED
+
+    """
+    
+    The display width of the generated image for layout = FIXED, and the display
+    width of the largest image for layout = CONSTRAINED.
+    The actual largest image resolution will be this value multiplied by the largest value in outputPixelDensities
+    Ignored if layout = FLUID.
+    
+    """
+    width: Int
+
+    """
+    
+    If set, the height of the generated image. If omitted, it is calculated from
+    the supplied width, matching the aspect ratio of the source image.
+    """
+    height: Int
+
+    """
+    
+    Format of generated placeholder image, displayed while the main image loads.
+    BLURRED: a blurred, low resolution image, encoded as a base64 data URI
+    DOMINANT_COLOR: a solid color, calculated from the dominant color of the image (default).
+    TRACED_SVG: deprecated. Will use DOMINANT_COLOR.
+    NONE: no placeholder. Set the argument "backgroundColor" to use a fixed background color.
+    """
+    placeholder: RemoteFilePlaceholder = DOMINANT_COLOR
+
+    """
+    
+    If set along with width or height, this will set the value of the other
+    dimension to match the provided aspect ratio, cropping the image if needed.
+    If neither width or height is provided, height will be set based on the intrinsic width of the source image.
+    
+    """
+    aspectRatio: Float
+
+    """
+    
+    The image formats to generate. Valid values are AUTO (meaning the same
+    format as the source image), JPG, PNG, WEBP and AVIF.
+    The default value is [AUTO, WEBP, AVIF], and you should rarely need to
+    change this. Take care if you specify JPG or PNG when you do
+    not know the formats of the source images, as this could lead to unwanted
+    results such as converting JPEGs to PNGs. Specifying
+    both PNG and JPG is not supported and will be ignored.
+    
+    """
+    formats: [RemoteFileFormat!] = [AUTO, WEBP, AVIF]
+
+    """
+    
+    A list of image pixel densities to generate for FIXED and CONSTRAINED
+    images. You should rarely need to change this. It will never generate images
+    larger than the source, and will always include a 1x image.
+    Default is [ 1, 2 ] for fixed images, meaning 1x, 2x, and [0.25, 0.5, 1, 2]
+    for fluid. In this case, an image with a fluid layout and width = 400 would
+    generate images at 100, 200, 400 and 800px wide.
+    
+    """
+    outputPixelDensities: [Float] = [0.25, 0.5, 1, 2]
+
+    """
+    
+    Specifies the image widths to generate. You should rarely need to change
+    this. For FIXED and CONSTRAINED images it is better to allow these to be
+    determined automatically,
+    based on the image size. For FULL_WIDTH images this can be used to override
+    the default, which is [750, 1080, 1366, 1920].
+    It will never generate any images larger than the source.
+    
+    """
+    breakpoints: [Int] = [750, 1080, 1366, 1920]
+
+    """
+    
+    The "sizes" property, passed to the img tag. This describes the display size of the image.
+    This does not affect the generated images, but is used by the browser to
+    decide which images to download. You can leave this blank for fixed images,
+    or if the responsive image
+    container will be the full width of the screen. In these cases we will generate an appropriate value.
+    
+    """
+    sizes: String
+
+    """
+    Background color applied to the wrapper, or when "letterboxing" an image to another aspect ratio.
+    """
+    backgroundColor: String
+    fit: RemoteFileFit = COVER
+    cropFocus: [RemoteFileCropFocus]
+    quality: Int = 75
+  ): GatsbyImageData
+}
+
+type File implements Node @dontInfer {
+  sourceInstanceName: String!
+  absolutePath: String!
+  relativePath: String!
+  extension: String!
+  size: Int!
+  prettySize: String!
+  modifiedTime: Date! @dateformat
+  accessTime: Date! @dateformat
+  changeTime: Date! @dateformat
+  birthTime: Date! @dateformat
+  root: String!
+  dir: String!
+  base: String!
+  ext: String!
+  name: String!
+  relativeDirectory: String!
+  dev: Int!
+  mode: Int!
+  nlink: Int!
+  uid: Int!
+  gid: Int!
+  rdev: Int!
+  ino: Float!
+  atimeMs: Float!
+  mtimeMs: Float!
+  ctimeMs: Float!
+  atime: Date! @dateformat
+  mtime: Date! @dateformat
+  ctime: Date! @dateformat
+  birthtime: Date @deprecated(reason: "Use `birthTime` instead")
+  birthtimeMs: Float @deprecated(reason: "Use `birthTime` instead")
+}
+
+type Directory implements Node @dontInfer {
+  sourceInstanceName: String!
+  absolutePath: String!
+  relativePath: String!
+  extension: String!
+  size: Int!
+  prettySize: String!
+  modifiedTime: Date! @dateformat
+  accessTime: Date! @dateformat
+  changeTime: Date! @dateformat
+  birthTime: Date! @dateformat
+  root: String!
+  dir: String!
+  base: String!
+  ext: String!
+  name: String!
+  relativeDirectory: String!
+  dev: Int!
+  mode: Int!
+  nlink: Int!
+  uid: Int!
+  gid: Int!
+  rdev: Int!
+  ino: Float!
+  atimeMs: Float!
+  mtimeMs: Float!
+  ctimeMs: Float!
+  atime: Date! @dateformat
+  mtime: Date! @dateformat
+  ctime: Date! @dateformat
+  birthtime: Date @deprecated(reason: "Use `birthTime` instead")
+  birthtimeMs: Float @deprecated(reason: "Use `birthTime` instead")
+}
+
+type Site implements Node @derivedTypes @dontInfer {
+  buildTime: Date @dateformat
+  siteMetadata: SiteSiteMetadata
+  port: Int
+  host: String
+  flags: SiteFlags
+  polyfill: Boolean
+  pathPrefix: String
+  jsxRuntime: String
+  trailingSlash: String
+  graphqlTypegen: Boolean
+}
+
+type SiteSiteMetadata {
+  title: String
+  description: String
+  siteUrl: String
+}
+
+type SiteFlags {
+  PARALLEL_SOURCING: Boolean
+  PRESERVE_FILE_DOWNLOAD_CACHE: Boolean
+}
+
+type SiteFunction implements Node @dontInfer {
+  functionRoute: String!
+  pluginName: String!
+  originalAbsoluteFilePath: String!
+  originalRelativeFilePath: String!
+  relativeCompiledFilePath: String!
+  absoluteCompiledFilePath: String!
+  matchPath: String
+}
+
+type SitePage implements Node @dontInfer {
+  path: String!
+  component: String!
+  internalComponentName: String!
+  componentChunkName: String!
+  matchPath: String
+  pageContext: JSON @proxy(from: "context", fromNode: false)
+  pluginCreator: SitePlugin @link(by: "id", from: "pluginCreatorId")
+}
+
+type SitePlugin implements Node @dontInfer {
+  resolve: String
+  name: String
+  version: String
+  nodeAPIs: [String]
+  browserAPIs: [String]
+  ssrAPIs: [String]
+  pluginFilepath: String
+  pluginOptions: JSON
+  packageJson: JSON
+}
+
+type SiteBuildMetadata implements Node @dontInfer {
+  buildTime: Date @dateformat
+}
+
+type DatoCmsFixed {
+  base64: String
+  tracedSVG: String
+  aspectRatio: Float
+  width: Int!
+  height: Int!
+  src: String!
+  srcSet: String!
+  sizes: String
+}
+
+type DatoCmsFluid {
+  base64: String
+  tracedSVG: String
+  aspectRatio: Float!
+  width: Int
+  height: Int
+  src: String!
+  srcSet: String!
+  sizes: String!
+}
+
+input DatoCmsImgixParams {
+  """
+  Specifies an aspect ratio to maintain when resizing and cropping the image (https://docs.imgix.com/apis/url/size/ar)
+  """
+  ar: String
+
+  """
+  Applies automatic enhancements to images. (https://docs.imgix.com/apis/url/auto)
+  """
+  auto: String
+
+  """
+  Removes background from image. (https://docs.imgix.com/apis/rendering/background-removal/bg-remove)
+  """
+  bgRemove: Boolean
+
+  """
+  Overrides default fallback behavior for bg-remove failures.
+  (https://docs.imgix.com/apis/rendering/background-removal/bg-remove)
+  """
+  bgRemoveFallback: Boolean
+
+  """
+  Colors the background of padded and partially-transparent images. (https://docs.imgix.com/apis/url/bg)
+  """
+  bg: String
+
+  """
+  Changes the blend alignment relative to the parent image. (https://docs.imgix.com/apis/url/blending/blend-align)
+  """
+  blendAlign: String
+
+  """
+  Changes the alpha of the blend image. (https://docs.imgix.com/apis/url/blending/blend-alpha)
+  """
+  blendAlpha: Int
+
+  """
+  Specifies a color to use when applying the blend. (https://docs.imgix.com/apis/url/blending/blend-color)
+  """
+  blendColor: String
+
+  """
+  Specifies the type of crop for blend images. (https://docs.imgix.com/apis/url/blending/blend-crop)
+  """
+  blendCrop: String
+
+  """
+  Specifies the fit mode for blend images. (https://docs.imgix.com/apis/url/blending/blend-fit)
+  """
+  blendFit: String
+
+  """
+  Adjusts the height of the blend image. (https://docs.imgix.com/apis/url/blending/blend-h)
+  """
+  blendH: String
+
+  """
+  Sets the blend mode for a blend image. (https://docs.imgix.com/apis/url/blending/blend-mode)
+  """
+  blendMode: String
+
+  """
+  Applies padding to the blend image. (https://docs.imgix.com/apis/url/blending/blend-pad)
+  """
+  blendPad: Int
+
+  """
+  Adjusts the size of the blend image. (https://docs.imgix.com/apis/url/blending/blend-size)
+  """
+  blendSize: String
+
+  """
+  Adjusts the width of the blend image. (https://docs.imgix.com/apis/url/blending/blend-w)
+  """
+  blendW: String
+
+  """
+  Adjusts the x-offset of the blend image relative to its parent. (https://docs.imgix.com/apis/url/blending/blend-x)
+  """
+  blendX: Int
+
+  """
+  Adjusts the y-offset of the blend image relative to its parent. (https://docs.imgix.com/apis/url/blending/blend-y)
+  """
+  blendY: Int
+
+  """
+  Specifies the location of the blend image. (https://docs.imgix.com/apis/url/blending/blend)
+  """
+  blend: String
+
+  """
+  Applies a gaussian blur to an image. (https://docs.imgix.com/apis/url/stylize/blur)
+  """
+  blur: Int
+
+  """
+  Sets bottom border of an image. (https://docs.imgix.com/apis/url/border-and-padding/border-bottom)
+  """
+  borderBottom: Int
+
+  """
+  Sets left border of an image. (https://docs.imgix.com/apis/url/border-and-padding/border-left)
+  """
+  borderLeft: Int
+
+  """
+  Sets the inner radius of the image's border in pixels.
+  (https://docs.imgix.com/apis/url/border-and-padding/border-radius-inner)
+  """
+  borderRadiusInner: String
+
+  """
+  Sets the outer radius of the image's border in pixels. (https://docs.imgix.com/apis/url/border-and-padding/border-radius)
+  """
+  borderRadius: String
+
+  """
+  Sets right border of an image. (https://docs.imgix.com/apis/url/border-and-padding/border-right)
+  """
+  borderRight: Int
+
+  """
+  Sets top border of an image. (https://docs.imgix.com/apis/url/border-and-padding/border-top)
+  """
+  borderTop: Int
+
+  """
+  Applies a border to an image. (https://docs.imgix.com/apis/url/border-and-padding/border)
+  """
+  border: String
+
+  """
+  Adjusts the brightness of the source image. (https://docs.imgix.com/apis/url/adjustment/bri)
+  """
+  bri: Int
+
+  """
+  Sets one or more Client-Hints headers (https://docs.imgix.com/apis/url/format/ch)
+  """
+  ch: String
+
+  """
+  Specifies the output chroma subsampling rate. (https://docs.imgix.com/apis/url/format/chromasub)
+  """
+  chromasub: Int
+
+  """
+  Limits the number of unique colors in an image. (https://docs.imgix.com/apis/url/format/colorquant)
+  """
+  colorquant: Int
+
+  """
+  Specifies how many colors to include in a palette-extraction response.
+  (https://docs.imgix.com/apis/url/color-palette/colors)
+  """
+  colors: Int
+
+  """
+  Adjusts the contrast of the source image. (https://docs.imgix.com/apis/url/adjustment/con)
+  """
+  con: Int
+
+  """
+  Specifies the radius value for a rounded corner mask. (https://docs.imgix.com/apis/url/mask/corner-radius)
+  """
+  cornerRadius: String
+
+  """
+  Specifies how to crop an image. (https://docs.imgix.com/apis/url/size/crop)
+  """
+  crop: String
+
+  """
+  Specifies the color space of the output image. (https://docs.imgix.com/apis/url/format/cs)
+  """
+  cs: String
+
+  """
+  Forces a URL to use send-file in its response. (https://docs.imgix.com/apis/url/format/dl)
+  """
+  dl: String
+
+  """
+  Sets the DPI value in the EXIF header. (https://docs.imgix.com/apis/url/format/dpi)
+  """
+  dpi: Int
+
+  """
+  Adjusts the device-pixel ratio of the output image. (https://docs.imgix.com/apis/url/dpr)
+  """
+  dpr: Float
+
+  """
+  Changes the alpha of the duotone effect atop the source image. (https://docs.imgix.com/apis/url/stylize/duotone-alpha)
+  """
+  duotoneAlpha: Int
+
+  """
+  Applies a duotone effect to the source image. (https://docs.imgix.com/apis/url/stylize/duotone)
+  """
+  duotone: String
+
+  """
+  Adjusts the exposure of the output image. (https://docs.imgix.com/apis/url/adjustment/exp)
+  """
+  exp: Int
+
+  """
+  A Unix timestamp specifying a UTC time. Requests made to this URL after that
+  time will output a 404 status code. (https://docs.imgix.com/apis/url/expires)
+  """
+  expires: String
+
+  """
+  Selects a face to crop to. (https://docs.imgix.com/apis/url/face-detection/faceindex)
+  """
+  faceindex: Int
+
+  """
+  Adjusts padding around a selected face. (https://docs.imgix.com/apis/url/face-detection/facepad)
+  """
+  facepad: Float
+
+  """
+  Specifies that face data should be included in output when combined with
+  `fm=json`. (https://docs.imgix.com/apis/url/face-detection/faces)
+  """
+  faces: Int
+
+  """
+  Sets the fill color for images with additional space created by the fit
+  setting (https://docs.imgix.com/apis/url/fill/fill-color)
+  """
+  fillColor: String
+
+  """
+  Determines how to fill in additional space created by the fit setting (https://docs.imgix.com/apis/url/fill/fill)
+  """
+  fill: String
+
+  """
+  Specifies how to map the source image to the output image dimensions. (https://docs.imgix.com/apis/url/size/fit)
+  """
+  fit: String
+
+  """
+  Flips an image on a specified axis. (https://docs.imgix.com/apis/url/rotation/flip)
+  """
+  flip: String
+
+  """
+  Changes the format of the output image. (https://docs.imgix.com/apis/url/format/fm)
+  """
+  fm: String
+
+  """
+  Displays crosshairs identifying the location of the set focal point
+  (https://docs.imgix.com/apis/url/focalpoint-crop/fp-debug)
+  """
+  fpDebug: Boolean
+
+  """
+  Sets the relative horizontal value for the focal point of an image (https://docs.imgix.com/apis/url/focalpoint-crop/fp-x)
+  """
+  fpX: Float
+
+  """
+  Sets the relative vertical value for the focal point of an image (https://docs.imgix.com/apis/url/focalpoint-crop/fp-y)
+  """
+  fpY: Float
+
+  """
+  Sets the relative zoom value for the focal point of an image (https://docs.imgix.com/apis/url/focalpoint-crop/fp-z)
+  """
+  fpZ: Float
+
+  """Specifies the framerate of the generated image. (undefined)"""
+  fps: Int
+
+  """Specifies the frame of an animated image to use. (undefined)"""
+  frame: String
+
+  """
+  Adjusts the gamma of the source image. (https://docs.imgix.com/apis/url/adjustment/gam)
+  """
+  gam: Int
+
+  """undefined (undefined)"""
+  gifQ: Int
+
+  """Sets grid colors for the transparency checkerboard grid. (undefined)"""
+  gridColors: String
+
+  """Sets grid size for the transparency checkerboard grid. (undefined)"""
+  gridSize: Int
+
+  """
+  Adjusts the height of the output image. (https://docs.imgix.com/apis/url/size/h)
+  """
+  h: String
+
+  """
+  Adjusts the highlights of the source image. (https://docs.imgix.com/apis/url/adjustment/high)
+  """
+  high: Int
+
+  """
+  Applies a half-tone effect to the source image. (https://docs.imgix.com/apis/url/stylize/htn)
+  """
+  htn: Int
+
+  """
+  Adjusts the hue of the source image. (https://docs.imgix.com/apis/url/adjustment/hue)
+  """
+  hue: Int
+
+  """Displays every Nth frame starting with the first frame. (undefined)"""
+  interval: Int
+
+  """
+  Inverts the colors on the source image. (https://docs.imgix.com/apis/url/adjustment/invert)
+  """
+  invert: Boolean
+
+  """Determine if IPTC data should be passed for JPEG images. (undefined)"""
+  iptc: String
+
+  """
+  Specifies the number of times an animated image should repeat. A value of 0 means infinite looping. (undefined)
+  """
+  loop: Int
+
+  """
+  Specifies that the output image should be a lossless variant. (https://docs.imgix.com/apis/url/format/lossless)
+  """
+  lossless: Boolean
+
+  """
+  Changes the watermark alignment relative to the parent image. (https://docs.imgix.com/apis/url/watermark/mark-align)
+  """
+  markAlign: String
+
+  """
+  Changes the alpha of the watermark image. (https://docs.imgix.com/apis/url/watermark/mark-alpha)
+  """
+  markAlpha: Int
+
+  """
+  Changes base URL of the watermark image. (https://docs.imgix.com/apis/url/watermark/mark-base)
+  """
+  markBase: String
+
+  """
+  Specifies the fit mode for watermark images. (https://docs.imgix.com/apis/url/watermark/mark-fit)
+  """
+  markFit: String
+
+  """
+  Adjusts the height of the watermark image. (https://docs.imgix.com/apis/url/watermark/mark-h)
+  """
+  markH: String
+
+  """
+  Applies padding to the watermark image. (https://docs.imgix.com/apis/url/watermark/mark-pad)
+  """
+  markPad: Int
+
+  """
+  Rotates a watermark or tiled watermarks by a specified number of degrees.
+  (https://docs.imgix.com/apis/url/watermark/mark-rot)
+  """
+  markRot: Float
+
+  """
+  Adjusts the scale of the watermark image. (https://docs.imgix.com/apis/url/watermark/mark-scale)
+  """
+  markScale: Int
+
+  """
+  Adds tiled watermark. (https://docs.imgix.com/apis/url/watermark/mark-tile)
+  """
+  markTile: String
+
+  """
+  Adjusts the width of the watermark image. (https://docs.imgix.com/apis/url/watermark/mark-w)
+  """
+  markW: String
+
+  """
+  Adjusts the x-offset of the watermark image relative to its parent. (https://docs.imgix.com/apis/url/watermark/mark-x)
+  """
+  markX: Int
+
+  """
+  Adjusts the y-offset of the watermark image relative to its parent. (https://docs.imgix.com/apis/url/watermark/mark-y)
+  """
+  markY: Int
+
+  """
+  Specifies the location of the watermark image. (https://docs.imgix.com/apis/url/watermark/mark)
+  """
+  mark: String
+
+  """
+  Colors the background of the transparent mask area of images (https://docs.imgix.com/apis/url/mask/mask-bg)
+  """
+  maskBg: String
+
+  """
+  Defines the type of mask and specifies the URL if that type is selected. (https://docs.imgix.com/apis/url/mask)
+  """
+  mask: String
+
+  """
+  Specifies the maximum height of the output image in pixels. (https://docs.imgix.com/apis/url/size/max-height)
+  """
+  maxH: Int
+
+  """
+  Specifies the maximum width of the output image in pixels. (https://docs.imgix.com/apis/url/size/max-width)
+  """
+  maxW: Int
+
+  """
+  Specifies the minimum height of the output image in pixels. (https://docs.imgix.com/apis/url/size/min-height)
+  """
+  minH: Int
+
+  """
+  Specifies the minimum width of the output image in pixels. (https://docs.imgix.com/apis/url/size/min-width)
+  """
+  minW: Int
+
+  """
+  Applies a monochrome effect to the source image. (https://docs.imgix.com/apis/url/stylize/monochrome)
+  """
+  monochrome: String
+
+  """
+  Reduces the noise in an image. (https://docs.imgix.com/apis/url/noise-reduction/nr)
+  """
+  nr: Int
+
+  """
+  Provides a threshold by which to sharpen an image. (https://docs.imgix.com/apis/url/noise-reduction/nrs)
+  """
+  nrs: Int
+
+  """
+  Changes the image orientation. (https://docs.imgix.com/apis/url/rotation/orient)
+  """
+  orient: Int
+
+  """
+  Sets bottom padding of an image. (https://docs.imgix.com/apis/url/border-and-padding/pad-bottom)
+  """
+  padBottom: Int
+
+  """
+  Sets left padding of an image. (https://docs.imgix.com/apis/url/border-and-padding/pad-left)
+  """
+  padLeft: Int
+
+  """
+  Sets right padding of an image. (https://docs.imgix.com/apis/url/border-and-padding/pad-right)
+  """
+  padRight: Int
+
+  """
+  Sets top padding of an image. (https://docs.imgix.com/apis/url/border-and-padding/pad-top)
+  """
+  padTop: Int
+
+  """
+  Pads an image. (https://docs.imgix.com/apis/url/border-and-padding/pad)
+  """
+  pad: Int
+
+  """
+  Selects a page from a PDF for display. (https://docs.imgix.com/apis/url/pdf/page)
+  """
+  page: Int
+
+  """
+  Specifies an output format for palette-extraction. (https://docs.imgix.com/apis/url/color-palette/palette)
+  """
+  palette: String
+
+  """
+  Enables or disables PDF annotation. (https://docs.imgix.com/apis/url/pdf/pdf-annotation)
+  """
+  pdfAnnotation: Boolean
+
+  """
+  Specifies a CSS prefix for all classes in palette-extraction. (https://docs.imgix.com/apis/url/color-palette/prefix)
+  """
+  prefix: String
+
+  """
+  Applies a pixelation effect to an image. (https://docs.imgix.com/apis/url/stylize/px)
+  """
+  px: Int
+
+  """
+  Adjusts the quality of an output image. (https://docs.imgix.com/apis/url/format/q)
+  """
+  q: Int
+
+  """
+  Crops an image to a specified rectangle. (https://docs.imgix.com/apis/url/size/rect)
+  """
+  rect: String
+
+  """Reverses the frame order on the source animation. (undefined)"""
+  reverse: Boolean
+
+  """
+  Rotates an image by a specified number of degrees. (https://docs.imgix.com/apis/url/rotation/rot)
+  """
+  rot: Float
+
+  """
+  Adjusts the saturation of an image. (https://docs.imgix.com/apis/url/adjustment/sat)
+  """
+  sat: Int
+
+  """
+  Applies a sepia effect to an image. (https://docs.imgix.com/apis/url/stylize/sepia)
+  """
+  sepia: Int
+
+  """
+  Adjusts the highlights of the source image. (https://docs.imgix.com/apis/url/adjustment/shad)
+  """
+  shad: Float
+
+  """
+  Adjusts the sharpness of the source image. (https://docs.imgix.com/apis/url/adjustment/sharp)
+  """
+  sharp: Float
+
+  """Skips every Nth frame starting with the first frame. (undefined)"""
+  skip: Int
+
+  """
+  Adds checkerboard behind images which support transparency. (https://docs.imgix.com/apis/url/fill/transparency)
+  """
+  transparency: String
+
+  """
+  Specifies a trim color on a trim operation. (https://docs.imgix.com/apis/url/trim/trim-color)
+  """
+  trimColor: String
+
+  """
+  Specifies the mean difference on a trim operation. (https://docs.imgix.com/apis/url/trim/trim-md)
+  """
+  trimMd: Float
+
+  """
+  Pads the area of the source image before trimming. (https://docs.imgix.com/apis/url/trim/trim-pad)
+  """
+  trimPad: Int
+
+  """
+  Specifies the standard deviation on a trim operation. (https://docs.imgix.com/apis/url/trim/trim-sd)
+  """
+  trimSd: Float
+
+  """
+  Specifies the tolerance on a trim operation. (https://docs.imgix.com/apis/url/trim/trim-tol)
+  """
+  trimTol: Float
+
+  """Trims the source image. (https://docs.imgix.com/apis/url/trim/trim)"""
+  trim: String
+
+  """
+  Sets the vertical and horizontal alignment of rendered text relative to the
+  base image. (https://docs.imgix.com/apis/url/text/txt-align)
+  """
+  txtAlign: String
+
+  """
+  Sets the clipping properties of rendered text. (https://docs.imgix.com/apis/url/text/txt-clip)
+  """
+  txtClip: String
+
+  """
+  Specifies the color of rendered text. (https://docs.imgix.com/apis/url/text/txt-color)
+  """
+  txtColor: String
+
+  """
+  Specifies the fit approach for rendered text. (https://docs.imgix.com/apis/url/text/txt-fit)
+  """
+  txtFit: String
+
+  """
+  Selects a font for rendered text. (https://docs.imgix.com/apis/url/text/txt-font)
+  """
+  txtFont: String
+
+  """
+  Sets the leading (line spacing) for rendered text. Only works on the
+  multi-line text endpoint.
+  (https://docs.imgix.com/apis/url/typesetting/txt-lead)
+  """
+  txtLead: Int
+
+  """
+  Controls the level of ligature substitution (https://docs.imgix.com/apis/url/text/txt-lig)
+  """
+  txtLig: Int
+
+  """
+  Specifies a text outline color. (https://docs.imgix.com/apis/url/text/txt-line-color)
+  """
+  txtLineColor: String
+
+  """
+  Outlines the rendered text with a specified color. (https://docs.imgix.com/apis/url/text/txt-line)
+  """
+  txtLine: Int
+
+  """
+  Specifies the padding (in device-independent pixels) between a textbox and the
+  edges of the base image. (https://docs.imgix.com/apis/url/text/txt-pad)
+  """
+  txtPad: Int
+
+  """
+  Applies a shadow to rendered text. (https://docs.imgix.com/apis/url/text/txt-shad)
+  """
+  txtShad: Float
+
+  """
+  Sets the font size of rendered text. (https://docs.imgix.com/apis/url/text/txt-size)
+  """
+  txtSize: Int
+
+  """
+  Sets the tracking (letter spacing) for rendered text. Only works on the
+  multi-line text endpoint.
+  (https://docs.imgix.com/apis/url/typesetting/txt-track)
+  """
+  txtTrack: Int
+
+  """
+  Sets the width of rendered text. (https://docs.imgix.com/apis/url/text/txt-width)
+  """
+  txtWidth: Int
+
+  """
+  Sets the horizontal (x) position of the text in pixels relative to the left
+  edge of the base image. (https://docs.imgix.com/apis/url/text/txt-x)
+  """
+  txtX: Int
+
+  """
+  Sets the vertical (y) position of the text in pixels relative to the top edge
+  of the base image. (https://docs.imgix.com/apis/url/text/txt-y)
+  """
+  txtY: Int
+
+  """
+  Sets the text string to render. (https://docs.imgix.com/apis/url/text/txt)
+  """
+  txt: String
+
+  """
+  Overrides default fallback behavior for super resolution failures
+  (https://docs.imgix.com/apis/rendering/super-resolution/upscale-fallback)
+  """
+  upscaleFallback: Boolean
+
+  """
+  Uses generative AI fill to upscale low resolution images. (https://docs.imgix.com/apis/rendering/super-resolution/upscale)
+  """
+  upscale: Boolean
+
+  """
+  Sharpens the source image using an unsharp mask. (https://docs.imgix.com/apis/url/adjustment/usm)
+  """
+  usm: Int
+
+  """
+  Specifies the radius for an unsharp mask operation. (https://docs.imgix.com/apis/url/adjustment/usmrad)
+  """
+  usmrad: Float
+
+  """
+  Adjusts the vibrance of an image. (https://docs.imgix.com/apis/url/adjustment/vib)
+  """
+  vib: Int
+
+  """
+  Adjusts the width of the output image. (https://docs.imgix.com/apis/url/size/w)
+  """
+  w: String
+}
+
+type DatoCmsColorField {
+  red: Int
+  green: Int
+  blue: Int
+  alpha: Int
+  rgb: String
+  hex: String
+}
+
+enum DatoImagePlaceholder {
+  NONE
+  DOMINANT_COLOR
+  TRACED_SVG
+  BLURRED
+}
+
+type DatoCmsFileField {
+  size: Int
+  width: Int
+  height: Int
+  path: String
+  format: String
+  isImage: Boolean
+  notes: String
+  author: String
+  copyright: String
+  tags: [String]
+  smartTags: [String]
+  filename: String
+  basename: String
+  exifInfo: JSON
+  mimeType: String
+  colors: [DatoCmsColorField]
+  blurhash: String
+  originalId: String!
+  url(imgixParams: DatoCmsImgixParams): String
+  createdAt: Date @dateformat @proxy(from: "foo", fromNode: false)
+  video: DatoCmsAssetVideo
+  fluid(maxWidth: Int = 800, maxHeight: Int, sizes: String, imgixParams: DatoCmsImgixParams, forceBlurhash: Boolean): DatoCmsFluid
+  sizes(maxWidth: Int = 800, maxHeight: Int, sizes: String, imgixParams: DatoCmsImgixParams, forceBlurhash: Boolean): DatoCmsFluid
+  fixed(width: Int = 400, height: Int, forceBlurhash: Boolean, imgixParams: DatoCmsImgixParams): DatoCmsFixed
+  resolutions(width: Int = 400, height: Int, forceBlurhash: Boolean, imgixParams: DatoCmsImgixParams): DatoCmsFixed
+  gatsbyImageData(
+    """
+    The layout for the image.
+    FIXED: A static image sized, that does not resize according to the screen width
+    FULL_WIDTH: The image resizes to fit its container. Pass a "sizes" option if
+    it isn't going to be the full width of the screen.
+    CONSTRAINED: Resizes to fit its container, up to a maximum width, at which point it will remain fixed in size.
+    """
+    layout: GatsbyImageLayout
+
+    """
+    The display width of the generated image for layout = FIXED, and the display
+    width of the largest image for layout = CONSTRAINED.
+    The actual largest image resolution will be this value multiplied by the largest value in outputPixelDensities
+    Ignored if layout = FULL_WIDTH.
+    """
+    width: Int
+
+    """
+    If set, the height of the generated image. If omitted, it is calculated from
+    the supplied width, matching the aspect ratio of the source image.
+    """
+    height: Int
+
+    """
+    If set along with width or height, this will set the value of the other
+    dimension to match the provided aspect ratio, cropping the image if needed.
+    If neither width or height is provided, height will be set based on the intrinsic width of the source image.
+    """
+    aspectRatio: Float
+
+    """
+    The "sizes" property, passed to the img tag. This describes the display size of the image.
+    This does not affect the generated images, but is used by the browser to
+    decide which images to download. You can leave this blank for fixed images,
+    or if the responsive image
+    container will be the full width of the screen. In these cases we will generate an appropriate value.
+    """
+    sizes: String
+
+    """
+    A list of image pixel densities to generate for FIXED and CONSTRAINED
+    images. You should rarely need to change this. It will never generate images
+    larger than the source, and will always include a 1x image.
+    Default is [ 1, 2 ] for fixed images, meaning 1x, 2x, 3x, and [0.25, 0.5, 1,
+    2] for fluid. In this case, an image with a fluid layout and width = 400
+    would generate images at 100, 200, 400 and 800px wide.
+    Ignored for FULL_WIDTH, which uses breakpoints instead.
+    """
+    outputPixelDensities: [Float]
+
+    """
+    Specifies the image widths to generate. You should rarely need to change
+    this. For FIXED and CONSTRAINED images it is better to allow these to be
+    determined automatically,
+    based on the image size. For FULL_WIDTH images this can be used to override
+    the default, which is determined by the plugin.
+    It will never generate any images larger than the source.
+    """
+    breakpoints: [Int]
+
+    """
+    Background color applied to the wrapper, or when "letterboxing" an image to another aspect ratio.
+    """
+    backgroundColor: String
+    imgixParams: DatoCmsImgixParams
+    forceBlurhash: Boolean
+
+    """
+    Format of generated placeholder, displayed while the main image loads.
+    DOMINANT_COLOR: a solid color, calculated from the dominant color of the image (default).
+    BLURRED: a blurred, low resolution image, encoded as a base64 data URI
+    TRACED_SVG: a low-resolution traced SVG of the image. Note that this will
+    download the image at build time for processing.
+    NONE: no placeholder. Set "backgroundColor" to use a fixed background color.
+    """
+    placeholder: DatoImagePlaceholder
+  ): JSON
+  alt: String
+  title: String
+  customData: JSON
+  focalPoint: DatoCmsFocalPoint
+}
+
+type DatoCmsAssetVideo {
+  muxPlaybackId: String
+  frameRate: Int
+  duration: Int
+  streamingUrl: String
+  thumbnailUrl(format: DatoCmsAssetVideoThumbnailFormat): String
+  mp4Url(res: DatoCmsAssetVideoMp4ResolutionQuality, exactRes: DatoCmsAssetVideoMp4ResolutionQuality): String
+}
+
+enum DatoCmsAssetVideoThumbnailFormat {
+  jpg
+  png
+  gif
+}
+
+enum DatoCmsAssetVideoMp4ResolutionQuality {
+  low
+  medium
+  high
+}
+
+enum GatsbyImageLayout {
+  FIXED
+  FULL_WIDTH
+  CONSTRAINED
+}
+
+type DatoCmsFocalPoint {
+  x: Float!
+  y: Float!
+}
+
+type DatoCmsLatLonField {
+  latitude: Float
+  longitude: Float
+}
+
+type DatoCmsMetaField {
+  createdAt: Date @dateformat
+  updatedAt: Date @dateformat
+  publishedAt: Date @dateformat
+  firstPublishedAt: Date @dateformat
+  isValid: Boolean
+  status: String
+}
+
+type DatoCmsSeoField {
+  title: String
+  description: String
+  twitterCard: String
+  image: DatoCmsAsset
+}
+
+type DatoCmsAsset implements Node @dontInfer {
+  size: Int
+  width: Int
+  height: Int
+  path: String
+  format: String
+  isImage: Boolean
+  notes: String
+  author: String
+  copyright: String
+  tags: [String]
+  smartTags: [String]
+  filename: String
+  basename: String
+  exifInfo: JSON
+  mimeType: String
+  colors: [DatoCmsColorField]
+  blurhash: String
+  originalId: String!
+  url(imgixParams: DatoCmsImgixParams): String
+  createdAt: Date @dateformat @proxy(from: "foo", fromNode: false)
+  video: DatoCmsAssetVideo
+  fluid(maxWidth: Int = 800, maxHeight: Int, sizes: String, imgixParams: DatoCmsImgixParams, forceBlurhash: Boolean): DatoCmsFluid
+  sizes(maxWidth: Int = 800, maxHeight: Int, sizes: String, imgixParams: DatoCmsImgixParams, forceBlurhash: Boolean): DatoCmsFluid
+  fixed(width: Int = 400, height: Int, forceBlurhash: Boolean, imgixParams: DatoCmsImgixParams): DatoCmsFixed
+  resolutions(width: Int = 400, height: Int, forceBlurhash: Boolean, imgixParams: DatoCmsImgixParams): DatoCmsFixed
+  gatsbyImageData(
+    """
+    The layout for the image.
+    FIXED: A static image sized, that does not resize according to the screen width
+    FULL_WIDTH: The image resizes to fit its container. Pass a "sizes" option if
+    it isn't going to be the full width of the screen.
+    CONSTRAINED: Resizes to fit its container, up to a maximum width, at which point it will remain fixed in size.
+    """
+    layout: GatsbyImageLayout
+
+    """
+    The display width of the generated image for layout = FIXED, and the display
+    width of the largest image for layout = CONSTRAINED.
+    The actual largest image resolution will be this value multiplied by the largest value in outputPixelDensities
+    Ignored if layout = FULL_WIDTH.
+    """
+    width: Int
+
+    """
+    If set, the height of the generated image. If omitted, it is calculated from
+    the supplied width, matching the aspect ratio of the source image.
+    """
+    height: Int
+
+    """
+    If set along with width or height, this will set the value of the other
+    dimension to match the provided aspect ratio, cropping the image if needed.
+    If neither width or height is provided, height will be set based on the intrinsic width of the source image.
+    """
+    aspectRatio: Float
+
+    """
+    The "sizes" property, passed to the img tag. This describes the display size of the image.
+    This does not affect the generated images, but is used by the browser to
+    decide which images to download. You can leave this blank for fixed images,
+    or if the responsive image
+    container will be the full width of the screen. In these cases we will generate an appropriate value.
+    """
+    sizes: String
+
+    """
+    A list of image pixel densities to generate for FIXED and CONSTRAINED
+    images. You should rarely need to change this. It will never generate images
+    larger than the source, and will always include a 1x image.
+    Default is [ 1, 2 ] for fixed images, meaning 1x, 2x, 3x, and [0.25, 0.5, 1,
+    2] for fluid. In this case, an image with a fluid layout and width = 400
+    would generate images at 100, 200, 400 and 800px wide.
+    Ignored for FULL_WIDTH, which uses breakpoints instead.
+    """
+    outputPixelDensities: [Float]
+
+    """
+    Specifies the image widths to generate. You should rarely need to change
+    this. For FIXED and CONSTRAINED images it is better to allow these to be
+    determined automatically,
+    based on the image size. For FULL_WIDTH images this can be used to override
+    the default, which is determined by the plugin.
+    It will never generate any images larger than the source.
+    """
+    breakpoints: [Int]
+
+    """
+    Background color applied to the wrapper, or when "letterboxing" an image to another aspect ratio.
+    """
+    backgroundColor: String
+    imgixParams: DatoCmsImgixParams
+    forceBlurhash: Boolean
+
+    """
+    Format of generated placeholder, displayed while the main image loads.
+    DOMINANT_COLOR: a solid color, calculated from the dominant color of the image (default).
+    BLURRED: a blurred, low resolution image, encoded as a base64 data URI
+    TRACED_SVG: a low-resolution traced SVG of the image. Note that this will
+    download the image at build time for processing.
+    NONE: no placeholder. Set "backgroundColor" to use a fixed background color.
+    """
+    placeholder: DatoImagePlaceholder
+  ): JSON
+}
+
+type DatoCmsSeoMetaTags {
+  tags: JSON
+}
+
+type DatoCmsVideoField {
+  url: String
+  title: String
+  provider: String
+  providerUid: String
+  thumbnailUrl: String
+  width: Int
+  height: Int
+}
+
+type DatoCmsTextNode implements Node @dontInfer
+
+type DatoCmsHighlightEvent implements Node @dontInfer {
+  sectionTitle: String
+  cta: [DatoCmsCta]
+  items: [DatoCmsEvent]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsCta implements Node @dontInfer {
+  title: String
+  link: DatoCmsGlobalLink
+  style: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsGlobalLink implements Node @dontInfer {
+  label: String
+  content: DatoCmsUnionForDatoCmsGlobalLinkContent
+  externalUrl: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+union DatoCmsUnionForDatoCmsGlobalLinkContent = DatoCmsEvent | DatoCmsListEvent | DatoCmsListGroup | DatoCmsTool | DatoCmsListTool | DatoCmsHome | DatoCmsGroup | DatoCmsBasicPage
+
+type DatoCmsModel implements Node @dontInfer {
+  name: String
+  singleton: Boolean
+  sortable: Boolean
+  apiKey: String
+  orderingDirection: String
+  tree: Boolean
+  modularBlock: Boolean
+  draftModeActive: Boolean
+  allLocalesRequired: Boolean
+  collectionAppeareance: String
+  hasSingletonItem: Boolean
+  originalId: String!
+  fields: [DatoCmsField!] @link(by: "id", from: "fields___NODE")
+}
+
+type DatoCmsField implements Node @dontInfer {
+  label: String
+  fieldType: String
+  apiKey: String
+  localized: Boolean
+  validators: JSON
+  position: Int
+  appeareance: JSON
+  defaultValue: JSON
+  originalId: String!
+}
+
+type DatoCmsEvent implements Node @dontInfer {
+  onlineEvent: Boolean
+  date: Date @dateformat @proxy(from: "foo", fromNode: false)
+  title: String
+  address: String
+  hourStart: String
+  region: String
+  slug: String
+  hourEnd: String
+  coordinates: DatoCmsLatLonField
+  tags: [DatoCmsTag]
+  externalLink: String
+  closeEvent: Boolean
+  registrationForm: DatoCmsHubspot
+  formBackgroundColor: String
+  shareMessage: String
+  shareMessageNode: DatoCmsTextNode
+  introduction: String
+  introductionNode: DatoCmsTextNode
+  image: DatoCmsFileField
+  content: DatoCmsDatoCmsEventContentStructuredText
+  preview: JSON
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsTag implements Node @dontInfer {
+  title: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsHubspot implements Node @dontInfer {
+  internalName: String
+  formId: String
+  portalId: String
+  region: String
+  columns: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsDatoCmsEventContentStructuredText {
+  value: JSON
+  blocks: [DatoCmsDatoCmsEventContentStructuredTextBlocks]
+  links: [String]
+}
+
+union DatoCmsDatoCmsEventContentStructuredTextBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock | DatoCmsSimpleText
+
+type DatoCmsCtaWithIcon implements Node @dontInfer {
+  label: String
+  introduction: String
+  introductionNode: DatoCmsTextNode
+  icon: DatoCmsFileField
+  colorVariant: String
+  link: DatoCmsGlobalLink
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsMenuColumn implements Node @dontInfer {
+  label: String
+  content: String
+  contentNode: DatoCmsTextNode
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsAcordionItem implements Node @dontInfer {
+  title: String
+  text: String
+  textNode: DatoCmsTextNode
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsCtaIconsList implements Node @dontInfer {
+  items: [DatoCmsCtaWithIcon]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsImage implements Node @isPlaceholder @dontInfer {
+  image: DatoCmsFileField
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsTable implements Node @isPlaceholder @dontInfer {
+  table: String
+  tableNode: DatoCmsTextNode
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsNarrativeBlock implements Node @isPlaceholder @dontInfer {
+  title: String
+  textContent: String
+  textContentNode: DatoCmsTextNode
+  alignment: String
+  image: DatoCmsFileField
+  imageMobile: DatoCmsFileField
+  video: DatoCmsVideo
+  ctas: [DatoCmsCta]
+  backgroundColor: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsVideo implements Node @dontInfer {
+  source: DatoCmsVideoField
+  preview: DatoCmsFileField
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsImageGallery implements Node @isPlaceholder @dontInfer {
+  headline: String
+  items: [DatoCmsImage]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsTextHubspotForm implements Node @isPlaceholder @dontInfer {
+  title: String
+  description: String
+  descriptionNode: DatoCmsTextNode
+  hubspot: DatoCmsHubspot
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsCountdown implements Node @isPlaceholder @dontInfer {
+  headline: String
+  successMessage: String
+  date: Date @dateformat @proxy(from: "foo", fromNode: false)
+  colorVariant: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsShare implements Node @isPlaceholder @dontInfer {
+  title: String
+  socialLinks: [DatoCmsSocialLink]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsSocialLink implements Node @dontInfer {
+  url: String
+  socialNetwork: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsCtaList implements Node @isPlaceholder @dontInfer {
+  items: [DatoCmsBlockCta]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsBlockCta implements Node @isPlaceholder @dontInfer {
+  title: String
+  link: DatoCmsGlobalLink
+  style: String
+  alignment: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsEmbedIframe implements Node @isPlaceholder @dontInfer {
+  iframeCode: String
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsHighlightTool implements Node @isPlaceholder @dontInfer {
+  sectionTitle: String
+  items: [DatoCmsToolItem]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsToolItem implements Node @dontInfer {
+  title: String
+  introduction: String
+  introductionNode: DatoCmsTextNode
+  image: DatoCmsFileField
+  icon: DatoCmsFileField
+  iconFontPicker: JSON
+  backgroundColor: String
+  cta: [DatoCmsCta]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsColumn implements Node @isPlaceholder @dontInfer {
+  firstColumn: [DatoCmsUnionForDatoCmsColumnFirstColumn]
+  secondColumn: [DatoCmsUnionForDatoCmsColumnSecondColumn]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+union DatoCmsUnionForDatoCmsColumnFirstColumn = DatoCmsBlockCta | DatoCmsSimpleText
+
+union DatoCmsUnionForDatoCmsColumnSecondColumn = DatoCmsBlockCta | DatoCmsSimpleText
+
+type DatoCmsAcordion implements Node @isPlaceholder @dontInfer {
+  colorVariant: String
+  items: [DatoCmsAcordionItem]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsMap implements Node @isPlaceholder @dontInfer {
+  filterBy: DatoCmsTag
+  labelsInCsl: String
+  textOverlayingMap: String
+  showMap: Boolean
+  showList: Boolean
+  buttonOnMap: [DatoCmsCta]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsVideoBlock implements Node @isPlaceholder @dontInfer {
+  video: DatoCmsVideoField
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsSimpleText implements Node @isPlaceholder @dontInfer {
+  text: String
+  textNode: DatoCmsTextNode
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsListEvent implements Node @isPlaceholder @dontInfer {
+  title: String
+  slug: String
+  highlighEvent: DatoCmsEvent
+  buttonOnMap: [DatoCmsCta]
+  blocks: [DatoCmsUnionForDatoCmsListEventBlocks]
+  preview: JSON
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+union DatoCmsUnionForDatoCmsListEventBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock | DatoCmsSimpleText
+
+type DatoCmsListGroup implements Node @isPlaceholder @dontInfer {
+  title: String
+  slug: String
+  blocks: [DatoCmsUnionForDatoCmsListGroupBlocks]
+  preview: JSON
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+union DatoCmsUnionForDatoCmsListGroupBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock | DatoCmsSimpleText
+
+type DatoCmsTool implements Node @isPlaceholder @dontInfer {
+  introduction: String
+  introductionNode: DatoCmsTextNode
+  heroImage: DatoCmsFileField
+  title: String
+  slug: String
+  content: DatoCmsDatoCmsToolContentStructuredText
+  blocks: [DatoCmsUnionForDatoCmsToolBlocks]
+  preview: JSON
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsDatoCmsToolContentStructuredText {
+  value: JSON
+  blocks: [DatoCmsDatoCmsToolContentStructuredTextBlocks]
+  links: [String]
+}
+
+union DatoCmsDatoCmsToolContentStructuredTextBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock
+
+union DatoCmsUnionForDatoCmsToolBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock | DatoCmsSimpleText
+
+type DatoCmsListTool implements Node @isPlaceholder @dontInfer {
+  introduction: String
+  introductionNode: DatoCmsTextNode
+  backgroundColor: String
+  title: String
+  heroBackgroundImage: DatoCmsFileField
+  slug: String
+  blocks: [DatoCmsUnionForDatoCmsListToolBlocks]
+  preview: JSON
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+union DatoCmsUnionForDatoCmsListToolBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock | DatoCmsSimpleText
+
+type DatoCmsHome implements Node @isPlaceholder @dontInfer {
+  heroImage: DatoCmsFileField
+  mobileHeroImage: DatoCmsFileField
+  title: String
+  subtitle: String
+  subtitleNode: DatoCmsTextNode
+  blocks: [DatoCmsUnionForDatoCmsHomeBlocks]
+  form: DatoCmsHubspot
+  preview: JSON
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+union DatoCmsUnionForDatoCmsHomeBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock | DatoCmsSimpleText
+
+type DatoCmsGroup implements Node @isPlaceholder @dontInfer {
+  localGroupId: String
+  address: String
+  coordinates: DatoCmsLatLonField
+  title: String
+  email: String
+  slug: String
+  whatsappGroup: String
+  introduction: String
+  introductionNode: DatoCmsTextNode
+  organizer: String
+  registrationForm: DatoCmsHubspot
+  tags: [DatoCmsTag]
+  alternativeHero: Boolean
+  image: DatoCmsFileField
+  content: DatoCmsDatoCmsGroupContentStructuredText
+  relatedEvents: [DatoCmsEvent]
+  preview: JSON
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsDatoCmsGroupContentStructuredText {
+  value: JSON
+  blocks: [DatoCmsDatoCmsGroupContentStructuredTextBlocks]
+  links: [String]
+}
+
+union DatoCmsDatoCmsGroupContentStructuredTextBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock
+
+type DatoCmsBasicPage implements Node @isPlaceholder @dontInfer {
+  introduction: String
+  introductionNode: DatoCmsTextNode
+  backgroundColor: String
+  title: String
+  heroBackgroundImage: DatoCmsFileField
+  slug: String
+  blocks: [DatoCmsUnionForDatoCmsBasicPageBlocks]
+  preview: JSON
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+union DatoCmsUnionForDatoCmsBasicPageBlocks = DatoCmsHighlightEvent | DatoCmsCtaIconsList | DatoCmsImage | DatoCmsTable | DatoCmsNarrativeBlock | DatoCmsImageGallery | DatoCmsTextHubspotForm | DatoCmsCountdown | DatoCmsShare | DatoCmsCtaList | DatoCmsEmbedIframe | DatoCmsHighlightTool | DatoCmsColumn | DatoCmsAcordion | DatoCmsBlockCta | DatoCmsMap | DatoCmsVideoBlock | DatoCmsSimpleText
+
+union DatoCmsUnionForDatoCmsMenuItemContent = DatoCmsEvent | DatoCmsListEvent | DatoCmsListGroup | DatoCmsTool | DatoCmsListTool | DatoCmsHome | DatoCmsGroup | DatoCmsBasicPage
+
+type DatoCmsMenuItem implements Node @dontInfer {
+  title: String
+  content: DatoCmsUnionForDatoCmsMenuItemContent
+  externalUrl: String
+  isButton: Boolean
+  position: Int
+  treeParent: DatoCmsMenuItem
+  treeChildren: [DatoCmsMenuItem]
+  root: Boolean
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsSiteConfiguration implements Node @dontInfer {
+  whatsappGroup: String
+  cslGenericImage: DatoCmsFileField
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsFooter implements Node @dontInfer {
+  logo: DatoCmsFileField
+  socialLinks: [DatoCmsSocialLink]
+  columns: [DatoCmsMenuColumn]
+  bottomLinks: [DatoCmsGlobalLink]
+  meta: DatoCmsMetaField!
+  originalId: String!
+  seoMetaTags: DatoCmsSeoMetaTags
+  model: DatoCmsModel
+}
+
+type DatoCmsSite implements Node @dontInfer {
+  name: String
+  locales: [String!]!
+  domain: String
+  internalDomain: String!
+  noIndex: Boolean
+  globalSeo(locale: String, fallbackLocales: [String!]): DatoCmsGlobalSeo
+  faviconMetaTags: DatoCmsFaviconMetaTags
+  originalId: String!
+}
+
+type DatoCmsGlobalSeo {
+  siteName: String
+  titleSuffix: String
+  twitterAccount: String
+  facebookPageUrl: String
+  fallbackSeo: DatoCmsSeoField
+}
+
+type DatoCmsFaviconMetaTags {
+  tags: JSON
+}
+
+enum GatsbyImageFormat {
+  NO_CHANGE
+  AUTO
+  JPG
+  PNG
+  WEBP
+  AVIF
+}
+
+enum GatsbyImagePlaceholder {
+  DOMINANT_COLOR
+  TRACED_SVG
+  BLURRED
+  NONE
+}
+
+enum ImageFormat {
+  NO_CHANGE
+  AUTO
+  JPG
+  PNG
+  WEBP
+  AVIF
+}
+
+enum ImageFit {
+  COVER
+  CONTAIN
+  FILL
+  INSIDE
+  OUTSIDE
+}
+
+enum ImageLayout {
+  FIXED
+  FULL_WIDTH
+  CONSTRAINED
+}
+
+enum ImageCropFocus {
+  CENTER
+  NORTH
+  NORTHEAST
+  EAST
+  SOUTHEAST
+  SOUTH
+  SOUTHWEST
+  WEST
+  NORTHWEST
+  ENTROPY
+  ATTENTION
+}
+
+input DuotoneGradient {
+  highlight: String!
+  shadow: String!
+  opacity: Int
+}
+
+enum PotraceTurnPolicy {
+  TURNPOLICY_BLACK
+  TURNPOLICY_WHITE
+  TURNPOLICY_LEFT
+  TURNPOLICY_RIGHT
+  TURNPOLICY_MINORITY
+  TURNPOLICY_MAJORITY
+}
+
+input Potrace {
+  turnPolicy: PotraceTurnPolicy
+  turdSize: Float
+  alphaMax: Float
+  optCurve: Boolean
+  optTolerance: Float
+  threshold: Int
+  blackOnWhite: Boolean
+  color: String
+  background: String
+}
+
+type ImageSharpFixed {
+  base64: String
+  tracedSVG: String
+  aspectRatio: Float
+  width: Float!
+  height: Float!
+  src: String!
+  srcSet: String!
+  srcWebp: String
+  srcSetWebp: String
+  originalName: String
+}
+
+type ImageSharpFluid {
+  base64: String
+  tracedSVG: String
+  aspectRatio: Float!
+  src: String!
+  srcSet: String!
+  srcWebp: String
+  srcSetWebp: String
+  sizes: String!
+  originalImg: String
+  originalName: String
+  presentationWidth: Int!
+  presentationHeight: Int!
+}
+
+enum ImagePlaceholder {
+  DOMINANT_COLOR
+  TRACED_SVG
+  BLURRED
+  NONE
+}
+
+input BlurredOptions {
+  """Width of the generated low-res preview. Default is 20px"""
+  width: Int
+
+  """
+  Force the output format for the low-res preview. Default is to use the same
+  format as the input. You should rarely need to change this
+  """
+  toFormat: ImageFormat
+}
+
+input JPGOptions {
+  quality: Int
+  progressive: Boolean = true
+}
+
+input PNGOptions {
+  quality: Int
+  compressionSpeed: Int = 4
+}
+
+input WebPOptions {
+  quality: Int
+}
+
+input AVIFOptions {
+  quality: Int
+  lossless: Boolean
+  speed: Int
+}
+
+input TransformOptions {
+  grayscale: Boolean
+  duotone: DuotoneGradient
+  rotate: Int
+  trim: Float
+  cropFocus: ImageCropFocus = ATTENTION
+  fit: ImageFit = COVER
+}
+
+type ImageSharpOriginal {
+  width: Float
+  height: Float
+  src: String
+}
+
+type ImageSharpResize {
+  src: String
+  tracedSVG: String
+  width: Int
+  height: Int
+  aspectRatio: Float
+  originalName: String
+}
+
+type ImageSharp implements Node @childOf(types: ["File"]) @dontInfer {
+  fixed(width: Int, height: Int, base64Width: Int, jpegProgressive: Boolean = true, pngCompressionSpeed: Int = 4, grayscale: Boolean, duotone: DuotoneGradient, traceSVG: Potrace, quality: Int, jpegQuality: Int, pngQuality: Int, webpQuality: Int, toFormat: ImageFormat, toFormatBase64: ImageFormat, cropFocus: ImageCropFocus = ATTENTION, fit: ImageFit = COVER, background: String = "rgba(0,0,0,1)", rotate: Int, trim: Float): ImageSharpFixed
+  fluid(
+    maxWidth: Int
+    maxHeight: Int
+    base64Width: Int
+    grayscale: Boolean
+    jpegProgressive: Boolean = true
+    pngCompressionSpeed: Int = 4
+    duotone: DuotoneGradient
+    traceSVG: Potrace
+    quality: Int
+    jpegQuality: Int
+    pngQuality: Int
+    webpQuality: Int
+    toFormat: ImageFormat
+    toFormatBase64: ImageFormat
+    cropFocus: ImageCropFocus = ATTENTION
+    fit: ImageFit = COVER
+    background: String = "rgba(0,0,0,1)"
+    rotate: Int
+    trim: Float
+    sizes: String
+
+    """
+    A list of image widths to be generated. Example: [ 200, 340, 520, 890 ]
+    """
+    srcSetBreakpoints: [Int] = []
+  ): ImageSharpFluid
+  gatsbyImageData(
+    """
+    The layout for the image.
+    FIXED: A static image sized, that does not resize according to the screen width
+    FULL_WIDTH: The image resizes to fit its container. Pass a "sizes" option if
+    it isn't going to be the full width of the screen.
+    CONSTRAINED: Resizes to fit its container, up to a maximum width, at which point it will remain fixed in size.
+    """
+    layout: ImageLayout = CONSTRAINED
+
+    """
+    The display width of the generated image for layout = FIXED, and the maximum
+    display width of the largest image for layout = CONSTRAINED.
+    Ignored if layout = FLUID.
+    """
+    width: Int
+
+    """
+    The display height of the generated image for layout = FIXED, and the
+    maximum display height of the largest image for layout = CONSTRAINED.
+    The image will be cropped if the aspect ratio does not match the source
+    image. If omitted, it is calculated from the supplied width,
+    matching the aspect ratio of the source image.
+    """
+    height: Int
+
+    """
+    If set along with width or height, this will set the value of the other
+    dimension to match the provided aspect ratio, cropping the image if needed.
+    If neither width or height is provided, height will be set based on the intrinsic width of the source image.
+    """
+    aspectRatio: Float
+
+    """
+    Format of generated placeholder image, displayed while the main image loads.
+    BLURRED: a blurred, low resolution image, encoded as a base64 data URI
+    DOMINANT_COLOR: a solid color, calculated from the dominant color of the image (default).
+    TRACED_SVG: deprecated. Will use DOMINANT_COLOR.
+    NONE: no placeholder. Set "background" to use a fixed background color.
+    """
+    placeholder: ImagePlaceholder
+
+    """
+    Options for the low-resolution placeholder image. Set placeholder to "BLURRED" to use this
+    """
+    blurredOptions: BlurredOptions
+
+    """
+    Options for traced placeholder SVGs. You also should set placeholder to "TRACED_SVG".
+    """
+    tracedSVGOptions: Potrace
+
+    """
+    The image formats to generate. Valid values are "AUTO" (meaning the same
+    format as the source image), "JPG", "PNG", "WEBP" and "AVIF".
+    The default value is [AUTO, WEBP], and you should rarely need to change
+    this. Take care if you specify JPG or PNG when you do
+    not know the formats of the source images, as this could lead to unwanted
+    results such as converting JPEGs to PNGs. Specifying
+    both PNG and JPG is not supported and will be ignored.
+    """
+    formats: [ImageFormat]
+
+    """
+    A list of image pixel densities to generate. It will never generate images
+    larger than the source, and will always include a 1x image.
+    Default is [ 1, 2 ] for FIXED images, meaning 1x and 2x and [0.25, 0.5, 1,
+    2] for CONSTRAINED. In this case, an image with a constrained layout
+    and width = 400 would generate images at 100, 200, 400 and 800px wide.
+    Ignored for FULL_WIDTH images, which use breakpoints instead
+    """
+    outputPixelDensities: [Float]
+
+    """
+    Specifies the image widths to generate. For FIXED and CONSTRAINED images it
+    is better to allow these to be determined automatically,
+    based on the image size. For FULL_WIDTH images this can be used to override
+    the default, which is [750, 1080, 1366, 1920].
+    It will never generate any images larger than the source.
+    """
+    breakpoints: [Int]
+
+    """
+    The "sizes" property, passed to the img tag. This describes the display size of the image.
+    This does not affect the generated images, but is used by the browser to decide which images to download.
+    You should usually leave this blank, and a suitable value will be calculated. The exception is if a FULL_WIDTH image
+    does not actually span the full width of the screen, in which case you should pass the correct size here.
+    """
+    sizes: String
+
+    """The default quality. This is overridden by any format-specific options"""
+    quality: Int
+
+    """Options to pass to sharp when generating JPG images."""
+    jpgOptions: JPGOptions
+
+    """Options to pass to sharp when generating PNG images."""
+    pngOptions: PNGOptions
+
+    """Options to pass to sharp when generating WebP images."""
+    webpOptions: WebPOptions
+
+    """Options to pass to sharp when generating AVIF images."""
+    avifOptions: AVIFOptions
+
+    """
+    Options to pass to sharp to control cropping and other image manipulations.
+    """
+    transformOptions: TransformOptions
+
+    """
+    Background color applied to the wrapper. Also passed to sharp to use as a
+    background when "letterboxing" an image to another aspect ratio.
+    """
+    backgroundColor: String
+  ): GatsbyImageData!
+  original: ImageSharpOriginal
+  resize(width: Int, height: Int, quality: Int, jpegQuality: Int, pngQuality: Int, webpQuality: Int, jpegProgressive: Boolean = true, pngCompressionLevel: Int = 9, pngCompressionSpeed: Int = 4, grayscale: Boolean, duotone: DuotoneGradient, base64: Boolean, traceSVG: Potrace, toFormat: ImageFormat, cropFocus: ImageCropFocus = ATTENTION, fit: ImageFit = COVER, background: String = "rgba(0,0,0,1)", rotate: Int, trim: Float): ImageSharpResize
+}
+
+type ExternalEvent implements Node @derivedTypes @dontInfer {
+  slug: String!
+  title: String!
+  url: String
+  description: String
+  start_at: Date
+  raw_start: String
+  raw_end: String
+  end_at: String
+  cancelled_at: String
+  start_in_zone: String
+  end_in_zone: String
+  time_zone: String
+  virtual: Boolean
+  launched_at: String
+  locale: String
+  host_address: String
+  max_attendees_count: String
+  image_url: String
+  labels: [String!]!
+  inputs: [String!]!
+  location: Location
+  calendar: Calendar
+  rich_description: String
+  additional_image_sizes_url: [ExternalEventAdditional_image_sizes_url]
+  campaigner_contactable: Boolean
+  hidden_address: Boolean
+  sharing_disabled: Boolean
+  host: ExternalEventHost
+}
+
+type Location {
+  latitude: Float
+  longitude: Float
+  postal_code: String
+  country: String
+  region: String
+  locality: String
+  query: String
+  street: String
+  street_number: String
+  venue: String
+  created_at: String
+}
+
+type Calendar {
+  name: String
+  title: String
+  slug: String
+  url: String
+}
+
+type ExternalEventAdditional_image_sizes_url {
+  style: String
+  url: String
+}
+
+type ExternalEventHost {
+  email: String
+  full_name: String
+  member_id: Int
+  phone_number: String
+  postcode: String
+}

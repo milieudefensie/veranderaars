@@ -216,6 +216,7 @@ export const PageQuery = graphql`
             query
             region
           }
+          hiddenAddress
         }
       }
     }

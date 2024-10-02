@@ -23,7 +23,8 @@
     }
 
     .description {
-      color: var(--white);
+      // color: var(--white);
+      color: var(--dark);
       font-size: 20px;
       font-style: normal;
       font-weight: 400;
@@ -83,14 +84,23 @@
     form .hs-form-booleancheckbox label * {
       color: var(--dark) !important;
     }
-    .form-columns-3{
+
+    .form-columns-3 {
       display: block;
-      .hs-form-field{
-        width:100%;
-        height:auto;
-        margin-bottom:10px;
+
+      .hs-form-field {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
       }
-    
+    }
+  }
+
+  .form-block form .focused {
+    border-radius: 6px;
+
+    span {
+      font-size: 14px;
     }
   }
 }
@@ -108,6 +118,7 @@
 @media screen and (max-width: 992px) {
   .form-block-wrapper {
     border-radius: 10px;
+    padding: 0 16px;
     background: var(--nb-primary-color-light);
 
     .container {
@@ -145,6 +156,10 @@
 
   .form-hubspot form .legal-consent-container .inputs-list .hs-form-booleancheckbox label span * {
     font-size: 13px;
+  }
+
+  .form-block-wrapper .form-block form .hs-submit .actions .hs-button {
+    padding: 10px 8px;
   }
 
   .inner-page .form-block-wrapper {
