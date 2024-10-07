@@ -137,6 +137,7 @@ exports.createPages = ({ graphql, actions }) => {
       tool: path.resolve('./src/templates/tool.js'),
       listTools: path.resolve('./src/templates/listTools.js'),
       cslEvent: path.resolve('./src/templates/cslEvent.js'),
+      listWhatsAppGroups: path.resolve('./src/templates/listWhatsappGroups.js'),
     };
 
     resolve(
@@ -217,6 +218,11 @@ exports.createPages = ({ graphql, actions }) => {
                 title
               }
             }
+          }
+          listWhatsAppGroups: datoCmsListGroupWhatsappCommunity {
+            id
+            slug
+            title
           }
         }
       `).then((result) => {
@@ -331,6 +337,18 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: tool.node.slug,
               id: tool.node.id,
+            },
+          });
+        }
+
+        // list WhatsApp Groups
+        const listWhatsAppGroups = result.data.listWhatsAppGroups || [];
+        if (listWhatsAppGroups) {
+          createPage({
+            path: listWhatsAppGroups.slug,
+            component: templates.listWhatsAppGroups,
+            context: {
+              slug: listWhatsAppGroups.slug,
             },
           });
         }

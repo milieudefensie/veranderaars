@@ -40,6 +40,16 @@
       opacity: 0;
       z-index: -1;
     }
+
+    &.wp-group {
+      .custom-btn {
+        background-color: var(--nb-primary-color-light);
+
+        &:hover {
+          opacity: .9;
+        }
+      }
+    }
   }
 }
 

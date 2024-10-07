@@ -35,7 +35,14 @@
       margin: 0;
       padding: 0;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+
+      svg {
+        width: 35px;
+        height: 35px;
+      }
     }
   }
 

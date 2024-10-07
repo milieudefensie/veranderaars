@@ -6,13 +6,14 @@ import Link from '../../Link/Link';
 
 import './styles.scss';
 
-const MapPopup = ({ card, linkTitle = 'Meld je aan' }) => {
-  const { slug, title, rawDate, hourStart, hourEnd, address, image, tags, type, url, externalLink } = card;
+const MapPopup = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => {
+  const { slug, title, rawDate, hourStart, hourEnd, address, image, tags, type, whatsappGroup, url, externalLink } =
+    card;
   const isCslEvent = type === 'CSL';
 
   return (
-    <article className="map-popup">
-      {Array.isArray(tags) && (
+    <article className={`map-popup ${cardType ? cardType : ''}`}>
+      {Array.isArray(tags) && tags.length > 0 && (
         <div className="tags">
           <TagList tags={tags} />
         </div>
@@ -23,20 +24,24 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan' }) => {
           <img src={image.url} alt={`${title}`} />
         </div>
       )}
+      {(rawDate || address) && (
+        <div className="metadata">
+          {rawDate && (
+            <h5>
+              {formatDate(rawDate)} | {hourStart} {hourEnd ? ` - ${hourEnd}` : ''}
+            </h5>
+          )}
 
-      <div className="metadata">
-        {rawDate && (
-          <h5>
-            {formatDate(rawDate)} | {hourStart} {hourEnd ? ` - ${hourEnd}` : ''}
-          </h5>
-        )}
-
-        {address && <span>{address}</span>}
-      </div>
-
+          {address && <span>{address}</span>}
+        </div>
+      )}
       {title && <h2>{title}</h2>}
 
-      {isCslEvent ? (
+      {cardType === 'wp-group' ? (
+        <a href={whatsappGroup} target={`_blank`} className="custom-btn custom-btn-primary">
+          WhatsApp Community
+        </a>
+      ) : isCslEvent ? (
         <Link to={`/lokaal/${slug}`} className="custom-btn custom-btn-primary">
           Meld je aan
         </Link>

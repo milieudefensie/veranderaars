@@ -6,6 +6,7 @@ import MapPopup from './MapPopup/MapPopup';
 import useSupercluster from 'use-supercluster';
 import CtaHandler from '../Cta/CtaHandler';
 import Cta from '../Cta/Cta';
+import WPGroupMarker from './Marker/WPGroupMarker';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles.scss';
@@ -101,6 +102,7 @@ const MapWrapper = ({
         slug: e.slug,
         externalLink: e.externalLink,
         model: e.model,
+        whatsappGroup: e.whatsappGroup,
       },
       geometry: {
         type: 'Point',
@@ -133,7 +135,7 @@ const MapWrapper = ({
               }}
             >
               <span>←</span>
-              <span>{type === 'event' ? 'Bekijk lijst' : 'Bekijk lijst'}</span>
+              <span>Bekijk lijst</span>
             </div>
           </div>
         </div>
@@ -210,7 +212,7 @@ const MapWrapper = ({
                 }}
                 anchor="bottom"
               >
-                {type === 'group' ? <GroupMarker /> : <CustomMarker />}
+                {type === 'wp-group' ? <WPGroupMarker /> : type === 'group' ? <GroupMarker /> : <CustomMarker />}
               </Marker>
             );
           })}
@@ -228,7 +230,7 @@ const MapWrapper = ({
                 }
               }}
             >
-              <MapPopup card={selectedMarker.properties} />
+              <MapPopup cardType={type} card={selectedMarker.properties} />
             </Popup>
           )}
 

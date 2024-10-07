@@ -66,4 +66,14 @@
     margin-bottom: 15px;
     overflow-wrap: break-word;
   }
+
+  &.wp-group {
+    a.custom-btn {
+      background-color: var(--nb-primary-color-light);
+
+      &:hover {
+        opacity: .8;
+      }
+    }
+  }
 }

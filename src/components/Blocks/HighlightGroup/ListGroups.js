@@ -4,7 +4,12 @@ import ListPaginated from '../../Global/Pagination/ListPaginated';
 
 import './styles.scss';
 
-const ListGroupBlock = ({ items = [], withContainer = true, withPagination = false }) => {
+const ListGroupBlock = ({
+  items = [],
+  withContainer = true,
+  withPagination = false,
+  redirectToWhatsappGroup = false,
+}) => {
   if (withPagination) {
     return (
       <div className={`${withContainer ? 'container' : ''} pb-5`} id="groups-list">
@@ -14,7 +19,7 @@ const ListGroupBlock = ({ items = [], withContainer = true, withPagination = fal
             customPageSize={10}
             renderItem={(item) => (
               <div className="col-lg-4" key={item.id}>
-                <GroupCard group={item} />
+                <GroupCard group={item} redirectToWhatsappGroup={redirectToWhatsappGroup} />
               </div>
             )}
             extraLogic={() => {
@@ -35,7 +40,7 @@ const ListGroupBlock = ({ items = [], withContainer = true, withPagination = fal
       <div className="row gy-4">
         {items.map((item) => (
           <div className="col-lg-4" key={item.id}>
-            <GroupCard group={item} />
+            <GroupCard group={item} redirectToWhatsappGroup={redirectToWhatsappGroup} />
           </div>
         ))}
       </div>
