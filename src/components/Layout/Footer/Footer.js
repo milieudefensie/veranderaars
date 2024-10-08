@@ -12,6 +12,13 @@ function Footer({ isLanding = false, customLogo = null }) {
     query FooterData {
       configuration: datoCmsSiteConfiguration {
         whatsappGroup
+        whatsappPage {
+          id
+          slug
+          model {
+            apiKey
+          }
+        }
       }
       datoCmsFooter {
         id
@@ -111,7 +118,14 @@ function Footer({ isLanding = false, customLogo = null }) {
             </Link>
           </div>
 
-          {data.configuration?.whatsappGroup && (
+          {data.configuration?.whatsappPage ? (
+            <Link className="wp-button" to={data.configuration.whatsappPage}>
+              <div className="wp-btn">
+                <span>WhatsApp groep</span>
+                <ReactSVG src={wpIcon} />
+              </div>
+            </Link>
+          ) : data.configuration?.whatsappGroup ? (
             <a
               className="wp-button"
               href={`${data.configuration.whatsappGroup}`}
@@ -123,7 +137,7 @@ function Footer({ isLanding = false, customLogo = null }) {
                 <ReactSVG src={wpIcon} />
               </div>
             </a>
-          )}
+          ) : null}
         </div>
 
         {/* Second row */}
