@@ -11,7 +11,7 @@ import './styles.scss';
 const MapFilter = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [mobileDevice, setMobileDevice] = useState(false);
-  const { filterBy = {}, labelsInCsl, textOverlayingMap, showMap, showList, buttonOnMap } = block;
+  const { filterBy = {}, labelsInCsl, textOverlayingMap, showMap, showList, buttonOnMap, cslCalendarName } = block;
 
   const { allDatoCmsEvent: events, cslEvents } = useStaticQuery(graphql`
     query events {
@@ -36,6 +36,10 @@ const MapFilter = ({ block }) => {
               venue
               query
               region
+            }
+            calendar {
+              name
+              slug
             }
             hiddenAddress
           }
@@ -84,10 +88,13 @@ const MapFilter = ({ block }) => {
   const { mergedEvents } = useCSLEvents(cmsEvents, cslEventsMapped);
 
   const filteredEvents = mergedEvents.filter((e) => {
-    if (!labelsInCsl && !filterBy?.id) return true;
+    if (!labelsInCsl && !filterBy?.id && !cslCalendarName) return true;
 
     const isCSLEvent = e.type === 'CSL';
     if (isCSLEvent) {
+      if (cslCalendarName) {
+        return e.calendar?.slug === cslCalendarName;
+      }
       return e.labels?.includes(labelsInCsl);
     }
 

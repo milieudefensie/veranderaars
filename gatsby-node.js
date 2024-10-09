@@ -99,6 +99,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       createNode({
         ...eventResponse,
         id: String(event.id),
+        calendar: eventResponse.calendar,
         slug: event.slug,
         title: eventResponse.title,
         labels: eventResponse.labels || [],

@@ -31,6 +31,7 @@ function useCSLEvents(cmsEvents, cslEvents) {
       labels: e.labels || [],
       type: e.type,
       model: e.model,
+      calendar: e.calendar,
     }));
 
     // Get only future events

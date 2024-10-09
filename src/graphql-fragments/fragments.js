@@ -146,6 +146,7 @@ export const DatoCMS = graphql`
       id
       title
     }
+    cslCalendarName
     labelsInCsl
     textOverlayingMap
     showMap
