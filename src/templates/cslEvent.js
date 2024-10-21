@@ -103,7 +103,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
                   <img src={hourIcon} alt="Hour icon" />
                   <span>
                     {start_in_zone ? formatDateCSL(start_in_zone) : ''}{' '}
-                    {raw_end ? ` - ${formatDateCSL(end_in_zone)}` : ''}
+                    {end_in_zone ? ` - ${formatDateCSL(end_in_zone)}` : ''}
                   </span>
                 </span>
               )}

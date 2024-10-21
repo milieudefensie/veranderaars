@@ -95,6 +95,8 @@ const MapWrapper = ({
         hourStart: e.hourStart,
         hourEnd: e.hourEnd,
         address: e.address,
+        startInZone: e.startInZone,
+        endInZone: e.endInZone,
         image: e.image,
         tags: e.tags || [],
         type: e.type,

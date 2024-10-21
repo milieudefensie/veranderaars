@@ -1,14 +1,28 @@
 import React from 'react';
 import TagList from '../../Tag/TagList';
-import { formatDate } from '../../../../utils';
+import { formatDate, formatDateCSL } from '../../../../utils';
 import Cta from '../../Cta/Cta';
 import Link from '../../Link/Link';
 
 import './styles.scss';
 
 const MapPopup = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => {
-  const { slug, title, rawDate, hourStart, hourEnd, address, image, tags, type, whatsappGroup, url, externalLink } =
-    card;
+  const {
+    slug,
+    title,
+    rawDate,
+    hourStart,
+    hourEnd,
+    address,
+    image,
+    tags,
+    type,
+    whatsappGroup,
+    url,
+    externalLink,
+    startInZone,
+    endInZone,
+  } = card;
   const isCslEvent = type === 'CSL';
 
   return (
@@ -28,7 +42,16 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => 
         <div className="metadata">
           {rawDate && (
             <h5>
-              {formatDate(rawDate)} | {hourStart} {hourEnd ? ` - ${hourEnd}` : ''}
+              {isCslEvent ? (
+                <>
+                  {formatDate(startInZone)} | {startInZone ? formatDateCSL(startInZone) : ''}{' '}
+                  {endInZone ? ` - ${formatDateCSL(endInZone)}` : ''}
+                </>
+              ) : (
+                <>
+                  {formatDate(rawDate)} | {hourStart} {hourEnd ? ` - ${hourEnd}` : ''}
+                </>
+              )}
             </h5>
           )}
 
