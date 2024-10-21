@@ -13,34 +13,36 @@ export default function CountDown({ block }) {
   });
 
   return (
-    <div id="countdown" className={`countdown ${colorVariant}`}>
-      <h2>{headline}</h2>
+    <div className="container">
+      <div id="countdown" className={`countdown ${colorVariant}`}>
+        <h2>{headline}</h2>
 
-      <div className="">
-        {isRunning && (
-          <div className="countdown-container">
-            <div className="item-countdown">
-              <span>{days}</span>
-              days
+        <div className="">
+          {isRunning && (
+            <div className="countdown-container">
+              <div className="item-countdown">
+                <span>{days}</span>
+                Dagen
+              </div>
+              <div className="item-countdown">
+                <span>{hours}</span>
+                Uren
+              </div>
+              <div className="item-countdown">
+                <span>{minutes}</span>
+                Minuten
+              </div>
+              <div className="item-countdown">
+                <span>{seconds}</span>
+                Seconden
+              </div>
             </div>
-            <div className="item-countdown">
-              <span>{hours}</span>
-              hours
-            </div>
-            <div className="item-countdown">
-              <span>{minutes}</span>
-              minutes
-            </div>
-            <div className="item-countdown">
-              <span>{seconds}</span>
-              seconds
-            </div>
-          </div>
-        )}
+          )}
 
-        {!isRunning && (
-          <div className="success-container">{successMessage && <p className="success">{successMessage}</p>}</div>
-        )}
+          {!isRunning && (
+            <div className="success-container">{successMessage && <p className="success">{successMessage}</p>}</div>
+          )}
+        </div>
       </div>
     </div>
   );

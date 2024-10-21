@@ -29,6 +29,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
   } = event;
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
+  const withImage = image?.gatsbyImageData || image?.url || image_url;
 
   const renderContent = () => (
     <>
@@ -56,7 +57,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
         <span className="custom-btn custom-btn-primary">Meld je aan</span>
       </div>
 
-      {(image?.gatsbyImageData || image?.url || image_url) && (
+      {withImage && (
         <div className="image">
           <ImageWrapper image={image || image_url} />
         </div>
@@ -69,7 +70,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
       <a
         href={externalLink || url}
         target={`${externalLink ? '' : '_blank'}`}
-        className={`event-card ${isHighlighted ? 'highlighted' : ''}`}
+        className={`event-card ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'}`}
       >
         {renderContent()}
       </a>
@@ -77,7 +78,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
   }
 
   return (
-    <Link to={event} className={`event-card ${isHighlighted ? 'highlighted' : ''}`}>
+    <Link to={event} className={`event-card ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'}`}>
       {renderContent()}
     </Link>
   );

@@ -161,6 +161,10 @@
       }
     }
   }
+
+  &.no-image {
+    grid-template-columns: .5fr 1.5fr;
+  }
 }
 
 @media screen and (max-width: 992px) {

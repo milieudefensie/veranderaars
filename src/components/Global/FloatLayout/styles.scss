@@ -10,6 +10,7 @@
   .container {
     padding: 0;
     margin: 0;
+    max-width: 100%;
   }
 
   &.reduce {
@@ -90,6 +91,10 @@
     &.reduce {
       max-width: 100%;
       padding: 22px 16px;
+    }
+
+    #countdown {
+      margin-top: 1rem;
     }
   }
 }

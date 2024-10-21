@@ -3,13 +3,14 @@
   display: grid;
   gap: 45px;
   grid-template-columns: 1fr 1fr;
+  align-items: center;
   padding: 35px 40px;
   margin-bottom: 25px;
 
   h2 {
     font-size: 31px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 700;
     line-height: 120%;
     margin: 0;
   }
@@ -66,7 +67,6 @@
     border: 2px solid var(--Zwart, #000);
     background: var(--M---White, #FFF);
   }
-
 }
 
 @media screen and (max-width: 992px) {
@@ -76,21 +76,23 @@
     flex-direction: column;
     gap: 20px;
     padding: 15px;
+    margin: 0;
 
     h2 {
-      font-size: 24px;
+      font-size: 24px !important;
+      margin: 0 !important;
     }
 
     .countdown-container {
       gap: 10px;
 
       .item-countdown {
-        padding: 10px 5px;
-        font-size: 12px;
+        padding: 10px 8px;
+        font-size: 10px;
         width: auto;
 
         span {
-          font-size: 30px;
+          font-size: 25px;
         }
       }
     }
