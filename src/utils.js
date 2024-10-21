@@ -128,7 +128,8 @@ export const isEventFuture = (event) => {
     }
   }
 
-  return eventDate.toMillis() >= DateTime.local({ zone: 'Europe/Amsterdam' }).toMillis();
+  const now = DateTime.now().setZone('Europe/Amsterdam');
+  return eventDate.toMillis() >= now.toMillis();
 };
 
 export const convertTime = (dateTimeString) => {
