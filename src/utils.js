@@ -129,7 +129,9 @@ export const isEventFuture = (event) => {
   }
 
   const now = DateTime.now().setZone('Europe/Amsterdam');
-  return eventDate.toMillis() >= now.toMillis();
+  const isFuture = eventDate.toMillis() >= now.toMillis();
+
+  return isFuture;
 };
 
 export const convertTime = (dateTimeString) => {

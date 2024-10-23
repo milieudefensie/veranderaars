@@ -1,6 +1,5 @@
 const puppeteer = require('puppeteer-core');
 const chromium = require('@sparticuz/chromium');
-const { DateTime } = require('luxon');
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
@@ -423,12 +422,7 @@ const getAllGoodEvents = async () => {
       throw new Error('Invalid response structure');
     }
 
-    const today = DateTime.now().setZone('Europe/Amsterdam');
-    const futureEvents = resultData.data.filter((e) => {
-      const startDate = DateTime.fromISO(e.start_at, { zone: 'Europe/Amsterdam' });
-      return startDate > today && e.launched_at !== null;
-    });
-
+    const futureEvents = resultData.data;
     events.push(...futureEvents);
 
     const meta = resultData.meta;
