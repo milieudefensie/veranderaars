@@ -4,7 +4,6 @@
   }
 
   &.light {
-    // background-color: var(--secondary-bg-color);
     background-color: var(--nb-bg-light);
   }
 }
@@ -12,7 +11,6 @@
 @media screen and (max-width:992px) {
   .wrapper-layout {
     &.secondary-bg {
-      // background-color: var(--secondary-bg-color);
       background-color: var(--nb-bg-light);
     }
   }
