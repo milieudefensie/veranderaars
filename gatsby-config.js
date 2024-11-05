@@ -34,19 +34,19 @@ module.exports = {
     'gatsby-plugin-advanced-sitemap',
     'gatsby-plugin-react-helmet',
     `gatsby-plugin-netlify`,
-    {
-      resolve: `gatsby-plugin-schema-snapshot`,
-      // options: {
-      //   path: `schema.gql`,
-      //   exclude: {
-      //     plugins: [`gatsby-source-npm-package-search`],
-      //   },
-      // },
-    },
+    // {
+    //   resolve: `gatsby-plugin-schema-snapshot`,
+    // options: {
+    //   path: `schema.gql`,
+    //   exclude: {
+    //     plugins: [`gatsby-source-npm-package-search`],
+    //   },
+    // },
+    // },
   ],
-  flags: {
-    // FAST_DEV: true,
-    PARALLEL_SOURCING: true,
-    PRESERVE_FILE_DOWNLOAD_CACHE: true, // Este es opcional, si tienes cache habilitada
-  },
+  // flags: {
+  //   // FAST_DEV: true,
+  //   PARALLEL_SOURCING: true,
+  //   PRESERVE_FILE_DOWNLOAD_CACHE: true,
+  // },
 };
