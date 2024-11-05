@@ -14,10 +14,20 @@ const Header = ({ setNavOpen, heroBgColor }) => {
       configuration: datoCmsSiteConfiguration {
         whatsappGroup
         whatsappPage {
-          id
-          slug
-          model {
-            apiKey
+          __typename
+          ... on DatoCmsBasicPage {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
+          ... on DatoCmsListGroupWhatsappCommunity {
+            id
+            slug
+            model {
+              apiKey
+            }
           }
         }
       }

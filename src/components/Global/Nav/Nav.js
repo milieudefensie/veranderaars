@@ -121,7 +121,7 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
               </button>
 
               {config.whatsappPage ? (
-                <Link to={config.whatsappPage} className="wp-button">
+                <Link className="wp-button" to={config.whatsappPage}>
                   <ReactSVG src={wpNavigationIcon} />
                 </Link>
               ) : config?.whatsappGroup ? (
@@ -163,11 +163,15 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }) {
                 </svg>
               </button>
 
-              {config?.whatsappGroup && (
+              {config.whatsappPage ? (
+                <Link className="wp-button" to={config.whatsappPage}>
+                  <ReactSVG src={wpNavigationIcon} />
+                </Link>
+              ) : config?.whatsappGroup ? (
                 <a className="wp-button" href={`${config.whatsappGroup}`} target="_blank" rel="noopener noreferrer">
                   <ReactSVG src={wpNavigationIcon} />
                 </a>
-              )}
+              ) : null}
             </div>
           </div>
 
