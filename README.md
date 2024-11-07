@@ -4,9 +4,8 @@
   </a>
 </p>
 <h1 align="center">
-  Veranderaars Starter
+  Veranderaars Starter.
 </h1>
-
 
 <p>This is the official action center platform of Milieudefensie. All rights reserved.</p>
 
