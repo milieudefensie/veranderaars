@@ -7,12 +7,11 @@ export default async function handler(req, res) {
     fakeEmail: 'donotremove@formio.integration.com',
   };
 
-  // console.log('CSL Updated Info:', cslUpdatedInfo);
-
   await axios
     .post(`https://api-eu1.hubapi.com/automation/v4/webhook-triggers/139720471/wNTGt4x`, cslUpdatedInfo)
     .then((response) => {
-      res.status(200).json({ message: 'OK' });
+      const data = response.data;
+      res.status(200).json({ message: `OK. Data: ${JSON.stringify(data)}` });
       return;
     })
     .catch((error) => {
