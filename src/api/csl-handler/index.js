@@ -10,8 +10,7 @@ export default async function handler(req, res) {
   await axios
     .post(`https://api-eu1.hubapi.com/automation/v4/webhook-triggers/139720471/wNTGt4x`, cslUpdatedInfo)
     .then((response) => {
-      const data = response.data;
-      res.status(200).json({ message: `OK. Data: ${JSON.stringify(data)}` });
+      res.status(200).json({ message: `OK. Data: ${JSON.stringify(cslUpdatedInfo)}` });
       return;
     })
     .catch((error) => {
