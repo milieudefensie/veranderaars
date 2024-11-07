@@ -1,7 +1,6 @@
 .form-hubspot {
   form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     gap: 16px;
 
     .hs-form-field {
@@ -70,9 +69,6 @@
     }
 
     .legal-consent-container {
-      grid-column: span 2;
-      position: relative;
-
       .inputs-list {
         margin: 0;
         padding: 0;
@@ -91,9 +87,6 @@
       }
 
       .hs-richtext {
-        position: absolute;
-        top: 6rem;
-        left: 0;
         margin: 0;
         padding: 0;
 
@@ -168,8 +161,6 @@
     }
 
     .hs-submit {
-      grid-column: span 2;
-
       .actions {
         .hs-button {
           width: 100%;
@@ -222,7 +213,6 @@
 
     .hs-fieldtype-radio {
       position: initial;
-      grid-column: span 2;
 
       .inputs-list {
         list-style: none;
@@ -246,7 +236,6 @@
 
     .hs-fieldtype-booleancheckbox {
       position: initial;
-      grid-column: span 2;
 
       &:last-of-type {
         margin: 0;
@@ -323,7 +312,6 @@
       position: absolute;
       top: 15px;
       left: 10px;
-      // pointer-events: none;
       transition: 0.15s ease-out;
       color: var(--white);
       font-size: 16px;
@@ -354,21 +342,9 @@
       }
     }
 
-    /*
-    .hs-form-field:has(.hs-input:focus),
-    .hs-form-field:has(.hs-input[data-input="load"]) {
-      label {
-        top: -8px;
-        background-color: var(--primary-color);
-        color: var(--white);
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 16px;
-        padding: 0 5px;
-      }
+    .hs-recaptcha {
+      margin: 0;
     }
-    */
 
     .focused {
       top: -8px !important;
@@ -381,6 +357,9 @@
       padding: 0 5px !important;
     }
 
+    .legal-consent-container {
+      order: 100;
+    }
   }
 
   &.homepage {
@@ -428,16 +407,6 @@
         color: #49454F;
       }
 
-      /*
-      .hs-form-field:has(.hs-input:focus),
-      .hs-form-field:has(.hs-input[data-input="load"]) {
-        label {
-          background-color: var(--white);
-          color: #49454F;
-        }
-      }
-      */
-
       .focused {
         background-color: var(--white);
         color: #49454F;
@@ -451,8 +420,6 @@
   }
 
   &.event {
-    margin-bottom: 5.5rem;
-
     form {
       .hs-form-field {
         .input {
@@ -497,19 +464,13 @@
         color: #49454F;
       }
 
-      /*
-      .hs-form-field:has(.hs-input:focus),
-      .hs-form-field:has(.hs-input[data-input="load"]) {
-        label {
-          background-color: var(--white);
-          color: #49454F;
-        }
-      }
-      */
-
       .focused {
         background-color: var(--white);
         color: #49454F;
+      }
+
+      .legal-consent-container {
+        order: unset;
       }
     }
   }
@@ -556,19 +517,26 @@
 
   // Columns layout
   &.columns-two form {
-    grid-template-columns: 1fr 1fr;
-
-  }
-
-  &.columns-three form {
-    grid-template-columns: 1fr 1fr 1fr;
 
     .legal-consent-container,
     .hs-submit,
     .hs-fieldtype-radio,
-    .hs-fieldtype-booleancheckbox {
-      grid-column: span 3;
-      position: relative;
+    .hs-fieldtype-booleancheckbox,
+    .hs-form-field {
+      flex: 1 1 calc(50% - 16px);
+    }
+  }
+
+  &.columns-three form {
+    display: flex;
+    flex-wrap: wrap;
+
+    .legal-consent-container,
+    .hs-submit,
+    .hs-fieldtype-radio,
+    .hs-fieldtype-booleancheckbox,
+    .hs-form-field {
+      flex: 1 1 calc(33.33% - 16px);
     }
 
     .hs-fieldtype-radio,
@@ -578,23 +546,18 @@
         padding: 0 !important;
       }
     }
-  }
-}
 
-// Homepage hide checkbox
-.homepage-md .legal-consent-container .hs-dependent-field {
-  display: none;
+    .legal-consent-container,
+    .hs_submit {
+      flex: 1 1 100%;
+    }
+  }
 }
 
 @media screen and (max-width: 992px) {
   .form-hubspot {
     form {
       grid-template-columns: 1fr;
-
-      .legal-consent-container,
-      .hs-submit {
-        grid-column: initial;
-      }
     }
 
     form {
@@ -627,48 +590,6 @@
         padding-bottom: 15px;
         margin-bottom: 0;
       }
-    }
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .form-hubspot {
-    &.homepage {
-      padding-bottom: 5rem;
-    }
-
-    &.event {
-      margin-bottom: 7rem;
-
-      form .legal-consent-container .hs-richtext {
-        top: 6.5rem;
-      }
-    }
-
-    form .hs-form-field label {
-      font-size: 13px;
-    }
-  }
-}
-
-@media screen and (min-width: 370px) {
-  .homepage-md .legal-consent-container .hs-richtext {
-    top: 4.5rem !important;
-  }
-}
-
-@media screen and (max-width: 366px) {
-  .form-hubspot {
-    &.homepage {
-      padding-bottom: 7rem;
-    }
-  }
-}
-
-@media screen and (max-width: 325px) {
-  .form-hubspot {
-    &.homepage {
-      padding-bottom: 8rem;
     }
   }
 }
