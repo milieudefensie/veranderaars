@@ -81,6 +81,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
+
   const receivedToken = await accessToken.json();
 
   for (const event of allEvents) {
@@ -90,8 +91,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     });
     const { event: eventResponse } = await result.json();
 
-    // We will only show events that do not contain the 'hidden' tag.
-    if (Array.isArray(eventResponse.labels) && !eventResponse.labels.includes('hidden')) {
+    if (shouldCreateEvent(eventResponse)) {
       console.log('[CSL Source] Creating: ', eventResponse.title);
       const cslInputs = await scrapingFormInputs(eventResponse);
 
@@ -110,6 +110,44 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         time_zone: eventResponse.time_zone,
         inputs: cslInputs || [],
         hiddenAddress: event.hiddenAddress,
+        internal: {
+          type: 'ExternalEvent',
+          contentDigest: createContentDigest(eventResponse),
+        },
+      });
+    } else {
+      console.log(`Event ${event.slug} not created.`);
+    }
+  }
+
+  // Extras events
+  const slugs = ['shell-borrel-in-maastricht'];
+  for (const eventSlug of slugs) {
+    const result = await fetch(`${cslPath}/api/v1/events/${eventSlug}?access_token=${receivedToken.access_token}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    });
+    const { event } = await result.json();
+
+    if (shouldCreateEvent(event)) {
+      console.log('[CSL Extra Source] Creating: ', event.title);
+      const cslInputs = await scrapingFormInputs(event);
+
+      createNode({
+        ...event,
+        id: String(event.slug),
+        calendar: event.calendar,
+        slug: event.slug,
+        title: event.title,
+        labels: event.labels || [],
+        start_at: event.start_at ? new Date(event.start_at).toISOString().split('T')[0] : null,
+        raw_start: event.start_at,
+        raw_end: event.end_at,
+        start_in_zone: event.start_in_zone,
+        end_in_zone: event.end_in_zone,
+        time_zone: event.time_zone,
+        inputs: cslInputs || [],
+        hiddenAddress: event.hidden_address,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(eventResponse),
@@ -368,6 +406,9 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 };
 
 // Utils
+// We will only show events that do not contain the 'hidden' tag.
+const shouldCreateEvent = (event) => Array.isArray(event.labels) && !event.labels.includes('hidden');
+
 chromium.setHeadlessMode = true;
 chromium.setGraphicsMode = false;
 
