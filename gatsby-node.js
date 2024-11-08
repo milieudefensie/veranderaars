@@ -150,7 +150,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         hiddenAddress: event.hidden_address,
         internal: {
           type: 'ExternalEvent',
-          contentDigest: createContentDigest(eventResponse),
+          contentDigest: createContentDigest(event),
         },
       });
     } else {
@@ -421,14 +421,8 @@ const scrapingFormInputs = async (event) => {
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
-      // executablePath:
-      //   process.env.CHROME_EXECUTABLE_PATH ||
-      //   (await chromium.executablePath('/var/task/node_modules/@sparticuz/chromium/bin')),
     });
 
-    // const browser = await puppeteer.launch({
-    //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    // });
     const page = await browser.newPage();
     await page.goto(url);
 
