@@ -11,7 +11,16 @@ import './styles.scss';
 const MapFilter = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [mobileDevice, setMobileDevice] = useState(false);
-  const { filterBy = {}, labelsInCsl, textOverlayingMap, showMap, showList, buttonOnMap, cslCalendarName } = block;
+  const {
+    filterBy = {},
+    labelsInCsl,
+    textOverlayingMap,
+    showMap,
+    showList,
+    buttonOnMap,
+    cslCalendarName,
+    extraEvents,
+  } = block;
 
   const { allDatoCmsEvent: events, cslEvents } = useStaticQuery(graphql`
     query events {
@@ -92,9 +101,13 @@ const MapFilter = ({ block }) => {
 
     const isCSLEvent = e.type === 'CSL';
     if (isCSLEvent) {
+      if (extraEvents && e.slug.includes(extraEvents)) {
+        return true;
+      }
       if (cslCalendarName) {
         return e.calendar?.slug === cslCalendarName;
       }
+
       return e.labels?.includes(labelsInCsl);
     }
 

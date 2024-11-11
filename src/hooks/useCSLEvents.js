@@ -34,21 +34,28 @@ function useCSLEvents(cmsEvents, cslEvents) {
       calendar: e.calendar,
     }));
 
-    // Get only future events
     const temEvents = [...cmsEvents, ...mappedCSL];
     const futureEvents = temEvents.filter((event) => isEventFuture(event));
 
-    const events = futureEvents.sort((a, b) => {
+    const sortedEvents = futureEvents.sort((a, b) => {
       const dateA = new Date(a.rawDate);
       const dateB = new Date(b.rawDate);
-
       return dateA - dateB;
     });
 
-    const uniqueLocations = [...new Set(events.map((event) => event.region))];
+    const uniqueEvents = [];
+    const slugsSeen = new Set();
+    sortedEvents.forEach((event) => {
+      if (!slugsSeen.has(event.slug)) {
+        slugsSeen.add(event.slug);
+        uniqueEvents.push(event);
+      }
+    });
 
-    setMergedEvents(events);
-    setFilteredEvents(events);
+    const uniqueLocations = [...new Set(uniqueEvents.map((event) => event.region))];
+
+    setMergedEvents(uniqueEvents);
+    setFilteredEvents(uniqueEvents);
     setLocationOptions(uniqueLocations);
     setStatus('success');
   }, []);

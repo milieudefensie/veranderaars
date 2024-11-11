@@ -154,6 +154,7 @@ export const DatoCMS = graphql`
     buttonOnMap {
       ...AppCta
     }
+    extraEvents
   }
 
   fragment BlockNarrativeBlock on DatoCmsNarrativeBlock {
