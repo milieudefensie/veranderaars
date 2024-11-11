@@ -122,7 +122,8 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 
   // Extras events
   const slugs = ['shell-borrel-in-maastricht'];
-  for (const eventSlug of slugs) {
+  const slugsFiltered = slugs.filter((slug) => allEvents.find((e) => e.slug === slug));
+  for (const eventSlug of slugsFiltered) {
     const result = await fetch(`${cslPath}/api/v1/events/${eventSlug}?access_token=${receivedToken.access_token}`, {
       method: 'GET',
       headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
