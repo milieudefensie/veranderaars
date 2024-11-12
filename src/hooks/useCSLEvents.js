@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { convertTime, formatDate, isEventFuture } from '../utils';
+import { convertTime, formatDate } from '../utils';
+import { DateTime } from 'luxon';
 
 function useCSLEvents(cmsEvents, cslEvents) {
   const [mergedEvents, setMergedEvents] = useState([]);
@@ -10,7 +11,7 @@ function useCSLEvents(cmsEvents, cslEvents) {
   useEffect(() => {
     setStatus('loading');
 
-    const mappedCSL = [...cslEvents].map((e) => ({
+    const mappedCSL = cslEvents.map((e) => ({
       id: e.slug.replace(' ', '_'),
       address: e.location?.query,
       coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
@@ -34,13 +35,25 @@ function useCSLEvents(cmsEvents, cslEvents) {
       calendar: e.calendar,
     }));
 
-    const temEvents = [...cmsEvents, ...mappedCSL];
-    const futureEvents = temEvents; //temEvents.filter((event) => isEventFuture(event));
+    const temEvents = [...cmsEvents, ...mappedCSL].map((e) => {
+      const isCSLEvent = e.type === 'CSL';
+      let startDateWithHour = null;
+
+      if (isCSLEvent) {
+        startDateWithHour = DateTime.fromFormat(e.startInZone, "yyyy-MM-dd'T'HH:mm:ssZZ");
+      } else {
+        const hourStart = e.hourStart ? e.hourStart.replace('.', ':').padStart(5, '0') : '00:00';
+        startDateWithHour = DateTime.fromFormat(`${e.rawDate} ${hourStart}`, 'yyyy-MM-dd HH:mm').setZone(
+          'Europe/Amsterdam'
+        );
+      }
+
+      return { ...e, startDateToCompare: startDateWithHour };
+    });
+    const futureEvents = temEvents;
 
     const sortedEvents = futureEvents.sort((a, b) => {
-      const dateA = new Date(a.rawDate);
-      const dateB = new Date(b.rawDate);
-      return dateA - dateB;
+      return a.startDateToCompare - b.startDateToCompare;
     });
 
     const uniqueEvents = [];
