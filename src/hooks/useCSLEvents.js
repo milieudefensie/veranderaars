@@ -35,7 +35,7 @@ function useCSLEvents(cmsEvents, cslEvents) {
     }));
 
     const temEvents = [...cmsEvents, ...mappedCSL];
-    const futureEvents = temEvents.filter((event) => isEventFuture(event));
+    const futureEvents = temEvents; //temEvents.filter((event) => isEventFuture(event));
 
     const sortedEvents = futureEvents.sort((a, b) => {
       const dateA = new Date(a.rawDate);
