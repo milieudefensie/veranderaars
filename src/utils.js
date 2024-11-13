@@ -79,6 +79,12 @@ export const formatDate = (rawDate) => {
   }
 };
 
+export const extractNumericHour = (hourString) => {
+  const match = hourString.match(/\d{1,2}\.\d{2}|\d{1,2}:\d{2}/);
+  const hour = match ? match[0].replace('.', ':') : '23:59';
+  return hour;
+};
+
 export const formatDateCSL = (rawDate) => {
   const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/;
   if (!regex.test(rawDate)) {

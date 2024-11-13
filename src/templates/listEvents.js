@@ -14,7 +14,7 @@ import { mapCmsEvents, mapCslEvents } from '../utils';
 
 import './list-basic.styles.scss';
 
-const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], favicon } }) => {
+const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
@@ -215,6 +215,10 @@ export const PageQuery = graphql`
             venue
             query
             region
+          }
+          calendar {
+            name
+            slug
           }
           hiddenAddress
         }

@@ -36,9 +36,9 @@ const MapFilter = ({ block }) => {
             raw_start
             raw_end
             image_url
+            labels
             start_in_zone
             end_in_zone
-            labels
             location {
               latitude
               longitude

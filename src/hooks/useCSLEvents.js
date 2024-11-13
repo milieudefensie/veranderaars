@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { convertTime, formatDate } from '../utils';
+import { convertTime, formatDate, extractNumericHour } from '../utils';
 import { DateTime } from 'luxon';
 
 function useCSLEvents(cmsEvents, cslEvents) {
@@ -35,30 +35,52 @@ function useCSLEvents(cmsEvents, cslEvents) {
       calendar: e.calendar,
     }));
 
-    const temEvents = [...cmsEvents, ...mappedCSL].map((e) => {
-      const isCSLEvent = e.type === 'CSL';
-      let startDateWithHour = null;
+    const currentDateTime = DateTime.now().setZone('Europe/Amsterdam');
+    const events = [...cmsEvents, ...mappedCSL]
+      .map((e) => {
+        const isCSLEvent = e.type === 'CSL';
+        let startDateWithHour = null;
+        let endDateWithHour = null;
 
-      if (isCSLEvent) {
-        startDateWithHour = DateTime.fromFormat(e.startInZone, "yyyy-MM-dd'T'HH:mm:ssZZ");
-      } else {
-        const hourStart = e.hourStart ? e.hourStart.replace('.', ':').padStart(5, '0') : '00:00';
-        startDateWithHour = DateTime.fromFormat(`${e.rawDate} ${hourStart}`, 'yyyy-MM-dd HH:mm').setZone(
-          'Europe/Amsterdam'
+        if (isCSLEvent) {
+          // Set start date
+          startDateWithHour = DateTime.fromFormat(e.startInZone, "yyyy-MM-dd'T'HH:mm:ssZZ");
+          // Set end date
+          endDateWithHour = DateTime.fromFormat(e.endInZone, "yyyy-MM-dd'T'HH:mm:ssZZ");
+        } else {
+          // Set start date
+          const cleanHourStart = typeof e.hourStart === 'string' ? extractNumericHour(e.hourStart) : '00:00';
+          startDateWithHour = DateTime.fromFormat(`${e.rawDate} ${cleanHourStart}`, 'yyyy-MM-dd HH:mm').setZone(
+            'Europe/Amsterdam'
+          );
+
+          // Set end date
+          const cleanHourEnd = typeof e.hourEnd === 'string' ? extractNumericHour(e.hourEnd) : '23:59';
+          endDateWithHour = DateTime.fromFormat(`${e.rawDate} ${cleanHourEnd}`, 'yyyy-MM-dd HH:mm').setZone(
+            'Europe/Amsterdam'
+          );
+        }
+
+        return { ...e, startDateToCompare: startDateWithHour, endDateToCompare: endDateWithHour };
+      })
+      .filter((e) => {
+        if (!e.startDateToCompare.isValid || !e.endDateToCompare.isValid) {
+          console.warn(`Invalid date:`, e);
+          return false;
+        }
+
+        return (
+          e.startDateToCompare > currentDateTime ||
+          (e.startDateToCompare <= currentDateTime && e.endDateToCompare >= currentDateTime)
         );
-      }
-
-      return { ...e, startDateToCompare: startDateWithHour };
-    });
-    const futureEvents = temEvents;
-
-    const sortedEvents = futureEvents.sort((a, b) => {
-      return a.startDateToCompare - b.startDateToCompare;
-    });
+      })
+      .sort((a, b) => {
+        return a.startDateToCompare - b.startDateToCompare;
+      });
 
     const uniqueEvents = [];
     const slugsSeen = new Set();
-    sortedEvents.forEach((event) => {
+    events.forEach((event) => {
       if (!slugsSeen.has(event.slug)) {
         slugsSeen.add(event.slug);
         uniqueEvents.push(event);
