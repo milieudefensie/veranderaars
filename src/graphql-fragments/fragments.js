@@ -312,6 +312,8 @@ export const DatoCMS = graphql`
             link {
               ... on DatoCmsGlobalLink {
                 id
+                label
+                externalUrl
                 content {
                   ... on DatoCmsListTool {
                     id
