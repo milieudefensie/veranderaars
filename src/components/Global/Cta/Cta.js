@@ -29,7 +29,6 @@ export default function Cta({
     );
   }
 
-  console.log('cta', cta);
   if (cta?.externalUrl) {
     return <a href={'/' + cta.externalUrl}>{externalTitle || cta.title}</a>;
   }
