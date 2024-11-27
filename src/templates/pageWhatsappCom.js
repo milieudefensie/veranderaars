@@ -6,24 +6,14 @@ import Blocks from '../components/Blocks';
 import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
+import { BotProtectionProvider, BotProtectionStatus } from '../components/Global/BotProtection/BotProtection';
+import { ProtectedLink } from '../components/Global/BotProtection/BotProtection';
 
 const Page = ({ pageContext, data: { page, favicon } }) => {
   const { seo, title, introduction, backgroundColor, heroBackgroundImage, blocks = [] } = page;
 
-  const renderMainContent = () => (
-    <>
-      {introduction && (
-        <SimpleText
-          limitedWidth
-          block={{ text: introduction }}
-          container={false}
-          extraClassNames={true ? 'introduction' : 'introduction-normal'}
-        />
-      )}
-
-      <Blocks blocks={blocks} />
-    </>
-  );
+  const ctaBlocks = blocks.filter(block => block.__typename === 'DatoCmsBlockCta');
+  const otherBlocks = blocks.filter(block => block.__typename !== 'DatoCmsBlockCta');
 
   return (
     <Layout heroBgColor={backgroundColor}>
@@ -35,7 +25,44 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
         <FloatLayout reduceOverlap>
           
           <h1>{title}</h1>
-            {renderMainContent()}            
+          
+            <SimpleText
+              limitedWidth
+              block={{ text: introduction }}
+              container={false}
+              extraClassNames={true ? 'introduction' : 'introduction-normal'}
+            />
+
+          <div className='row mb-5'>
+            <Blocks blocks={otherBlocks} />
+          </div>
+          
+          <BotProtectionProvider
+            turnstileMode="managed"
+            onVerificationComplete={(success) => {
+              console.log('Verification status:', success);
+            }}
+          >
+            <div className='row mt-5'>
+              {ctaBlocks.map((block, index) => {
+                console.log('block', block);
+                if (block.__typename === 'DatoCmsBlockCta') { 
+                    return (
+                      <div className='col-md-6 mb-3'>
+                        <ProtectedLink 
+                          to={ block.link.externalUrl }
+                          className="custom-btn custom-btn-primary w-100"
+                        >
+                          { block.title }
+                        </ProtectedLink>
+                      </div>
+                    )
+                }
+              })}
+            </div>
+            
+            <BotProtectionStatus />
+          </BotProtectionProvider>
           
         </FloatLayout>
       </div>
