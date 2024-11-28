@@ -18,6 +18,7 @@ import BlockCtaList from './Blocks/CtaList/CtaList';
 import BlockCtaIconsList from './Blocks/CtaIconsList/CtaIconsList';
 import ImageGallery from './Blocks/ImageGallery/ImageGallery';
 import Columns from './Blocks/Columns/Columns';
+import { ProtectedLink } from './Global/BotProtection/BotProtection';
 
 export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage = false }) {
   return (
@@ -60,7 +61,17 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
                   justifyContent: block?.alignment ? alignment[block.alignment] : '',
                 }}
               >
+                { !block.whatsappCommunity && (
                 <Cta cta={block} />
+                )}
+                { block.whatsappCommunity && (
+                <ProtectedLink 
+                  to={ block.link.externalUrl }
+                  className="custom-btn custom-btn-primary"
+                >
+                  { block.title }
+                </ProtectedLink>
+                )}
               </div>
             );
 

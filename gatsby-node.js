@@ -177,6 +177,7 @@ exports.createPages = ({ graphql, actions }) => {
       listTools: path.resolve('./src/templates/listTools.js'),
       cslEvent: path.resolve('./src/templates/cslEvent.js'),
       listWhatsAppGroups: path.resolve('./src/templates/listWhatsappGroups.js'),
+      pageWhatsAppGroups: path.resolve('./src/templates/pageWhatsappCom.js'),
     };
 
     resolve(
@@ -275,7 +276,7 @@ exports.createPages = ({ graphql, actions }) => {
         for (const page of pages) {
           createPage({
             path: page.node.slug,
-            component: templates.page,
+            component: page.node.slug === 'whatsapp' ? templates.pageWhatsAppGroups : templates.page,
             context: {
               slug: page.node.slug,
               id: page.node.id,
