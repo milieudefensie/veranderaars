@@ -110,7 +110,8 @@ const useTurnstile = (mode = 'managed') => {
 
   useEffect(() => {
     if (turnstileLoaded && containerRef.current) {
-      const siteKey = process.env.GATSBY_TURNSTILE_SITE_KEY;
+      // const siteKey = process.env.GATSBY_TURNSTILE_SITE_KEY;
+      const siteKey = '0x4AAAAAAAzd4svib0aVD74y';
       
       const commonOptions = {
         sitekey: siteKey,
@@ -144,7 +145,8 @@ const useTurnstile = (mode = 'managed') => {
       return new Promise((resolve) => {
         window.turnstile.ready(() => {
           window.turnstile.invoke({
-            sitekey: process.env.GATSBY_TURNSTILE_SITE_KEY,
+            // sitekey: process.env.GATSBY_TURNSTILE_SITE_KEY,
+            sitekey: '0x4AAAAAAAzd4svib0aVD74y',
             callback: (token) => {
               setToken(token);
               resolve(token);

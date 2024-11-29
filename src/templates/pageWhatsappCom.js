@@ -6,9 +6,9 @@ import Blocks from '../components/Blocks';
 import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
-// import { BotProtectionProvider, BotProtectionStatus } from '../components/Global/BotProtection/BotProtection';
-// import { ProtectedLink } from '../components/Global/BotProtection/BotProtection';
-import Cta from '../components/Global/Cta/Cta';
+import { BotProtectionProvider, BotProtectionStatus } from '../components/Global/BotProtection/BotProtection';
+import { ProtectedLink } from '../components/Global/BotProtection/BotProtection';
+// import Cta from '../components/Global/Cta/Cta';
 
 const Page = ({ pageContext, data: { page, favicon } }) => {
   const { seo, title, introduction, backgroundColor, heroBackgroundImage, blocks = [] } = page;
@@ -38,7 +38,10 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
             <Blocks blocks={otherBlocks} />
           </div>
           
-          {/* <BotProtectionProvider
+          
+          {/* -- REACTIVATE THIS CODE WHEN THE TURNSTILE ENV VARS ARE SET IN NETLIFY -- */}
+          
+          <BotProtectionProvider
             turnstileMode="managed"
             onVerificationComplete={(success) => {
               console.log('Verification status:', success);
@@ -62,25 +65,19 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
             </div>
             
             <BotProtectionStatus />
-          </BotProtectionProvider> */}
+          </BotProtectionProvider>
 
-            <div className='row mt-5'>
+            {/* <div className='row mt-5'>
               {ctaBlocks.map((block, index) => {
                 if (block.__typename === 'DatoCmsBlockCta') { 
                     return (
                       <div className='col-md-6 mb-3'>
                         <Cta cta={block} />
-                        {/* <ProtectedLink 
-                          to={ block.link.externalUrl }
-                          className="custom-btn custom-btn-primary w-100"
-                        >
-                          { block.title }
-                        </ProtectedLink> */}
                       </div>
                     )
                 }
               })}
-            </div>
+            </div> */}
           
         </FloatLayout>
       </div>
