@@ -1,6 +1,7 @@
 // src/components/BotProtection.js
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { navigate } from 'gatsby';
+import './index.scss';
 
 // Create context for bot protection
 const BotProtectionContext = createContext(null);
@@ -197,7 +198,7 @@ export const BotProtectionProvider = ({
         : await executeTurnstile();
 
       if (!turnstileToken) {
-        throw new Error('Please complete the security check');
+        throw new Error('Verifieer alstublieft de checkbox hierboven.');
       }
 
       // Call the Netlify function
@@ -261,8 +262,8 @@ export const BotProtectionProvider = ({
         
         {/* Error message */}
         {error && (
-          <div className="text-red-500 mt-2 text-sm" role="alert">
-            {error} - Please, contact us at <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">service@milieudefensie.nl</a>
+          <div className="text-red mt-2 text-sm" role="alert">
+            {error} - Gaat er iets mis? Stuur een mailtje naar <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">doemee@milieudefensie.nl</a>
           </div>
         )}
         
@@ -338,7 +339,7 @@ export const BotProtectionStatus = () => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 p-4 bg-white shadow-lg rounded-lg">
+    <div className="text-red fixed bottom-4 right-4 p-4 bg-white shadow-lg rounded-lg">
       {isVerified && (
         <div className="text-green-600">✓ Verified</div>
       )}
