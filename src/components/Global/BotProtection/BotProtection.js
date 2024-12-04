@@ -111,8 +111,7 @@ const useTurnstile = (mode = 'managed') => {
 
   useEffect(() => {
     if (turnstileLoaded && containerRef.current) {
-      // const siteKey = process.env.GATSBY_TURNSTILE_SITE_KEY;
-      const siteKey = '0x4AAAAAAAzd4svib0aVD74y';
+      const siteKey = process.env.GATSBY_TURNSTILE_SITE_KEY;
       
       const commonOptions = {
         sitekey: siteKey,
@@ -146,8 +145,7 @@ const useTurnstile = (mode = 'managed') => {
       return new Promise((resolve) => {
         window.turnstile.ready(() => {
           window.turnstile.invoke({
-            // sitekey: process.env.GATSBY_TURNSTILE_SITE_KEY,
-            sitekey: '0x4AAAAAAAzd4svib0aVD74y',
+            sitekey: process.env.GATSBY_TURNSTILE_SITE_KEY,
             callback: (token) => {
               setToken(token);
               resolve(token);
@@ -198,7 +196,7 @@ export const BotProtectionProvider = ({
         : await executeTurnstile();
 
       if (!turnstileToken) {
-        throw new Error('Verifieer alstublieft de checkbox hierboven.');
+        throw new Error('Klik op de checkbox hierboven.');
       }
 
       // Call the Netlify function

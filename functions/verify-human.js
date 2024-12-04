@@ -39,15 +39,14 @@ const BOT_USER_AGENTS = [
   };
   
   const verifyTurnstile = async (token) => {
-    // if (!process.env.TURNSTILE_SECRET_KEY) return true; // Skip if not configured
+    if (!process.env.TURNSTILE_SECRET_KEY) return true; // Skip if not configured
     
     try {
       const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          // secret: process.env.TURNSTILE_SECRET_KEY,
-          secret: '0x4AAAAAAAzd4lxXR-X5KxRGOaQREgHUCSs',
+          secret: process.env.TURNSTILE_SECRET_KEY,
           response: token
         })
       });
