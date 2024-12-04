@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+const chromium = require('chromium');
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
@@ -422,7 +422,7 @@ const scrapingFormInputs = async (event) => {
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
+      executablePath: chromium.path,
     });
 
     const page = await browser.newPage();
