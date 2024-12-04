@@ -4,6 +4,8 @@ import { navigate } from 'gatsby';
 import './styles.scss';
 
 const Form = ({ event, inputs = [] }) => {
+  console.log({ event, inputs });
+
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
   const [formData, setFormData] = useState({
