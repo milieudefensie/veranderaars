@@ -11,6 +11,9 @@ export default async function handler(req, res) {
     ['https://www.googleapis.com/auth/spreadsheets']
   );
 
+  console.log('Key: ', process.env.GOOGLE_SHEETS_PRIVATE_KEY);
+  console.log('JWT: ', JSON.stringify(jwtClient));
+
   jwtClient.authorize(async function (err, tokens) {
     if (err) {
       console.error('Authorization failed:', err);
