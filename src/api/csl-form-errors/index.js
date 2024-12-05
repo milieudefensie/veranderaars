@@ -11,9 +11,6 @@ export default async function handler(req, res) {
     ['https://www.googleapis.com/auth/spreadsheets']
   );
 
-  console.log('Key: ', process.env.GOOGLE_SHEETS_PRIVATE_KEY);
-  console.log('JWT: ', JSON.stringify(jwtClient));
-
   jwtClient.authorize(async function (err, tokens) {
     if (err) {
       console.error('Authorization failed:', err);
@@ -22,21 +19,20 @@ export default async function handler(req, res) {
     console.log('Authorization successful');
 
     if (!req.body) {
+      console.log('Body not found');
       res.status(400).json({ message: 'No data provided' });
     }
 
     const { date, url, browser } = req.body;
 
+    console.log(`Request: ${date}, ${url}, ${browser}`);
+
     const request = {
-      spreadsheetId: process.env.SPREADSHEET_ID, // Replace with your spreadsheet ID
-      range: 'Sheet1!A1', // Replace with your sheet name and range
+      spreadsheetId: process.env.SPREADSHEET_ID,
+      range: 'Sheet1!A1',
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
-      resource: {
-        values: [
-          [date, url, browser], // Add the data you want to append
-        ],
-      },
+      resource: { values: [[date, url, browser]] },
       auth: jwtClient,
     };
 
