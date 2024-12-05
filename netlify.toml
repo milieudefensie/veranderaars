@@ -1,4 +1,5 @@
 [build]
   functions = 'functions'
-[build.environment]
-  NODE_VERSION = "18"
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@sparticuz/chromium"]
