@@ -274,7 +274,7 @@
         margin: 0;
         padding-bottom: 30px;
         margin-bottom: 6px;
-        border-bottom: 1px solid #6F6F6E;
+        // border-bottom: 1px solid #6F6F6E;
 
         .hs-form-booleancheckbox {
 
@@ -359,6 +359,25 @@
 
     .legal-consent-container {
       order: 100;
+    }
+
+    .hs_gmm_7_6_24_lenghtmembership,
+    .hs_vanaf_9_30 {
+      flex: 1 1 100% !important;
+
+      legend {
+        color: var(--dark);
+        font-family: var(--nb-secondary-font);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%;
+      }
+
+      .inputs-list {
+        padding: 0;
+        margin: 0;
+      }
     }
   }
 
