@@ -32,12 +32,17 @@ export default async function handler(req, res) {
       range: 'Sheet1!A1',
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
-      resource: { values: [[date, url, browser]] },
-      auth: jwtClient,
+      resource: {
+        values: [[date, url, browser]],
+      },
     };
 
     try {
-      const response = await sheets.spreadsheets.values.append(request);
+      const response = await sheets.spreadsheets.values.append({
+        ...request,
+        auth: jwtClient,
+      });
+
       console.log('Data appended:', response.data);
       res.status(200).json({ message: 'Error logged successfully' });
     } catch (err) {
