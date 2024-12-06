@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const jwtClient = new google.auth.JWT(
     process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
     null,
-    process.env.GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    process.env.GOOGLE_SHEETS_PRIVATE_KEY,
     ['https://www.googleapis.com/auth/spreadsheets']
   );
 
@@ -15,8 +15,8 @@ export default async function handler(req, res) {
     if (err) {
       console.error('Authorization failed:', err);
       res.status(400).json({ message: 'Authentication failed' });
+      return;
     }
-    console.log('Authorization successful');
 
     if (!req.body) {
       console.log('Body not found');
