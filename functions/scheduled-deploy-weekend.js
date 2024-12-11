@@ -1,10 +1,8 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 const BUILD_HOOK = 'https://api.netlify.com/build_hooks/65b131147490661994e417e8';
 
 export default async (req) => {
-  console.log('Scheduled function executed.');
-
-  // triggerBuild();
+  triggerBuild();
   return { statusCode: 200 };
 };
 
@@ -17,6 +15,7 @@ const triggerBuild = async () => {
   }
 };
 
+// Runs on weekend, only 1 time per day
 export const config = {
-  schedule: '*/2 * * * *',
+  schedule: '0 0 * * 6,7',
 };
