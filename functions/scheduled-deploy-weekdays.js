@@ -2,7 +2,7 @@ const BUILD_HOOK = 'https://api.netlify.com/build_hooks/65b131147490661994e417e8
 
 export default async (req) => {
   triggerBuild();
-  return { statusCode: 200 };
+  return undefined;
 };
 
 const triggerBuild = async () => {
