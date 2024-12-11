@@ -17,6 +17,5 @@ const triggerBuild = async () => {
 
 // Runs on every workday,
 export const config = {
-  // schedule: '0 */3 * * *',
-  schedule: '* * * * *',
+  schedule: '0 */3 * * *',
 };
