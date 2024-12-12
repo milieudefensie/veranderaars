@@ -7,7 +7,8 @@ export default async (req) => {
 
   // Weekdays
   if (currentDay >= 1 && currentDay <= 5) {
-    if (currentHour % 2 === 0) {
+    if (currentHour % 4 === 0) {
+      // Run to every 4 hours
       await triggerBuild();
     }
   } else {
