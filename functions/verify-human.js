@@ -79,10 +79,12 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const ip = event.headers['x-forwarded-for'] || event.headers['client-ip'];
+    const ip =
+      event.headers['x-nf-client-connection-ip'] || event.headers['x-forwarded-for'] || event.headers['client-ip'];
     const { clientData, turnstileToken } = JSON.parse(event.body);
 
     console.log(JSON.stringify(event.headers));
+    console.log('IP: ', ip);
 
     // Basic IP validation
     if (!ip || ip.includes(';') || ip.includes(',')) {
