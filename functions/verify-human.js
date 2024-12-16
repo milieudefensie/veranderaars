@@ -45,6 +45,8 @@ const analyzeBehavior = (clientData) => {
     tooFastInteraction: clientData.firstInteractionTime < 100, // Interaction faster than 100ms
   };
 
+  console.log({ suspicious });
+
   return Object.values(suspicious).filter(Boolean).length;
 };
 
@@ -83,7 +85,6 @@ exports.handler = async (event, context) => {
       event.headers['x-nf-client-connection-ip'] || event.headers['x-forwarded-for'] || event.headers['client-ip'];
     const { clientData, turnstileToken } = JSON.parse(event.body);
 
-    console.log(JSON.stringify(event.headers));
     console.log('IP: ', ip);
 
     // Basic IP validation
