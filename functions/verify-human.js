@@ -69,7 +69,7 @@ const verifyTurnstile = async (token) => {
   }
 };
 
-export default async (event, context) => {
+exports.handler = async (event, context) => {
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
@@ -80,9 +80,9 @@ export default async (event, context) => {
 
   try {
     const ip = event.headers['x-forwarded-for'] || event.headers['client-ip'];
-    console.log(JSON.stringify(event.headers));
-
     const { clientData, turnstileToken } = JSON.parse(event.body);
+
+    console.log(JSON.stringify(event.headers));
 
     // Basic IP validation
     if (!ip || ip.includes(';') || ip.includes(',')) {
