@@ -33,10 +33,8 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
         <HeroBasic image={heroBackgroundImage} backgroundColor={backgroundColor} overlay={false} />
 
         <FloatLayout reduceOverlap>
-          
           <h1>{title}</h1>
-            {renderMainContent()}            
-          
+          {renderMainContent()}
         </FloatLayout>
       </div>
     </Layout>

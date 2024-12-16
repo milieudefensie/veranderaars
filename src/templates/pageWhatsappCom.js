@@ -8,13 +8,12 @@ import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import { BotProtectionProvider, BotProtectionStatus } from '../components/Global/BotProtection/BotProtection';
 import { ProtectedLink } from '../components/Global/BotProtection/BotProtection';
-// import Cta from '../components/Global/Cta/Cta';
 
 const Page = ({ pageContext, data: { page, favicon } }) => {
   const { seo, title, introduction, backgroundColor, heroBackgroundImage, blocks = [] } = page;
 
-  const ctaBlocks = blocks.filter(block => block.__typename === 'DatoCmsBlockCta');
-  const otherBlocks = blocks.filter(block => block.__typename !== 'DatoCmsBlockCta');
+  const ctaBlocks = blocks.filter((block) => block.__typename === 'DatoCmsBlockCta');
+  const otherBlocks = blocks.filter((block) => block.__typename !== 'DatoCmsBlockCta');
 
   return (
     <Layout heroBgColor={backgroundColor}>
@@ -24,50 +23,44 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
         <HeroBasic image={heroBackgroundImage} backgroundColor={backgroundColor} overlay={false} />
 
         <FloatLayout reduceOverlap>
-          
           <h1>{title}</h1>
-          
-            <SimpleText
-              limitedWidth
-              block={{ text: introduction }}
-              container={false}
-              extraClassNames={true ? 'introduction' : 'introduction-normal'}
-            />
+          <SimpleText
+            limitedWidth
+            block={{ text: introduction }}
+            container={false}
+            extraClassNames={true ? 'introduction' : 'introduction-normal'}
+          />
 
-          <div className='row mb-5'>
+          <div className="row mb-5">
             <Blocks blocks={otherBlocks} />
           </div>
-          
-          
+
           {/* -- REACTIVATE THIS CODE WHEN THE TURNSTILE ENV VARS ARE SET IN NETLIFY -- */}
-          
+
           <BotProtectionProvider
             turnstileMode="managed"
             onVerificationComplete={(success) => {
               console.log('Verification status:', success);
             }}
           >
-            <div className='row mt-5'>
+            <div className="row mt-5">
               {ctaBlocks.map((block, index) => {
-                if (block.__typename === 'DatoCmsBlockCta') { 
-                    return (
-                      <div className='col-md-6 mb-3'>
-                        <ProtectedLink 
-                          to={ block.link.externalUrl }
-                          className="custom-btn custom-btn-primary w-100"
-                        >
-                          { block.title }
-                        </ProtectedLink>
-                      </div>
-                    )
+                if (block.__typename === 'DatoCmsBlockCta') {
+                  return (
+                    <div className="col-md-6 mb-3">
+                      <ProtectedLink to={block.link.externalUrl} className="custom-btn custom-btn-primary w-100">
+                        {block.title}
+                      </ProtectedLink>
+                    </div>
+                  );
                 }
               })}
             </div>
-            
+
             <BotProtectionStatus />
           </BotProtectionProvider>
 
-            {/* <div className='row mt-5'>
+          {/* <div className='row mt-5'>
               {ctaBlocks.map((block, index) => {
                 if (block.__typename === 'DatoCmsBlockCta') { 
                     return (
@@ -78,7 +71,6 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
                 }
               })}
             </div> */}
-          
         </FloatLayout>
       </div>
     </Layout>

@@ -8,7 +8,6 @@ const BlockCtaIconsList = ({ block }) => {
   return (
     <div id="cta-icons-list" className="cta-icons-list">
       {iconsItems.map((item) => {
-        console.log({ item });
         return (
           <Link to={item.link}>
             <div key={item.id} className={`cta-w-icon ${item.colorVariant ? item.colorVariant : ''}`}>
