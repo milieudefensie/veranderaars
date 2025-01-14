@@ -45,7 +45,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
           {address && !hiddenAddress && <span>{address}</span>}
         </div>
 
-        {Array.isArray(tags) && tags.length > 0 ? <TagList tags={tags} /> : <div className="tags-list" />}
+        {Array.isArray(tags) && tags.length > 0 ? <TagList tags={tags} /> : null}
       </div>
 
       <div className="basic-info">
