@@ -18,7 +18,7 @@ function Accordion({ variant, items, renderCustomTitle = null, defaultActive = 0
   if (items.length === 0) return null;
 
   return (
-    <div className={`accordion ${variant ? variant : ''}`}>
+    <div className={`ui-accordion ${variant ? variant : ''}`}>
       {items.map((item, index) => (
         <div
           key={index}
