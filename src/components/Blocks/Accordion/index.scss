@@ -41,16 +41,19 @@
       .ac-content {
         display: block;
         margin-top: 20px !important;
+        color: var(--black);
+        font-family: var(--nb-secondary-font);
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
 
-        * {
-          margin: 0;
-          padding: 0;
-          color: var(--black) !important;
-          font-family: var(--nb-secondary-font) !important;
-          font-size: 20px !important;
-          font-style: normal;
-          font-weight: 400 !important;
-          line-height: 140% !important;
+        a {
+          color: inherit;
+        }
+
+        img {
+          max-width: 100%;
         }
       }
     }
@@ -139,13 +142,12 @@
         margin-top: 10px !important;
       }
 
-      #ac-content * {
-        margin: 0 !important;
+      #ac-content {
         padding: 0 !important;
-        font-size: 15px !important;
-        font-style: normal !important;
-        font-weight: 400 !important;
-        line-height: 145% !important;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 145%;
       }
     }
   }
