@@ -1,7 +1,7 @@
 require('dotenv').config();
 import { google } from 'googleapis';
 
-export default async function handler(req, res) {
+export default async function trackRequest({ date, endpoint, body, success }) {
   const sheets = google.sheets('v4');
 
   // todo fix issue with env variables + netlify format
@@ -13,27 +13,16 @@ export default async function handler(req, res) {
 
   jwtClient.authorize(async function (err, tokens) {
     if (err) {
-      console.error('Authorization failed:', err);
-      res.status(400).json({ message: 'Authentication failed' });
-      return;
+      throw new Error('Failed to authorize Google Sheets API');
     }
-
-    if (!req.body) {
-      console.log('Body not found');
-      res.status(400).json({ message: 'No data provided' });
-    }
-
-    const { date, url, browser } = req.body;
-
-    console.log(`Request: ${date}, ${url}, ${browser}`);
 
     const request = {
       spreadsheetId: process.env.SPREADSHEET_ID,
-      range: 'Hubspot Forms Errors!A1',
+      range: 'CSL API Errors!A1',
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       resource: {
-        values: [[date, url, browser]],
+        values: [[date, endpoint, JSON.stringify(body), success]],
       },
     };
 
@@ -44,10 +33,9 @@ export default async function handler(req, res) {
       });
 
       console.log('Data appended:', response.data);
-      res.status(200).json({ message: 'Error logged successfully' });
     } catch (err) {
       console.error('Error appending data:', err);
-      res.status(500).json({ message: 'Failed to log error' });
+      throw new Error('Failed to append data to Google Sheets');
     }
   });
 }
