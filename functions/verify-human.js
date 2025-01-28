@@ -119,6 +119,7 @@ exports.handler = async (event, context) => {
           error: 'Access denied',
           headerSuspicionScore,
           behaviorSuspicionScore,
+          clientData,
           details:
             process.env.NODE_ENV === 'development'
               ? {
