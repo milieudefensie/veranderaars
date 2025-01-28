@@ -306,9 +306,10 @@ export const ProtectedLink = ({ to, children, className = '' }) => {
       className={`${className} ${isLoading || isNavigating ? 'opacity-50 cursor-wait' : ''}`}
       aria-disabled={isLoading || isNavigating}
     >
-      {children}
-      {(isLoading || isNavigating) && (
+      {isLoading || isNavigating ? (
         <span className="text-gray">{isVerified ? 'Navigating...' : 'Verifying...'}</span>
+      ) : (
+        children
       )}
     </a>
   );
