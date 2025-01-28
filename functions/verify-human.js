@@ -45,8 +45,6 @@ const analyzeBehavior = (clientData) => {
     tooFastInteraction: clientData.firstInteractionTime < 500, // Interaction faster than 500ms
   };
 
-  console.log({ suspicious });
-
   return Object.values(suspicious).filter(Boolean).length;
 };
 
@@ -112,7 +110,7 @@ exports.handler = async (event, context) => {
     const totalSuspicionScore = headerSuspicionScore + behaviorSuspicionScore;
 
     // More stringent checking since we don't have rate limiting
-    if (totalSuspicionScore >= 2) {
+    if (totalSuspicionScore >= 3) {
       return {
         statusCode: 403,
         body: JSON.stringify({
