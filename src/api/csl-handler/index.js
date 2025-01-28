@@ -31,8 +31,9 @@ export default async function handler(req, res) {
   }
 
   const cslUpdatedInfo = {
-    ...rest,
+    type,
     fakeEmail: 'donotremove@formio.integration.com',
+    ...rest,
   };
 
   try {
