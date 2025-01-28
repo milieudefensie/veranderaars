@@ -41,8 +41,8 @@ const analyzeBehavior = (clientData) => {
     invalidResolution: !clientData.screenResolution?.includes('x'),
     missingTimezone: !clientData.timezone,
     // Add timing checks
-    suspiciousLoadTime: clientData.timeOnPage < 2000, // Less than 2 seconds on page
-    tooFastInteraction: clientData.firstInteractionTime < 100, // Interaction faster than 100ms
+    suspiciousLoadTime: clientData.timeOnPage < 1000, // Less than 1 seconds on page
+    tooFastInteraction: clientData.firstInteractionTime < 500, // Interaction faster than 500ms
   };
 
   console.log({ suspicious });
@@ -85,8 +85,6 @@ exports.handler = async (event, context) => {
       event.headers['x-nf-client-connection-ip'] || event.headers['x-forwarded-for'] || event.headers['client-ip'];
     const { clientData, turnstileToken } = JSON.parse(event.body);
 
-    console.log('IP: ', ip);
-
     // Basic IP validation
     if (!ip || ip.includes(';') || ip.includes(',')) {
       return {
@@ -115,14 +113,6 @@ exports.handler = async (event, context) => {
 
     // More stringent checking since we don't have rate limiting
     if (totalSuspicionScore >= 2) {
-      console.log('Suspicious activity detected:', {
-        ip,
-        headerScore: headerSuspicionScore,
-        behaviorScore: behaviorSuspicionScore,
-        userAgent: event.headers['user-agent'],
-        timestamp: new Date().toISOString(),
-      });
-
       return {
         statusCode: 403,
         body: JSON.stringify({
