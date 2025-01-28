@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       success: true,
     });
 
-    return res.status(200).json({ message: `OK. Data: ${JSON.stringify(cslUpdatedInfo)}` });
+    return res.status(200).json({ message: `OK. Type: ${type} | Data: ${JSON.stringify(cslUpdatedInfo)}` });
   } catch (error) {
     await trackRequest({
       date: new Date().toISOString(),
