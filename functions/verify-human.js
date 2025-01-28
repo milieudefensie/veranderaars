@@ -117,6 +117,8 @@ exports.handler = async (event, context) => {
         statusCode: 403,
         body: JSON.stringify({
           error: 'Access denied',
+          headerSuspicionScore,
+          behaviorSuspicionScore,
           details:
             process.env.NODE_ENV === 'development'
               ? {
@@ -130,9 +132,7 @@ exports.handler = async (event, context) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        verified: true,
-      }),
+      body: JSON.stringify({ verified: true }),
     };
   } catch (error) {
     console.error('Verification error:', error);
