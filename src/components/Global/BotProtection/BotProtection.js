@@ -112,12 +112,12 @@ const useTurnstile = (mode = 'managed') => {
   useEffect(() => {
     if (turnstileLoaded && containerRef.current) {
       const siteKey = process.env.GATSBY_TURNSTILE_SITE_KEY;
-      
+
       const commonOptions = {
         sitekey: siteKey,
         callback: (token) => setToken(token),
         'refresh-expired': 'auto',
-        'retry': 'auto',
+        retry: 'auto',
       };
 
       switch (mode) {
@@ -168,11 +168,7 @@ const useTurnstile = (mode = 'managed') => {
 };
 
 // Provider component that will wrap your page
-export const BotProtectionProvider = ({ 
-  children, 
-  turnstileMode = 'managed',
-  onVerificationComplete 
-}) => {
+export const BotProtectionProvider = ({ children, turnstileMode = 'managed', onVerificationComplete }) => {
   const [isVerified, setIsVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -191,9 +187,7 @@ export const BotProtectionProvider = ({
 
     try {
       // Execute Turnstile verification
-      const turnstileToken = turnstileMode === 'managed' 
-        ? token 
-        : await executeTurnstile();
+      const turnstileToken = turnstileMode === 'managed' ? token : await executeTurnstile();
 
       if (!turnstileToken) {
         throw new Error('Klik op de checkbox hierboven.');
@@ -249,22 +243,21 @@ export const BotProtectionProvider = ({
 
   return (
     <BotProtectionContext.Provider value={contextValue}>
-      <div className="space-y-4">
+      <div>
         {/* Turnstile container */}
-        {!isVerified && turnstileMode === 'managed' && (
-          <div ref={containerRef} className="turnstile-container" />
-        )}
-        {!isVerified && turnstileMode === 'invisible' && (
-          <div ref={containerRef} style={{ display: 'none' }} />
-        )}
-        
+        {!isVerified && turnstileMode === 'managed' && <div ref={containerRef} className="turnstile-container" />}
+        {!isVerified && turnstileMode === 'invisible' && <div ref={containerRef} style={{ display: 'none' }} />}
+
         {/* Error message */}
         {error && (
-          <div className="text-red mt-2 text-sm" role="alert">
-            {error} - Gaat er iets mis? Stuur een mailtje naar <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">doemee@milieudefensie.nl</a>
+          <div className="text-red" role="alert">
+            {error} - Gaat er iets mis? Stuur een mailtje naar{' '}
+            <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">
+              doemee@milieudefensie.nl
+            </a>
           </div>
         )}
-        
+
         {children}
       </div>
     </BotProtectionContext.Provider>
@@ -274,9 +267,10 @@ export const BotProtectionProvider = ({
 // Helper functions
 const checkClickConsistency = (intervals) => {
   const mean = intervals.reduce((a, b) => a + b) / intervals.length;
-  const variance = intervals.reduce((sum, interval) => {
-    return sum + Math.pow(interval - mean, 2);
-  }, 0) / intervals.length;
+  const variance =
+    intervals.reduce((sum, interval) => {
+      return sum + Math.pow(interval - mean, 2);
+    }, 0) / intervals.length;
   return variance < 50; // Suspiciously consistent if true
 };
 
@@ -309,14 +303,12 @@ export const ProtectedLink = ({ to, children, className = '' }) => {
     <a
       href={to}
       onClick={handleClick}
-      className={`${className} ${(isLoading || isNavigating) ? 'opacity-50 cursor-wait' : ''}`}
+      className={`${className} ${isLoading || isNavigating ? 'opacity-50 cursor-wait' : ''}`}
       aria-disabled={isLoading || isNavigating}
     >
       {children}
       {(isLoading || isNavigating) && (
-        <span className="inline-block ml-2 text-gray-600">
-          {isVerified ? 'Navigating...' : 'Verifying...'}
-        </span>
+        <span className="text-gray">{isVerified ? 'Navigating...' : 'Verifying...'}</span>
       )}
     </a>
   );
@@ -337,16 +329,10 @@ export const BotProtectionStatus = () => {
   }
 
   return (
-    <div className="text-red fixed bottom-4 right-4 p-4 bg-white shadow-lg rounded-lg">
-      {isVerified && (
-        <div className="text-green-600">✓ Verified</div>
-      )}
-      {isLoading && (
-        <div className="text-blue-600">Verifying...</div>
-      )}
-      {error && (
-        <div className="text-red-600">{error}</div>
-      )}
+    <div>
+      {isVerified && <div className="text-green">✓ Verified</div>}
+      {isLoading && <div className="text-blue">Verifying...</div>}
+      {error && <div className="text-red">{error}</div>}
     </div>
   );
 };

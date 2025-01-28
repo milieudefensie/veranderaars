@@ -35,8 +35,6 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
             <Blocks blocks={otherBlocks} />
           </div>
 
-          {/* -- REACTIVATE THIS CODE WHEN THE TURNSTILE ENV VARS ARE SET IN NETLIFY -- */}
-
           <BotProtectionProvider
             turnstileMode="managed"
             onVerificationComplete={(success) => {
@@ -59,18 +57,6 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
 
             <BotProtectionStatus />
           </BotProtectionProvider>
-
-          {/* <div className='row mt-5'>
-              {ctaBlocks.map((block, index) => {
-                if (block.__typename === 'DatoCmsBlockCta') { 
-                    return (
-                      <div className='col-md-6 mb-3'>
-                        <Cta cta={block} />
-                      </div>
-                    )
-                }
-              })}
-            </div> */}
         </FloatLayout>
       </div>
     </Layout>
