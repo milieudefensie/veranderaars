@@ -27,7 +27,12 @@ exports.handler = async (req, context) => {
   const webhookEndpoint = getWebhookEndpoint(type);
 
   if (!webhookEndpoint) {
-    return Response.json({ message: 'Invalid CSL type' }).status(200);
+    return new Response(
+      { message: 'Invalid CSL type' },
+      {
+        status: 200,
+      }
+    );
   }
 
   const cslUpdatedInfo = {
@@ -46,7 +51,12 @@ exports.handler = async (req, context) => {
       success: true,
     });
 
-    return Response.json({ message: `OK. Type: ${type} | Data: ${JSON.stringify(cslUpdatedInfo)}` }).status(200);
+    return new Response(
+      { message: `OK. Type: ${type} | Data: ${JSON.stringify(cslUpdatedInfo)}` },
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     await trackRequest({
       date: new Date().toISOString(),
@@ -55,6 +65,11 @@ exports.handler = async (req, context) => {
       success: false,
     });
 
-    return Response.json({ message: error.message }).status(200);
+    return new Response(
+      { message: error.message },
+      {
+        status: 200,
+      }
+    );
   }
 };
