@@ -22,7 +22,7 @@ const getWebhookEndpoint = (type) => {
   return null;
 };
 
-export default async (event, context) => {
+exports.handler = async (event, context) => {
   try {
     const { type, ...rest } = JSON.parse(event.body || '{}');
     const webhookEndpoint = getWebhookEndpoint(type);
