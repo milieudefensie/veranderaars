@@ -22,7 +22,7 @@ const getWebhookEndpoint = (type) => {
   return null;
 };
 
-exports.handler = async (req, context) => {
+export default async (req, context) => {
   const { type, ...rest } = req.body;
   const webhookEndpoint = getWebhookEndpoint(type);
 
