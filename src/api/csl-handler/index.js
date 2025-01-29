@@ -27,7 +27,7 @@ export default async function handler(req, res) {
   const webhookEndpoint = getWebhookEndpoint(type);
 
   if (!webhookEndpoint) {
-    return res.status(400).json({ message: 'Invalid CSL type' });
+    return res.status(200).json({ message: 'Invalid CSL type' });
   }
 
   const cslUpdatedInfo = {
