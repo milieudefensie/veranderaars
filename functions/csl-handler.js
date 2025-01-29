@@ -22,26 +22,24 @@ const getWebhookEndpoint = (type) => {
   return null;
 };
 
-export default async (req, context) => {
-  const { type, ...rest } = req.body;
-  const webhookEndpoint = getWebhookEndpoint(type);
-
-  if (!webhookEndpoint) {
-    return new Response(
-      { message: 'Invalid CSL type' },
-      {
-        status: 200,
-      }
-    );
-  }
-
-  const cslUpdatedInfo = {
-    type,
-    fakeEmail: 'donotremove@formio.integration.com',
-    ...rest,
-  };
-
+export default async (event, context) => {
   try {
+    const { type, ...rest } = JSON.parse(event.body || '{}');
+    const webhookEndpoint = getWebhookEndpoint(type);
+
+    if (!webhookEndpoint) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Invalid CSL type' }),
+      };
+    }
+
+    const cslUpdatedInfo = {
+      type,
+      fakeEmail: 'donotremove@formio.integration.com',
+      ...rest,
+    };
+
     await axios.post(webhookEndpoint, cslUpdatedInfo);
 
     await trackRequest({
@@ -51,12 +49,10 @@ export default async (req, context) => {
       success: true,
     });
 
-    return new Response(
-      { message: `OK. Type: ${type} | Data: ${JSON.stringify(cslUpdatedInfo)}` },
-      {
-        status: 200,
-      }
-    );
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: `OK. Type: ${type}`, data: cslUpdatedInfo }),
+    };
   } catch (error) {
     await trackRequest({
       date: new Date().toISOString(),
@@ -65,11 +61,9 @@ export default async (req, context) => {
       success: false,
     });
 
-    return new Response(
-      { message: error.message },
-      {
-        status: 200,
-      }
-    );
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: error.message }),
+    };
   }
 };
