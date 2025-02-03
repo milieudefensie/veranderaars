@@ -46,7 +46,9 @@ function useCSLEvents(cmsEvents, cslEvents) {
           // Set start date
           startDateWithHour = e.startInZone ? DateTime.fromFormat(e.startInZone, "yyyy-MM-dd'T'HH:mm:ssZZ") : null;
           // Set end date
-          endDateWithHour = e.endInZone ? DateTime.fromFormat(e.endInZone, "yyyy-MM-dd'T'HH:mm:ssZZ") : null;
+          endDateWithHour = e.endInZone
+            ? DateTime.fromFormat(e.endInZone, "yyyy-MM-dd'T'HH:mm:ssZZ")
+            : startDateWithHour;
         } else {
           // Set start date
           const cleanHourStart = typeof e.hourStart === 'string' ? extractNumericHour(e.hourStart) : '00:00';
@@ -65,7 +67,7 @@ function useCSLEvents(cmsEvents, cslEvents) {
       })
       .filter((e) => {
         if (!e.startDateToCompare?.isValid || !e.endDateToCompare?.isValid) {
-          console.warn(`Invalid date:`, e);
+          // console.log(`Invalid date:`, e);
           return false;
         }
 
