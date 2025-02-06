@@ -2,7 +2,6 @@
   margin-top: 50px !important;
 
   .item {
-    cursor: pointer;
     padding: 25px !important;
     margin-bottom: 5px !important;
     border-radius: 10px;
@@ -14,6 +13,7 @@
       justify-content: space-between;
       margin: 0 !important;
       padding: 0 !important;
+      cursor: pointer;
 
       h3 {
         color: var(--dark) !important;

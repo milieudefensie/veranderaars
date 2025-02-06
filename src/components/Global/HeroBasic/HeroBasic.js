@@ -9,6 +9,7 @@ function HeroBasic({
   overlay = true,
   external = false,
   alternative = false,
+  small = false,
 }) {
   const heroBgImage = image?.url ? `url(${image.url})` : undefined;
 
@@ -16,7 +17,7 @@ function HeroBasic({
     <div
       className={`hero-basic ${alternative ? 'alternative' : ''} ${backgroundColor ? backgroundColor : ''} ${heroBgImage ? 'with-bg-image' : ''} ${
         responsiveVariant ? responsiveVariant : ''
-      } ${external ? 'external-img' : ''}`}
+      } ${external ? 'external-img' : ''} ${small ? 'small' : ''}`}
       style={{ backgroundImage: heroBgImage }}
     >
       <div className="container">

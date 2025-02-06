@@ -8,7 +8,7 @@ import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 
 const Page = ({ pageContext, data: { page, favicon } }) => {
-  const { seo, title, introduction, backgroundColor, heroBackgroundImage, blocks = [] } = page;
+  const { seo, title, introduction, backgroundColor, heroBackgroundImage, smallHero = false, blocks = [] } = page;
 
   const renderMainContent = () => (
     <>
@@ -29,8 +29,8 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
     <Layout heroBgColor={backgroundColor}>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <div className="inner-page" style={{ backgroundColor: '#FFF' }}>
-        <HeroBasic image={heroBackgroundImage} backgroundColor={backgroundColor} overlay={false} />
+      <div className="inner-page">
+        <HeroBasic image={heroBackgroundImage} backgroundColor={backgroundColor} overlay={false} small={smallHero} />
 
         <FloatLayout reduceOverlap>
           <h1>{title}</h1>
@@ -58,6 +58,7 @@ export const PageQuery = graphql`
         url
         gatsbyImageData
       }
+      smallHero
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags
       }
