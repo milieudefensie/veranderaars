@@ -67,6 +67,11 @@
         font-size: 75px;
         color: var(--dark);
       }
+
+      svg {
+        width: 75px;
+        height: 75px;
+      }
     }
 
     h3 {
@@ -145,6 +150,11 @@
 
         span {
           font-size: 45px;
+        }
+
+        svg {
+          width: 45px;
+          height: 45px;
         }
       }
 
