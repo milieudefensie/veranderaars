@@ -334,8 +334,19 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
+        // Group detail
+        const RADIUS_KM = 15;
+        const KM_PER_DEGREE_LAT = 111;
+        const KM_PER_DEGREE_LNG = 111;
+
         const groups = result.data.groups.edges;
         for (const group of groups) {
+          const latitude = group.node.coordinates?.latitude;
+          const longitude = group.node.coordinates?.longitude;
+
+          const latRange = RADIUS_KM / KM_PER_DEGREE_LAT;
+          const lngRange = RADIUS_KM / (KM_PER_DEGREE_LNG * Math.cos((latitude * Math.PI) / 180));
+
           createPage({
             path: `/groep/${group.node.slug}`,
             component: templates.group,
@@ -345,14 +356,14 @@ exports.createPages = ({ graphql, actions }) => {
               currentDate: new Date().toISOString().split('T')[0],
 
               // latitude
-              latitude: group.node.coordinates?.latitude,
-              maxLat: group.node.coordinates?.latitude ? group.node.coordinates.latitude + 1 : null,
-              minLat: group.node.coordinates?.latitude ? group.node.coordinates.latitude - 1 : null,
+              latitude: latitude,
+              maxLat: latitude ? latitude + latRange : null,
+              minLat: latitude ? latitude - latRange : null,
 
               // longitude
-              longitude: group.node.coordinates?.longitude,
-              maxLon: group.node.coordinates?.longitude ? group.node.coordinates.longitude + 1 : null,
-              minLon: group.node.coordinates?.longitude ? group.node.coordinates.longitude - 1 : null,
+              longitude: longitude,
+              maxLon: longitude ? longitude + lngRange : null,
+              minLon: longitude ? longitude - lngRange : null,
             },
           });
         }
