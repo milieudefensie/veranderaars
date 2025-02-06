@@ -52,8 +52,16 @@
           color: inherit;
         }
 
+        em {
+          font-style: italic;
+        }
+
         img {
           max-width: 100%;
+        }
+
+        ol {
+          list-style: decimal;
         }
       }
     }
