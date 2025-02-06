@@ -8,35 +8,6 @@ function Layout({ children, bgColor = null, extraClassNames = null, heroBgColor 
   const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
-    const trackingTally = document.createElement('script');
-    trackingTally.src = 'https://tally.so/widgets/embed.js';
-    trackingTally.async = true;
-    document.body.appendChild(trackingTally);
-
-    const tallyConfig = document.createElement('script');
-    tallyConfig.innerHTML = `
-      window.TallyConfig = {
-        "formId": "mZaLJA",
-        "popup": {
-          "width": 250,
-          "open": {
-            "trigger": "scroll",
-            "scrollPercent": 80
-          },
-          "hideTitle": true,
-          "showOnce": true
-        }
-      };
-    `;
-    document.body.appendChild(tallyConfig);
-
-    return () => {
-      document.body.removeChild(trackingTally);
-      document.body.removeChild(tallyConfig);
-    };
-  }, []);
-
-  useEffect(() => {
     const overlay = document.querySelector('.nav-open-overlay');
     if (!navOpen) {
       overlay.style.opacity = 0;
@@ -52,7 +23,6 @@ function Layout({ children, bgColor = null, extraClassNames = null, heroBgColor 
 
   return (
     <>
-      {/* slice does not work here, because of setNavOpen function and serializable issue */}
       <Header alias="header" setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
 
       <div className={`nav-open-overlay`} />

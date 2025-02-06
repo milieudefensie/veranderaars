@@ -50,6 +50,10 @@
     width: 100%;
     height: calc(150px + 20vw);
   }
+
+  &.small {
+    height: 250px;
+  }
 }
 
 @media screen and (max-width:992px) {

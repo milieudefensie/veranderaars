@@ -185,3 +185,44 @@ html {
     max-width: 1140px;
   }
 }
+
+.inner-page {
+  background-color: #FFF;
+}
+
+.toolkit-page {
+  .blocks-wrapper {
+    position: relative;
+    top: -100px;
+  }
+
+  .highlight-tools-section {
+    padding-bottom: 30px;
+
+    .container {
+      max-width: 100%;
+      padding: 0;
+    }
+  }
+
+  .ui-accordion {
+    margin-bottom: 50px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .toolkit-page {
+    .blocks-wrapper {
+      max-width: 100%;
+      top: -110px;
+    }
+
+    .highlight-tools-section {
+      padding-bottom: 15px;
+    }
+
+    .ui-accordion {
+      margin-top: 15px !important;
+    }
+  }
+}

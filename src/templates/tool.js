@@ -19,7 +19,7 @@ const Tool = ({ pageContext, data: { page, listTool, favicon } }) => {
     <Layout heroBgColor={heroImage ? '' : 'green'}>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="white">
+      <WrapperLayout variant="toolkit-page white">
         <HeroBasic image={heroImage} overlay={false} />
 
         {/* Main information */}
@@ -45,7 +45,11 @@ const Tool = ({ pageContext, data: { page, listTool, favicon } }) => {
         </FloatLayout>
 
         {/* Additional blocks */}
-        {Array.isArray(blocks) && <Blocks blocks={blocks} />}
+        {Array.isArray(blocks) && (
+          <div className="container blocks-wrapper">
+            <Blocks blocks={blocks} />
+          </div>
+        )}
       </WrapperLayout>
     </Layout>
   );

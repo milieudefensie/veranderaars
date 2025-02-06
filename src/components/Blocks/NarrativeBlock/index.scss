@@ -48,6 +48,7 @@
     padding: 0 !important;
     border-radius: 10px;
     border: 2px solid var(--Zwart, #000);
+    margin-bottom: 32px;
 
     .row {
       width: 100%;
@@ -58,6 +59,10 @@
       padding-top: 15px;
       padding-bottom: 40px;
       width: 50%;
+
+      .ctas {
+        gap: 12px;
+      }
     }
 
     .img-wrapper-nb {
