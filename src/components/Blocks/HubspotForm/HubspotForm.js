@@ -194,7 +194,7 @@ const HubspotForm = ({
 
       <div
         id={`hubspotForm-${id}`}
-        className={`form-hubspot ${style ? style : ''} ${columns ? `columns-${columns}` : ''}`}
+        className={`ui-form-hubspot ${style ? style : ''} ${columns ? `columns-${columns}` : ''}`}
       ></div>
     </>
   );
