@@ -196,6 +196,13 @@ const HubspotForm = ({
         id={`hubspotForm-${id}`}
         className={`ui-form-hubspot ${style ? style : ''} ${columns ? `columns-${columns}` : ''}`}
       ></div>
+      <div className={`recaptcha-text ${style ? style : ''}`}>
+        <p>
+          Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google{' '}
+          <a href="https://policies.google.com/privacy">privacybeleid</a> en{' '}
+          <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.
+        </p>
+      </div>
     </>
   );
 };

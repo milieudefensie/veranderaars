@@ -304,6 +304,12 @@ const Form = ({ event, inputs = [] }) => {
             je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze{' '}
             <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy">privacybepaling</a> voor alle details.
           </p>
+
+          <p className="recaptcha-text">
+            Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google{' '}
+            <a href="https://policies.google.com/privacy">privacybeleid</a> en{' '}
+            <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.
+          </p>
         </div>
       </form>
 
