@@ -115,7 +115,6 @@ export const PageQuery = graphql`
           id
           title
           slug
-          address
           coordinates {
             latitude
             longitude
@@ -124,6 +123,7 @@ export const PageQuery = graphql`
             apiKey
           }
           image {
+            url
             gatsbyImageData(width: 900, height: 505)
           }
           tags {

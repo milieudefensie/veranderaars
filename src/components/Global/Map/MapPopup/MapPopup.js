@@ -24,10 +24,11 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => 
     endInZone,
   } = card;
   const isCslEvent = type === 'CSL';
+  const withTags = Array.isArray(tags) && tags.length > 0;
 
   return (
-    <article className={`map-popup ${cardType ? cardType : ''}`}>
-      {Array.isArray(tags) && tags.length > 0 && (
+    <article className={`map-popup ${cardType ? cardType : ''} ${withTags ? 'with-tags' : 'no-tags'}`}>
+      {withTags && (
         <div className="tags">
           <TagList tags={tags} />
         </div>
