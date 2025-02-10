@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { convertTime, formatDate, extractNumericHour } from '../utils';
+import { extractNumericHour, formatCslEvents } from '../utils';
 import { DateTime } from 'luxon';
 
 function useCSLEvents(cmsEvents, cslEvents) {
@@ -11,29 +11,7 @@ function useCSLEvents(cmsEvents, cslEvents) {
   useEffect(() => {
     setStatus('loading');
 
-    const mappedCSL = cslEvents.map((e) => ({
-      id: e.slug.replace(' ', '_'),
-      address: e.location?.query,
-      coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
-      region: e.location?.region,
-      rawStartDate: e.raw_start,
-      rawEndDate: e.raw_end,
-      rawDate: e.start_at,
-      date: e.start_at ? formatDate(e.start_at) : null,
-      hourStart: e.start_at ? convertTime(e.start_at) : null,
-      hourEnd: e.end_at ? convertTime(e.end_at) : null,
-      startInZone: e.start_in_zone,
-      endInZone: e.end_in_zone,
-      introduction: e.description,
-      slug: e.slug,
-      url: e.url,
-      title: e.title,
-      image: { url: e.image_url },
-      labels: e.labels || [],
-      type: e.type,
-      model: e.model,
-      calendar: e.calendar,
-    }));
+    const mappedCSL = cslEvents.map(formatCslEvents);
 
     const currentDateTime = DateTime.now().setZone('Europe/Amsterdam');
     const events = [...cmsEvents, ...mappedCSL]

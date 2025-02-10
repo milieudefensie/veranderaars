@@ -10,25 +10,23 @@ const ListHighlightEvent = ({ block }) => {
 
   return (
     <section className={`highlight-event-section ${hasItems ? '' : 'empty'}`}>
-      <div className="container">
-        <div className="header">
-          <h3>{sectionTitle}</h3>
+      <div className="header">
+        <h3>{sectionTitle}</h3>
 
-          <div className="desktop-ctas">
-            <CtaList ctas={cta} />
-          </div>
-        </div>
-
-        {/* Items */}
-        <div className="content">
-          {items.map((item) => (
-            <EventCard event={item} key={item.id} />
-          ))}
-        </div>
-
-        <div className="mobile-ctas">
+        <div className="desktop-ctas">
           <CtaList ctas={cta} />
         </div>
+      </div>
+
+      {/* Items */}
+      <div className="content">
+        {items.map((item) => (
+          <EventCard event={item} key={item.id} />
+        ))}
+      </div>
+
+      <div className="mobile-ctas">
+        <CtaList ctas={cta} />
       </div>
     </section>
   );

@@ -27,7 +27,6 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
           <SimpleText
             limitedWidth
             block={{ text: introduction }}
-            container={false}
             extraClassNames={true ? 'introduction' : 'introduction-normal'}
           />
 

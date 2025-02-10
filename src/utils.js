@@ -295,3 +295,33 @@ export const mapCslEvents = (events) => {
       }))
     : [];
 };
+
+export const formatCslEvents = (e) => {
+  return {
+    id: e.slug.replace(' ', '_'),
+    address: e.location?.query,
+    coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
+    region: e.location?.region,
+    rawStartDate: e.raw_start,
+    rawEndDate: e.raw_end,
+    rawDate: e.start_at,
+    date: e.start_at ? formatDate(e.start_at) : null,
+    hourStart: e.start_at ? convertTime(e.start_at) : null,
+    hourEnd: e.end_at ? convertTime(e.end_at) : null,
+    startInZone: e.start_in_zone,
+    endInZone: e.end_in_zone,
+    introduction: e.description,
+    slug: e.slug,
+    url: e.url,
+    title: e.title,
+    image: { url: e.image_url },
+    labels: e.labels || [],
+    type: e.type,
+    model: e.model,
+    calendar: e.calendar,
+    model: {
+      apiKey: 'ExternalEvent',
+    },
+    type: 'CSL',
+  };
+};

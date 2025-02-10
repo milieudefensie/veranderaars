@@ -10,22 +10,20 @@ const HighlightTools = ({ block }) => {
 
   return (
     <section className="highlight-tools-section">
-      <div className="container">
-        {sectionTitle && (
-          <div className="header">
-            <h3>{sectionTitle}</h3>
-          </div>
-        )}
+      {sectionTitle && (
+        <div className="header">
+          <h3>{sectionTitle}</h3>
+        </div>
+      )}
 
-        {/* Items */}
-        <div className="content-tool">
-          <div className="row gy-4">
-            {items.map((item) => (
-              <div className={`col-lg-${12 / numColumns}`} key={item.id}>
-                <ToolCard tool={item} />
-              </div>
-            ))}
-          </div>
+      {/* Items */}
+      <div className="content-tool">
+        <div className="row gy-4">
+          {items.map((item) => (
+            <div className={`col-lg-${12 / numColumns}`} key={item.id}>
+              <ToolCard tool={item} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

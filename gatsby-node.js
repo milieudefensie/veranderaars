@@ -188,8 +188,8 @@ exports.createPages = ({ graphql, actions }) => {
               url
               alt
             }
+            slugOfHighlightedEvent
           }
-
           pages: allDatoCmsBasicPage {
             edges {
               node {
@@ -271,6 +271,8 @@ exports.createPages = ({ graphql, actions }) => {
           reject(result.errors);
         }
 
+        const cslHighlightedEvent = result.data.configuration.slugOfHighlightedEvent;
+
         // create the pages
         const pages = result.data.pages.edges;
         for (const page of pages) {
@@ -292,6 +294,7 @@ exports.createPages = ({ graphql, actions }) => {
             component: templates.listEvents,
             context: {
               slug: listEvents.slug,
+              cslHighlightedEvent: cslHighlightedEvent,
               currentDate: new Date().toISOString().split('T')[0],
             },
           });

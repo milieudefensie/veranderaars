@@ -6,7 +6,7 @@ import Blocks from '../components/Blocks';
 import HomeHero from '../components/Global/HomeHero/HomeHero';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 
-const IndexPage = ({ data: { page, favicon } }) => {
+const IndexPage = ({ data: { page, configuration, favicon } }) => {
   return (
     <Layout extraClassNames="homepage-md">
       {page?.seo && <SeoDatoCMS seo={page?.seo} favicon={favicon} homepage />}
@@ -20,7 +20,11 @@ const IndexPage = ({ data: { page, favicon } }) => {
           form={page?.form}
         />
 
-        {page?.blocks && <Blocks blocks={page.blocks} isHomepage />}
+        {page?.blocks && (
+          <div className="container">
+            <Blocks blocks={page.blocks} context={configuration} isHomepage />
+          </div>
+        )}
       </WrapperLayout>
     </Layout>
   );
@@ -34,6 +38,9 @@ export const HomeQuery = graphql`
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
       }
+    }
+    configuration: datoCmsSiteConfiguration {
+      slugOfHighlightedEvent
     }
     page: datoCmsHome {
       seo: seoMetaTags {

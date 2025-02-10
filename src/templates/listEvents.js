@@ -7,18 +7,18 @@ import EventCard from '../components/Blocks/HighlightEvent/EventCard';
 import Map from '../components/Global/Map/Map';
 import FilterEvents from '../components/Global/FilterEvents/FilterEvents';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
-import Blocks from '../components/Blocks';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 import useCSLEvents from '../hooks/useCSLEvents';
-import { mapCmsEvents, mapCslEvents } from '../utils';
+import { formatCslEvents, mapCmsEvents, mapCslEvents } from '../utils';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 
 import './list-basic.styles.scss';
 
-const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], favicon } }) => {
+const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], cslHighlightEvent, favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
-  const { title, seo, highlighEvent, buttonOnMap, blocks = [] } = page;
+  const { title, seo, highlighEvent, buttonOnMap, content } = page;
 
   const [filterValues, setFilterValues] = useState({ location: null, typeOfEvent: null, description: null });
   const [mobileShowMap, setMobileShowMap] = useState(false);
@@ -105,9 +105,9 @@ const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], favicon }
           <div className="container">
             {title && <h1>{title}</h1>}
 
-            {highlighEvent && (
+            {(cslHighlightEvent || highlighEvent) && (
               <div className="highlighted-event-wrapper">
-                <EventCard event={highlighEvent} isHighlighted />
+                <EventCard event={formatCslEvents(cslHighlightEvent) || highlighEvent} isHighlighted />
               </div>
             )}
 
@@ -138,9 +138,9 @@ const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], favicon }
             </div>
           </div>
 
-          {Array.isArray(blocks) && blocks.length > 0 && (
-            <div className="mt-5 pb-5">
-              <Blocks blocks={blocks} />
+          {content && (
+            <div className="container mt-5 pb-5">
+              <StructuredTextDefault content={content} />
             </div>
           )}
         </div>
@@ -152,7 +152,7 @@ const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], favicon }
 export default ListEvents;
 
 export const PageQuery = graphql`
-  query ListEventById($id: String, $currentDate: Date!) {
+  query ListEventById($id: String, $currentDate: Date!, $cslHighlightedEvent: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -224,6 +224,33 @@ export const PageQuery = graphql`
         }
       }
     }
+    cslHighlightEvent: externalEvent(slug: { eq: $cslHighlightedEvent }) {
+      __typename
+      id: slug
+      slug
+      title
+      description
+      start_at
+      end_at
+      raw_start
+      raw_end
+      image_url
+      labels
+      start_in_zone
+      end_in_zone
+      location {
+        latitude
+        longitude
+        venue
+        query
+        region
+      }
+      calendar {
+        name
+        slug
+      }
+      hiddenAddress
+    }
     page: datoCmsListEvent(id: { eq: $id }) {
       id
       title
@@ -255,63 +282,27 @@ export const PageQuery = graphql`
           }
         }
       }
-      blocks {
-        ... on DatoCmsMap {
+      content {
+        value
+        blocks {
+          __typename
           ...BlockMap
-        }
-        ... on DatoCmsColumn {
-          ...BlockColumns
-        }
-        ... on DatoCmsCountdown {
-          ...BlockCountdown
-        }
-        ... on DatoCmsCtaList {
-          ...BlockCtaList
-        }
-        ... on DatoCmsCtaIconsList {
-          ...BlockCtaIconsList
-        }
-        ... on DatoCmsImageGallery {
-          ...BlockImageGallery
-        }
-        ... on DatoCmsNarrativeBlock {
           ...BlockNarrativeBlock
-        }
-        ... on DatoCmsHighlightEvent {
-          ...BlockHighlightEvent
-        }
-        ... on DatoCmsHighlightTool {
-          ...BlockHighlightTools
-        }
-        ... on DatoCmsTextHubspotForm {
-          ...BlockTextHubspot
-        }
-        ... on DatoCmsTable {
-          ...BlockTable
-        }
-        ... on DatoCmsShare {
-          ...BlockShare
-        }
-        ... on DatoCmsImage {
-          ...BlockImage
-        }
-        ... on DatoCmsEmbedIframe {
-          ...BlockEmbedIframe
-        }
-        ... on DatoCmsAcordion {
           ...BlockAccordion
-        }
-        ... on DatoCmsVideoBlock {
+          ...BlockImage
+          ...BlockShare
+          ...BlockHighlightTools
+          ...BlockHighlightEvent
+          ...BlockTable
+          ...BlockEmbedIframe
           ...BlockVideo
-        }
-        ... on DatoCmsSimpleText {
-          ...BlockText
-        }
-        ... on DatoCmsBlockCta {
+          ...BlockTextHubspot
+          ...BlockColumns
+          ...BlockCountdown
+          ...BlockCtaList
+          ...BlockCtaIconsList
+          ...BlockImageGallery
           ...BlockCustomCta
-        }
-        ... on DatoCmsMap {
-          ...BlockMap
         }
       }
       seo: seoMetaTags {

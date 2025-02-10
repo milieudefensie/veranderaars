@@ -4,15 +4,10 @@ import ListPaginated from '../../Global/Pagination/ListPaginated';
 
 import './styles.scss';
 
-const ListGroupBlock = ({
-  items = [],
-  withContainer = true,
-  withPagination = false,
-  redirectToWhatsappGroup = false,
-}) => {
+const ListGroupBlock = ({ items = [], withPagination = false, redirectToWhatsappGroup = false }) => {
   if (withPagination) {
     return (
-      <div className={`${withContainer ? 'container' : ''} pb-5`} id="groups-list">
+      <div className={`pb-5`} id="groups-list">
         <div className="row gy-4">
           <ListPaginated
             list={items}
@@ -36,7 +31,7 @@ const ListGroupBlock = ({
   }
 
   return (
-    <div className={`${withContainer ? 'container' : ''} pb-5`} id="groups-list">
+    <div className={`pb-5`} id="groups-list">
       <div className="row gy-4">
         {items.map((item) => (
           <div className="col-lg-4" key={item.id}>

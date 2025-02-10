@@ -20,6 +20,8 @@ import Columns from '../Columns/Columns';
 import MapFilter from '../MapFilter/MapFilter';
 
 const StructuredTextDefault = ({ content }) => {
+  if (!content || !content.value) return null;
+
   return (
     <StructuredText
       data={content}

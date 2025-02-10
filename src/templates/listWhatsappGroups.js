@@ -83,9 +83,7 @@ const ListWhatsAppGroups = ({ data: { page, allGroups = [], favicon } }) => {
               }}
             />
 
-            {Array.isArray(mappedGroups) && (
-              <ListGroupBlock items={mappedGroups} withContainer={false} redirectToWhatsappGroup={true} />
-            )}
+            {Array.isArray(mappedGroups) && <ListGroupBlock items={mappedGroups} redirectToWhatsappGroup={true} />}
 
             {/* Fixed cta to view all */}
             <FloatCta title="Bekijk lijst" id="groups-list" variant="wp-group" />

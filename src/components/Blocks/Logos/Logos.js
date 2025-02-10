@@ -26,37 +26,35 @@ function Logos({ block }) {
 
   return (
     <div className="logos-block">
-      <div className="container">
-        <div className="row">
-          <div className="col-12">
-            {title && (
-              <h2 className="text-with-border-color">
-                <span>{title}</span>
-              </h2>
-            )}
-          </div>
+      <div className="row">
+        <div className="col-12">
+          {title && (
+            <h2 className="text-with-border-color">
+              <span>{title}</span>
+            </h2>
+          )}
         </div>
+      </div>
 
-        <div className="row">
-          <div className="col-12 logo-slider">
-            <AppSlider responsive={logosResponsiveSettings}>
-              {item.map((item) => {
-                if (item.externalLink) {
-                  return (
-                    <a key={item.id} href={item.externalLink} target="_blank" rel="noreferrer">
-                      <ImageWrapper image={item.image} />
-                    </a>
-                  );
-                }
-
+      <div className="row">
+        <div className="col-12 logo-slider">
+          <AppSlider responsive={logosResponsiveSettings}>
+            {item.map((item) => {
+              if (item.externalLink) {
                 return (
-                  <div key={item.id}>
+                  <a key={item.id} href={item.externalLink} target="_blank" rel="noreferrer">
                     <ImageWrapper image={item.image} />
-                  </div>
+                  </a>
                 );
-              })}
-            </AppSlider>
-          </div>
+              }
+
+              return (
+                <div key={item.id}>
+                  <ImageWrapper image={item.image} />
+                </div>
+              );
+            })}
+          </AppSlider>
         </div>
       </div>
     </div>

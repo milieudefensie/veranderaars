@@ -6,9 +6,10 @@ import Blocks from '../components/Blocks';
 import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 
 const Page = ({ pageContext, data: { page, favicon } }) => {
-  const { seo, title, introduction, backgroundColor, heroBackgroundImage, smallHero = false, blocks = [] } = page;
+  const { seo, title, introduction, backgroundColor, heroBackgroundImage, smallHero = false, content } = page;
 
   const renderMainContent = () => (
     <>
@@ -16,12 +17,11 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
         <SimpleText
           limitedWidth
           block={{ text: introduction }}
-          container={false}
           extraClassNames={true ? 'introduction' : 'introduction-normal'}
         />
       )}
 
-      <Blocks blocks={blocks} />
+      <StructuredTextDefault content={content} />
     </>
   );
 
@@ -61,6 +61,29 @@ export const PageQuery = graphql`
       smallHero
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags
+      }
+      content {
+        value
+        blocks {
+          __typename
+          ...BlockMap
+          ...BlockNarrativeBlock
+          ...BlockAccordion
+          ...BlockImage
+          ...BlockShare
+          ...BlockHighlightTools
+          ...BlockHighlightEvent
+          ...BlockTable
+          ...BlockEmbedIframe
+          ...BlockVideo
+          ...BlockTextHubspot
+          ...BlockColumns
+          ...BlockCountdown
+          ...BlockCtaList
+          ...BlockCtaIconsList
+          ...BlockImageGallery
+          ...BlockCustomCta
+        }
       }
       blocks {
         ... on DatoCmsNarrativeBlock {
