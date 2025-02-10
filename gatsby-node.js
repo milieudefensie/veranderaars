@@ -168,6 +168,7 @@ exports.createPages = ({ graphql, actions }) => {
 
   return new Promise((resolve, reject) => {
     const templates = {
+      home: path.resolve('./src/templates/home.js'),
       page: path.resolve('./src/templates/page.js'),
       event: path.resolve('./src/templates/event.js'),
       listEvents: path.resolve('./src/templates/listEvents.js'),
@@ -272,6 +273,15 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         const cslHighlightedEvent = result.data.configuration.slugOfHighlightedEvent;
+
+        // Create homepage
+        createPage({
+          path: '/',
+          component: templates.home,
+          context: {
+            cslHighlightedEvent: cslHighlightedEvent,
+          },
+        });
 
         // create the pages
         const pages = result.data.pages.edges;

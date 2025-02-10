@@ -6,7 +6,7 @@ import Blocks from '../components/Blocks';
 import HomeHero from '../components/Global/HomeHero/HomeHero';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 
-const IndexPage = ({ data: { page, configuration, favicon } }) => {
+const IndexPage = ({ pageContext, data: { page, cslHighlightEvent, configuration, favicon } }) => {
   return (
     <Layout extraClassNames="homepage-md">
       {page?.seo && <SeoDatoCMS seo={page?.seo} favicon={favicon} homepage />}
@@ -22,7 +22,7 @@ const IndexPage = ({ data: { page, configuration, favicon } }) => {
 
         {page?.blocks && (
           <div className="container">
-            <Blocks blocks={page.blocks} context={configuration} isHomepage />
+            <Blocks blocks={page.blocks} context={{ cslHighlightEvent }} isHomepage />
           </div>
         )}
       </WrapperLayout>
@@ -33,14 +33,38 @@ const IndexPage = ({ data: { page, configuration, favicon } }) => {
 export default IndexPage;
 
 export const HomeQuery = graphql`
-  query Home {
+  query Home($cslHighlightedEvent: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
       }
     }
-    configuration: datoCmsSiteConfiguration {
-      slugOfHighlightedEvent
+    cslHighlightEvent: externalEvent(slug: { eq: $cslHighlightedEvent }) {
+      __typename
+      id: slug
+      slug
+      title
+      description
+      start_at
+      end_at
+      raw_start
+      raw_end
+      image_url
+      labels
+      start_in_zone
+      end_in_zone
+      location {
+        latitude
+        longitude
+        venue
+        query
+        region
+      }
+      calendar {
+        name
+        slug
+      }
+      hiddenAddress
     }
     page: datoCmsHome {
       seo: seoMetaTags {

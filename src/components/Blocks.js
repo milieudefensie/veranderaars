@@ -20,7 +20,7 @@ import ImageGallery from './Blocks/ImageGallery/ImageGallery';
 import Columns from './Blocks/Columns/Columns';
 import { ProtectedLink } from './Global/BotProtection/BotProtection';
 
-export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage = false }) {
+export default function Blocks({ blocks, context, usePrimaryHeading = false, isHomepage = false }) {
   return (
     <>
       {blocks.map((block, index) => {
@@ -38,7 +38,7 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
           case 'DatoCmsVideoBlock':
             return <Video key={block.id} content={block} />;
           case 'DatoCmsHighlightEvent':
-            return <ListHighlightEvent key={block.id} block={block} />;
+            return <ListHighlightEvent key={block.id} block={block} context={context} />;
           case 'DatoCmsHighlightTool':
             return <HighlightTools key={block.id} block={block} />;
           case 'DatoCmsTextHubspotForm':
