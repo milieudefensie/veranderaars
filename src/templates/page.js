@@ -12,14 +12,7 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
 
   const renderMainContent = () => (
     <>
-      {introduction && (
-        <SimpleText
-          limitedWidth
-          block={{ text: introduction }}
-          extraClassNames={true ? 'introduction' : 'introduction-normal'}
-        />
-      )}
-
+      {introduction && <SimpleText limitedWidth block={{ text: introduction }} extraClassNames={'introduction'} />}
       <StructuredTextDefault content={content} />
     </>
   );

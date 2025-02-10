@@ -7,13 +7,12 @@ import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 import Link from '../components/Global/Link/Link';
 import backBtnIcon from '../components/Icons/back-btn.svg';
-import Blocks from '../components/Blocks';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 
 import './basic.styles.scss';
 
 const Tool = ({ pageContext, data: { page, listTool, favicon } }) => {
-  const { seo, title, introduction, heroImage, content, blocks = [] } = page;
+  const { seo, title, introduction, heroImage, content } = page;
 
   return (
     <Layout heroBgColor={heroImage ? '' : 'green'}>
@@ -43,13 +42,6 @@ const Tool = ({ pageContext, data: { page, listTool, favicon } }) => {
             </div>
           )}
         </FloatLayout>
-
-        {/* Additional blocks */}
-        {Array.isArray(blocks) && (
-          <div className="container blocks-wrapper">
-            <Blocks blocks={blocks} />
-          </div>
-        )}
       </WrapperLayout>
     </Layout>
   );
@@ -79,62 +71,6 @@ export const PageQuery = graphql`
       heroImage {
         gatsbyImageData
         url
-      }
-      blocks {
-        ... on DatoCmsMap {
-          ...BlockMap
-        }
-        ... on DatoCmsColumn {
-          ...BlockColumns
-        }
-        ... on DatoCmsCountdown {
-          ...BlockCountdown
-        }
-        ... on DatoCmsCtaList {
-          ...BlockCtaList
-        }
-        ... on DatoCmsCtaIconsList {
-          ...BlockCtaIconsList
-        }
-        ... on DatoCmsImageGallery {
-          ...BlockImageGallery
-        }
-        ... on DatoCmsNarrativeBlock {
-          ...BlockNarrativeBlock
-        }
-        ... on DatoCmsHighlightEvent {
-          ...BlockHighlightEvent
-        }
-        ... on DatoCmsHighlightTool {
-          ...BlockHighlightTools
-        }
-        ... on DatoCmsTextHubspotForm {
-          ...BlockTextHubspot
-        }
-        ... on DatoCmsTable {
-          ...BlockTable
-        }
-        ... on DatoCmsShare {
-          ...BlockShare
-        }
-        ... on DatoCmsImage {
-          ...BlockImage
-        }
-        ... on DatoCmsEmbedIframe {
-          ...BlockEmbedIframe
-        }
-        ... on DatoCmsAcordion {
-          ...BlockAccordion
-        }
-        ... on DatoCmsVideoBlock {
-          ...BlockVideo
-        }
-        ... on DatoCmsSimpleText {
-          ...BlockText
-        }
-        ... on DatoCmsBlockCta {
-          ...BlockCustomCta
-        }
       }
       content {
         value
