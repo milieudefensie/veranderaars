@@ -69,7 +69,7 @@ const ListWhatsAppGroups = ({ data: { page, allGroups = [], favicon } }) => {
 
         <div className="list-event-wrapper">
           <div className="container">
-            <h1>{title}</h1>
+            <h1 className="main-heading">{title}</h1>
 
             {/* Map */}
             <Map

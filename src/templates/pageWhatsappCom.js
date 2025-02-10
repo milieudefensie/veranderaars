@@ -23,7 +23,7 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
         <HeroBasic image={heroBackgroundImage} backgroundColor={backgroundColor} overlay={false} />
 
         <FloatLayout reduceOverlap>
-          <h1>{title}</h1>
+          <h1 className="main-heading">{title}</h1>
           <SimpleText
             limitedWidth
             block={{ text: introduction }}

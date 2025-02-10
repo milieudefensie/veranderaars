@@ -88,7 +88,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
             </div>
           )}
 
-          {title && <h1 className="title-hero-alternative">{title}</h1>}
+          {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
           {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
 
           {/* Form  */}
