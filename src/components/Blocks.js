@@ -38,7 +38,7 @@ export default function Blocks({ blocks, context, usePrimaryHeading = false, isH
           case 'DatoCmsVideoBlock':
             return <Video key={block.id} content={block} />;
           case 'DatoCmsHighlightEvent':
-            return <ListHighlightEvent key={block.id} block={block} context={context} />;
+            return <ListHighlightEvent key={block.id} block={block} context={isHomepage ? context : null} />;
           case 'DatoCmsHighlightTool':
             return <HighlightTools key={block.id} block={block} />;
           case 'DatoCmsTextHubspotForm':
