@@ -1,15 +1,11 @@
 import React from 'react';
 import './index.scss';
 
-function SimpleText({ block, custom = false, limitedWidth = false, extraClassNames = null }) {
+function SimpleText({ block, limitedWidth = false, extraClassNames = null }) {
   return (
     <div id="simple-text-block" className={`simple-text-wrapper ${extraClassNames ? extraClassNames : ''}`}>
       <div className={`simple-text ${limitedWidth ? 'limited-with' : ''}`}>
-        <div className={`${custom ? '' : 'row'}`}>
-          <div className={`${custom ? '' : 'col'}`}>
-            <div dangerouslySetInnerHTML={{ __html: block.text }} />
-          </div>
-        </div>
+        <div dangerouslySetInnerHTML={{ __html: block.text }} />
       </div>
     </div>
   );

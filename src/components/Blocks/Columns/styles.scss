@@ -45,8 +45,9 @@
 
 @media screen and (max-width: 992px) {
   #block-columns {
-    grid-template-columns: 1fr;
-    gap: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 
     .first,
     .second {

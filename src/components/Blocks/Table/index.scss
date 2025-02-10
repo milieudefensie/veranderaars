@@ -7,18 +7,20 @@
   table {
     border: 0;
     width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 
     * {
-      color: var(--black);
-      font-family: "Inter";
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
       vertical-align: middle;
     }
 
     th {
       padding: 20px;
       background-color: #EEF5FF;
-      color: var(--dark) !important;
-      font-family: "Inter";
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
       font-size: 16px !important;
       font-weight: 700 !important;
       line-height: 150% !important;
@@ -26,11 +28,12 @@
     }
 
     tr {
-      border-bottom: 1px solid #CBDFFE;
+      border-bottom: 1px solid #c7c7c7;
 
       td {
         padding: 20px;
-        font-family: "Inter";
+        color: var(--dark);
+        font-family: var(--nb-secondary-font);
         font-size: 16px !important;
         font-style: normal;
         font-weight: 500 !important;

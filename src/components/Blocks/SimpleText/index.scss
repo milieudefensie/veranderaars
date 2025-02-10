@@ -1,17 +1,19 @@
 .simple-text-wrapper {
   .simple-text {
 
-    //
     ul,
     ol {
       list-style: initial;
       padding-left: 3rem;
-    }
 
-    ul,
-    ol,
-    p {
-      margin-bottom: 1rem;
+      p {
+        margin-bottom: .5rem;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
+        font-family: var(--nb-secondary-font);
+      }
     }
 
     table {
@@ -55,17 +57,16 @@
     a {
       color: var(--dark);
       font-family: var(--nb-secondary-font);
+      font-weight: 600;
+      line-height: 150%;
     }
 
-    * {
-      color: var(--dark);
-      font-family: var(--nb-secondary-font);
+    p {
       font-size: 20px;
       font-style: normal;
       font-weight: 400;
-      line-height: 150%;
-      margin: 0;
-      padding: 0;
+      line-height: 140%;
+      font-family: var(--nb-secondary-font);
     }
 
     em {
@@ -83,32 +84,30 @@
       font-style: normal;
       font-weight: 400;
       line-height: 120%;
-      margin-bottom: 1rem;
     }
 
-    h1,
+    h1 {
+      font-size: 40px;
+    }
+
     h2 {
-      font-size: 39px;
+      font-size: 30px;
     }
 
     h3 {
-      font-size: 31px;
+      font-size: 28px;
     }
 
     h4 {
-      font-size: 25px;
+      font-size: 23px;
     }
 
-    h5 {
-      font-size: 22px;
-    }
-
+    h5,
     h6 {
       font-size: 20px;
     }
 
     blockquote {
-      float: left;
       border-left: 8px solid var(--dark);
       padding-left: 20px;
       margin-right: 25px;
@@ -123,6 +122,37 @@
         line-height: 120%;
         letter-spacing: 0.39px;
         margin: 0;
+      }
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    b,
+    strong {
+      font-weight: bold;
+    }
+
+    ol {
+      list-style: decimal;
+    }
+
+    ul {
+      list-style: initial;
+    }
+
+    ol,
+    ul {
+      padding-left: 2.5rem;
+
+      p {
+        margin-bottom: .5rem;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
+        font-family: var(--nb-secondary-font);
       }
     }
 
@@ -144,12 +174,12 @@
       font-size: 25px;
       font-style: normal;
       font-weight: 700;
-      line-height: 135%;
+      line-height: 140%;
     }
   }
 }
 
-@media screen and (max-width:992px) {
+@media screen and (max-width: 992px) {
   .simple-text-wrapper {
     .simple-text {
       div:first-child {
