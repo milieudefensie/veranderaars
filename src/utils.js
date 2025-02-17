@@ -297,6 +297,7 @@ export const mapCslEvents = (events) => {
 };
 
 export const formatCslEvents = (e) => {
+  if (!e) return {};
   return {
     id: e.slug.replace(' ', '_'),
     address: e.location?.query,
