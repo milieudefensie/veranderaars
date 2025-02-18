@@ -156,13 +156,15 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
         {/* Related events */}
         {hasRelatedEvents && (
           <div className="related-section">
-            <ListHighlightEvent
-              block={{
-                sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
-                cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
-                items: related ? relatedEvents : nearbyEvents,
-              }}
-            />
+            <div className="container">
+              <ListHighlightEvent
+                block={{
+                  sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
+                  cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
+                  items: related ? relatedEvents : nearbyEvents,
+                }}
+              />
+            </div>
           </div>
         )}
       </WrapperLayout>
