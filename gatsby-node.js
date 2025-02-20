@@ -348,7 +348,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // Group detail
-        const RADIUS_KM = 10;
+        const RADIUS_KM = 15;
         const KM_PER_DEGREE_LAT = 111;
         const KM_PER_DEGREE_LNG = 111;
 

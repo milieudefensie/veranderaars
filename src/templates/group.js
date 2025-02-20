@@ -195,7 +195,7 @@ export const PageQuery = graphql`
         start_at: { gte: $currentDate }
         location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
       }
-      limit: 2
+      limit: 10
     ) {
       edges {
         node {
@@ -229,7 +229,7 @@ export const PageQuery = graphql`
         date: { gte: $currentDate }
         coordinates: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
       }
-      limit: 2
+      limit: 10
     ) {
       edges {
         node {
