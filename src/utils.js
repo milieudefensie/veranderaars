@@ -156,11 +156,19 @@ export const convertTime = (dateTimeString) => {
   return formattedTime;
 };
 
+function stripHtml(html) {
+  let temporalDivElement = document.createElement('div');
+  temporalDivElement.innerHTML = html;
+  return temporalDivElement.textContent || temporalDivElement.innerText || '';
+}
+
 export const truncateText = (text, maxLength) => {
-  if (text.length <= maxLength) {
-    return text;
+  const cleanedText = stripHtml(text);
+
+  if (cleanedText.length <= maxLength) {
+    return cleanedText;
   } else {
-    return text.substring(0, maxLength) + '...';
+    return cleanedText.substring(0, maxLength) + '...';
   }
 };
 
