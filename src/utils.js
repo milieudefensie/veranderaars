@@ -309,7 +309,7 @@ export const mapCslEvents = (events) => {
 };
 
 export const formatCslEvents = (e) => {
-  if (!e) return {};
+  if (!e) return null;
   return {
     id: e.slug.replace(' ', '_'),
     address: e.location?.query,
