@@ -1,316 +1,73 @@
-// src/components/BotProtection.js
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { navigate } from 'gatsby';
 import './index.scss';
 
-// Create context for bot protection
 const BotProtectionContext = createContext(null);
 
-// Custom hook for bot detection
-const useBotDetection = () => {
-  const [isBot, setIsBot] = useState(false);
-  const mouseMovements = useRef(0);
-  const lastClickTime = useRef(0);
-  const clickIntervals = useRef([]);
-  const pageLoadTime = useRef(Date.now());
-  const firstInteractionTime = useRef(null);
+// Custom hook for reCAPTCHA
+const useReCAPTCHA = () => {
+  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
 
   useEffect(() => {
-    // Check for common bot characteristics
-    const suspicious = {
-      hasWebdriver: navigator?.webdriver,
-      hasLanguages: !navigator?.languages,
-      hasWebGL: !window?.WebGLRenderingContext,
-    };
-
-    const suspiciousCount = Object.values(suspicious).filter(Boolean).length;
-    if (suspiciousCount >= 2) {
-      setIsBot(true);
-      return;
-    }
-
-    // Track first interaction time
-    const handleFirstInteraction = () => {
-      if (!firstInteractionTime.current) {
-        firstInteractionTime.current = Date.now() - pageLoadTime.current;
-      }
-    };
-
-    // Track mouse movements
-    const handleMouseMove = () => {
-      mouseMovements.current += 1;
-      handleFirstInteraction();
-    };
-
-    // Track click patterns
-    const handleClick = () => {
-      handleFirstInteraction();
-      const currentTime = Date.now();
-      if (lastClickTime.current !== 0) {
-        const interval = currentTime - lastClickTime.current;
-        clickIntervals.current.push(interval);
-
-        if (clickIntervals.current.length > 3) {
-          const isConsistent = checkClickConsistency(clickIntervals.current);
-          if (isConsistent) {
-            setIsBot(true);
-          }
-        }
-      }
-      lastClickTime.current = currentTime;
-    };
-
-    // Track scroll events
-    const handleScroll = () => {
-      handleFirstInteraction();
-    };
-
-    // Add event listeners
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('click', handleClick);
-    document.addEventListener('scroll', handleScroll);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('click', handleClick);
-      document.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  return {
-    isBot,
-    mouseMovements: mouseMovements.current,
-    timeOnPage: () => Date.now() - pageLoadTime.current,
-    firstInteractionTime: firstInteractionTime.current,
-  };
-};
-
-// Custom hook for Turnstile
-const useTurnstile = (mode = 'managed') => {
-  const [turnstileLoaded, setTurnstileLoaded] = useState(false);
-  const [token, setToken] = useState(null);
-  const widgetId = useRef(null);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    // Load Turnstile script
     const script = document.createElement('script');
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    script.src = 'https://www.google.com/recaptcha/api.js?render=' + process.env.GATSBY_RECAPTCHA_SITE_KEY;
     script.async = true;
     script.defer = true;
-    script.onload = () => setTurnstileLoaded(true);
+    script.onload = () => setRecaptchaLoaded(true);
     document.body.appendChild(script);
 
     return () => {
       document.body.removeChild(script);
-      if (widgetId.current) {
-        window.turnstile?.remove(widgetId.current);
-      }
     };
   }, []);
 
-  useEffect(() => {
-    if (turnstileLoaded && containerRef.current) {
-      const siteKey = process.env.GATSBY_TURNSTILE_SITE_KEY;
+  const executeRecaptcha = useCallback(async () => {
+    if (!recaptchaLoaded) return null;
 
-      const commonOptions = {
-        sitekey: siteKey,
-        callback: (token) => setToken(token),
-        'refresh-expired': 'auto',
-        retry: 'auto',
-      };
-
-      switch (mode) {
-        case 'invisible':
-          widgetId.current = window.turnstile.render(containerRef.current, {
-            ...commonOptions,
-            appearance: 'invisible',
-          });
-          break;
-        case 'managed':
-          widgetId.current = window.turnstile.render(containerRef.current, {
-            ...commonOptions,
-            theme: 'light',
-          });
-          break;
-        // Interactive mode doesn't render immediately
-      }
-    }
-  }, [turnstileLoaded, mode]);
-
-  const executeTurnstile = useCallback(async () => {
-    if (!turnstileLoaded) return null;
-
-    if (mode === 'invisible' || mode === 'interactive') {
-      return new Promise((resolve) => {
-        window.turnstile.ready(() => {
-          window.turnstile.invoke({
-            sitekey: process.env.GATSBY_TURNSTILE_SITE_KEY,
-            callback: (token) => {
-              setToken(token);
-              resolve(token);
-            },
-          });
-        });
+    return new Promise((resolve) => {
+      window.grecaptcha.ready(() => {
+        window.grecaptcha.execute(process.env.GATSBY_RECAPTCHA_SITE_KEY, { action: 'submit' }).then(resolve);
       });
-    }
-    return token; // For managed mode, return existing token
-  }, [turnstileLoaded, mode, token]);
+    });
+  }, [recaptchaLoaded]);
 
-  const resetTurnstile = useCallback(() => {
-    if (widgetId.current) {
-      window.turnstile.reset(widgetId.current);
-      setToken(null);
-    }
-  }, []);
-
-  return { containerRef, token, executeTurnstile, resetTurnstile };
+  return { executeRecaptcha };
 };
 
 // Provider component that will wrap your page
-export const BotProtectionProvider = ({ children, turnstileMode = 'managed', onVerificationComplete }) => {
-  const [isVerified, setIsVerified] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { isBot, mouseMovements, timeOnPage, firstInteractionTime } = useBotDetection();
-  const { containerRef, token, executeTurnstile, resetTurnstile } = useTurnstile(turnstileMode);
-
-  const verifyHuman = async () => {
-    if (isVerified) return true;
-    if (isBot) {
-      setError('Access denied - suspicious behavior detected');
-      return false;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Execute Turnstile verification
-      const turnstileToken = turnstileMode === 'managed' ? token : await executeTurnstile();
-
-      if (!turnstileToken) {
-        throw new Error('Klik op de checkbox hierboven.');
-      }
-
-      // Call the Netlify function
-      const response = await fetch('/.netlify/functions/verify-human', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          clientData: {
-            userAgent: navigator.userAgent,
-            languages: navigator.languages,
-            platform: navigator.platform,
-            screenResolution: `${window.screen.width}x${window.screen.height}`,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            mouseMovements,
-            timeOnPage: timeOnPage(),
-            firstInteractionTime,
-          },
-          turnstileToken,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Verification failed');
-      }
-
-      setIsVerified(true);
-      onVerificationComplete?.(true);
-      return true;
-    } catch (error) {
-      console.error('Verification failed:', error);
-      setError(error.message);
-      resetTurnstile();
-      onVerificationComplete?.(false);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const contextValue = {
-    isVerified,
-    isLoading,
-    error,
-    verifyHuman,
-  };
+export const BotProtectionProvider = ({ children }) => {
+  const { executeRecaptcha } = useReCAPTCHA();
 
   return (
-    <BotProtectionContext.Provider value={contextValue}>
+    <BotProtectionContext.Provider value={{ executeRecaptcha }}>
       <div>
-        {/* Turnstile container */}
-        {!isVerified && turnstileMode === 'managed' && <div ref={containerRef} className="turnstile-container" />}
-        {!isVerified && turnstileMode === 'invisible' && <div ref={containerRef} style={{ display: 'none' }} />}
-
-        {/* Error message */}
-        {error && (
-          <div className="text-red" role="alert">
-            {error} - Gaat er iets mis? Stuur een mailtje naar{' '}
-            <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">
-              doemee@milieudefensie.nl
-            </a>
-          </div>
-        )}
-
+        <p>
+          Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google{' '}
+          <a href="https://policies.google.com/privacy">privacybeleid</a> en{' '}
+          <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.
+        </p>
         {children}
       </div>
     </BotProtectionContext.Provider>
   );
 };
 
-// Helper functions
-const checkClickConsistency = (intervals) => {
-  const mean = intervals.reduce((a, b) => a + b) / intervals.length;
-  const variance =
-    intervals.reduce((sum, interval) => {
-      return sum + Math.pow(interval - mean, 2);
-    }, 0) / intervals.length;
-  return variance < 50; // Suspiciously consistent if true
-};
-
-// Main Protected Link component
 export const ProtectedLink = ({ to, children, className = '' }) => {
-  const context = useContext(BotProtectionContext);
-  const [isNavigating, setIsNavigating] = useState(false);
+  const { executeRecaptcha } = useContext(BotProtectionContext);
 
-  if (!context) {
+  if (!executeRecaptcha) {
     throw new Error('ProtectedLink must be used within a BotProtectionProvider');
   }
 
-  const { isVerified, isLoading, verifyHuman } = context;
-
   const handleClick = async (e) => {
     e.preventDefault();
-    setIsNavigating(true);
-
-    try {
-      const verified = await verifyHuman();
-      if (verified) {
-        navigate(to);
-      }
-    } finally {
-      setIsNavigating(false);
-    }
+    await executeRecaptcha();
+    navigate(to);
   };
 
   return (
-    <a
-      href={to}
-      onClick={handleClick}
-      className={`${className} ${isLoading || isNavigating ? 'opacity-50 cursor-wait' : ''}`}
-      aria-disabled={isLoading || isNavigating}
-    >
-      {isLoading || isNavigating ? (
-        <span className="text-gray">{isVerified ? 'Navigating...' : 'Verifying...'}</span>
-      ) : (
-        children
-      )}
+    <a href={to} onClick={handleClick} className={className}>
+      {children}
     </a>
   );
 };
@@ -323,17 +80,5 @@ export const BotProtectionStatus = () => {
     return null;
   }
 
-  const { isVerified, isLoading, error } = context;
-
-  if (!isVerified && !isLoading && !error) {
-    return null;
-  }
-
-  return (
-    <div>
-      {isVerified && <div className="text-green">✓ Verified</div>}
-      {isLoading && <div className="text-blue">Verifying...</div>}
-      {error && <div className="text-red">{error}</div>}
-    </div>
-  );
+  return null;
 };
