@@ -157,9 +157,13 @@ export const convertTime = (dateTimeString) => {
 };
 
 function stripHtml(html) {
-  let temporalDivElement = document.createElement('div');
-  temporalDivElement.innerHTML = html;
-  return temporalDivElement.textContent || temporalDivElement.innerText || '';
+  if (typeof document !== 'undefined') {
+    let temporalDivElement = document.createElement('div');
+    temporalDivElement.innerHTML = html;
+    return temporalDivElement.textContent || temporalDivElement.innerText || '';
+  } else {
+    return html;
+  }
 }
 
 export const truncateText = (text, maxLength) => {
