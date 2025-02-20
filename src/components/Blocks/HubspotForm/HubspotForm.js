@@ -163,7 +163,7 @@ const HubspotForm = ({
               }
 
               // Add reCaptcha text
-              const legalTextContainer = document.querySelector('.legal-consent-container .hs-richtext p');
+              const legalTextContainer = document.querySelector(`#${id} .legal-consent-container .hs-richtext p`);
               if (legalTextContainer) {
                 legalTextContainer.innerHTML += `
                   Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google 
