@@ -61,12 +61,9 @@ export default async function handler(req, res) {
       })
       .then((response) => {
         if (response.status !== 200) {
-          console.log('ERROR 1');
           throw new Error('Error');
         } else {
           if (response.data.errors) {
-            console.log('ERROR 2');
-
             const errorMessages = Object.keys(response.data.errors)
               .map((key) => {
                 const rawError = response.data.errors[key].join(', ');
@@ -83,7 +80,6 @@ export default async function handler(req, res) {
                 const k1 = KEY_ERROR_MSG[key];
                 const k2 = ERROR_MSG[response.data.errors[key].join(', ')];
                 if (k1 && k2) {
-                  // return `${KEY_ERROR_MSG[key]} ${ERROR_MSG[response.data.errors[key].join(', ')]}`;
                   return `${k1} ${k2}`;
                 } else {
                   return 'Er is een fout opgetreden. Probeer het later opnieuw.';
@@ -96,12 +92,10 @@ export default async function handler(req, res) {
           }
         }
 
-        console.log('SUCCESS');
         res.status(200).json({ message: 'OK' });
         return;
       });
   } catch (error) {
-    console.log('error: ', error.response);
     res.status(400).json({ message: error.message });
     return;
   }
