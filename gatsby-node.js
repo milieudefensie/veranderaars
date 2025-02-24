@@ -35,7 +35,8 @@ exports.createSchemaCustomization = ({ actions }) => {
       internal: Internal
       location: Location
       calendar: Calendar
-      hiddenAddress: Boolean      
+      hiddenAddress: Boolean     
+      web_conference_url: String 
     }
     type Calendar {
       name: String
@@ -81,8 +82,9 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
-
   const receivedToken = await accessToken.json();
+
+  // console.log('New token: ', receivedToken.access_token);
 
   for (const event of allEvents) {
     const result = await fetch(`${cslPath}/api/v1/events/${event.slug}?access_token=${receivedToken.access_token}`, {
@@ -110,6 +112,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         time_zone: eventResponse.time_zone,
         inputs: cslInputs || [],
         hiddenAddress: event.hiddenAddress,
+        web_conference_url: eventResponse.web_conference_url,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(eventResponse),

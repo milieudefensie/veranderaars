@@ -24,12 +24,12 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     image_url,
     additional_image_sizes_url,
     description,
-    raw_end,
     start_in_zone,
     end_in_zone,
     location,
     inputs = [],
     hiddenAddress = false,
+    web_conference_url,
   } = page;
   const heroImage = pageContext?.heroImage?.url || image_url;
 
@@ -85,7 +85,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
           {/* Form  */}
           <div className={`form-wrapper`}>
-            <Form event={slug} inputs={inputs} />
+            <Form event={slug} inputs={inputs} conferenceUrl={web_conference_url} />
           </div>
 
           {/* Brief information */}
@@ -187,6 +187,7 @@ export const PageQuery = graphql`
       }
       labels
       inputs
+      web_conference_url
     }
   }
 `;
