@@ -20,11 +20,15 @@ const ConferenceDistributor = ({ conferenceUrl }) => {
       const parsedUrl = new URL(url);
       const hostname = parsedUrl.hostname;
 
-      if (hostname.includes('whatsapp.com') || hostname.includes('whatsapp.net')) {
+      const allowedWhatsAppHosts = ['whatsapp.com', 'whatsapp.net'];
+      const allowedSignalHosts = ['signal.org', 'signal.group'];
+      const allowedZoomHosts = ['zoom.us'];
+
+      if (allowedWhatsAppHosts.includes(hostname)) {
         return 'WhatsApp';
-      } else if (hostname.includes('signal.org') || hostname.includes('signal.group')) {
+      } else if (allowedSignalHosts.includes(hostname)) {
         return 'Signal';
-      } else if (hostname.includes('zoom.us')) {
+      } else if (allowedZoomHosts.includes(hostname)) {
         return 'Zoom';
       } else {
         return null;
