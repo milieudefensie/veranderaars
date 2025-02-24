@@ -19,8 +19,9 @@ const ConferenceDistributor = ({ conferenceUrl }) => {
     try {
       const parsedUrl = new URL(url);
       const hostname = parsedUrl.hostname;
+      console.log({ conferenceUrl, hostname });
 
-      const allowedWhatsAppHosts = ['whatsapp.com', 'whatsapp.net'];
+      const allowedWhatsAppHosts = ['chat.whatsapp.com', 'whatsapp.com', 'whatsapp.net'];
       const allowedSignalHosts = ['signal.org', 'signal.group'];
       const allowedZoomHosts = ['zoom.us'];
 
