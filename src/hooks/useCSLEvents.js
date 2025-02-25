@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { extractNumericHour, formatCslEvents } from '../utils';
 import { DateTime } from 'luxon';
 
-function useCSLEvents(cmsEvents, cslEvents) {
+function useCSLEvents(cmsEvents, cslEvents, hideInAgendaPage = false) {
   const [mergedEvents, setMergedEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [locationOptions, setLocationOptions] = useState([]);
@@ -15,6 +15,12 @@ function useCSLEvents(cmsEvents, cslEvents) {
 
     const currentDateTime = DateTime.now().setZone('Europe/Amsterdam');
     const events = [...cmsEvents, ...mappedCSL]
+      .filter((e) => {
+        if (hideInAgendaPage) {
+          return !e.labels?.includes('exclude_in_agenda');
+        }
+        return true;
+      })
       .map((e) => {
         const isCSLEvent = e.type === 'CSL';
         let startDateWithHour = null;

@@ -40,8 +40,6 @@ const MapWrapper = ({
     setIsMobileDevice(isMobile);
 
     if (isMobile) {
-      console.log('[MAP] Is mobile');
-
       if (mobileView) {
         setViewport((prev) => ({ ...prev, zoom: 6.26, longitude: 5.5, latitude: 52 }));
         mapRef.current?.resize();

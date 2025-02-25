@@ -26,7 +26,8 @@ const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], cslHighli
 
   const { mergedEvents, setFilteredEvents, filteredEvents, locationOptions, status } = useCSLEvents(
     cmsEvents,
-    cslEvents
+    cslEvents,
+    true
   );
 
   useEffect(() => {
