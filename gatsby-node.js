@@ -191,6 +191,7 @@ exports.createPages = ({ graphql, actions }) => {
             }
             slugOfHighlightedEvent
             slugOfHighlightedEventAgenda
+            eventsHidden
           }
           pages: allDatoCmsBasicPage {
             edges {
@@ -275,6 +276,7 @@ exports.createPages = ({ graphql, actions }) => {
 
         const cslHighlightedEvent = result.data.configuration.slugOfHighlightedEvent;
         const cslHighlightedEventAgenda = result.data.configuration.slugOfHighlightedEventAgenda;
+        const cslSlugsOfEventsHidden = result.data.configuration.eventsHidden;
 
         // Create homepage
         createPage({
@@ -308,6 +310,7 @@ exports.createPages = ({ graphql, actions }) => {
               slug: listEvents.slug,
               cslHighlightedEvent: cslHighlightedEventAgenda,
               currentDate: new Date().toISOString().split('T')[0],
+              cslEventsHidden: cslSlugsOfEventsHidden,
             },
           });
         }

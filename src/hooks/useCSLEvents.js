@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { extractNumericHour, formatCslEvents } from '../utils';
 import { DateTime } from 'luxon';
 
-function useCSLEvents(cmsEvents, cslEvents, hideInAgendaPage = false) {
+function useCSLEvents(cmsEvents, cslEvents, hideInAgendaPage = false, slugsOfHiddenCSLEvents = null) {
   const [mergedEvents, setMergedEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [locationOptions, setLocationOptions] = useState([]);
@@ -12,11 +12,16 @@ function useCSLEvents(cmsEvents, cslEvents, hideInAgendaPage = false) {
     setStatus('loading');
 
     const mappedCSL = cslEvents.map(formatCslEvents);
-
     const currentDateTime = DateTime.now().setZone('Europe/Amsterdam');
+    const hiddenSlugsArray = slugsOfHiddenCSLEvents ? slugsOfHiddenCSLEvents.split(',') : [];
+
     const events = [...cmsEvents, ...mappedCSL]
       .filter((e) => {
         if (hideInAgendaPage) {
+          if (e.type === 'CSL' && hiddenSlugsArray.includes(e.slug)) {
+            return false;
+          }
+
           return !e.labels?.includes('exclude_in_agenda');
         }
         return true;
@@ -63,6 +68,8 @@ function useCSLEvents(cmsEvents, cslEvents, hideInAgendaPage = false) {
       .sort((a, b) => {
         return a.startDateToCompare - b.startDateToCompare;
       });
+
+    console.log({ events });
 
     const uniqueEvents = [];
     const slugsSeen = new Set();
