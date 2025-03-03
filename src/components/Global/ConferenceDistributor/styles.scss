@@ -6,7 +6,7 @@
   .ui-zoom-message {
     display: grid;
     grid-template-columns: 1fr 3fr;
-    gap: 20px;
+    gap: 24px;
 
     .heading {
       color: var(--dark);
@@ -15,6 +15,7 @@
       font-style: normal;
       font-weight: 600;
       line-height: 130%;
+      margin-bottom: 19px;
     }
 
     p {
@@ -35,19 +36,34 @@
 
   .ui-signal-qr {
     #signal-qr {
-      background-color: #2c6bed;
-      padding: .5rem;
+      background-color: #A3CFFF;
+      padding: 24px;
       border-radius: 10px;
+      width: 312px;
+      height: 312px;
     }
   }
 
   .ui-zoom-message {
-    grid-template-columns: auto 1fr;
-    gap: 30px;
-    align-items: center;
+    .img {
+      width: 312px;
+      height: 312px;
+      border-radius: 10px;
+      background: #2881FF;
 
-    img {
-      max-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .ui-whatsapp-qr {
+    #whatsapp-qr {
+      background-color: #D2FD68;
+      padding: 24px;
+      border-radius: 10px;
+      width: 312px;
+      height: 312px;
     }
   }
 }
@@ -71,15 +87,38 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      gap: 22px;
 
       .heading {
-        font-size: 18px !important;
-        margin-bottom: .5rem;
+        font-size: 19px !important;
+        margin-bottom: 20px;
       }
 
       p {
-        font-size: 16px;
+        font-size: 19px;
+
       }
+    }
+
+    .ui-zoom-message {
+      .img {
+        width: 100%;
+        height: 295px;
+      }
+    }
+
+    .ui-signal-qr {
+      #signal-qr {
+        width: 100%;
+        height: 295px;
+        padding: 15px;
+      }
+    }
+
+    .ui-whatsapp-qr #whatsapp-qr {
+      width: 100%;
+      height: 295px;
+      padding: 15px;
     }
   }
 }
