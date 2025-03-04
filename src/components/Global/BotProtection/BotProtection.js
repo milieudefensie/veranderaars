@@ -259,6 +259,8 @@ export const BotProtectionProvider = ({ children, turnstileMode = 'managed', onV
         )}
 
         {children}
+
+        <small>Deze website is beveiligd tegen spam met behulp van Cloudflare's Turnstile CAPTCHA. Lees hier ons <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy">privacybeleid</a>.</small>
       </div>
     </BotProtectionContext.Provider>
   );
