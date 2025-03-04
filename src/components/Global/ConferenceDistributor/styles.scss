@@ -1,0 +1,124 @@
+.ui-conference-distributor {
+  margin-top: 3rem;
+
+  .ui-whatsapp-qr,
+  .ui-signal-qr,
+  .ui-zoom-message {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 24px;
+
+    .heading {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 25px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 130%;
+      margin-bottom: 19px;
+    }
+
+    p {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 135%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+  }
+
+  .ui-signal-qr {
+    #signal-qr {
+      background-color: #A3CFFF;
+      padding: 24px;
+      border-radius: 10px;
+      width: 312px;
+      height: 312px;
+    }
+  }
+
+  .ui-zoom-message {
+    .img {
+      width: 312px;
+      height: 312px;
+      border-radius: 10px;
+      background: #2881FF;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .ui-whatsapp-qr {
+    #whatsapp-qr {
+      background-color: #D2FD68;
+      padding: 24px;
+      border-radius: 10px;
+      width: 312px;
+      height: 312px;
+    }
+  }
+}
+
+.redirect-message {
+  color: var(--dark);
+  font-family: var(--nb-secondary-font);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 135%;
+}
+
+@media screen and (max-width: 992px) {
+  .ui-conference-distributor {
+    margin-top: 1.5rem;
+
+    .ui-whatsapp-qr,
+    .ui-signal-qr,
+    .ui-zoom-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 22px;
+
+      .heading {
+        font-size: 19px !important;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 19px;
+
+      }
+    }
+
+    .ui-zoom-message {
+      .img {
+        width: 100%;
+        height: 295px;
+      }
+    }
+
+    .ui-signal-qr {
+      #signal-qr {
+        width: 100%;
+        height: 295px;
+        padding: 15px;
+      }
+    }
+
+    .ui-whatsapp-qr #whatsapp-qr {
+      width: 100%;
+      height: 295px;
+      padding: 15px;
+    }
+  }
+}
