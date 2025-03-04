@@ -67,16 +67,16 @@ const WhatsAppQR = ({ url }) => (
       value={url}
       size={200}
       imageSettings={{
-        src: '/whatsapp-icon2.svg',
+        src: '/whatsapp-icon.svg',
         x: undefined,
         y: undefined,
-        height: 50,
-        width: 50,
+        height: 30,
+        width: 30,
         opacity: 1,
         excavate: true,
       }}
-      bgColor="#000"
-      fgColor="#D2FD68"
+      bgColor="#D2FD68"
+      fgColor="#000"
     />
     <div>
       <p className="heading">Voor dit evenement is er een WhatsApp chat!</p>
