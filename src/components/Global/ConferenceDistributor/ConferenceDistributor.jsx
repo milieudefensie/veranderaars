@@ -92,16 +92,16 @@ const SignalQR = ({ url }) => (
       value={url}
       size={200}
       imageSettings={{
-        src: '/signal-icon2.svg',
+        src: '/signal-icon3.svg',
         x: undefined,
         y: undefined,
-        height: 48,
-        width: 48,
+        height: 30,
+        width: 30,
         opacity: 1,
         excavate: true,
       }}
-      bgColor="#000"
-      fgColor="#A3CFFF"
+      bgColor="#A3CFFF"
+      fgColor="#000"
     />
     <div>
       <p className="heading">Voor dit evenement is er een Signal chat!</p>
