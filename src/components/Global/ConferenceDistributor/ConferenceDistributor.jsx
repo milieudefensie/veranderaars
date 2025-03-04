@@ -23,7 +23,7 @@ const ConferenceDistributor = ({ conferenceUrl }) => {
 
       const allowedWhatsAppHosts = ['chat.whatsapp.com', 'whatsapp.com', 'whatsapp.net'];
       const allowedSignalHosts = ['signal.org', 'signal.group'];
-      const allowedZoomHosts = ['zoom.us'];
+      const allowedZoomHosts = ['zoom.us', 'us06web.zoom.us'];
 
       if (allowedWhatsAppHosts.includes(hostname)) {
         return 'WhatsApp';
