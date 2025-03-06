@@ -36,8 +36,9 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
 
           <BotProtectionProvider
             turnstileMode="managed"
-            onVerificationComplete={(success) => {
-              console.log('Verification status:', success);
+            sessionDuration={60} // Verification valid for 60 minutes
+            onVerificationComplete={(success, error) => {
+              console.log('Verification status:', success, error);
             }}
           >
             <div className="row mt-5">

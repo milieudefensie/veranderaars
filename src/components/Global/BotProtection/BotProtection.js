@@ -1,12 +1,11 @@
 // src/components/BotProtection.js
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { navigate } from 'gatsby';
-import './index.scss';
 
 // Create context for bot protection
 const BotProtectionContext = createContext(null);
 
-// Custom hook for bot detection
+// Custom hook for bot detection with improved reliability
 const useBotDetection = () => {
   const [isBot, setIsBot] = useState(false);
   const mouseMovements = useRef(0);
@@ -14,21 +13,35 @@ const useBotDetection = () => {
   const clickIntervals = useRef([]);
   const pageLoadTime = useRef(Date.now());
   const firstInteractionTime = useRef(null);
+  const detectionComplete = useRef(false);
 
   useEffect(() => {
-    // Check for common bot characteristics
-    const suspicious = {
-      hasWebdriver: navigator?.webdriver,
-      hasLanguages: !navigator?.languages,
-      hasWebGL: !window?.WebGLRenderingContext,
-    };
+    // Wait for browser to fully initialize before running detection
+    const initTimeout = setTimeout(() => {
+      // Basic browser feature detection (more reliable)
+      try {
+        const suspicious = {
+          hasWebdriver: navigator?.webdriver === true,
+          noLanguages: !navigator?.languages || navigator.languages.length === 0,
+          hasNoCanvas: !window?.HTMLCanvasElement,
+        };
+        
+        const suspiciousCount = Object.values(suspicious).filter(Boolean).length;
+        if (suspiciousCount >= 2) {
+          setIsBot(true);
+        }
+        detectionComplete.current = true;
+      } catch (err) {
+        console.error("Detection error:", err);
+        // On error, don't flag as bot to prevent false positives
+        detectionComplete.current = true;
+      }
+    }, 500); // Give browser time to initialize properly
 
-    const suspiciousCount = Object.values(suspicious).filter(Boolean).length;
-    if (suspiciousCount >= 2) {
-      setIsBot(true);
-      return;
-    }
+    return () => clearTimeout(initTimeout);
+  }, []);
 
+  useEffect(() => {
     // Track first interaction time
     const handleFirstInteraction = () => {
       if (!firstInteractionTime.current) {
@@ -36,10 +49,14 @@ const useBotDetection = () => {
       }
     };
 
-    // Track mouse movements
+    // Track mouse movements with debounce to avoid performance issues
+    let moveTimer;
     const handleMouseMove = () => {
-      mouseMovements.current += 1;
-      handleFirstInteraction();
+      clearTimeout(moveTimer);
+      moveTimer = setTimeout(() => {
+        mouseMovements.current += 1;
+        handleFirstInteraction();
+      }, 50);
     };
 
     // Track click patterns
@@ -49,235 +66,454 @@ const useBotDetection = () => {
       if (lastClickTime.current !== 0) {
         const interval = currentTime - lastClickTime.current;
         clickIntervals.current.push(interval);
-
-        if (clickIntervals.current.length > 3) {
-          const isConsistent = checkClickConsistency(clickIntervals.current);
-          if (isConsistent) {
-            setIsBot(true);
-          }
-        }
       }
       lastClickTime.current = currentTime;
     };
 
-    // Track scroll events
-    const handleScroll = () => {
-      handleFirstInteraction();
-    };
-
     // Add event listeners
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('click', handleClick);
-    document.addEventListener('scroll', handleScroll);
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
+    document.addEventListener('click', handleClick, { passive: true });
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('click', handleClick);
-      document.removeEventListener('scroll', handleScroll);
+      clearTimeout(moveTimer);
     };
   }, []);
 
-  return {
+  // Create a stable API to return
+  return useCallback(() => ({
     isBot,
+    isDetectionComplete: detectionComplete.current,
     mouseMovements: mouseMovements.current,
-    timeOnPage: () => Date.now() - pageLoadTime.current,
+    timeOnPage: Date.now() - pageLoadTime.current,
     firstInteractionTime: firstInteractionTime.current,
-  };
+  }), [isBot]);
 };
 
-// Custom hook for Turnstile
+// Improved Turnstile hook with better error handling
 const useTurnstile = (mode = 'managed') => {
   const [turnstileLoaded, setTurnstileLoaded] = useState(false);
   const [token, setToken] = useState(null);
+  const [loadError, setLoadError] = useState(null);
   const widgetId = useRef(null);
   const containerRef = useRef(null);
+  const attempts = useRef(0);
 
+  // Load Turnstile script
   useEffect(() => {
-    // Load Turnstile script
+    // Check if script is already loaded
+    if (document.querySelector('script[src*="turnstile"]')) {
+      setTurnstileLoaded(true);
+      return;
+    }
+
     const script = document.createElement('script');
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
     script.async = true;
     script.defer = true;
-    script.onload = () => setTurnstileLoaded(true);
+    
+    script.onload = () => {
+      setTurnstileLoaded(true);
+      setLoadError(null);
+    };
+    
+    script.onerror = (err) => {
+      console.error('Failed to load Turnstile:', err);
+      setLoadError('Failed to load security verification');
+    };
+    
     document.body.appendChild(script);
 
     return () => {
-      document.body.removeChild(script);
-      if (widgetId.current) {
-        window.turnstile?.remove(widgetId.current);
+      // Only remove if we added it
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
       }
     };
   }, []);
 
+  // Initialize Turnstile when ready
   useEffect(() => {
-    if (turnstileLoaded && containerRef.current) {
-      const siteKey = process.env.GATSBY_TURNSTILE_SITE_KEY;
+    // Ensure container, turnstile loaded, and window.turnstile exists
+    if (!turnstileLoaded || !containerRef.current || !window.turnstile) {
+      return;
+    }
 
+    // Clear any existing widget
+    if (widgetId.current) {
+      try {
+        window.turnstile.remove(widgetId.current);
+      } catch (err) {
+        console.warn('Failed to remove Turnstile widget:', err);
+      }
+    }
+
+    const siteKey = process.env.GATSBY_TURNSTILE_SITE_KEY;
+    if (!siteKey) {
+      console.error('Missing Turnstile site key');
+      setLoadError('Security configuration error');
+      return;
+    }
+    
+    try {
       const commonOptions = {
         sitekey: siteKey,
-        callback: (token) => setToken(token),
-        'refresh-expired': 'auto',
-        retry: 'auto',
+        callback: (returnedToken) => {
+          setToken(returnedToken);
+          attempts.current = 0; // Reset attempts on success
+        },
+        'expired-callback': () => {
+          console.log('Turnstile token expired');
+          setToken(null);
+        },
+        'error-callback': (error) => {
+          console.error('Turnstile error:', error);
+          setToken(null);
+        },
       };
 
-      switch (mode) {
-        case 'invisible':
-          widgetId.current = window.turnstile.render(containerRef.current, {
-            ...commonOptions,
-            appearance: 'invisible',
-          });
-          break;
-        case 'managed':
-          widgetId.current = window.turnstile.render(containerRef.current, {
-            ...commonOptions,
-            theme: 'light',
-          });
-          break;
-        // Interactive mode doesn't render immediately
+      // Use different options based on mode
+      if (mode === 'invisible') {
+        widgetId.current = window.turnstile.render(containerRef.current, {
+          ...commonOptions,
+          appearance: 'invisible',
+          execution: 'execute',
+        });
+      } else if (mode === 'managed') {
+        widgetId.current = window.turnstile.render(containerRef.current, {
+          ...commonOptions,
+          theme: 'light',
+        });
       }
+    } catch (err) {
+      console.error('Failed to render Turnstile:', err);
+      setLoadError(`Security verification error: ${err.message}`);
     }
   }, [turnstileLoaded, mode]);
 
   const executeTurnstile = useCallback(async () => {
-    if (!turnstileLoaded) return null;
-
-    if (mode === 'invisible' || mode === 'interactive') {
-      return new Promise((resolve) => {
-        window.turnstile.ready(() => {
-          window.turnstile.invoke({
-            sitekey: process.env.GATSBY_TURNSTILE_SITE_KEY,
-            callback: (token) => {
-              setToken(token);
-              resolve(token);
-            },
-          });
-        });
-      });
+    attempts.current += 1;
+    
+    // If we already have a token, return it
+    if (token) return token;
+    
+    // Prevent too many consecutive attempts
+    if (attempts.current > 3) {
+      throw new Error('Too many verification attempts. Please reload the page.');
     }
-    return token; // For managed mode, return existing token
-  }, [turnstileLoaded, mode, token]);
+
+    // Check if Turnstile is loaded
+    if (!window.turnstile) {
+      throw new Error('Security verification not loaded');
+    }
+
+    return new Promise((resolve, reject) => {
+      let timeoutId;
+      
+      try {
+        // Execute or reset based on mode
+        if (mode === 'invisible' || mode === 'interactive') {
+          window.turnstile.execute(widgetId.current, {
+            callback: (newToken) => {
+              clearTimeout(timeoutId);
+              setToken(newToken);
+              resolve(newToken);
+            },
+            'error-callback': (error) => {
+              clearTimeout(timeoutId);
+              reject(new Error(`Verification failed: ${error}`));
+            }
+          });
+        } else {
+          // For managed mode, we need to wait for user interaction
+          window.turnstile.reset(widgetId.current);
+          
+          // Setup watcher for token
+          const checkToken = () => {
+            if (token) {
+              clearTimeout(timeoutId);
+              resolve(token);
+            } else {
+              timeoutId = setTimeout(checkToken, 500);
+            }
+          };
+          checkToken();
+        }
+        
+        // Set a timeout to prevent hanging
+        timeoutId = setTimeout(() => {
+          reject(new Error('Verification timed out'));
+        }, 30000);
+      } catch (err) {
+        clearTimeout(timeoutId);
+        reject(new Error(`Verification error: ${err.message}`));
+      }
+    });
+  }, [token, mode]);
 
   const resetTurnstile = useCallback(() => {
-    if (widgetId.current) {
-      window.turnstile.reset(widgetId.current);
-      setToken(null);
+    if (widgetId.current && window.turnstile) {
+      try {
+        window.turnstile.reset(widgetId.current);
+        setToken(null);
+      } catch (err) {
+        console.warn('Failed to reset Turnstile:', err);
+      }
     }
   }, []);
 
-  return { containerRef, token, executeTurnstile, resetTurnstile };
+  return { 
+    containerRef, 
+    token, 
+    executeTurnstile, 
+    resetTurnstile, 
+    turnstileLoaded,
+    loadError 
+  };
 };
 
-// Provider component that will wrap your page
-export const BotProtectionProvider = ({ children, turnstileMode = 'managed', onVerificationComplete }) => {
-  const [isVerified, setIsVerified] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { isBot, mouseMovements, timeOnPage, firstInteractionTime } = useBotDetection();
-  const { containerRef, token, executeTurnstile, resetTurnstile } = useTurnstile(turnstileMode);
+// Provider component with improved reliability
+export const BotProtectionProvider = ({ 
+  children, 
+  turnstileMode = 'invisible',
+  onVerificationComplete,
+  sessionDuration = 30  // Minutes the verification remains valid
+}) => {
+  const [verificationState, setVerificationState] = useState({
+    isVerified: false,
+    isLoading: false,
+    error: null,
+    lastVerified: null
+  });
+  
+  const getBotInfo = useBotDetection();
+  const { 
+    containerRef, 
+    token, 
+    executeTurnstile, 
+    resetTurnstile,
+    loadError
+  } = useTurnstile(turnstileMode);
+
+  // Initialize from session storage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const storedVerification = JSON.parse(sessionStorage.getItem('botVerification'));
+      
+      if (storedVerification && typeof storedVerification === 'object') {
+        const { isVerified, lastVerified } = storedVerification;
+        
+        // Check if verification is still valid (not expired)
+        if (isVerified && lastVerified) {
+          const now = Date.now();
+          const expiresAt = lastVerified + (sessionDuration * 60 * 1000);
+          
+          if (now < expiresAt) {
+            setVerificationState(prev => ({
+              ...prev,
+              isVerified: true,
+              lastVerified
+            }));
+            return;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to restore verification state:', err);
+    }
+  }, [sessionDuration]);
+
+  // Save to session storage when verification state changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (verificationState.isVerified) {
+      const storeValue = {
+        isVerified: true,
+        lastVerified: verificationState.lastVerified || Date.now()
+      };
+      sessionStorage.setItem('botVerification', JSON.stringify(storeValue));
+    }
+  }, [verificationState.isVerified, verificationState.lastVerified]);
+
+  // If Turnstile has a load error, show it
+  useEffect(() => {
+    if (loadError) {
+      setVerificationState(prev => ({
+        ...prev,
+        error: loadError
+      }));
+    }
+  }, [loadError]);
 
   const verifyHuman = async () => {
-    if (isVerified) return true;
-    if (isBot) {
-      setError('Access denied - suspicious behavior detected');
-      return false;
-    }
-
-    setIsLoading(true);
-    setError(null);
+    // Return true immediately if already verified
+    if (verificationState.isVerified) return true;
+    
+    setVerificationState(prev => ({
+      ...prev,
+      isLoading: true,
+      error: null
+    }));
 
     try {
+      // Get current bot detection info
+      const botInfo = getBotInfo();
+      
+      // Skip further checks if detected as bot
+      if (botInfo.isBot) {
+        throw new Error('Access denied - suspicious behavior detected');
+      }
+
+      // Wait for detection to complete
+      if (!botInfo.isDetectionComplete) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
       // Execute Turnstile verification
-      const turnstileToken = turnstileMode === 'managed' ? token : await executeTurnstile();
+      const turnstileToken = turnstileMode === 'managed' 
+        ? token 
+        : await executeTurnstile();
 
       if (!turnstileToken) {
-        throw new Error('Klik op de checkbox hierboven.');
+        throw new Error('Please complete the security check');
       }
 
-      // Call the Netlify function
-      const response = await fetch('/.netlify/functions/verify-human', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          clientData: {
-            userAgent: navigator.userAgent,
-            languages: navigator.languages,
-            platform: navigator.platform,
-            screenResolution: `${window.screen.width}x${window.screen.height}`,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            mouseMovements,
-            timeOnPage: timeOnPage(),
-            firstInteractionTime,
-          },
-          turnstileToken,
-        }),
-      });
+      // Call the Netlify function with added retry logic
+      let response;
+      let retries = 0;
+      const maxRetries = 2;
+      
+      while (retries <= maxRetries) {
+        try {
+          response = await fetch('/.netlify/functions/verify-human', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              clientData: {
+                userAgent: navigator.userAgent,
+                languages: navigator.languages,
+                platform: navigator.platform,
+                screenResolution: `${window.screen.width}x${window.screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                mouseMovements: botInfo.mouseMovements,
+                timeOnPage: botInfo.timeOnPage,
+                firstInteractionTime: botInfo.firstInteractionTime,
+              },
+              turnstileToken,
+            }),
+          });
+          
+          // If successful, break the retry loop
+          if (response.ok) break;
+          
+          // If server error, retry
+          if (response.status >= 500) {
+            retries++;
+            await new Promise(r => setTimeout(r, 1000 * retries));
+          } else {
+            // Client errors shouldn't be retried
+            break;
+          }
+        } catch (err) {
+          // Network errors should be retried
+          retries++;
+          if (retries > maxRetries) throw err;
+          await new Promise(r => setTimeout(r, 1000 * retries));
+        }
+      }
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      // Process the response
+      if (!response || !response.ok) {
+        const data = response ? await response.json() : { error: 'Network error' };
         throw new Error(data.error || 'Verification failed');
       }
-
-      setIsVerified(true);
+      
+      // Success path
+      const now = Date.now();
+      setVerificationState({
+        isVerified: true,
+        isLoading: false,
+        error: null,
+        lastVerified: now
+      });
+      
       onVerificationComplete?.(true);
       return true;
     } catch (error) {
       console.error('Verification failed:', error);
-      setError(error.message);
+      
+      setVerificationState({
+        isVerified: false,
+        isLoading: false,
+        error: error.message,
+        lastVerified: null
+      });
+      
       resetTurnstile();
-      onVerificationComplete?.(false);
+      onVerificationComplete?.(false, error.message);
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const contextValue = {
-    isVerified,
-    isLoading,
-    error,
+    ...verificationState,
     verifyHuman,
+    resetVerification: () => {
+      setVerificationState({
+        isVerified: false,
+        isLoading: false,
+        error: null,
+        lastVerified: null
+      });
+      resetTurnstile();
+      sessionStorage.removeItem('botVerification');
+    }
   };
 
   return (
     <BotProtectionContext.Provider value={contextValue}>
-      <div>
+      <div className="space-y-4">
         {/* Turnstile container */}
-        {!isVerified && turnstileMode === 'managed' && <div ref={containerRef} className="turnstile-container" />}
-        {!isVerified && turnstileMode === 'invisible' && <div ref={containerRef} style={{ display: 'none' }} />}
-
+        {!verificationState.isVerified && turnstileMode === 'managed' && (
+          <div ref={containerRef} className="turnstile-container my-4" />
+        )}
+        {!verificationState.isVerified && turnstileMode === 'invisible' && (
+          <div ref={containerRef} style={{ display: 'none' }} />
+        )}
+        
         {/* Error message */}
-        {error && (
+        {verificationState.error && !verificationState.isLoading && (
+          // <div className="text-red-500 p-2 text-sm" role="alert">
+          //   {verificationState.error}
+          // </div>
           <div className="text-red" role="alert">
-            {error} - Gaat er iets mis? Stuur een mailtje naar{' '}
-            <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">
-              doemee@milieudefensie.nl
-            </a>
+          {verificationState.error} - Gaat er iets mis? Stuur een mailtje naar{' '}
+          <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">
+            doemee@milieudefensie.nl
+          </a>
+        </div>
+        )}
+        
+        {/* Loading indicator when first verifying */}
+        {verificationState.isLoading && !verificationState.isVerified && (
+          <div className="text-blue-600 p-2 text-sm">
+            Verifying your browser...
           </div>
         )}
-
+        
         {children}
-
-        <small>Deze website is beveiligd tegen spam met behulp van Cloudflare's Turnstile CAPTCHA. Lees hier ons <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy">privacybeleid</a>.</small>
       </div>
     </BotProtectionContext.Provider>
   );
 };
 
-// Helper functions
-const checkClickConsistency = (intervals) => {
-  const mean = intervals.reduce((a, b) => a + b) / intervals.length;
-  const variance =
-    intervals.reduce((sum, interval) => {
-      return sum + Math.pow(interval - mean, 2);
-    }, 0) / intervals.length;
-  return variance < 50; // Suspiciously consistent if true
-};
-
-// Main Protected Link component
-export const ProtectedLink = ({ to, children, className = '' }) => {
+// Simplified Protected Link component
+export const ProtectedLink = ({ to, children, className = '', onClick }) => {
   const context = useContext(BotProtectionContext);
   const [isNavigating, setIsNavigating] = useState(false);
 
@@ -289,6 +525,14 @@ export const ProtectedLink = ({ to, children, className = '' }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    
+    // Execute custom onClick if provided
+    if (onClick) {
+      onClick(e);
+      // If preventDefault() was called in the onClick handler, respect it
+      if (e.defaultPrevented) return;
+    }
+    
     setIsNavigating(true);
 
     try {
@@ -305,37 +549,52 @@ export const ProtectedLink = ({ to, children, className = '' }) => {
     <a
       href={to}
       onClick={handleClick}
-      className={`${className} ${isLoading || isNavigating ? 'opacity-50 cursor-wait' : ''}`}
+      className={`${className} ${(isLoading || isNavigating) ? 'opacity-50 cursor-wait' : ''}`}
       aria-disabled={isLoading || isNavigating}
     >
-      {isLoading || isNavigating ? (
-        <span className="text-gray">{isVerified ? 'Navigating...' : 'Verifying...'}</span>
-      ) : (
-        children
+      {children}
+      {(isNavigating) && !isVerified && (
+        <span className="inline-block ml-2 text-gray-600 text-sm">
+          Verifying...
+        </span>
       )}
     </a>
   );
 };
 
-// Optional: Loading indicator component
-export const BotProtectionStatus = () => {
+// Status indicator component
+export const BotProtectionStatus = ({ className = '' }) => {
   const context = useContext(BotProtectionContext);
 
   if (!context) {
     return null;
   }
 
-  const { isVerified, isLoading, error } = context;
+  const { isVerified, isLoading, error, resetVerification } = context;
 
   if (!isVerified && !isLoading && !error) {
     return null;
   }
 
   return (
-    <div>
-      {isVerified && <div className="text-green">✓ Verified</div>}
-      {isLoading && <div className="text-blue">Verifying...</div>}
-      {error && <div className="text-red">{error}</div>}
+    <div className={`fixed bottom-4 right-4 p-4 bg-white rounded-lg z-50 ${className}`}>
+      {isVerified && (
+        <div className="text-green-600 flex items-center">
+          <span className="mr-2 text-green-600">✓ geverifieerd</span>
+          {/* <button 
+            onClick={resetVerification}
+            className="text-xs text-gray-500 hover:text-gray-700"
+          >
+            Reset
+          </button> */}
+        </div>
+      )}
+      {isLoading && (
+        <div className="text-blue-600">Verifying...</div>
+      )}
+      {error && (
+        <div className="text-red-600">{error}</div>
+      )}
     </div>
   );
 };
