@@ -314,8 +314,7 @@ exports.createPages = ({ graphql, actions }) => {
 
         const redirects = result.data.redirects.edges;
         redirects.forEach(({ node }) => {
-          // Only create redirect if both paths are defined
-          if (node.sourcePath && node.destinationPath) {
+          if (typeof node.sourcePath === 'string' && typeof node.destinationPath === 'string') {
             createRedirect({
               fromPath: node.sourcePath,
               toPath: node.destinationPath,
@@ -327,14 +326,6 @@ exports.createPages = ({ graphql, actions }) => {
             console.warn(`Skipping invalid redirect: ${JSON.stringify(node)}`);
           }
         });
-        // for (const node of redirects) {
-        //   createRedirect({
-        //     fromPath: node.sourcePath,
-        //     toPath: node.destinationPath,
-        //     statusCode: parseInt(node.statusCode),
-        //     isPermanent: node.statusCode === "301",
-        //   });
-        // }
 
         // create the pages
         const pages = result.data.pages.edges;
