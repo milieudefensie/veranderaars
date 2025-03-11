@@ -26,7 +26,7 @@
     "@netlify/functions": "^2.8.2",
     "@sparticuz/chromium": "^126.0.0",
     "@types/mapbox-gl": "^2.7.19",
-    "axios": "^1.7.7",
+    "axios": "^1.7.8",
     "chromium": "^3.0.3",
     "datocms-search": "^0.1.10",
     "dotenv": "16.3.1",
