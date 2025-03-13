@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import { detectService } from '../../../utils';
 
 import './styles.scss';
 
-const ConferenceDistributor = ({ conferenceUrl }) => {
-  const [isMobile, setIsMobile] = useState(false);
+const ConferenceDistributor = ({ conferenceUrl2 }) => {
+  const conferenceUrl = 'https://chat.whatsapp.com';
+
+  const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
     const checkDevice = () => {
@@ -12,32 +15,9 @@ const ConferenceDistributor = ({ conferenceUrl }) => {
       const isMobileDevice = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent);
       setIsMobile(isMobileDevice);
     };
-    checkDevice();
+    // checkDevice();
   }, []);
 
-  const detectService = (url) => {
-    try {
-      const parsedUrl = new URL(url);
-      const hostname = parsedUrl.hostname;
-      console.log({ conferenceUrl, hostname });
-
-      const allowedWhatsAppHosts = ['chat.whatsapp.com', 'whatsapp.com', 'whatsapp.net'];
-      const allowedSignalHosts = ['signal.org', 'signal.group'];
-      const allowedZoomHosts = ['zoom.us', 'us06web.zoom.us'];
-
-      if (allowedWhatsAppHosts.includes(hostname)) {
-        return 'WhatsApp';
-      } else if (allowedSignalHosts.includes(hostname)) {
-        return 'Signal';
-      } else if (allowedZoomHosts.includes(hostname)) {
-        return 'Zoom';
-      } else {
-        return null;
-      }
-    } catch (error) {
-      return null;
-    }
-  };
   const service = detectService(conferenceUrl);
 
   if (!service) {
@@ -46,15 +26,21 @@ const ConferenceDistributor = ({ conferenceUrl }) => {
   }
 
   if (isMobile && (service === 'WhatsApp' || service === 'Signal')) {
-    window.location.href = conferenceUrl;
-    return <p className="redirect-message">Doorverwijzen naar {service}...</p>;
+    return (
+      <p className="redirect-message">
+        <p className="heading">Voor dit evenement is er een {service} chat!</p>
+        <a className="wp-btn" href={conferenceUrl} target="_blank">
+          WhatsApp op desktop starten
+        </a>
+      </p>
+    );
   }
 
   return (
     <section className="ui-conference-distributor">
       {service === 'WhatsApp' && !isMobile && <WhatsAppQR url={conferenceUrl} />}
       {service === 'Signal' && !isMobile && <SignalQR url={conferenceUrl} />}
-      {service === 'Zoom' && <ZoomMessage />}
+      {service === 'Zoom' && <ZoomMessage url={conferenceUrl} />}
     </section>
   );
 };
@@ -75,12 +61,14 @@ const WhatsAppQR = ({ url }) => (
         opacity: 1,
         excavate: true,
       }}
-      bgColor="#D2FD68"
-      fgColor="#000"
+      bgColor="#F5F5F5"
     />
     <div>
       <p className="heading">Voor dit evenement is er een WhatsApp chat!</p>
       <p>Scan de QR code met je telefoon om op de hoogte gehouden te worden van de actie</p>
+      <a className="wp-btn" href={url} target="_blank">
+        WhatsApp op desktop starten
+      </a>
     </div>
   </div>
 );
@@ -100,8 +88,7 @@ const SignalQR = ({ url }) => (
         opacity: 1,
         excavate: true,
       }}
-      bgColor="#A3CFFF"
-      fgColor="#000"
+      bgColor="#F5F5F5"
     />
     <div>
       <p className="heading">Voor dit evenement is er een Signal chat!</p>
@@ -116,7 +103,7 @@ const SignalQR = ({ url }) => (
   </div>
 );
 
-const ZoomMessage = () => (
+const ZoomMessage = ({ url }) => (
   <div className="ui-zoom-message">
     <div className="img">
       <svg xmlns="http://www.w3.org/2000/svg" width="200" height="45" viewBox="0 0 200 45" fill="none">
@@ -137,7 +124,13 @@ const ZoomMessage = () => (
     </div>
     <div>
       <p className="heading">Dit is een online evenement.</p>
-      <p>Je ontvangt de zoomlink in je mail!</p>
+      <p className="link">
+        Hier is de link om mee te doen: <br />
+        <a href={url} target="_blank">
+          {url}
+        </a>
+      </p>
+      <p className="extra">Deze link is ook naar uw e-mailadres verzonden</p>
     </div>
   </div>
 );

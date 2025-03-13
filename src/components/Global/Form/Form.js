@@ -114,7 +114,8 @@ const Form = ({ event, inputs = [], conferenceUrl = null }) => {
   const hasErrors = Object.values(errors).some((e) => e);
   const isLoading = status === 'loading';
 
-  if (conferenceUrl && status === 'success') {
+  // if (conferenceUrl && status === 'success') {
+  if (true) {
     return <ConferenceDistributor conferenceUrl={conferenceUrl} />;
   }
 
