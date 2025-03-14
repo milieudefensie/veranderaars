@@ -13,7 +13,7 @@ import Link from '../components/Global/Link/Link';
 import backBtnIcon from '../components/Icons/back-btn.svg';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
-import { formatDate } from '../utils';
+import { formatDate, isArray } from '../utils';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 
 import './basic.styles.scss';
@@ -50,29 +50,31 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
       <WrapperLayout variant="white event-detail">
-        <FormSteps
-          title={title}
-          description={introduction}
-          bgImageUrl={image?.url}
-          form={formSteps}
-          variant="green"
-          headerComponents={
-            <>
-              {listEvent && (
-                <div className="pre-header">
-                  <div className="back-btn">
-                    <Link to={listEvent}>
-                      <img src={backBtnIcon} alt="Back button icon" />
-                      <span>Alle evenementen</span>
-                    </Link>
-                  </div>
+        {isArray(formSteps) && (
+          <FormSteps
+            title={title}
+            description={introduction}
+            bgImageUrl={image?.url}
+            form={formSteps}
+            variant="green"
+            headerComponents={
+              <>
+                {listEvent && (
+                  <div className="pre-header">
+                    <div className="back-btn">
+                      <Link to={listEvent}>
+                        <img src={backBtnIcon} alt="Back button icon" />
+                        <span>Alle evenementen</span>
+                      </Link>
+                    </div>
 
-                  {Array.isArray(tags) && <TagList tags={tags} />}
-                </div>
-              )}
-            </>
-          }
-        />
+                    {Array.isArray(tags) && <TagList tags={tags} />}
+                  </div>
+                )}
+              </>
+            }
+          />
+        )}
 
         <FloatLayout reduceOverlap>
           {/* Brief information */}

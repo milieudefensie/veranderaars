@@ -3,7 +3,7 @@ import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 
 import './styles.scss';
 
-const FormSteps = ({ title, description, bgImageUrl, form, variant, headerComponents }) => {
+const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
   const { firstForm, secondForm, legalText, secondStepIntroduction } = form[0];
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -43,9 +43,20 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, headerCompon
               {...firstForm}
               onFormSubmitted={handleOnFirstStepSubmitted}
               style={variant ? variant : 'purple'}
+              extraLogic={(ctx) => {
+                extraLogic && extraLogic(ctx);
+              }}
             />
           ) : (
-            <HubspotForm key={currentStep} {...secondForm} extraLogic={initializeSecondStepForm} style="gray" />
+            <HubspotForm
+              key={currentStep}
+              {...secondForm}
+              extraLogic={(ctx) => {
+                extraLogic && extraLogic(ctx);
+                initializeSecondStepForm(ctx);
+              }}
+              style="gray"
+            />
           )}
         </div>
         <div className="image-container">

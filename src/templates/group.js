@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 import emailIcon from '../components/Icons/email.svg';
@@ -12,12 +11,12 @@ import wpIcon from '../components/Icons/wp-icon.svg';
 import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/Link';
 import backBtnIcon from '../components/Icons/back-btn.svg';
-import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
-import { mapCmsEvents, mapCslEvents } from '../utils';
+import { isArray, mapCmsEvents, mapCslEvents } from '../utils';
 import useCSLEvents from '../hooks/useCSLEvents';
+import FormSteps from '../components/Global/FormSteps/FormSteps';
 
 import './basic.styles.scss';
 
@@ -37,6 +36,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
     relatedEvents = [],
     localGroupId,
     alternativeHero = false,
+    formSteps,
   } = page;
 
   useEffect(() => {
@@ -72,32 +72,35 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
     <Layout heroBgColor={image ? '' : 'green'}>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="white">
-        <HeroBasic image={image} overlay={alternativeHero || false} alternative={alternativeHero} />
+      <WrapperLayout variant="white event-detail">
+        {isArray(formSteps) && (
+          <FormSteps
+            title={title}
+            description={introduction}
+            bgImageUrl={image?.url}
+            form={formSteps}
+            variant="green"
+            headerComponents={
+              <>
+                {listGroup && (
+                  <div className="pre-header">
+                    <div className="back-btn">
+                      <Link to={listGroup}>
+                        <img src={backBtnIcon} alt="Back button icon" />
+                        <span>Bekijk alle groepen</span>
+                      </Link>
+                    </div>
+
+                    {Array.isArray(tags) && <TagList tags={tags} />}
+                  </div>
+                )}
+              </>
+            }
+            extraLogic={hubspotFormSetGroupId}
+          />
+        )}
+
         <FloatLayout reduceOverlap alternative={alternativeHero}>
-          {listGroup && (
-            <div className="pre-header">
-              <div className="back-btn">
-                <Link to={listGroup}>
-                  <img src={backBtnIcon} alt="Back button icon" />
-                  <span>Bekijk alle groepen</span>
-                </Link>
-              </div>
-
-              {Array.isArray(tags) && <TagList tags={tags} />}
-            </div>
-          )}
-
-          {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
-          {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
-
-          {/* Form  */}
-          {registrationForm && (
-            <div className="form-wrapper">
-              <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
-            </div>
-          )}
-
           {/* Brief information */}
           {(email || whatsappGroup || organizer) && (
             <div className="brief-information">
@@ -275,6 +278,9 @@ export const PageQuery = graphql`
       organizer
       introduction
       alternativeHero
+      formSteps {
+        ...FormStepBlock
+      }
       registrationForm {
         ... on DatoCmsHubspot {
           formId
