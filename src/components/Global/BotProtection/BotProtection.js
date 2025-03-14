@@ -504,7 +504,7 @@ export const BotProtectionProvider = ({
           // <div className="text-red-500 p-2 text-sm" role="alert">
           //   {verificationState.error}
           // </div>
-          <div className="text-red" role="alert" style={{ display: 'none' }}>
+          <div className="text-red d-none" role="alert">
             {verificationState.error}
           </div>
         )}
@@ -579,8 +579,6 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
 export const BotProtectionStatus = ({ className = '' }) => {
   const [isOpen, setIsOpen] = useState(true);
   const context = useContext(BotProtectionContext);
-
-  console.log('context', context);
 
   if (!context) {
     return null;
