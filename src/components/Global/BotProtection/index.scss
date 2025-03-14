@@ -68,3 +68,9 @@
     font-size: 20px;
   }
 }
+
+@media screen and (max-width: 767px) {
+  .verification-error {
+    font-size: 0.75rem;
+  }
+}

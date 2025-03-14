@@ -604,7 +604,7 @@ export const BotProtectionStatus = ({ className = '' }) => {
         </div>
       )}
       {isLoading && (
-        <div className="text-blue-600 d-none">Verifying...</div>
+        <div className="text-blue-600 d-none">Verifiëren...</div>
       )}
       {error && (
         <div className={`popup-overlay ${isOpen ? 'popup-active' : ''}`}>
@@ -619,6 +619,9 @@ export const BotProtectionStatus = ({ className = '' }) => {
                 <ProtectedLink to={buttonClicked} className="custom-btn custom-btn-primary w-100 mb-4">
                   WhatsApp starten
                 </ProtectedLink>
+                {isLoading && (
+                  <div className="text-blue-600">Verifiëren...</div>
+                )}
                 {/*error*/}Gaat er iets mis? Stuur een mailtje naar<br />
                 <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">doemee@milieudefensie.nl</a>
             </div>
