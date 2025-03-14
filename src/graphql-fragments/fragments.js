@@ -758,4 +758,30 @@ export const DatoCMS = graphql`
       }
     }
   }
+
+  fragment FormStepBlock on DatoCmsForm2Step {
+    id
+    firstForm {
+      ... on DatoCmsHubspot {
+        id
+        formId
+        region
+        portalId
+        columns
+        trackErrors
+      }
+    }
+    secondForm {
+      ... on DatoCmsHubspot {
+        id
+        formId
+        region
+        portalId
+        columns
+        trackErrors
+      }
+    }
+    legalText
+    secondStepIntroduction
+  }
 `;

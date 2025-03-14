@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 import dateIcon from '../components/Icons/calendar-date.svg';
@@ -12,10 +11,10 @@ import wpIcon from '../components/Icons/wp-icon.svg';
 import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/Link';
 import backBtnIcon from '../components/Icons/back-btn.svg';
-import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import { formatDate } from '../utils';
+import FormSteps from '../components/Global/FormSteps/FormSteps';
 
 import './basic.styles.scss';
 
@@ -28,12 +27,11 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
     hourEnd,
     date,
     address,
-    registrationForm,
-    formBackgroundColor,
     shareMessage,
     image,
     content,
     tags = [],
+    formSteps,
   } = page;
 
   const [shareWpText, setShareWpText] = useState('');
@@ -51,32 +49,32 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
     <Layout>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="white">
-        <HeroBasic image={image} overlay={false} />
+      <WrapperLayout variant="white event-detail">
+        <FormSteps
+          title={title}
+          description={introduction}
+          bgImageUrl={image?.url}
+          form={formSteps}
+          variant="green"
+          headerComponents={
+            <>
+              {listEvent && (
+                <div className="pre-header">
+                  <div className="back-btn">
+                    <Link to={listEvent}>
+                      <img src={backBtnIcon} alt="Back button icon" />
+                      <span>Alle evenementen</span>
+                    </Link>
+                  </div>
+
+                  {Array.isArray(tags) && <TagList tags={tags} />}
+                </div>
+              )}
+            </>
+          }
+        />
 
         <FloatLayout reduceOverlap>
-          {listEvent && (
-            <div className="pre-header">
-              <div className="back-btn">
-                <Link to={listEvent}>
-                  <img src={backBtnIcon} alt="Back button icon" />
-                  <span>Alle evenementen</span>
-                </Link>
-              </div>
-
-              {Array.isArray(tags) && <TagList tags={tags} />}
-            </div>
-          )}
-
-          {title && <h1 className="main-heading">{title}</h1>}
-
-          {/* Form  */}
-          {registrationForm && (
-            <div className={`form-wrapper ${formBackgroundColor}`}>
-              <HubspotForm {...registrationForm} style={`${formBackgroundColor === 'dark-green' ? '' : 'event'}`} />
-            </div>
-          )}
-
           {/* Brief information */}
           <div className="brief-information">
             <div className="metadata">
@@ -149,6 +147,9 @@ export const PageQuery = graphql`
       address
       region
       shareMessage
+      formSteps {
+        ...FormStepBlock
+      }
       registrationForm {
         ... on DatoCmsHubspot {
           formId
@@ -167,7 +168,6 @@ export const PageQuery = graphql`
       }
       introduction
       image {
-        gatsbyImageData
         url
       }
       content {
