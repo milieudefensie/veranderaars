@@ -13,6 +13,7 @@ const HubspotForm = ({
   style = 'default',
   columns,
   extraLogic = null,
+  onFormSubmitted,
 }) => {
   return (
     <>
@@ -173,7 +174,10 @@ const HubspotForm = ({
               }
 
               // Custom logic if needed
-              if (extraLogic) extraLogic();
+              if (extraLogic) extraLogic(ctx);
+            },
+            onFormSubmitted: ($form, data) => {
+              onFormSubmitted && onFormSubmitted($form, data);
             },
           });
         }}

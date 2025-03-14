@@ -3,7 +3,6 @@ import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
-import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import backBtnIcon from '../components/Icons/back-btn.svg';
 import Link from '../components/Global/Link/Link';
@@ -24,7 +23,6 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     image_url,
     additional_image_sizes_url,
     description,
-    raw_end,
     start_in_zone,
     end_in_zone,
     location,
@@ -66,28 +64,31 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
         <meta name="twitter:card" content="summary_large_image" />
       </SeoDatoCMS>
 
-      <WrapperLayout variant="white">
-        <HeroBasic image={{ url: heroImage }} overlay={false} external />
+      <WrapperLayout variant="white event-detail">
+        <div className={`form-wrapper`}>
+          <Form
+            title={title}
+            event={slug}
+            inputs={inputs}
+            image={heroImage}
+            headerComponents={
+              <>
+                {listEvent && (
+                  <div className="pre-header">
+                    <div className="back-btn">
+                      <Link to={listEvent}>
+                        <img src={backBtnIcon} alt="Back button icon" />
+                        <span>Alle evenementen</span>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </>
+            }
+          />
+        </div>
 
         <FloatLayout reduceOverlap>
-          {listEvent && (
-            <div className="pre-header">
-              <div className="back-btn">
-                <Link to={listEvent}>
-                  <img src={backBtnIcon} alt="Back button icon" />
-                  <span>Alle evenementen</span>
-                </Link>
-              </div>
-            </div>
-          )}
-
-          {title && <h1 className="main-heading">{title}</h1>}
-
-          {/* Form  */}
-          <div className={`form-wrapper`}>
-            <Form event={slug} inputs={inputs} />
-          </div>
-
           {/* Brief information */}
           <div className="brief-information">
             <div className="metadata">

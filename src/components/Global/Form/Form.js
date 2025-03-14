@@ -3,7 +3,7 @@ import { navigate } from 'gatsby';
 
 import './styles.scss';
 
-const Form = ({ event, inputs = [] }) => {
+const Form = ({ title, event, inputs = [], image, headerComponents }) => {
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
   const [formData, setFormData] = useState({
@@ -16,6 +16,8 @@ const Form = ({ event, inputs = [] }) => {
     slug: event,
   });
   const [errors, setErrors] = useState({});
+  const [currentStep, setCurrentStep] = useState(0);
+  const isFirstStep = currentStep === 0;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,19 +86,18 @@ const Form = ({ event, inputs = [] }) => {
     }
 
     try {
-      const submit = await fetch('/api/submit-form', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const response = await submit.json();
-      if (submit.status !== 200) {
-        setStatus('fail');
-        setErrorMsg(response.message);
-      } else {
-        navigate('/bedankt-dat-je-komt/');
-      }
+      // const submit = await fetch('/api/submit-form', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(formData),
+      // });
+      // const response = await submit.json();
+      // if (submit.status !== 200) {
+      //   setStatus('fail');
+      //   setErrorMsg(response.message);
+      // } else {
+      //   navigate('/bedankt-dat-je-komt/');
+      // }
     } catch (error) {
       setStatus('error');
       console.error(error);
@@ -108,225 +109,304 @@ const Form = ({ event, inputs = [] }) => {
     return inputs.some((input) => input.includes(`name="attendee[${fieldName}]"`));
   };
 
+  const handleOnFirstStepSubmitted = (e) => {
+    e.preventDefault();
+    setCurrentStep(1);
+
+    // focus input
+    setTimeout(() => {
+      const nameInput = document.querySelector('#firstName');
+      console.log({ nameInput });
+
+      if (nameInput) nameInput.focus();
+    }, 100);
+  };
+
   const hasErrors = Object.values(errors).some((e) => e);
   const isLoading = status === 'loading';
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="custom-form">
-        {isFieldPresent('first_name') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="firstName">
-              <span>Voornaam</span>
-              <span className="required">*</span>
-            </label>
+    <div className="container">
+      {headerComponents}
 
-            <div className="input">
-              <input
-                id="firstName"
-                name="firstName"
-                type="text"
-                className={`input ${errors.firstName ? 'error' : ''} `}
-                inputMode="text"
-                autoComplete="off"
-                onChange={handleChange}
-              />
-            </div>
-
-            {errors.firstName && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.firstName}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        {isFieldPresent('last_name') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="lastName">
-              <span>Achternaam</span>
-              <span className="required">*</span>
-            </label>
-
-            <div className="input">
-              <input
-                id="lastName"
-                name="lastName"
-                type="text"
-                className={`input ${errors.lastName ? 'error' : ''} `}
-                inputMode="text"
-                autoComplete="off"
-                onChange={handleChange}
-              />
-            </div>
-
-            {errors.lastName && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.lastName}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        {isFieldPresent('postcode') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="postcode">
-              <span>Postcode</span>
-              <span className="required">*</span>
-            </label>
-
-            <div className="input">
-              <input
-                id="postcode"
-                name="postcode"
-                type="text"
-                className={`input ${errors.postcode ? 'error' : ''} `}
-                inputMode="text"
-                autoComplete="off"
-                onChange={handleChange}
-              />
-            </div>
-
-            {errors.postcode && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.postcode}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        {isFieldPresent('email') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="email">
-              <span>E-mail</span>
-              <span className="required">*</span>
-            </label>
-
-            <div className="input">
-              <input
-                id="email"
-                name="email"
-                type="text"
-                className={`input ${errors.email ? 'error' : ''} `}
-                inputMode="text"
-                autoComplete="off"
-                onChange={handleChange}
-              />
-            </div>
-
-            {errors.email && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        {isFieldPresent('phone_number') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="phone">
-              <span>Telefoonnummer</span>
-            </label>
-
-            <div className="input">
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                className={`input ${errors.phone ? 'error' : ''} `}
-                inputMode="tel"
-                autoComplete="off"
-                required={false}
-                onChange={handleChange}
-              />
-            </div>
-
-            {errors.phone && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        <div className="form-field-checkbox" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-          <fieldset>
-            <legend>Ik wil emails ontvangen over de beweging</legend>
-
-            <div className="options">
-              <div className="opt">
-                <input
-                  type="radio"
-                  id="consent_email_yes"
-                  name="consent_email"
-                  value="yes"
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="consent_email_yes">Ja</label>
-              </div>
-
-              <div className="opt">
-                <input
-                  type="radio"
-                  id="consent_email_no"
-                  name="consent_email"
-                  value="no"
-                  onChange={handleChange}
-                  required
-                />
-                <label htmlFor="consent_email_no">Nee</label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-
-        <input
-          type="submit"
-          value={isLoading ? 'Sending...' : 'Ik ben er bij!'}
-          className={`send-btn ${hasErrors ? 'disabled' : ''}`}
-          disabled={hasErrors || isLoading}
-        />
-
-        <div className="legal-consent-container">
+      <div className={`ui-form-steps ${isFirstStep ? 'green first-step' : 'second-step'}`}>
+        <div className="metadata">
+          <h1>{isFirstStep ? title : 'Bijna klaar...'}</h1>
           <p>
-            Als we je mogen mailen, dan houden we je op de hoogte over onze beweging en acties bij jou in de buurt. Als
-            je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze{' '}
-            <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy">privacybepaling</a> voor alle details.
+            Lorem ipsum dolor sit amet consectetur. Commodo aenean scelerisque non gravida mauris eu ornare turpis duis.
+            Donec eget vestibulum mattis nibh est gravida.
           </p>
 
-          {/* <p className="recaptcha-text">
-            Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google{' '}
-            <a href="https://policies.google.com/privacy">privacybeleid</a> en{' '}
-            <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.
-          </p> */}
-        </div>
-      </form>
+          {isFirstStep ? (
+            <>
+              <form className="custom-form first" onSubmit={handleOnFirstStepSubmitted}>
+                {isFieldPresent('email') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="email">
+                      <span>E-mail</span>
+                      <span className="required">*</span>
+                    </label>
 
-      {/* Error messages */}
-      {status === 'fail' && errorMsg && (
-        <div className="error-wrapper">
-          <ul>
-            {errorMsg
-              .split(';')
-              .filter((str) => str.trim().length) // Avoid empty fields
-              .map((e) => (
-                <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
-              ))}
-          </ul>
+                    <div className="input">
+                      <input
+                        id="email"
+                        name="email"
+                        type="text"
+                        className={`input ${errors.email ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.email && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                <input
+                  type="submit"
+                  value={isLoading ? 'Sending...' : 'Ik ben er bij!'}
+                  className={`send-btn ${hasErrors ? 'disabled' : ''}`}
+                  disabled={hasErrors || isLoading}
+                />
+              </form>
+
+              {/* Error messages */}
+              {status === 'fail' && errorMsg && (
+                <div className="error-wrapper white">
+                  <ul>
+                    {errorMsg
+                      .split(';')
+                      .filter((str) => str.trim().length) // Avoid empty fields
+                      .map((e) => (
+                        <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className="custom-form second">
+                {isFieldPresent('email') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="email">
+                      <span>E-mail</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="email"
+                        name="email"
+                        type="text"
+                        className={`input ${errors.email ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.email && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {isFieldPresent('first_name') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="firstName">
+                      <span>Voornaam</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        className={`input ${errors.firstName ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.firstName && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.firstName}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {isFieldPresent('last_name') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="lastName">
+                      <span>Achternaam</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        className={`input ${errors.lastName ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.lastName && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.lastName}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {isFieldPresent('postcode') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="postcode">
+                      <span>Postcode</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="postcode"
+                        name="postcode"
+                        type="text"
+                        className={`input ${errors.postcode ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.postcode && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.postcode}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {isFieldPresent('phone_number') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="phone">
+                      <span>Telefoonnummer</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        className={`input ${errors.phone ? 'error' : ''} `}
+                        inputMode="tel"
+                        autoComplete="off"
+                        required={false}
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.phone && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                <div className="form-field-checkbox" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                  <fieldset>
+                    <legend>Ik wil emails ontvangen over de beweging</legend>
+
+                    <div className="options">
+                      <div className="opt">
+                        <input
+                          type="radio"
+                          id="consent_email_yes"
+                          name="consent_email"
+                          value="yes"
+                          onChange={handleChange}
+                          required
+                        />
+                        <label htmlFor="consent_email_yes">Ja</label>
+                      </div>
+
+                      <div className="opt">
+                        <input
+                          type="radio"
+                          id="consent_email_no"
+                          name="consent_email"
+                          value="no"
+                          onChange={handleChange}
+                          required
+                        />
+                        <label htmlFor="consent_email_no">Nee</label>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+
+                <input
+                  type="submit"
+                  value={isLoading ? 'Sending...' : 'Ik ben er bij!'}
+                  className={`send-btn ${hasErrors ? 'disabled' : ''}`}
+                  disabled={hasErrors || isLoading}
+                />
+              </form>
+
+              {/* Error messages */}
+              {status === 'fail' && errorMsg && (
+                <div className="error-wrapper">
+                  <ul>
+                    {errorMsg
+                      .split(';')
+                      .filter((str) => str.trim().length) // Avoid empty fields
+                      .map((e) => (
+                        <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          )}
         </div>
-      )}
-    </>
+        <div className="image-container">
+          <img src={image} />
+        </div>
+      </div>
+      <div
+        className="legal-text"
+        dangerouslySetInnerHTML={{
+          __html:
+            '<p>We willen je graag op de hoogte houden over onze beweging en acties bij jou in de buurt via je ingevulde e-mailadres. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen.</p>',
+        }}
+      />
+    </div>
   );
 };
 
