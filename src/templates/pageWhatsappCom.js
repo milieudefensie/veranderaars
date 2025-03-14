@@ -41,6 +41,7 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
               console.log('Verification status:', success, error);
             }}
           >
+            <BotProtectionStatus />
             <div className="row mt-5">
               {ctaBlocks.map((block, index) => {
                 if (block.__typename === 'DatoCmsBlockCta') {
@@ -54,8 +55,6 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
                 }
               })}
             </div>
-
-            <BotProtectionStatus />
           </BotProtectionProvider>
         </FloatLayout>
       </div>
