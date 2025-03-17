@@ -691,6 +691,10 @@
     form .legal-consent-container .hs-dependent-field span {
       color: var(--white);
     }
+
+    form .hs-submit .actions .hs-button:hover {
+      color: var(--white);
+    }
   }
 
   &.gray {
