@@ -629,6 +629,20 @@
             letter-spacing: 0.5px;
           }
         }
+
+        // Error messages
+        .hs-error-msgs.inputs-list {
+
+          label,
+          label a {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: 0.5px;
+            color: #B3261E !important;
+            cursor: pointer;
+          }
+        }
       }
 
       .hs-submit .actions .hs-button {
@@ -664,18 +678,6 @@
             font-weight: 400;
             line-height: 150%;
           }
-        }
-      }
-
-      // Error messages
-      .hs-error-msgs {
-        label a {
-          font-size: 14px;
-          font-weight: 400;
-          line-height: 24px;
-          letter-spacing: 0.5px;
-          color: #B3261E !important;
-          cursor: pointer;
         }
       }
     }
