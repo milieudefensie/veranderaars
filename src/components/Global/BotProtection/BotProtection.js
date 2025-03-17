@@ -617,7 +617,7 @@ export const BotProtectionStatus = ({ className = '' }) => {
             </span>
             <div className='verification-error my-4'>
                 <ProtectedLink to={buttonClicked} className="custom-btn custom-btn-primary w-100 mb-4">
-                  WhatsApp starten
+                Open WhatsApp
                 </ProtectedLink>
                 {isLoading && (
                   <div className="text-blue-600">Verifiëren...</div>
