@@ -638,6 +638,7 @@
         transition: all .25s ease;
 
         &:hover {
+          color: var(--dark);
           background-color: transparent;
         }
       }
@@ -673,7 +674,7 @@
           font-weight: 400;
           line-height: 24px;
           letter-spacing: 0.5px;
-          color: #FF0000 !important;
+          color: #B3261E !important;
           cursor: pointer;
         }
       }
@@ -685,6 +686,10 @@
     form .hs-form-field .hs-error-msgs.inputs-list label.hs-error-msg,
     form .hs-form-field .hs-error-msgs label a {
       color: var(--white) !important;
+    }
+
+    form .legal-consent-container .hs-dependent-field span {
+      color: var(--white);
     }
   }
 
@@ -760,7 +765,7 @@
           font-weight: 400;
           line-height: 24px;
           letter-spacing: 0.5px;
-          color: #FF0000 !important;
+          color: #B3261E !important;
           cursor: pointer;
         }
       }
@@ -773,6 +778,10 @@
         label span {
           color: var(--dark);
         }
+      }
+
+      .legal-consent-container .hs-dependent-field span {
+        color: var(--dark);
       }
     }
   }

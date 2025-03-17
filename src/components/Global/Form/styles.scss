@@ -218,6 +218,7 @@
       transition: all .25s ease;
 
       &:hover {
+        color: var(--dark);
         background-color: transparent;
       }
     }
