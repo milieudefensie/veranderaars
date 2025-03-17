@@ -4,10 +4,9 @@ import { detectService } from '../../../utils';
 
 import './styles.scss';
 
-const ConferenceDistributor = ({ conferenceUrl2 }) => {
-  const conferenceUrl = 'https://chat.whatsapp.com';
-
-  const [isMobile, setIsMobile] = useState(true);
+const ConferenceDistributor = ({ conferenceUrl }) => {
+  // const conferenceUrl = 'https://chat.whatsapp.com';
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkDevice = () => {
@@ -15,7 +14,7 @@ const ConferenceDistributor = ({ conferenceUrl2 }) => {
       const isMobileDevice = /android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent);
       setIsMobile(isMobileDevice);
     };
-    // checkDevice();
+    checkDevice();
   }, []);
 
   const service = detectService(conferenceUrl);
@@ -25,12 +24,12 @@ const ConferenceDistributor = ({ conferenceUrl2 }) => {
     return null;
   }
 
-  if (isMobile && (service === 'WhatsApp' || service === 'Signal')) {
+  if (isMobile && service === 'WhatsApp') {
     return (
       <p className="redirect-message">
         <p className="heading">Voor dit evenement is er een {service} chat!</p>
         <a className="wp-btn" href={conferenceUrl} target="_blank">
-          WhatsApp op desktop starten
+          WhatsApp openen
         </a>
       </p>
     );
@@ -125,12 +124,11 @@ const ZoomMessage = ({ url }) => (
     <div>
       <p className="heading">Dit is een online evenement.</p>
       <p className="link">
-        Hier is de link om mee te doen: <br />
+        We hebben de video call link ook naar je e-mail adres gestuurd:{' '}
         <a href={url} target="_blank">
           {url}
         </a>
       </p>
-      <p className="extra">Deze link is ook naar uw e-mailadres verzonden</p>
     </div>
   </div>
 );

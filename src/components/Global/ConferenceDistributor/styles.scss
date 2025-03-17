@@ -125,12 +125,39 @@
 }
 
 .redirect-message {
-  color: var(--dark);
-  font-family: var(--nb-secondary-font);
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 135%;
+  .heading {
+    color: var(--dark);
+    font-family: var(--nb-secondary-font);
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    margin-bottom: 20px;
+  }
+
+  .wp-btn {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    background-color: var(--nb-primary-color);
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.35);
+    border: 2px solid var(--dark);
+    color: var(--dark);
+    font-family: var(--nb-secondary-font);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+
+    &:hover {
+      background: #BA6900;
+    }
+  }
 }
 
 @media screen and (max-width: 992px) {
