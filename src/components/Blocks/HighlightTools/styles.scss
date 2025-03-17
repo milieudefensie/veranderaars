@@ -1,4 +1,4 @@
-.highlight-tools-section {
+.highlight-tools-section2 {
   margin-top: 50px;
   padding-bottom: 115px;
 
@@ -34,7 +34,7 @@
     }
   }
 
-  &+.highlight-tools-section {
+  &+.highlight-tools-section2 {
     margin-top: 0;
     padding-bottom: 60px;
   }
@@ -118,7 +118,7 @@
 }
 
 @media screen and (max-width: 992px) {
-  .highlight-tools-section {
+  .highlight-tools-section2 {
     padding-bottom: 30px;
     margin-top: 20px;
 
