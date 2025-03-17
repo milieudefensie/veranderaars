@@ -84,6 +84,11 @@
       margin: 0;
       padding: 0;
       margin-bottom: 30px;
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+      word-wrap: break-word;
     }
 
     .introduction {
