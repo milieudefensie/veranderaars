@@ -45,6 +45,7 @@
     "lru-cache": "^10.1.0",
     "luxon": "^3.4.4",
     "mapbox-gl": "^3.0.1",
+    "netlify-cli": "^19.0.2",
     "node-fetch": "^3.3.2",
     "path": "^0.12.7",
     "puppeteer": "^23.10.0",

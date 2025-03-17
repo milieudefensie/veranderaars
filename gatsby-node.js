@@ -63,6 +63,17 @@ exports.createSchemaCustomization = ({ actions }) => {
     }
   `;
   createTypes(externalEvent);
+
+  const typeDefs = `
+    type DatoCmsRedirect implements Node {
+      sourcePath: String!
+      destinationPath: String!
+      statusCode: String!
+      active: Boolean!
+    }
+  `;
+  
+  createTypes(typeDefs);
 };
 
 exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
@@ -164,7 +175,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 };
 
 exports.createPages = ({ graphql, actions }) => {
-  const { createPage, createSlice } = actions;
+  const { createPage, createSlice, createRedirect } = actions;
 
   createSlice({ id: `header`, component: require.resolve(`./src/components/Layout/Header.js`) });
   createSlice({ id: `footer`, component: require.resolve(`./src/components/Layout/Footer/Footer.js`) });
@@ -194,6 +205,7 @@ exports.createPages = ({ graphql, actions }) => {
             }
             slugOfHighlightedEvent
             slugOfHighlightedEventAgenda
+            eventsHidden
           }
           pages: allDatoCmsBasicPage {
             edges {
@@ -269,6 +281,17 @@ exports.createPages = ({ graphql, actions }) => {
             slug
             title
           }
+
+          redirects: allDatoCmsRedirect(filter: {active: {eq: true}}) {
+            edges {
+              node {
+                sourcePath
+                destinationPath
+                statusCode
+              }
+            }
+          }
+
         }
       `).then((result) => {
         if (result.errors) {
@@ -278,6 +301,7 @@ exports.createPages = ({ graphql, actions }) => {
 
         const cslHighlightedEvent = result.data.configuration.slugOfHighlightedEvent;
         const cslHighlightedEventAgenda = result.data.configuration.slugOfHighlightedEventAgenda;
+        const cslSlugsOfEventsHidden = result.data.configuration.eventsHidden;
 
         // Create homepage
         createPage({
@@ -286,6 +310,24 @@ exports.createPages = ({ graphql, actions }) => {
           context: {
             cslHighlightedEvent: cslHighlightedEvent,
           },
+        });
+
+        // Debug output - check what's coming from the API
+        console.log("Redirects data:", JSON.stringify(result.data.redirects, null, 2));
+
+        const redirects = result.data.redirects.edges;
+        redirects.forEach(({ node }) => {
+          if (typeof node.sourcePath === 'string' && typeof node.destinationPath === 'string') {
+            createRedirect({
+              fromPath: node.sourcePath,
+              toPath: node.destinationPath,
+              statusCode: parseInt(node.statusCode || "301"),
+              isPermanent: (node.statusCode || "301") === "301",
+            });
+            console.log(`Created redirect: ${node.sourcePath} → ${node.destinationPath}`);
+          } else {
+            console.warn(`Skipping invalid redirect: ${JSON.stringify(node)}`);
+          }
         });
 
         // create the pages
@@ -311,6 +353,7 @@ exports.createPages = ({ graphql, actions }) => {
               slug: listEvents.slug,
               cslHighlightedEvent: cslHighlightedEventAgenda,
               currentDate: new Date().toISOString().split('T')[0],
+              cslEventsHidden: cslSlugsOfEventsHidden,
             },
           });
         }

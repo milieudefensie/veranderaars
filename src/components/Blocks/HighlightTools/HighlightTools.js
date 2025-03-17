@@ -9,7 +9,7 @@ const HighlightTools = ({ block }) => {
   const numColumns = items.length % 3 === 0 ? 3 : items.length % 2 === 0 ? 2 : 3;
 
   return (
-    <section className="highlight-tools-section">
+    <section className="highlight-tools-section2">
       {sectionTitle && (
         <div className="header">
           <h3>{sectionTitle}</h3>

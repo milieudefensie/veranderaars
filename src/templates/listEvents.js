@@ -14,7 +14,7 @@ import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/St
 
 import './list-basic.styles.scss';
 
-const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], cslHighlightEvent, favicon } }) => {
+const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], cslHighlightEvent, favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
@@ -26,7 +26,9 @@ const ListEvents = ({ data: { page, allEvents = [], allCSLEvents = [], cslHighli
 
   const { mergedEvents, setFilteredEvents, filteredEvents, locationOptions, status } = useCSLEvents(
     cmsEvents,
-    cslEvents
+    cslEvents,
+    true,
+    pageContext?.cslEventsHidden
   );
 
   useEffect(() => {
