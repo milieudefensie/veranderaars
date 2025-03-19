@@ -5,7 +5,6 @@ import { detectService } from '../../../utils';
 import './styles.scss';
 
 const ConferenceDistributor = ({ conferenceUrl }) => {
-  // const conferenceUrl = 'https://chat.whatsapp.com';
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -66,7 +65,7 @@ const WhatsAppQR = ({ url }) => (
       <p className="heading">Voor dit evenement is er een WhatsApp chat!</p>
       <p>Scan de QR code met je telefoon om op de hoogte gehouden te worden van de actie</p>
       <a className="wp-btn" href={url} target="_blank">
-        WhatsApp op desktop starten
+        Open WhatsApp op deze computer
       </a>
     </div>
   </div>
@@ -124,7 +123,7 @@ const ZoomMessage = ({ url }) => (
     <div>
       <p className="heading">Dit is een online evenement.</p>
       <p className="link">
-        We hebben de video call link ook naar je e-mail adres gestuurd:{' '}
+        We hebben de video call link ook naar je e-mailadres gestuurd:{' '}
         <a href={url} target="_blank">
           {url}
         </a>
