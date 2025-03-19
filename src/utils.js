@@ -338,3 +338,26 @@ export const formatCslEvents = (e) => {
     type: 'CSL',
   };
 };
+
+export const detectService = (url) => {
+  try {
+    const parsedUrl = new URL(url);
+    const hostname = parsedUrl.hostname;
+
+    const allowedWhatsAppHosts = ['chat.whatsapp.com', 'whatsapp.com', 'whatsapp.net'];
+    const allowedSignalHosts = ['signal.org', 'signal.group'];
+    const allowedZoomHosts = ['zoom.us', 'us06web.zoom.us'];
+
+    if (allowedWhatsAppHosts.includes(hostname)) {
+      return 'WhatsApp';
+    } else if (allowedSignalHosts.includes(hostname)) {
+      return 'Signal';
+    } else if (allowedZoomHosts.includes(hostname)) {
+      return 'Zoom';
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+};

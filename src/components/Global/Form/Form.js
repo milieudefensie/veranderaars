@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { navigate } from 'gatsby';
+import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributor';
 
 import './styles.scss';
 
-const Form = ({ event, inputs = [] }) => {
+const Form = ({ event, inputs = [], conferenceUrl = null }) => {
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
   const [formData, setFormData] = useState({
@@ -95,8 +96,12 @@ const Form = ({ event, inputs = [] }) => {
         setStatus('fail');
         setErrorMsg(response.message);
       } else {
-        navigate('/bedankt-dat-je-komt/');
+        if (!conferenceUrl) {
+          navigate('/bedankt-dat-je-komt/');
+        }
       }
+
+      setStatus('success');
     } catch (error) {
       setStatus('error');
       console.error(error);
@@ -110,6 +115,10 @@ const Form = ({ event, inputs = [] }) => {
 
   const hasErrors = Object.values(errors).some((e) => e);
   const isLoading = status === 'loading';
+
+  if (conferenceUrl && status === 'success') {
+    return <ConferenceDistributor conferenceUrl={conferenceUrl} />;
+  }
 
   return (
     <>
@@ -304,12 +313,6 @@ const Form = ({ event, inputs = [] }) => {
             je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze{' '}
             <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy">privacybepaling</a> voor alle details.
           </p>
-
-          {/* <p className="recaptcha-text">
-            Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google{' '}
-            <a href="https://policies.google.com/privacy">privacybeleid</a> en{' '}
-            <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.
-          </p> */}
         </div>
       </form>
 

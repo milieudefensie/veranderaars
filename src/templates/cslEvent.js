@@ -8,7 +8,7 @@ import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import backBtnIcon from '../components/Icons/back-btn.svg';
 import Link from '../components/Global/Link/Link';
 import { ReactSVG } from 'react-svg';
-import { formatDate, formatDateCSL } from '../utils';
+import { detectService, formatDate, formatDateCSL } from '../utils';
 import dateIcon from '../components/Icons/calendar-date.svg';
 import hourIcon from '../components/Icons/calendar-hour.svg';
 import locationIcon from '../components/Icons/calendar-location.svg';
@@ -24,12 +24,12 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     image_url,
     additional_image_sizes_url,
     description,
-    raw_end,
     start_in_zone,
     end_in_zone,
     location,
     inputs = [],
     hiddenAddress = false,
+    web_conference_url,
   } = page;
   const heroImage = pageContext?.heroImage?.url || image_url;
 
@@ -48,6 +48,9 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
   if (additional_image_sizes_url) {
     mainImage = additional_image_sizes_url.find((i) => i.style === 'original');
   }
+
+  const conferenceType = detectService(web_conference_url);
+  const isConferenceWp = conferenceType === 'WhatsApp';
 
   return (
     <Layout>
@@ -85,7 +88,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
           {/* Form  */}
           <div className={`form-wrapper`}>
-            <Form event={slug} inputs={inputs} />
+            <Form event={slug} inputs={inputs} conferenceUrl={web_conference_url} />
           </div>
 
           {/* Brief information */}
@@ -116,7 +119,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
               )}
             </div>
 
-            {shareWpText && (
+            {!isConferenceWp && shareWpText && (
               <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
                 <span>Deel op WhatsApp</span>
                 <ReactSVG src={wpIcon} alt="Wp icon" />
@@ -187,6 +190,7 @@ export const PageQuery = graphql`
       }
       labels
       inputs
+      web_conference_url
     }
   }
 `;
