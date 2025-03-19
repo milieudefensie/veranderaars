@@ -29,7 +29,7 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
   };
 
   return (
-    <div className="container">
+    <div className="container container-steps">
       {headerComponents}
       <div
         className={`ui-form-steps ${variant && isFirstStep ? variant : ''} ${isFirstStep ? 'first-step' : 'second-step'}`}

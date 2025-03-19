@@ -136,7 +136,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
   }
 
   return (
-    <div className="container">
+    <div className="container container-steps">
       {headerComponents}
 
       <div className={`ui-form-steps ${isFirstStep ? 'green first-step agenda' : 'second-step'}`}>
