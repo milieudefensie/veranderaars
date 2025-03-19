@@ -174,6 +174,7 @@ export const PageQuery = graphql`
         value
         blocks {
           __typename
+          ...BlockEmbedIframe
           ... on DatoCmsNarrativeBlock {
             id: originalId
             title
