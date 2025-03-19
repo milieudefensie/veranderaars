@@ -1,0 +1,222 @@
+.ui-conference-distributor {
+  margin-top: 3rem;
+
+  .ui-whatsapp-qr,
+  .ui-signal-qr,
+  .ui-zoom-message {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 24px;
+
+    .heading {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 25px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 130%;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 135%;
+      margin-bottom: 30px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+  }
+
+  .ui-signal-qr {
+    #signal-qr {
+      background: #F5F5F5;
+      padding: 44px;
+      border-radius: 10px;
+      width: 312px;
+      height: 312px;
+    }
+
+    p {
+      margin-bottom: 5px;
+    }
+  }
+
+  .ui-zoom-message {
+    .img {
+      width: 312px;
+      height: 312px;
+      border-radius: 10px;
+      background: #2881FF;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heading {
+      margin-bottom: 29px;
+    }
+
+    .link {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 165%;
+      margin-bottom: 10px;
+
+      a {
+        font-weight: 600;
+      }
+    }
+
+    .extra {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 135%;
+    }
+  }
+
+  .ui-whatsapp-qr {
+    #whatsapp-qr {
+      background: #F5F5F5;
+      padding: 44px;
+      border-radius: 10px;
+      width: 312px;
+      height: 312px;
+    }
+
+    .wp-btn {
+      display: block;
+      width: 100%;
+      padding: 19px 20px 15px 20px;
+      background-color: var(--nb-primary-color);
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.35);
+      border: 2px solid var(--dark);
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 100%;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+
+      &:hover {
+        background: #BA6900;
+      }
+    }
+  }
+}
+
+.redirect-message {
+  .heading {
+    color: var(--dark);
+    font-family: var(--nb-secondary-font);
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    margin-bottom: 20px;
+  }
+
+  .wp-btn {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    background-color: var(--nb-primary-color);
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.35);
+    border: 2px solid var(--dark);
+    color: var(--dark);
+    font-family: var(--nb-secondary-font);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+
+    &:hover {
+      background: #BA6900;
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .ui-conference-distributor {
+    margin-top: 1.5rem;
+
+    .ui-whatsapp-qr,
+    .ui-signal-qr,
+    .ui-zoom-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 22px;
+
+      .heading {
+        font-size: 19px !important;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 19px;
+
+      }
+    }
+
+    .ui-zoom-message {
+      .img {
+        width: 100%;
+        height: 295px;
+      }
+
+      .link {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      .extra {
+        font-size: 15px;
+      }
+    }
+
+    .ui-signal-qr {
+      #signal-qr {
+        width: 100%;
+        height: 295px;
+        padding: 15px;
+      }
+    }
+
+    .ui-whatsapp-qr {
+      #whatsapp-qr {
+        width: 100%;
+        height: 295px;
+        padding: 15px;
+      }
+
+      .wp-btn {
+        display: none;
+      }
+    }
+  }
+}

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { navigate } from 'gatsby';
+import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributor';
 
 import './styles.scss';
 
-const Form = ({ title, event, inputs = [], image, headerComponents }) => {
+const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUrl = null }) => {
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
   const [formData, setFormData] = useState({
@@ -91,13 +92,18 @@ const Form = ({ title, event, inputs = [], image, headerComponents }) => {
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(formData),
       // });
+
       // const response = await submit.json();
       // if (submit.status !== 200) {
       //   setStatus('fail');
       //   setErrorMsg(response.message);
       // } else {
-      //   navigate('/bedankt-dat-je-komt/');
+      //   if (!conferenceUrl) {
+      //     navigate('/bedankt-dat-je-komt/');
+      //   }
       // }
+
+      setStatus('success');
     } catch (error) {
       setStatus('error');
       console.error(error);
@@ -124,6 +130,10 @@ const Form = ({ title, event, inputs = [], image, headerComponents }) => {
 
   const hasErrors = Object.values(errors).some((e) => e);
   const isLoading = status === 'loading';
+
+  if (conferenceUrl && status === 'success') {
+    return <ConferenceDistributor conferenceUrl={conferenceUrl} />;
+  }
 
   return (
     <div className="container">
