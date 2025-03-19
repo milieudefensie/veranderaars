@@ -129,7 +129,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents }) => {
     <div className="container">
       {headerComponents}
 
-      <div className={`ui-form-steps ${isFirstStep ? 'green first-step' : 'second-step'}`}>
+      <div className={`ui-form-steps ${isFirstStep ? 'green first-step agenda' : 'second-step'}`}>
         <div className="metadata">
           <h1>{isFirstStep ? title : 'Bijna klaar...'}</h1>
           <p>
@@ -193,7 +193,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents }) => {
             </>
           ) : (
             <>
-              <form onSubmit={handleSubmit} className="custom-form second">
+              <form onSubmit={handleSubmit} className="custom-form second second-step">
                 {isFieldPresent('email') && (
                   <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
                     <label className="custom-label" htmlFor="email">
@@ -400,7 +400,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents }) => {
         </div>
       </div>
       <div
-        className="legal-text"
+        className={`legal-text ${isFirstStep ? 'first-step' : 'second-step'}`}
         dangerouslySetInnerHTML={{
           __html:
             '<p>We willen je graag op de hoogte houden over onze beweging en acties bij jou in de buurt via je ingevulde e-mailadres. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen.</p>',

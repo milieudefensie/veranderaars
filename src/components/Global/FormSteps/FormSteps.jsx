@@ -63,7 +63,10 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
           <img src={bgImageUrl} />
         </div>
       </div>
-      <div className="legal-text" dangerouslySetInnerHTML={{ __html: legalText }} />
+      <div
+        className={`legal-text ${isFirstStep ? 'first-step' : 'second-step'}`}
+        dangerouslySetInnerHTML={{ __html: legalText }}
+      />
     </div>
   );
 };

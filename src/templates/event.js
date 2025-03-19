@@ -56,7 +56,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
             description={introduction}
             bgImageUrl={image?.url}
             form={formSteps}
-            variant="green"
+            variant="green agenda"
             headerComponents={
               <>
                 {listEvent && (

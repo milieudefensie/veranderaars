@@ -79,7 +79,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
             description={introduction}
             bgImageUrl={image?.url}
             form={formSteps}
-            variant="green"
+            variant="green group"
             headerComponents={
               <>
                 {listGroup && (
