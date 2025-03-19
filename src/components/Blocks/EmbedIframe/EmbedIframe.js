@@ -8,10 +8,12 @@ function EmbedIframe({ content }) {
     if (containerRef.current) {
       const scripts = containerRef.current.getElementsByTagName('script');
       for (let script of scripts) {
-        const newScript = document.createElement('script');
-        newScript.src = script.src;
-        newScript.async = true;
-        document.body.appendChild(newScript);
+        if (script.src && !document.querySelector(`script[src="${script.src}"]`)) {
+          const newScript = document.createElement('script');
+          newScript.src = script.src;
+          newScript.async = true;
+          document.body.appendChild(newScript);
+        }
       }
     }
   }, [content]);
