@@ -1,6 +1,7 @@
 // src/components/BotProtection.js
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { navigate } from 'gatsby';
+import './index.scss';
 
 // Create context for bot protection
 const BotProtectionContext = createContext(null);
@@ -284,8 +285,16 @@ export const BotProtectionProvider = ({
     isVerified: false,
     isLoading: false,
     error: null,
-    lastVerified: null
+    lastVerified: null,
+    buttonClicked: null
   });
+
+  const setButtonClicked = (value) => {
+    setVerificationState(prev => ({
+      ...prev,
+      buttonClicked: value
+    }));
+  };
   
   const getBotInfo = useBotDetection();
   const { 
@@ -439,7 +448,8 @@ export const BotProtectionProvider = ({
         isVerified: true,
         isLoading: false,
         error: null,
-        lastVerified: now
+        lastVerified: now,
+        buttonClicked: null
       });
       
       onVerificationComplete?.(true);
@@ -451,7 +461,8 @@ export const BotProtectionProvider = ({
         isVerified: false,
         isLoading: false,
         error: error.message,
-        lastVerified: null
+        lastVerified: null,
+        buttonClicked: verificationState.buttonClicked
       });
       
       resetTurnstile();
@@ -463,12 +474,14 @@ export const BotProtectionProvider = ({
   const contextValue = {
     ...verificationState,
     verifyHuman,
+    setButtonClicked,
     resetVerification: () => {
       setVerificationState({
         isVerified: false,
         isLoading: false,
         error: null,
-        lastVerified: null
+        lastVerified: null,
+        buttonClicked: null
       });
       resetTurnstile();
       sessionStorage.removeItem('botVerification');
@@ -480,7 +493,7 @@ export const BotProtectionProvider = ({
       <div className="space-y-4">
         {/* Turnstile container */}
         {!verificationState.isVerified && turnstileMode === 'managed' && (
-          <div ref={containerRef} className="turnstile-container my-4" />
+          <div ref={containerRef} className="turnstile-container my-4" style={{ display: 'none' }} />
         )}
         {!verificationState.isVerified && turnstileMode === 'invisible' && (
           <div ref={containerRef} style={{ display: 'none' }} />
@@ -491,12 +504,9 @@ export const BotProtectionProvider = ({
           // <div className="text-red-500 p-2 text-sm" role="alert">
           //   {verificationState.error}
           // </div>
-          <div className="text-red" role="alert">
-          {verificationState.error} - Gaat er iets mis? Stuur een mailtje naar{' '}
-          <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">
-            doemee@milieudefensie.nl
-          </a>
-        </div>
+          <div className="text-red d-none" role="alert">
+            {verificationState.error}
+          </div>
         )}
         
         {/* Loading indicator when first verifying */}
@@ -521,7 +531,7 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
     throw new Error('ProtectedLink must be used within a BotProtectionProvider');
   }
 
-  const { isVerified, isLoading, verifyHuman } = context;
+  const { isVerified, isLoading, verifyHuman, buttonClicked, setButtonClicked } = context;
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -539,6 +549,9 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
       const verified = await verifyHuman();
       if (verified) {
         navigate(to);
+      } else {
+        setButtonClicked(to);
+        // console.log('buttonClicked', buttonClicked);
       }
     } finally {
       setIsNavigating(false);
@@ -564,22 +577,23 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
 
 // Status indicator component
 export const BotProtectionStatus = ({ className = '' }) => {
+  const [isOpen, setIsOpen] = useState(true);
   const context = useContext(BotProtectionContext);
 
   if (!context) {
     return null;
   }
 
-  const { isVerified, isLoading, error, resetVerification } = context;
+  const { isVerified, isLoading, error, resetVerification, buttonClicked } = context;
 
   if (!isVerified && !isLoading && !error) {
     return null;
   }
 
   return (
-    <div className={`fixed bottom-4 right-4 p-4 bg-white rounded-lg z-50 ${className}`}>
+    <div className={`fixed bottom-4 right-4 bg-white rounded-lg z-50 ${className}`}>
       {isVerified && (
-        <div className="text-green-600 flex items-center">
+        <div className="text-green-600 flex items-center d-none">
           <span className="mr-2 text-green-600">✓ geverifieerd</span>
           {/* <button 
             onClick={resetVerification}
@@ -590,10 +604,29 @@ export const BotProtectionStatus = ({ className = '' }) => {
         </div>
       )}
       {isLoading && (
-        <div className="text-blue-600">Verifying...</div>
+        <div className="text-blue-600 d-none">Verifiëren...</div>
       )}
       {error && (
-        <div className="text-red-600">{error}</div>
+        <div className={`popup-overlay ${isOpen ? 'popup-active' : ''}`}>
+          <div className="popup-content">
+            <span className="popup-close" onClick={() => setIsOpen(false)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                <circle cx="15" cy="15" r="14" stroke="black" stroke-width="2"/>
+                <path d="M22 9.41L20.59 8L15 13.59L9.41 8L8 9.41L13.59 15L8 20.59L9.41 22L15 16.41L20.59 22L22 20.59L16.41 15L22 9.41Z" fill="black"/>
+              </svg>
+            </span>
+            <div className='verification-error my-4'>
+                <ProtectedLink to={buttonClicked} className="custom-btn custom-btn-primary w-100 mb-4">
+                Open WhatsApp
+                </ProtectedLink>
+                {isLoading && (
+                  <div className="text-blue-600">Verifiëren...</div>
+                )}
+                {/*error*/}Gaat er iets mis? Stuur een mailtje naar<br />
+                <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">doemee@milieudefensie.nl</a>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
