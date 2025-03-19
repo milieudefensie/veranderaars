@@ -72,7 +72,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       active: Boolean!
     }
   `;
-  
+
   createTypes(typeDefs);
 };
 
@@ -135,8 +135,13 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   }
 
   // Extras events
-  const slugs = ['shell-borrel-in-maastricht'];
-  const slugsFiltered = slugs.filter((slug) => allEvents.find((e) => e.slug === slug));
+  const slugsFiltered = [
+    //'shell-borrel-in-maastricht',
+    'test-event-whatsapp-link',
+    'test-event-zoom',
+  ];
+  // const slugsFiltered = slugs.filter((slug) => allEvents.find((e) => e.slug === slug));
+
   for (const eventSlug of slugsFiltered) {
     const result = await fetch(`${cslPath}/api/v1/events/${eventSlug}?access_token=${receivedToken.access_token}`, {
       method: 'GET',
@@ -282,7 +287,7 @@ exports.createPages = ({ graphql, actions }) => {
             title
           }
 
-          redirects: allDatoCmsRedirect(filter: {active: {eq: true}}) {
+          redirects: allDatoCmsRedirect(filter: { active: { eq: true } }) {
             edges {
               node {
                 sourcePath
@@ -291,7 +296,6 @@ exports.createPages = ({ graphql, actions }) => {
               }
             }
           }
-
         }
       `).then((result) => {
         if (result.errors) {
@@ -313,7 +317,7 @@ exports.createPages = ({ graphql, actions }) => {
         });
 
         // Debug output - check what's coming from the API
-        console.log("Redirects data:", JSON.stringify(result.data.redirects, null, 2));
+        console.log('Redirects data:', JSON.stringify(result.data.redirects, null, 2));
 
         const redirects = result.data.redirects.edges;
         redirects.forEach(({ node }) => {
@@ -321,8 +325,8 @@ exports.createPages = ({ graphql, actions }) => {
             createRedirect({
               fromPath: node.sourcePath,
               toPath: node.destinationPath,
-              statusCode: parseInt(node.statusCode || "301"),
-              isPermanent: (node.statusCode || "301") === "301",
+              statusCode: parseInt(node.statusCode || '301'),
+              isPermanent: (node.statusCode || '301') === '301',
             });
             console.log(`Created redirect: ${node.sourcePath} → ${node.destinationPath}`);
           } else {
