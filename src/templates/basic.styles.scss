@@ -261,6 +261,36 @@
     background-repeat: no-repeat;
     background-size: cover;
   }
+
+  .wrapper-layout.event-detail {
+    padding: 150px 0 50px 0;
+
+    .float-layout {
+      top: unset;
+    }
+
+    .pre-header {
+      display: flex;
+      align-items: center;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 35px;
+
+
+      a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: var(--dark);
+        font-family: Poppins;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 130%;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 992px) {
@@ -359,6 +389,14 @@
         img {
           object-fit: cover;
         }
+      }
+    }
+
+    .wrapper-layout.event-detail {
+      padding: 120px 0 30px 0;
+
+      .pre-header {
+        display: none;
       }
     }
   }
