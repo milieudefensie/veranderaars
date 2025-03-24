@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './index.scss';
 
 function EmbedIframe({ content }) {
   const containerRef = useRef(null);
-  // const [scriptCreated, setScriptCreated] = useState(false);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -14,7 +13,7 @@ function EmbedIframe({ content }) {
           newScript.src = script.src;
           newScript.async = true;
           document.body.appendChild(newScript);
-          // setScriptCreated(true);
+          console.log(`Added script: ${script.src}`);
         }
       }
     }
