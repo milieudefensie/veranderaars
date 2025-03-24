@@ -17,6 +17,7 @@ import { formatDate, isArray } from '../utils';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 
 import './basic.styles.scss';
+import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 
 const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
   const {
@@ -32,6 +33,8 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
     content,
     tags = [],
     formSteps,
+    registrationForm,
+    formBackgroundColor,
   } = page;
 
   const [shareWpText, setShareWpText] = useState('');
@@ -77,6 +80,13 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
         )}
 
         <FloatLayout reduceOverlap>
+          {/* Form  */}
+          {registrationForm && !isArray(formSteps) && (
+            <div className={`form-wrapper ${formBackgroundColor}`}>
+              <HubspotForm {...registrationForm} style={`${formBackgroundColor === 'dark-green' ? '' : 'event'}`} />
+            </div>
+          )}
+
           {/* Brief information */}
           <div className="brief-information">
             <div className="metadata">
