@@ -30,9 +30,10 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     inputs = [],
     hiddenAddress = false,
     web_conference_url,
+    waiting_list_enabled,
   } = page;
-  const heroImage = pageContext?.heroImage?.url || image_url;
 
+  const heroImage = pageContext?.heroImage?.url || image_url;
   const [shareWpText, setShareWpText] = useState('');
 
   useEffect(() => {
@@ -52,18 +53,20 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
   const conferenceType = detectService(web_conference_url);
   const isConferenceWp = conferenceType === 'WhatsApp';
 
+  const formattedTitle = waiting_list_enabled && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+
   return (
     <Layout>
       <SeoDatoCMS favicon={favicon}>
-        <title>{title}</title>
+        <title>{formattedTitle}</title>
         <meta name="description" content={description} />
 
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={formattedTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={image_url || ''} />
         <meta property="og:site_name" content="Milieudefensie" />
 
-        <meta name="twitter:title" content={title} />
+        <meta name="twitter:title" content={formattedTitle} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image_url || ''} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -84,11 +87,16 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             </div>
           )}
 
-          {title && <h1 className="main-heading">{title}</h1>}
+          {formattedTitle && <h1 className="main-heading">{formattedTitle}</h1>}
 
           {/* Form  */}
           <div className={`form-wrapper`}>
-            <Form event={slug} inputs={inputs} conferenceUrl={web_conference_url} />
+            <Form
+              event={slug}
+              inputs={inputs}
+              conferenceUrl={web_conference_url}
+              isWaitingList={waiting_list_enabled}
+            />
           </div>
 
           {/* Brief information */}
@@ -191,6 +199,8 @@ export const PageQuery = graphql`
       labels
       inputs
       web_conference_url
+      max_attendees_count
+      waiting_list_enabled
     }
   }
 `;

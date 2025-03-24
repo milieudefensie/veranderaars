@@ -37,12 +37,12 @@ export default async function handler(req, res) {
 
   try {
     const attendeeInfo = req.body;
-    const { slug, firstName, lastName, email, postcode, phone, consent_email } = attendeeInfo;
+    const { slug, firstName, lastName, email, postcode, phone, consent_email, waiting_list } = attendeeInfo;
     const consentAccepted = consent_email === 'yes';
 
     const body = {
       attendee: {
-        attending_status: 'attending',
+        attending_status: waiting_list ? 'waiting_list' : 'attending',
         notification_level: 'all_messages',
         first_name: firstName,
         last_name: lastName,

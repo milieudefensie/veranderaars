@@ -223,6 +223,7 @@ export const PageQuery = graphql`
             slug
           }
           hiddenAddress
+          waiting_list_enabled
         }
       }
     }
@@ -252,6 +253,7 @@ export const PageQuery = graphql`
         slug
       }
       hiddenAddress
+      waiting_list_enabled
     }
     page: datoCmsListEvent(id: { eq: $id }) {
       id

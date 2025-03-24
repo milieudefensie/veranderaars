@@ -4,7 +4,7 @@ import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributo
 
 import './styles.scss';
 
-const Form = ({ event, inputs = [], conferenceUrl = null }) => {
+const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false }) => {
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
   const [formData, setFormData] = useState({
@@ -88,7 +88,7 @@ const Form = ({ event, inputs = [], conferenceUrl = null }) => {
       const submit = await fetch('/api/submit-form', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, waiting_list: isWaitingList }),
       });
 
       const response = await submit.json();
@@ -302,7 +302,7 @@ const Form = ({ event, inputs = [], conferenceUrl = null }) => {
 
         <input
           type="submit"
-          value={isLoading ? 'Sending...' : 'Ik ben er bij!'}
+          value={isLoading ? 'Sending...' : isWaitingList ? 'Zet me op de wachtlijst!' : 'Ik ben er bij!'}
           className={`send-btn ${hasErrors ? 'disabled' : ''}`}
           disabled={hasErrors || isLoading}
         />

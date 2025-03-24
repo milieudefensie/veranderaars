@@ -332,6 +332,7 @@ export const formatCslEvents = (e) => {
     type: e.type,
     model: e.model,
     calendar: e.calendar,
+    waiting_list_enabled: e.waiting_list_enabled,
     model: {
       apiKey: 'ExternalEvent',
     },

@@ -26,10 +26,13 @@ const EventCard = ({ event, isHighlighted = false }) => {
     url,
     externalLink,
     hiddenAddress = false,
+    waiting_list_enabled,
   } = event;
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
   const withImage = image?.gatsbyImageData || image?.url || image_url;
+
+  const formattedTitle = waiting_list_enabled && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
 
   const renderContent = () => (
     <>
@@ -49,12 +52,14 @@ const EventCard = ({ event, isHighlighted = false }) => {
       </div>
 
       <div className="basic-info">
-        {title && <h4>{title}</h4>}
+        {formattedTitle && <h4>{formattedTitle}</h4>}
         {introduction && (
           <div className="introduction" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
         )}
 
-        <span className="custom-btn custom-btn-primary">Meld je aan</span>
+        <span className="custom-btn custom-btn-primary">
+          {waiting_list_enabled ? 'Zet me op de wachtlijst!' : 'Meld je aan'}
+        </span>
       </div>
 
       {withImage && (
