@@ -177,6 +177,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
                         inputMode="text"
                         autoComplete="off"
                         onChange={handleChange}
+                        required
                       />
                     </div>
 
