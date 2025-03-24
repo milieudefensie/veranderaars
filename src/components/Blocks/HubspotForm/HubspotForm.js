@@ -90,8 +90,10 @@ const HubspotForm = ({
               // General logic
               function checkIfFormHasErrors() {
                 const formWrapper = document.querySelector(`#${id}`);
-                const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
-                const fields = formWrapper.querySelectorAll('input.hs-input');
+                const submitBtn = formWrapper?.querySelector('input[type="submit"].hs-button');
+                const fields = formWrapper?.querySelectorAll('input.hs-input');
+
+                if (!fields || !submitBtn) return;
 
                 const hasError = Array.from(fields).some((input) => input.classList.contains('error'));
                 submitBtn.disabled = hasError;

@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { navigate } from 'gatsby';
+import { useLocation } from '@reach/router';
 import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 
 import './styles.scss';
 
 const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
   const { firstForm, secondForm, legalText, secondStepIntroduction } = form[0];
+  const location = useLocation();
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(location.search.includes('form_step=2') ? 1 : 0);
   const [email, setEmail] = useState(null);
   const isFirstStep = currentStep === 0;
+
+  useEffect(() => {
+    if (location.search.includes('form_step=2')) {
+      setCurrentStep(1);
+    } else {
+      setCurrentStep(0);
+    }
+  }, [location]);
 
   const handleOnFirstStepSubmitted = (_, data) => {
     const emailSubmitted = data.submissionValues.email;
     setEmail(emailSubmitted);
-    setCurrentStep(1);
+    navigate('?form_step=2', { replace: false }); // Cambiar la URL
   };
 
   const initializeSecondStepForm = (ctx) => {
