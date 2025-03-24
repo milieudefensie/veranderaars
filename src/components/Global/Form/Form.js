@@ -98,21 +98,21 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
     }
 
     try {
-      // const submit = await fetch('/api/submit-form', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
-      // });
+      const submit = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-      // const response = await submit.json();
-      // if (submit.status !== 200) {
-      //   setStatus('fail');
-      //   setErrorMsg(response.message);
-      // } else {
-      //   if (!conferenceUrl) {
-      //     navigate('/bedankt-dat-je-komt/');
-      //   }
-      // }
+      const response = await submit.json();
+      if (submit.status !== 200) {
+        setStatus('fail');
+        setErrorMsg(response.message);
+      } else {
+        if (!conferenceUrl) {
+          navigate('/bedankt-dat-je-komt/');
+        }
+      }
 
       setStatus('success');
     } catch (error) {
