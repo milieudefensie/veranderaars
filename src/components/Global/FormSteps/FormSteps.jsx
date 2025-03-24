@@ -24,7 +24,7 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
   const handleOnFirstStepSubmitted = (_, data) => {
     const emailSubmitted = data.submissionValues.email;
     setEmail(emailSubmitted);
-    navigate('?form_step=2', { replace: false }); // Cambiar la URL
+    navigate('?form_step=2', { replace: false });
   };
 
   const initializeSecondStepForm = (ctx) => {

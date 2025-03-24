@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { navigate } from 'gatsby';
+import { useLocation } from '@reach/router';
 import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributor';
 
 import './styles.scss';
 
 const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUrl = null }) => {
+  const location = useLocation();
+
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
   const [formData, setFormData] = useState({
@@ -17,8 +20,16 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
     slug: event,
   });
   const [errors, setErrors] = useState({});
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(location.search.includes('form_step=2') ? 1 : 0);
   const isFirstStep = currentStep === 0;
+
+  useEffect(() => {
+    if (location.search.includes('form_step=2')) {
+      setCurrentStep(1);
+    } else {
+      setCurrentStep(0);
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -117,7 +128,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
 
   const handleOnFirstStepSubmitted = (e) => {
     e.preventDefault();
-    setCurrentStep(1);
+    navigate('?form_step=2', { replace: false });
 
     // focus input
     setTimeout(() => {
