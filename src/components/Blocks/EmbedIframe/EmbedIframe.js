@@ -17,7 +17,7 @@ function EmbedIframe({ content }) {
 
     containerRef.current.innerHTML = '';
 
-    // Crear e insertar el div con el ID requerido por Eventix
+    // Crear e insertar el div con el ID requerido por Eventix.
     const eventixIdFromScript = content.iframeCode.match(/data-url="([^"]+)"/)[1];
 
     const div = document.createElement('div');
