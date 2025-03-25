@@ -108,6 +108,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
       if (submit.status !== 200) {
         setStatus('fail');
         setErrorMsg(response.message);
+        return;
       } else {
         if (!conferenceUrl) {
           navigate('/bedankt-dat-je-komt/');
@@ -130,11 +131,8 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
     e.preventDefault();
     navigate('?form_step=2', { replace: false });
 
-    // focus input
     setTimeout(() => {
       const nameInput = document.querySelector('#firstName');
-      console.log({ nameInput });
-
       if (nameInput) nameInput.focus();
     }, 100);
   };
