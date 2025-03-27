@@ -191,7 +191,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
 
                 <input
                   type="submit"
-                  value={isLoading ? 'Sending...' : 'Ik ben er bij!'}
+                  value={isLoading ? 'Versturen...' : 'Ik ben er bij!'}
                   className={`send-btn ${hasErrors ? 'disabled' : ''}`}
                   disabled={hasErrors || isLoading}
                 />
@@ -393,7 +393,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
 
                 <input
                   type="submit"
-                  value={isLoading ? 'Sending...' : 'Ik ben er bij!'}
+                  value={isLoading ? 'Versturen...' : 'Ik ben er bij!'}
                   className={`send-btn ${hasErrors ? 'disabled' : ''}`}
                   disabled={hasErrors || isLoading}
                 />
