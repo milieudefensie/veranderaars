@@ -224,6 +224,7 @@ export const PageQuery = graphql`
           }
           hiddenAddress
           waiting_list_enabled
+          max_attendees_count
         }
       }
     }
@@ -254,6 +255,7 @@ export const PageQuery = graphql`
       }
       hiddenAddress
       waiting_list_enabled
+      max_attendees_count
     }
     page: datoCmsListEvent(id: { eq: $id }) {
       id
