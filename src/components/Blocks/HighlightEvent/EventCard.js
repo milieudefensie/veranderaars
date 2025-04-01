@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ImageWrapper from '../../Global/Image/ImageWrapper';
 import { formatDate, formatDateCSL, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/TagList';
 import Link from '../../Global/Link/Link';
+import axios from 'axios';
 
 import './styles.scss';
+import Spinner from '../../Global/Spinner/Spinner';
 
 const EventCard = ({ event, isHighlighted = false }) => {
   const {
     __typename,
     type,
+    slug,
     title,
     introduction,
     image,
@@ -27,12 +30,35 @@ const EventCard = ({ event, isHighlighted = false }) => {
     externalLink,
     hiddenAddress = false,
     waiting_list_enabled,
+    max_attendees_count,
   } = event;
+
+  const [isWaitingListActive, setIsWaitingListActive] = useState(false);
+  const [status, setStatus] = useState('loading');
+
+  useEffect(() => {
+    // Determine the max_attendees
+    const checkIfEventHasReachedLimit = async () => {
+      const response = await axios.post('/api/get-csl-attendees', {
+        data: { slug, max_attendees_count },
+      });
+      const { isWaitingListActive, attendeesCount } = response.data;
+
+      setIsWaitingListActive(isWaitingListActive);
+      setStatus('idle');
+    };
+
+    if (isCslEvent && max_attendees_count) {
+      checkIfEventHasReachedLimit();
+    } else {
+      setStatus('idle');
+    }
+  }, []);
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
   const withImage = image?.gatsbyImageData || image?.url || image_url;
 
-  const formattedTitle = waiting_list_enabled && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+  const formattedTitle = isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
 
   const renderContent = () => (
     <>
@@ -58,7 +84,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
         )}
 
         <span className="custom-btn custom-btn-primary">
-          {waiting_list_enabled ? 'Zet me op de wachtlijst!' : 'Meld je aan'}
+          {status === 'loading' ? <Spinner /> : isWaitingListActive ? 'Zet me op de wachtlijst!' : 'Meld je aan'}
         </span>
       </div>
 

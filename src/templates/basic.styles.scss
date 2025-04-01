@@ -230,6 +230,13 @@
         padding: 20px;
         background-color: var(--primary-color);
       }
+
+      .spinner-wrapper {
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
 
     .external-register {
@@ -358,6 +365,12 @@
 
         img {
           object-fit: cover;
+        }
+      }
+
+      .form-wrapper {
+        .spinner-wrapper {
+          min-height: auto;
         }
       }
     }

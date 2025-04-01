@@ -14,6 +14,8 @@ import hourIcon from '../components/Icons/calendar-hour.svg';
 import locationIcon from '../components/Icons/calendar-location.svg';
 import wpIcon from '../components/Icons/wp-icon.svg';
 import Form from '../components/Global/Form/Form';
+import axios from 'axios';
+import Spinner from '../components/Global/Spinner/Spinner';
 
 import './basic.styles.scss';
 
@@ -31,10 +33,13 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     hiddenAddress = false,
     web_conference_url,
     waiting_list_enabled,
+    max_attendees_count,
   } = page;
 
   const heroImage = pageContext?.heroImage?.url || image_url;
   const [shareWpText, setShareWpText] = useState('');
+  const [isWaitingListActive, setIsWaitingListActive] = useState(false);
+  const [status, setStatus] = useState('loading');
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -43,17 +48,30 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     // Share WP
     const currentURL = encodeURIComponent(window.location.href);
     setShareWpText(`https://wa.me/?text=${currentURL}`);
-  }, []);
 
-  let mainImage = null;
-  if (additional_image_sizes_url) {
-    mainImage = additional_image_sizes_url.find((i) => i.style === 'original');
-  }
+    // Determine the max_attendees
+    const checkIfEventHasReachedLimit = async () => {
+      const response = await axios.post('/api/get-csl-attendees', {
+        data: { slug, max_attendees_count },
+      });
+      const { isWaitingListActive, attendeesCount } = response.data;
+
+      setIsWaitingListActive(isWaitingListActive);
+      setStatus('idle');
+    };
+
+    if (max_attendees_count) {
+      checkIfEventHasReachedLimit();
+    } else {
+      setStatus('idle');
+    }
+  }, []);
 
   const conferenceType = detectService(web_conference_url);
   const isConferenceWp = conferenceType === 'WhatsApp';
-
-  const formattedTitle = waiting_list_enabled && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+  const formattedTitle =
+    (isWaitingListActive || waiting_list_enabled) && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+  let mainImage = additional_image_sizes_url ? additional_image_sizes_url.find((i) => i.style === 'original') : null;
 
   return (
     <Layout>
@@ -87,16 +105,22 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             </div>
           )}
 
-          {formattedTitle && <h1 className="main-heading">{formattedTitle}</h1>}
+          {status === 'idle' && formattedTitle && <h1 className="main-heading">{formattedTitle}</h1>}
 
           {/* Form  */}
           <div className={`form-wrapper`}>
-            <Form
-              event={slug}
-              inputs={inputs}
-              conferenceUrl={web_conference_url}
-              isWaitingList={waiting_list_enabled}
-            />
+            {status === 'loading' ? (
+              <div className="spinner-wrapper">
+                <Spinner />
+              </div>
+            ) : (
+              <Form
+                event={slug}
+                inputs={inputs}
+                conferenceUrl={web_conference_url}
+                isWaitingList={isWaitingListActive} //waiting_list_enabled
+              />
+            )}
           </div>
 
           {/* Brief information */}
