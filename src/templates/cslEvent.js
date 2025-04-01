@@ -69,8 +69,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
   const conferenceType = detectService(web_conference_url);
   const isConferenceWp = conferenceType === 'WhatsApp';
-  const formattedTitle =
-    (isWaitingListActive || waiting_list_enabled) && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+  const formattedTitle = isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
   let mainImage = additional_image_sizes_url ? additional_image_sizes_url.find((i) => i.style === 'original') : null;
 
   return (
