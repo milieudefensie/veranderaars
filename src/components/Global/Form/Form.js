@@ -95,6 +95,7 @@ const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false 
       if (submit.status !== 200) {
         setStatus('fail');
         setErrorMsg(response.message);
+        return;
       } else {
         if (!conferenceUrl) {
           navigate('/bedankt-dat-je-komt/');
