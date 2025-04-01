@@ -5,6 +5,7 @@ export default async function handler(req, res) {
     let isWaitingListEnabled = false;
     let allAttendees = [];
     let currentPage = 1;
+    let totalPages = 0;
 
     const clientId = process.env.CSL_CLIENT_ID;
     const clientSecret = process.env.CSL_CLIENT_SECRET;
