@@ -58,6 +58,8 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
       setIsWaitingListActive(isWaitingListActive);
       setStatus('idle');
+
+      console.log({ isWaitingListActive, attendeesCount });
     };
 
     if (max_attendees_count) {
