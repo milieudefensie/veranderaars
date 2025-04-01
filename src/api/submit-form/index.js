@@ -11,6 +11,8 @@ const ERROR_MSG = {
   'is not a valid postal code': 'dit is geen geldige postcode',
   'must exist': '',
   'is al aangemeld voor de activiteit': 'Je hebt je al aangemeld voor dit evenement',
+  'Activiteit is niet beschikbaar voor aanmeldingen':
+    'Deze activiteit is momenteel niet beschikbaar voor inschrijvingen.',
 };
 
 const KEY_ERROR_MSG = {
@@ -66,24 +68,14 @@ export default async function handler(req, res) {
           if (response.data.errors) {
             const errorMessages = Object.keys(response.data.errors)
               .map((key) => {
+                if (key === 'base') {
+                  return response.data.errors[key].map((msg) => ERROR_MSG[msg] || msg).join('; ');
+                }
+
                 const rawError = response.data.errors[key].join(', ');
-
-                if (rawError === 'must exist') return null;
-                if (rawError === 'is not a valid postal code' || rawError === 'is not a valid email') {
-                  return `${ERROR_MSG[rawError]}`;
-                }
-
-                if (rawError === 'is al aangemeld voor de activiteit') {
-                  return 'Je hebt je al aangemeld voor dit evenement';
-                }
-
                 const k1 = KEY_ERROR_MSG[key];
-                const k2 = ERROR_MSG[response.data.errors[key].join(', ')];
-                if (k1 && k2) {
-                  return `${k1} ${k2}`;
-                } else {
-                  return 'Er is een fout opgetreden. Probeer het later opnieuw.';
-                }
+                const k2 = ERROR_MSG[rawError] || rawError;
+                return k1 ? `${k1} ${k2}` : k2;
               })
               .filter(Boolean)
               .join('; ');
