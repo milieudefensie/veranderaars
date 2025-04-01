@@ -46,6 +46,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
 
       setIsWaitingListActive(isWaitingListActive);
       setStatus('idle');
+      console.log({ slug, max_attendees_count, isWaitingListActive, attendeesCount });
     };
 
     if (isCslEvent && max_attendees_count) {
