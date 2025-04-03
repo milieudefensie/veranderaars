@@ -98,7 +98,11 @@ const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false 
         return;
       } else {
         if (!conferenceUrl) {
-          navigate('/bedankt-dat-je-komt/');
+          if (isWaitingList) {
+            navigate('/aanmelding-wachtlijst/');
+          } else {
+            navigate('/bedankt-dat-je-komt/');
+          }
         }
       }
 
