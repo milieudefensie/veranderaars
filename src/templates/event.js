@@ -128,7 +128,16 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
 export default Event;
 
 export const PageQuery = graphql`
-  query EventById($id: String) {
+  query EventById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

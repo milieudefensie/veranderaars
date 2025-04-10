@@ -50,7 +50,16 @@ const Tool = ({ pageContext, data: { page, listTool, favicon } }) => {
 export default Tool;
 
 export const PageQuery = graphql`
-  query ToolById($id: String) {
+  query ToolById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

@@ -180,7 +180,16 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 export default CSLEvent;
 
 export const PageQuery = graphql`
-  query CslEventById($id: String) {
+  query CslEventById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
