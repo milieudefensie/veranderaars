@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTimer } from 'react-timer-hook';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';
 
 export default function CountDown({ block }) {
+  const { t } = useTranslation();
   const { headline, date, successMessage, colorVariant } = block;
 
   const expiryTimestamp = Date.parse(date);
@@ -22,19 +24,19 @@ export default function CountDown({ block }) {
             <div className="countdown-container">
               <div className="item-countdown">
                 <span>{days}</span>
-                Dagen
+                {t('days')}
               </div>
               <div className="item-countdown">
                 <span>{hours}</span>
-                Uren
+                {t('hours')}
               </div>
               <div className="item-countdown">
                 <span>{minutes}</span>
-                Minuten
+                {t('minutes')}
               </div>
               <div className="item-countdown">
                 <span>{seconds}</span>
-                Seconden
+                {t('seconds')}
               </div>
             </div>
           )}

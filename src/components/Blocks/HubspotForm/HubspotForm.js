@@ -1,5 +1,6 @@
 import React from 'react';
 import { Script } from 'gatsby';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './index.scss';
 
@@ -13,6 +14,8 @@ const HubspotForm = ({
   columns,
   extraLogic = null,
 }) => {
+  const { t } = useTranslation();
+
   const initializeForm = () => {
     if (!window.hbspt) return;
 
@@ -24,11 +27,11 @@ const HubspotForm = ({
       locale: 'nl',
       translations: {
         nl: {
-          required: 'Verplicht veld',
-          invalidEmail: 'Geen geldig e-mailadres',
-          invalidEmailFormat: 'Geen geldig e-mailadres',
-          phoneInvalidCharacters: 'Telefoonnummer mag alleen nummers, +, en haakjes () bevatten.',
-          phoneInvalidCharactersWithoutCountryCode: 'Telefoonnummer mag alleen nummers, +, en haakjes () bevatten.',
+          required: t('form_required'),
+          invalidEmail: t('form_invalid_email'),
+          invalidEmailFormat: t('form_invalid_email_format'),
+          phoneInvalidCharacters: t('form_invalid_phone'),
+          phoneInvalidCharactersWithoutCountryCode: t('form_invalid_phone_format'),
         },
       },
       onFormReady: handleFormReady,
@@ -54,7 +57,6 @@ const HubspotForm = ({
     input.autocomplete = 'off';
 
     const observer = new MutationObserver(() => {
-      // updateInputState(input);
       validateForm(submitBtn);
     });
 
@@ -123,7 +125,7 @@ const HubspotForm = ({
 
     if (!isValid) {
       input.classList.add('error');
-      if (!errorContainer) showError(container, 'Voer een geldige postcode in');
+      if (!errorContainer) showError(container, t('form_postcode_error'));
     } else {
       input.classList.remove('error');
       errorContainer?.remove();
@@ -167,8 +169,7 @@ const HubspotForm = ({
       body: JSON.stringify(errorData),
     }).catch(console.error);
 
-    document.querySelector(`#hubspotForm-${id}`).innerHTML =
-      `<p style="color:red">Je instellingen blokkeren de weergave van dit formulier. Voeg onze website toe aan de uitzonderingenlijst van je adblocker, browser- of netwerkfilter en vernieuw de pagina</p>`;
+    document.querySelector(`#hubspotForm-${id}`).innerHTML = `<p style="color:red">${t('hubspot_error_privacy')}</p>`;
   };
 
   return (

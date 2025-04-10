@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { detectService } from '../../../utils';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';
 
 const ConferenceDistributor = ({ conferenceUrl }) => {
+  const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -26,9 +28,9 @@ const ConferenceDistributor = ({ conferenceUrl }) => {
   if (isMobile && service === 'WhatsApp') {
     return (
       <p className="redirect-message">
-        <p className="heading">Voor dit evenement is er een {service} chat!</p>
+        <p className="heading">{t('conference_mobile_whatsapp_message', { service })}</p>
         <a className="wp-btn" href={conferenceUrl} target="_blank">
-          WhatsApp openen
+          {t('whatsapp_open')}
         </a>
       </p>
     );
@@ -62,10 +64,10 @@ const WhatsAppQR = ({ url }) => (
       bgColor="#F5F5F5"
     />
     <div>
-      <p className="heading">Voor dit evenement is er een WhatsApp chat!</p>
-      <p>Scan de QR code met je telefoon om op de hoogte gehouden te worden van de actie</p>
+      <p className="heading">{t('conference_whatsapp_chat')}</p>
+      <p>{t('conference_scan_qr')}</p>
       <a className="wp-btn" href={url} target="_blank">
-        Open WhatsApp op deze computer
+        {t('whatsapp_open_computer')}
       </a>
     </div>
   </div>
@@ -89,14 +91,14 @@ const SignalQR = ({ url }) => (
       bgColor="#F5F5F5"
     />
     <div>
-      <p className="heading">Voor dit evenement is er een Signal chat!</p>
+      <p className="heading">{t('conference_signal_chat')}</p>
       <p>
-        Heb je nog geen Signal?{' '}
+        {t('conference_signal_label')}{' '}
         <a href="https://signal.org/download/" target="_blank" rel="noopener noreferrer">
-          Downloaden
+          {t('download')}
         </a>
       </p>
-      <p>Scan de QR code met je telefoon om op de hoogte gehouden te worden van de actie</p>
+      <p>{t('conference_scan_qr')}</p>
     </div>
   </div>
 );
@@ -121,9 +123,9 @@ const ZoomMessage = ({ url }) => (
       </svg>
     </div>
     <div>
-      <p className="heading">Dit is een online evenement.</p>
+      <p className="heading">{t('conference_zoom_chat')}</p>
       <p className="link">
-        We hebben de video call link ook naar je e-mailadres gestuurd:{' '}
+        {t('conference_zoom_link')}{' '}
         <a href={url} target="_blank">
           {url}
         </a>

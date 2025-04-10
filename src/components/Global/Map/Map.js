@@ -7,6 +7,7 @@ import useSupercluster from 'use-supercluster';
 import CtaHandler from '../Cta/CtaHandler';
 import Cta from '../Cta/Cta';
 import WPGroupMarker from './Marker/WPGroupMarker';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles.scss';
@@ -20,6 +21,7 @@ const MapWrapper = ({
   floatButton = null,
   extraLogic = null,
 }) => {
+  const { t } = useTranslation();
   const mapRef = useRef(null);
 
   const [viewport, setViewport] = useState({
@@ -135,7 +137,7 @@ const MapWrapper = ({
               }}
             >
               <span>←</span>
-              <span>Bekijk lijst</span>
+              <span>{t('back_to_list')}</span>
             </div>
           </div>
         </div>
@@ -239,7 +241,7 @@ const MapWrapper = ({
           {/* Mobile full screen toggler */}
           <div className="mobile-view-map">
             <CtaHandler
-              title={'Open kaart'}
+              title={t('open_map')}
               icon={
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
                   <path

@@ -4,11 +4,14 @@ import { formatDate, formatDateCSL, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/TagList';
 import Link from '../../Global/Link/Link';
 import axios from 'axios';
-
-import './styles.scss';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 import Spinner from '../../Global/Spinner/Spinner';
 
+import './styles.scss';
+
 const EventCard = ({ event, isHighlighted = false }) => {
+  const { t } = useTranslation();
+
   const {
     __typename,
     type,
@@ -85,7 +88,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
         )}
 
         <span className="custom-btn custom-btn-primary">
-          {status === 'loading' ? <Spinner /> : isWaitingListActive ? 'Zet me op de wachtlijst!' : 'Meld je aan'}
+          {status === 'loading' ? <Spinner /> : isWaitingListActive ? t('waiting_list_message') : t('sign_up')}
         </span>
       </div>
 

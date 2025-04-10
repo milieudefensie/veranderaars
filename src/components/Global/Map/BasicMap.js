@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { createMapMarkers, createMapReference } from './utils';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles.scss';
 
 const BasicMap = ({ title, data = [], type = 'event', mobileView = false, setMobileView }) => {
+  const { t } = useTranslation();
   const mapContainerRef = useRef(null);
 
   useEffect(() => {
@@ -38,12 +40,11 @@ const BasicMap = ({ title, data = [], type = 'event', mobileView = false, setMob
       {title && <h3>{title}</h3>}
 
       <div className="map">
-        {/* Pre-header */}
         <div className="pre-header">
           <div className="container">
             <div className="action" onClick={() => setMobileView((prev) => !prev)}>
               <span>←</span>
-              <span>{type === 'event' ? 'Bekijk lijst' : 'Bekijk lijst'}</span>
+              <span>{t('back_to_list')}</span>
             </div>
           </div>
         </div>

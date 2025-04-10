@@ -3,10 +3,13 @@ import TagList from '../../Tag/TagList';
 import { formatDate, formatDateCSL } from '../../../../utils';
 import Cta from '../../Cta/Cta';
 import Link from '../../Link/Link';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';
 
 const MapPopup = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => {
+  const { t } = useTranslation();
+
   const {
     slug,
     title,
@@ -63,11 +66,11 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => 
 
       {cardType === 'wp-group' ? (
         <a href={whatsappGroup} target={`_blank`} className="custom-btn custom-btn-primary">
-          WhatsApp Community
+          {t('whatsapp_community')}
         </a>
       ) : isCslEvent ? (
         <Link to={`/lokaal/${slug}`} className="custom-btn custom-btn-primary">
-          Meld je aan
+          {t('sign_up')}
         </Link>
       ) : externalLink ? (
         <a
@@ -75,7 +78,7 @@ const MapPopup = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => 
           target={`${externalLink ? '' : '_blank'}`}
           className="custom-btn custom-btn-primary"
         >
-          Meld je aan
+          {t('sign_up')}
         </a>
       ) : (
         <Cta cta={{ ...card, title: linkTitle, isButton: true, style: 'primary' }} />
