@@ -26,14 +26,14 @@ const useBotDetection = () => {
           noLanguages: !navigator?.languages || navigator.languages.length === 0,
           hasNoCanvas: !window?.HTMLCanvasElement,
         };
-        
+
         const suspiciousCount = Object.values(suspicious).filter(Boolean).length;
         if (suspiciousCount >= 2) {
           setIsBot(true);
         }
         detectionComplete.current = true;
       } catch (err) {
-        console.error("Detection error:", err);
+        console.error('Detection error:', err);
         // On error, don't flag as bot to prevent false positives
         detectionComplete.current = true;
       }
@@ -83,13 +83,16 @@ const useBotDetection = () => {
   }, []);
 
   // Create a stable API to return
-  return useCallback(() => ({
-    isBot,
-    isDetectionComplete: detectionComplete.current,
-    mouseMovements: mouseMovements.current,
-    timeOnPage: Date.now() - pageLoadTime.current,
-    firstInteractionTime: firstInteractionTime.current,
-  }), [isBot]);
+  return useCallback(
+    () => ({
+      isBot,
+      isDetectionComplete: detectionComplete.current,
+      mouseMovements: mouseMovements.current,
+      timeOnPage: Date.now() - pageLoadTime.current,
+      firstInteractionTime: firstInteractionTime.current,
+    }),
+    [isBot]
+  );
 };
 
 // Improved Turnstile hook with better error handling
@@ -113,17 +116,17 @@ const useTurnstile = (mode = 'managed') => {
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
     script.async = true;
     script.defer = true;
-    
+
     script.onload = () => {
       setTurnstileLoaded(true);
       setLoadError(null);
     };
-    
+
     script.onerror = (err) => {
       console.error('Failed to load Turnstile:', err);
       setLoadError('Failed to load security verification');
     };
-    
+
     document.body.appendChild(script);
 
     return () => {
@@ -156,7 +159,7 @@ const useTurnstile = (mode = 'managed') => {
       setLoadError('Security configuration error');
       return;
     }
-    
+
     try {
       const commonOptions = {
         sitekey: siteKey,
@@ -195,10 +198,10 @@ const useTurnstile = (mode = 'managed') => {
 
   const executeTurnstile = useCallback(async () => {
     attempts.current += 1;
-    
+
     // If we already have a token, return it
     if (token) return token;
-    
+
     // Prevent too many consecutive attempts
     if (attempts.current > 3) {
       throw new Error('Too many verification attempts. Please reload the page.');
@@ -211,7 +214,7 @@ const useTurnstile = (mode = 'managed') => {
 
     return new Promise((resolve, reject) => {
       let timeoutId;
-      
+
       try {
         // Execute or reset based on mode
         if (mode === 'invisible' || mode === 'interactive') {
@@ -224,12 +227,12 @@ const useTurnstile = (mode = 'managed') => {
             'error-callback': (error) => {
               clearTimeout(timeoutId);
               reject(new Error(`Verification failed: ${error}`));
-            }
+            },
           });
         } else {
           // For managed mode, we need to wait for user interaction
           window.turnstile.reset(widgetId.current);
-          
+
           // Setup watcher for token
           const checkToken = () => {
             if (token) {
@@ -241,7 +244,7 @@ const useTurnstile = (mode = 'managed') => {
           };
           checkToken();
         }
-        
+
         // Set a timeout to prevent hanging
         timeoutId = setTimeout(() => {
           reject(new Error('Verification timed out'));
@@ -264,67 +267,61 @@ const useTurnstile = (mode = 'managed') => {
     }
   }, []);
 
-  return { 
-    containerRef, 
-    token, 
-    executeTurnstile, 
-    resetTurnstile, 
+  return {
+    containerRef,
+    token,
+    executeTurnstile,
+    resetTurnstile,
     turnstileLoaded,
-    loadError 
+    loadError,
   };
 };
 
 // Provider component with improved reliability
-export const BotProtectionProvider = ({ 
-  children, 
+export const BotProtectionProvider = ({
+  children,
   turnstileMode = 'invisible',
   onVerificationComplete,
-  sessionDuration = 30  // Minutes the verification remains valid
+  sessionDuration = 30, // Minutes the verification remains valid
 }) => {
   const [verificationState, setVerificationState] = useState({
     isVerified: false,
     isLoading: false,
     error: null,
     lastVerified: null,
-    buttonClicked: null
+    buttonClicked: null,
   });
 
   const setButtonClicked = (value) => {
-    setVerificationState(prev => ({
+    setVerificationState((prev) => ({
       ...prev,
-      buttonClicked: value
+      buttonClicked: value,
     }));
   };
-  
+
   const getBotInfo = useBotDetection();
-  const { 
-    containerRef, 
-    token, 
-    executeTurnstile, 
-    resetTurnstile,
-    loadError
-  } = useTurnstile(turnstileMode);
+  const { containerRef, token, executeTurnstile, resetTurnstile, loadError } = useTurnstile(turnstileMode);
 
   // Initialize from session storage
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     try {
       const storedVerification = JSON.parse(sessionStorage.getItem('botVerification'));
-      
+
       if (storedVerification && typeof storedVerification === 'object') {
         const { isVerified, lastVerified } = storedVerification;
-        
+
         // Check if verification is still valid (not expired)
         if (isVerified && lastVerified) {
           const now = Date.now();
-          const expiresAt = lastVerified + (sessionDuration * 60 * 1000);
-          
+          const expiresAt = lastVerified + sessionDuration * 60 * 1000;
+
           if (now < expiresAt) {
-            setVerificationState(prev => ({
+            setVerificationState((prev) => ({
               ...prev,
               isVerified: true,
-              lastVerified
+              lastVerified,
             }));
             return;
           }
@@ -341,7 +338,7 @@ export const BotProtectionProvider = ({
     if (verificationState.isVerified) {
       const storeValue = {
         isVerified: true,
-        lastVerified: verificationState.lastVerified || Date.now()
+        lastVerified: verificationState.lastVerified || Date.now(),
       };
       sessionStorage.setItem('botVerification', JSON.stringify(storeValue));
     }
@@ -350,9 +347,9 @@ export const BotProtectionProvider = ({
   // If Turnstile has a load error, show it
   useEffect(() => {
     if (loadError) {
-      setVerificationState(prev => ({
+      setVerificationState((prev) => ({
         ...prev,
-        error: loadError
+        error: loadError,
       }));
     }
   }, [loadError]);
@@ -360,17 +357,17 @@ export const BotProtectionProvider = ({
   const verifyHuman = async () => {
     // Return true immediately if already verified
     if (verificationState.isVerified) return true;
-    
-    setVerificationState(prev => ({
+
+    setVerificationState((prev) => ({
       ...prev,
       isLoading: true,
-      error: null
+      error: null,
     }));
 
     try {
       // Get current bot detection info
       const botInfo = getBotInfo();
-      
+
       // Skip further checks if detected as bot
       if (botInfo.isBot) {
         throw new Error('Access denied - suspicious behavior detected');
@@ -378,13 +375,11 @@ export const BotProtectionProvider = ({
 
       // Wait for detection to complete
       if (!botInfo.isDetectionComplete) {
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
       // Execute Turnstile verification
-      const turnstileToken = turnstileMode === 'managed' 
-        ? token 
-        : await executeTurnstile();
+      const turnstileToken = turnstileMode === 'managed' ? token : await executeTurnstile();
 
       if (!turnstileToken) {
         throw new Error('Please complete the security check');
@@ -394,7 +389,7 @@ export const BotProtectionProvider = ({
       let response;
       let retries = 0;
       const maxRetries = 2;
-      
+
       while (retries <= maxRetries) {
         try {
           response = await fetch('/.netlify/functions/verify-human', {
@@ -416,14 +411,14 @@ export const BotProtectionProvider = ({
               turnstileToken,
             }),
           });
-          
+
           // If successful, break the retry loop
           if (response.ok) break;
-          
+
           // If server error, retry
           if (response.status >= 500) {
             retries++;
-            await new Promise(r => setTimeout(r, 1000 * retries));
+            await new Promise((r) => setTimeout(r, 1000 * retries));
           } else {
             // Client errors shouldn't be retried
             break;
@@ -432,7 +427,7 @@ export const BotProtectionProvider = ({
           // Network errors should be retried
           retries++;
           if (retries > maxRetries) throw err;
-          await new Promise(r => setTimeout(r, 1000 * retries));
+          await new Promise((r) => setTimeout(r, 1000 * retries));
         }
       }
 
@@ -441,7 +436,7 @@ export const BotProtectionProvider = ({
         const data = response ? await response.json() : { error: 'Network error' };
         throw new Error(data.error || 'Verification failed');
       }
-      
+
       // Success path
       const now = Date.now();
       setVerificationState({
@@ -449,22 +444,22 @@ export const BotProtectionProvider = ({
         isLoading: false,
         error: null,
         lastVerified: now,
-        buttonClicked: null
+        buttonClicked: null,
       });
-      
+
       onVerificationComplete?.(true);
       return true;
     } catch (error) {
       console.error('Verification failed:', error);
-      
+
       setVerificationState({
         isVerified: false,
         isLoading: false,
         error: error.message,
         lastVerified: null,
-        buttonClicked: verificationState.buttonClicked
+        buttonClicked: verificationState.buttonClicked,
       });
-      
+
       resetTurnstile();
       onVerificationComplete?.(false, error.message);
       return false;
@@ -481,11 +476,11 @@ export const BotProtectionProvider = ({
         isLoading: false,
         error: null,
         lastVerified: null,
-        buttonClicked: null
+        buttonClicked: null,
       });
       resetTurnstile();
       sessionStorage.removeItem('botVerification');
-    }
+    },
   };
 
   return (
@@ -498,7 +493,7 @@ export const BotProtectionProvider = ({
         {!verificationState.isVerified && turnstileMode === 'invisible' && (
           <div ref={containerRef} style={{ display: 'none' }} />
         )}
-        
+
         {/* Error message */}
         {verificationState.error && !verificationState.isLoading && (
           // <div className="text-red-500 p-2 text-sm" role="alert">
@@ -508,14 +503,12 @@ export const BotProtectionProvider = ({
             {verificationState.error}
           </div>
         )}
-        
+
         {/* Loading indicator when first verifying */}
         {verificationState.isLoading && !verificationState.isVerified && (
-          <div className="text-blue-600 p-2 text-sm">
-            Verifying your browser...
-          </div>
+          <div className="text-blue-600 p-2 text-sm">Verifiëren...</div>
         )}
-        
+
         {children}
       </div>
     </BotProtectionContext.Provider>
@@ -535,14 +528,14 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-    
+
     // Execute custom onClick if provided
     if (onClick) {
       onClick(e);
       // If preventDefault() was called in the onClick handler, respect it
       if (e.defaultPrevented) return;
     }
-    
+
     setIsNavigating(true);
 
     try {
@@ -562,15 +555,11 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
     <a
       href={to}
       onClick={handleClick}
-      className={`${className} ${(isLoading || isNavigating) ? 'opacity-50 cursor-wait' : ''}`}
+      className={`${className} ${isLoading || isNavigating ? 'opacity-50 cursor-wait' : ''}`}
       aria-disabled={isLoading || isNavigating}
     >
       {children}
-      {(isNavigating) && !isVerified && (
-        <span className="inline-block ml-2 text-gray-600 text-sm">
-          Verifying...
-        </span>
-      )}
+      {isNavigating && !isVerified && <span className="inline-block ml-2 text-gray-600 text-sm">Verifiëren...</span>}
     </a>
   );
 };
@@ -603,27 +592,29 @@ export const BotProtectionStatus = ({ className = '' }) => {
           </button> */}
         </div>
       )}
-      {isLoading && (
-        <div className="text-blue-600 d-none">Verifiëren...</div>
-      )}
+      {isLoading && <div className="text-blue-600 d-none">Verifiëren...</div>}
       {error && (
         <div className={`popup-overlay ${isOpen ? 'popup-active' : ''}`}>
           <div className="popup-content">
             <span className="popup-close" onClick={() => setIsOpen(false)}>
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <circle cx="15" cy="15" r="14" stroke="black" stroke-width="2"/>
-                <path d="M22 9.41L20.59 8L15 13.59L9.41 8L8 9.41L13.59 15L8 20.59L9.41 22L15 16.41L20.59 22L22 20.59L16.41 15L22 9.41Z" fill="black"/>
+                <circle cx="15" cy="15" r="14" stroke="black" stroke-width="2" />
+                <path
+                  d="M22 9.41L20.59 8L15 13.59L9.41 8L8 9.41L13.59 15L8 20.59L9.41 22L15 16.41L20.59 22L22 20.59L16.41 15L22 9.41Z"
+                  fill="black"
+                />
               </svg>
             </span>
-            <div className='verification-error my-4'>
-                <ProtectedLink to={buttonClicked} className="custom-btn custom-btn-primary w-100 mb-4">
+            <div className="verification-error my-4">
+              <ProtectedLink to={buttonClicked} className="custom-btn custom-btn-primary w-100 mb-4">
                 Open WhatsApp
-                </ProtectedLink>
-                {isLoading && (
-                  <div className="text-blue-600">Verifiëren...</div>
-                )}
-                {/*error*/}Gaat er iets mis? Stuur een mailtje naar<br />
-                <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">doemee@milieudefensie.nl</a>
+              </ProtectedLink>
+              {isLoading && <div className="text-blue-600">Verifiëren...</div>}
+              {/*error*/}Gaat er iets mis? Stuur een mailtje naar
+              <br />
+              <a href="mailto:service@milieudefensie.nl" target="_blank" rel="noopener">
+                doemee@milieudefensie.nl
+              </a>
             </div>
           </div>
         </div>
