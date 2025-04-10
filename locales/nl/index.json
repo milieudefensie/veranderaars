@@ -1,0 +1,18 @@
+{
+  "days": "Dagen",
+  "hours": "Uren",
+  "minutes": "Minuten",
+  "seconds": "Seconden",
+  "waiting_list_message": "Zet me op de wachtlijst!",
+  "sign_up": "Meld je aan",
+  "whatsapp_community": "WhatsApp Community",
+  "form_required": "Verplicht veld",
+  "form_invalid_email": "Geen geldig e-mailadres",
+  "form_invalid_email_format": "Geen geldig e-mailadres",
+  "form_invalid_phone": "Telefoonnummer mag alleen nummers, +, en haakjes () bevatten.",
+  "form_invalid_phone_format": "Telefoonnummer mag alleen nummers, +, en haakjes () bevatten.",
+  "form_postcode_error": "Voer een geldige postcode in",
+  "join_whatsapp": "Join Us to Our WhatsApp Community",
+  "dropdown_select_label": "Select an option",
+  "footer_extra_text": "Milieudefensie is onderdeel van Friends of the Earth International"
+}
