@@ -1,11 +1,14 @@
-const puppeteer = require('puppeteer-core');
-const chromium = require('chromium');
-const path = require(`path`);
-require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
-const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+import type { GatsbyNode } from 'gatsby';
+import puppeteer from 'puppeteer-core';
+import path from 'path';
+import { configDotenv } from 'dotenv';
+import chromium from 'chromium';
+import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
+
+configDotenv({ path: `.env.${process.env.NODE_ENV}` });
 
 // node source from CSL
-exports.createSchemaCustomization = ({ actions }) => {
+export const createSchemaCustomization: GatsbyNode['createSchemaCustomization'] = ({ actions }) => {
   const { createTypes } = actions;
   const externalEvent = `
     type ExternalEvent implements Node {
@@ -73,11 +76,10 @@ exports.createSchemaCustomization = ({ actions }) => {
       active: Boolean!
     }
   `;
-
   createTypes(typeDefs);
 };
 
-exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
+export const sourceNodes: GatsbyNode['sourceNodes'] = async ({ actions: { createNode }, createContentDigest }) => {
   const clientId = process.env.CSL_CLIENT_ID;
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
@@ -111,8 +113,9 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 
       let isWaitingListEnabled = false;
       if (eventResponse.max_attendees_count) {
-        let allAttendees = [];
+        let allAttendees: any[] = [];
         let currentPage = 1;
+        let totalPages = 0;
 
         do {
           const response = await fetch(
@@ -211,11 +214,11 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   }
 };
 
-exports.createPages = ({ graphql, actions }) => {
+export const createPages: GatsbyNode['createPages'] = ({ graphql, actions }) => {
   const { createPage, createSlice, createRedirect } = actions;
 
-  createSlice({ id: `header`, component: require.resolve(`./src/components/Layout/Header.js`) });
-  createSlice({ id: `footer`, component: require.resolve(`./src/components/Layout/Footer/Footer.js`) });
+  createSlice({ id: `header`, component: path.resolve(`./src/components/Layout/Header.js`) });
+  createSlice({ id: `footer`, component: path.resolve(`./src/components/Layout/Footer/Footer.js`) });
 
   return new Promise((resolve, reject) => {
     const templates = {
@@ -335,9 +338,9 @@ exports.createPages = ({ graphql, actions }) => {
           reject(result.errors);
         }
 
-        const cslHighlightedEvent = result.data.configuration.slugOfHighlightedEvent;
-        const cslHighlightedEventAgenda = result.data.configuration.slugOfHighlightedEventAgenda;
-        const cslSlugsOfEventsHidden = result.data.configuration.eventsHidden;
+        const cslHighlightedEvent = result.data?.configuration.slugOfHighlightedEvent;
+        const cslHighlightedEventAgenda = result.data?.configuration.slugOfHighlightedEventAgenda;
+        const cslSlugsOfEventsHidden = result.data?.configuration.eventsHidden;
 
         // Create homepage
         createPage({
@@ -349,9 +352,9 @@ exports.createPages = ({ graphql, actions }) => {
         });
 
         // Debug output - check what's coming from the API
-        console.log('Redirects data:', JSON.stringify(result.data.redirects, null, 2));
+        // console.log('Redirects data:', JSON.stringify(result.data?.redirects, null, 2));
 
-        const redirects = result.data.redirects.edges;
+        const redirects = result.data?.redirects.edges;
         redirects.forEach(({ node }) => {
           if (typeof node.sourcePath === 'string' && typeof node.destinationPath === 'string') {
             createRedirect({
@@ -367,7 +370,7 @@ exports.createPages = ({ graphql, actions }) => {
         });
 
         // create the pages
-        const pages = result.data.pages.edges;
+        const pages = result.data?.pages.edges;
         for (const page of pages) {
           createPage({
             path: page.node.slug,
@@ -380,7 +383,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list events
-        const listEvents = result.data.listEvents || [];
+        const listEvents = result.data?.listEvents || [];
         if (listEvents) {
           createPage({
             path: listEvents.slug,
@@ -394,7 +397,7 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
-        const events = result.data.events.edges;
+        const events = result.data?.events.edges;
         for (const event of events) {
           createPage({
             path: `/agenda/${event.node.slug}`,
@@ -406,7 +409,7 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
-        const CSLEvents = result.data.CSLevents.nodes;
+        const CSLEvents = result.data?.CSLevents.nodes;
         for (const event of CSLEvents) {
           createPage({
             path: `/lokaal/${event.slug}`,
@@ -414,13 +417,13 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: event.slug,
               id: event.id,
-              heroImage: result.data.configuration.cslGenericImage,
+              heroImage: result.data?.configuration.cslGenericImage,
             },
           });
         }
 
         // list groups
-        const listGroups = result.data.listGroups || [];
+        const listGroups = result.data?.listGroups || [];
         if (listGroups) {
           createPage({
             path: listGroups.slug,
@@ -436,7 +439,7 @@ exports.createPages = ({ graphql, actions }) => {
         const KM_PER_DEGREE_LAT = 111;
         const KM_PER_DEGREE_LNG = 111;
 
-        const groups = result.data.groups.edges;
+        const groups = result.data?.groups.edges;
         for (const group of groups) {
           const latitude = group.node.coordinates?.latitude;
           const longitude = group.node.coordinates?.longitude;
@@ -466,7 +469,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list tools
-        const listTools = result.data.listTools || [];
+        const listTools = result.data?.listTools || [];
         if (listTools) {
           createPage({
             path: listTools.slug,
@@ -477,7 +480,7 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
-        const tools = result.data.tools.edges;
+        const tools = result.data?.tools.edges;
         for (const tool of tools) {
           createPage({
             path: `/toolkit/${tool.node.slug}`,
@@ -490,7 +493,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list WhatsApp Groups
-        const listWhatsAppGroups = result.data.listWhatsAppGroups || [];
+        const listWhatsAppGroups = result.data?.listWhatsAppGroups || [];
         if (listWhatsAppGroups) {
           createPage({
             path: listWhatsAppGroups.slug,
@@ -505,7 +508,7 @@ exports.createPages = ({ graphql, actions }) => {
   });
 };
 
-exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
+export const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({ stage, actions, getConfig }) => {
   actions.setWebpackConfig({
     plugins: [
       new FilterWarningsPlugin({
@@ -517,12 +520,12 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 
 // Utils
 // We will only show events that do not contain the 'hidden' tag.
-const shouldCreateEvent = (event) => Array.isArray(event.labels) && !event.labels.includes('hidden');
+const shouldCreateEvent = (event: any) => Array.isArray(event.labels) && !event.labels.includes('hidden');
 
 chromium.setHeadlessMode = true;
 chromium.setGraphicsMode = false;
 
-const scrapingFormInputs = async (event) => {
+const scrapingFormInputs = async (event: any) => {
   const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
   console.log('Start web scraping. URL: ', url);
 

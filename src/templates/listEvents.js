@@ -13,6 +13,7 @@ import { formatCslEvents, mapCmsEvents, mapCslEvents } from '../utils';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 
 import './list-basic.styles.scss';
+import EventLayout from '../components/Layout/event-layout/event-layout';
 
 const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], cslHighlightEvent, favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
@@ -99,56 +100,63 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
   return (
     <Layout bgColor="secondary-bg" extraClassNames="list-pages">
       <SeoDatoCMS seo={seo} favicon={favicon} />
-
-      <WrapperLayout variant="white" responsiveVariant="secondary-bg">
-        <HeroBasic backgroundColor="light" responsiveVariant="event" />
-
-        <div className="list-event-wrapper">
-          <div className="container">
-            {title && <h1>{title}</h1>}
-
-            {(cslHighlightEvent || highlighEvent) && (
-              <div className="highlighted-event-wrapper">
-                <EventCard event={formatCslEvents(cslHighlightEvent) || highlighEvent} isHighlighted />
-              </div>
-            )}
-
-            <div className={`${mobileShowMap ? 'mobile-map' : ''}`}>
-              <Map
-                type="event"
-                floatButton={buttonOnMap}
-                title={title}
-                data={filteredEvents}
-                mobileView={mobileShowMap}
-                setMobileView={setMobileShowMap}
-                extraLogic={() => {
-                  if (window !== undefined && window.innerWidth < 992) {
-                    setMobileShowMap((prev) => !prev);
-                  }
-                }}
-              />
-
-              <FilterEvents
-                events={filteredEvents}
-                locations={locationOptions}
-                handleOnApplyNewFilters={(newFilterValues) =>
-                  setFilterValues((prev) => ({ ...prev, ...newFilterValues }))
-                }
-              />
-
-              <FloatCta title="Bekijk lijst" id="filter-events-list" isArrowVisible={isArrowVisible} />
-            </div>
-          </div>
-
-          {content && (
-            <div className="container mt-5 pb-5">
-              <StructuredTextDefault content={content} />
-            </div>
-          )}
-        </div>
-      </WrapperLayout>
+      <EventLayout events={mergedEvents} />
     </Layout>
   );
+
+  // return (
+  //   <Layout bgColor="secondary-bg" extraClassNames="list-pages">
+  //     <SeoDatoCMS seo={seo} favicon={favicon} />
+
+  //     <WrapperLayout variant="white" responsiveVariant="secondary-bg">
+  //       <HeroBasic backgroundColor="light" responsiveVariant="event" />
+
+  //       <div className="list-event-wrapper">
+  //         <div className="container">
+  //           {title && <h1>{title}</h1>}
+
+  //           {(cslHighlightEvent || highlighEvent) && (
+  //             <div className="highlighted-event-wrapper">
+  //               <EventCard event={formatCslEvents(cslHighlightEvent) || highlighEvent} isHighlighted />
+  //             </div>
+  //           )}
+
+  //           <div className={`${mobileShowMap ? 'mobile-map' : ''}`}>
+  //             <Map
+  //               type="event"
+  //               floatButton={buttonOnMap}
+  //               title={title}
+  //               data={filteredEvents}
+  //               mobileView={mobileShowMap}
+  //               setMobileView={setMobileShowMap}
+  //               extraLogic={() => {
+  //                 if (window !== undefined && window.innerWidth < 992) {
+  //                   setMobileShowMap((prev) => !prev);
+  //                 }
+  //               }}
+  //             />
+
+  //             <FilterEvents
+  //               events={filteredEvents}
+  //               locations={locationOptions}
+  //               handleOnApplyNewFilters={(newFilterValues) =>
+  //                 setFilterValues((prev) => ({ ...prev, ...newFilterValues }))
+  //               }
+  //             />
+
+  //             <FloatCta title="Bekijk lijst" id="filter-events-list" isArrowVisible={isArrowVisible} />
+  //           </div>
+  //         </div>
+
+  //         {content && (
+  //           <div className="container mt-5 pb-5">
+  //             <StructuredTextDefault content={content} />
+  //           </div>
+  //         )}
+  //       </div>
+  //     </WrapperLayout>
+  //   </Layout>
+  // );
 };
 
 export default ListEvents;
