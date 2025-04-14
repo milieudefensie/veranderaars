@@ -129,7 +129,7 @@
 }
 
 @media screen and (max-width: 992px) {
-  .accordion {
+  .ui-accordion {
     margin-top: 20px !important;
 
     .item {
@@ -157,12 +157,20 @@
         font-weight: 400;
         line-height: 145%;
       }
+
+      .ac-content {
+
+        ul,
+        ol {
+          padding-left: 1.3rem;
+        }
+      }
     }
   }
 }
 
 @media screen and (max-width: 767px) {
-  .accordion {
+  .ui-accordion {
     padding-top: 0;
 
     .item {

@@ -2,26 +2,18 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import Blocks from '../components/Blocks';
 import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 
 const Page = ({ pageContext, data: { page, favicon } }) => {
-  const { seo, title, introduction, backgroundColor, heroBackgroundImage, smallHero = false, blocks = [] } = page;
+  const { seo, title, introduction, backgroundColor, heroBackgroundImage, smallHero = false, content } = page;
 
   const renderMainContent = () => (
     <>
-      {introduction && (
-        <SimpleText
-          limitedWidth
-          block={{ text: introduction }}
-          container={false}
-          extraClassNames={true ? 'introduction' : 'introduction-normal'}
-        />
-      )}
-
-      <Blocks blocks={blocks} />
+      {introduction && <SimpleText limitedWidth block={{ text: introduction }} extraClassNames={'introduction'} />}
+      <StructuredTextDefault content={content} />
     </>
   );
 
@@ -33,7 +25,7 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
         <HeroBasic image={heroBackgroundImage} backgroundColor={backgroundColor} overlay={false} small={smallHero} />
 
         <FloatLayout reduceOverlap>
-          <h1>{title}</h1>
+          <h1 className="main-heading">{title}</h1>
           {renderMainContent()}
         </FloatLayout>
       </div>
@@ -44,7 +36,16 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
 export default Page;
 
 export const PageQuery = graphql`
-  query PageById($id: String) {
+  query PageById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -62,60 +63,27 @@ export const PageQuery = graphql`
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags
       }
-      blocks {
-        ... on DatoCmsNarrativeBlock {
-          ...BlockNarrativeBlock
-        }
-        ... on DatoCmsHighlightEvent {
-          ...BlockHighlightEvent
-        }
-        ... on DatoCmsHighlightTool {
-          ...BlockHighlightTools
-        }
-        ... on DatoCmsTextHubspotForm {
-          ...BlockTextHubspot
-        }
-        ... on DatoCmsTable {
-          ...BlockTable
-        }
-        ... on DatoCmsShare {
-          ...BlockShare
-        }
-        ... on DatoCmsImage {
-          ...BlockImage
-        }
-        ... on DatoCmsEmbedIframe {
-          ...BlockEmbedIframe
-        }
-        ... on DatoCmsAcordion {
-          ...BlockAccordion
-        }
-        ... on DatoCmsVideoBlock {
-          ...BlockVideo
-        }
-        ... on DatoCmsSimpleText {
-          ...BlockText
-        }
-        ... on DatoCmsMap {
+      content {
+        value
+        blocks {
+          __typename
           ...BlockMap
-        }
-        ... on DatoCmsBlockCta {
-          ...BlockCustomCta
-        }
-        ... on DatoCmsColumn {
+          ...BlockNarrativeBlock
+          ...BlockAccordion
+          ...BlockImage
+          ...BlockShare
+          ...BlockHighlightTools
+          ...BlockHighlightEvent
+          ...BlockTable
+          ...BlockEmbedIframe
+          ...BlockVideo
+          ...BlockTextHubspot
           ...BlockColumns
-        }
-        ... on DatoCmsCountdown {
           ...BlockCountdown
-        }
-        ... on DatoCmsCtaList {
           ...BlockCtaList
-        }
-        ... on DatoCmsCtaIconsList {
           ...BlockCtaIconsList
-        }
-        ... on DatoCmsImageGallery {
           ...BlockImageGallery
+          ...BlockCustomCta
         }
       }
     }

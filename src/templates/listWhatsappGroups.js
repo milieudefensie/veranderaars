@@ -69,7 +69,7 @@ const ListWhatsAppGroups = ({ data: { page, allGroups = [], favicon } }) => {
 
         <div className="list-event-wrapper">
           <div className="container">
-            <h1>{title}</h1>
+            <h1 className="main-heading">{title}</h1>
 
             {/* Map */}
             <Map
@@ -83,9 +83,7 @@ const ListWhatsAppGroups = ({ data: { page, allGroups = [], favicon } }) => {
               }}
             />
 
-            {Array.isArray(mappedGroups) && (
-              <ListGroupBlock items={mappedGroups} withContainer={false} redirectToWhatsappGroup={true} />
-            )}
+            {Array.isArray(mappedGroups) && <ListGroupBlock items={mappedGroups} redirectToWhatsappGroup={true} />}
 
             {/* Fixed cta to view all */}
             <FloatCta title="Bekijk lijst" id="groups-list" variant="wp-group" />
@@ -105,7 +103,16 @@ const ListWhatsAppGroups = ({ data: { page, allGroups = [], favicon } }) => {
 export default ListWhatsAppGroups;
 
 export const PageQuery = graphql`
-  query ListGroupById($id: String) {
+  query ListGroupById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

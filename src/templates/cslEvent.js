@@ -8,12 +8,14 @@ import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import backBtnIcon from '../components/Icons/back-btn.svg';
 import Link from '../components/Global/Link/Link';
 import { ReactSVG } from 'react-svg';
-import { formatDate, formatDateCSL } from '../utils';
+import { detectService, formatDate, formatDateCSL } from '../utils';
 import dateIcon from '../components/Icons/calendar-date.svg';
 import hourIcon from '../components/Icons/calendar-hour.svg';
 import locationIcon from '../components/Icons/calendar-location.svg';
 import wpIcon from '../components/Icons/wp-icon.svg';
 import Form from '../components/Global/Form/Form';
+import axios from 'axios';
+import Spinner from '../components/Global/Spinner/Spinner';
 
 import './basic.styles.scss';
 
@@ -24,16 +26,20 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     image_url,
     additional_image_sizes_url,
     description,
-    raw_end,
     start_in_zone,
     end_in_zone,
     location,
     inputs = [],
     hiddenAddress = false,
+    web_conference_url,
+    waiting_list_enabled,
+    max_attendees_count,
   } = page;
-  const heroImage = pageContext?.heroImage?.url || image_url;
 
+  const heroImage = pageContext?.heroImage?.url || image_url;
   const [shareWpText, setShareWpText] = useState('');
+  const [isWaitingListActive, setIsWaitingListActive] = useState(false);
+  const [status, setStatus] = useState('loading');
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -42,25 +48,44 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     // Share WP
     const currentURL = encodeURIComponent(window.location.href);
     setShareWpText(`https://wa.me/?text=${currentURL}`);
+
+    // Determine the max_attendees
+    const checkIfEventHasReachedLimit = async () => {
+      const response = await axios.post('/api/get-csl-attendees', {
+        data: { slug, max_attendees_count },
+      });
+      const { isWaitingListActive, attendeesCount } = response.data;
+
+      setIsWaitingListActive(isWaitingListActive);
+      setStatus('idle');
+
+      console.log({ slug, max_attendees_count, isWaitingListActive, attendeesCount });
+    };
+
+    if (max_attendees_count) {
+      checkIfEventHasReachedLimit();
+    } else {
+      setStatus('idle');
+    }
   }, []);
 
-  let mainImage = null;
-  if (additional_image_sizes_url) {
-    mainImage = additional_image_sizes_url.find((i) => i.style === 'original');
-  }
+  const conferenceType = detectService(web_conference_url);
+  const isConferenceWp = conferenceType === 'WhatsApp';
+  const formattedTitle = isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+  let mainImage = additional_image_sizes_url ? additional_image_sizes_url.find((i) => i.style === 'original') : null;
 
   return (
     <Layout>
       <SeoDatoCMS favicon={favicon}>
-        <title>{title}</title>
+        <title>{formattedTitle}</title>
         <meta name="description" content={description} />
 
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={formattedTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={image_url || ''} />
         <meta property="og:site_name" content="Milieudefensie" />
 
-        <meta name="twitter:title" content={title} />
+        <meta name="twitter:title" content={formattedTitle} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image_url || ''} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -81,11 +106,22 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             </div>
           )}
 
-          {title && <h1>{title}</h1>}
+          {status === 'idle' && formattedTitle && <h1 className="main-heading">{formattedTitle}</h1>}
 
           {/* Form  */}
           <div className={`form-wrapper`}>
-            <Form event={slug} inputs={inputs} />
+            {status === 'loading' ? (
+              <div className="spinner-wrapper">
+                <Spinner />
+              </div>
+            ) : (
+              <Form
+                event={slug}
+                inputs={inputs}
+                conferenceUrl={web_conference_url}
+                isWaitingList={isWaitingListActive} //waiting_list_enabled
+              />
+            )}
           </div>
 
           {/* Brief information */}
@@ -116,7 +152,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
               )}
             </div>
 
-            {shareWpText && (
+            {!isConferenceWp && shareWpText && (
               <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
                 <span>Deel op WhatsApp</span>
                 <ReactSVG src={wpIcon} alt="Wp icon" />
@@ -144,7 +180,16 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 export default CSLEvent;
 
 export const PageQuery = graphql`
-  query CslEventById($id: String) {
+  query CslEventById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -187,6 +232,9 @@ export const PageQuery = graphql`
       }
       labels
       inputs
+      web_conference_url
+      max_attendees_count
+      waiting_list_enabled
     }
   }
 `;

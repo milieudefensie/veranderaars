@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTimer } from 'react-timer-hook';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';
 
 export default function CountDown({ block }) {
+  const { t } = useTranslation();
   const { headline, date, successMessage, colorVariant } = block;
 
   const expiryTimestamp = Date.parse(date);
@@ -14,36 +16,34 @@ export default function CountDown({ block }) {
 
   return (
     <div className="countdown-wrapper">
-      <div className="container">
-        <div id="countdown" className={`countdown ${colorVariant}`}>
-          <h2>{headline}</h2>
+      <div id="countdown" className={`countdown ${colorVariant}`}>
+        <h2>{headline}</h2>
 
-          <div className="">
-            {isRunning && (
-              <div className="countdown-container">
-                <div className="item-countdown">
-                  <span>{days}</span>
-                  Dagen
-                </div>
-                <div className="item-countdown">
-                  <span>{hours}</span>
-                  Uren
-                </div>
-                <div className="item-countdown">
-                  <span>{minutes}</span>
-                  Minuten
-                </div>
-                <div className="item-countdown">
-                  <span>{seconds}</span>
-                  Seconden
-                </div>
+        <div className="">
+          {isRunning && (
+            <div className="countdown-container">
+              <div className="item-countdown">
+                <span>{days}</span>
+                {t('days')}
               </div>
-            )}
+              <div className="item-countdown">
+                <span>{hours}</span>
+                {t('hours')}
+              </div>
+              <div className="item-countdown">
+                <span>{minutes}</span>
+                {t('minutes')}
+              </div>
+              <div className="item-countdown">
+                <span>{seconds}</span>
+                {t('seconds')}
+              </div>
+            </div>
+          )}
 
-            {!isRunning && (
-              <div className="success-container">{successMessage && <p className="success">{successMessage}</p>}</div>
-            )}
-          </div>
+          {!isRunning && (
+            <div className="success-container">{successMessage && <p className="success">{successMessage}</p>}</div>
+          )}
         </div>
       </div>
     </div>

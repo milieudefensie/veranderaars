@@ -1,6 +1,6 @@
 import React from 'react';
 import { Script } from 'gatsby';
-import { homepageFormIssues } from '../../../utils';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './index.scss';
 
@@ -14,188 +14,168 @@ const HubspotForm = ({
   columns,
   extraLogic = null,
 }) => {
+  const { t } = useTranslation();
+
+  const initializeForm = () => {
+    if (!window.hbspt) return;
+
+    window.hbspt.forms.create({
+      region,
+      portalId,
+      formId,
+      target: `#hubspotForm-${id}`,
+      locale: 'nl',
+      translations: {
+        nl: {
+          required: t('form_required'),
+          invalidEmail: t('form_invalid_email'),
+          invalidEmailFormat: t('form_invalid_email_format'),
+          phoneInvalidCharacters: t('form_invalid_phone'),
+          phoneInvalidCharactersWithoutCountryCode: t('form_invalid_phone_format'),
+        },
+      },
+      onFormReady: handleFormReady,
+    });
+  };
+
+  const handleFormReady = (ctx) => {
+    const formWrapper = document.querySelector(`#${ctx.id}`);
+    if (!formWrapper) return;
+
+    const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
+    const inputs = formWrapper.querySelectorAll('.hs-input');
+
+    inputs.forEach((input) => setupInputObserver(input, submitBtn));
+    setupFocusHandlers(formWrapper);
+    setupPostalCodeValidation(formWrapper, submitBtn);
+    addRecaptchaText(formWrapper);
+
+    if (extraLogic) extraLogic();
+  };
+
+  const setupInputObserver = (input, submitBtn) => {
+    input.autocomplete = 'off';
+
+    const observer = new MutationObserver(() => {
+      validateForm(submitBtn);
+    });
+
+    observer.observe(input, { attributes: true, attributeFilter: ['value', 'class'] });
+    input.addEventListener('input', () => validateForm(submitBtn));
+  };
+
+  const updateInputState = (input) => {
+    const label = input.closest('.hs-form-field')?.querySelector('label');
+    if (input.value.trim() !== '') {
+      input.setAttribute('data-input', 'load');
+      label?.classList.add('focused');
+    } else {
+      input.setAttribute('data-input', 'empty');
+      label?.classList.remove('focused');
+    }
+  };
+
+  const validateForm = (submitBtn) => {
+    const hasError = Array.from(document.querySelectorAll(`#hubspotForm-${id} .hs-input`)).some((input) =>
+      input.classList.contains('error')
+    );
+    submitBtn.disabled = hasError;
+    submitBtn.classList.toggle('disabled', hasError);
+  };
+
+  const setupFocusHandlers = (formWrapper) => {
+    formWrapper.querySelectorAll('.hs-form-field').forEach((field) => {
+      const label = field.querySelector('label');
+      const input = field.querySelector('input');
+
+      if (input?.value.trim()) {
+        label?.classList.add('focused');
+      }
+
+      field.addEventListener('focusin', () => {
+        label.classList.add('focused');
+      });
+
+      field.addEventListener('focusout', () => {
+        if (!input?.value.trim()) label?.classList.remove('focused');
+      });
+    });
+  };
+
+  const setupPostalCodeValidation = (formWrapper, submitBtn) => {
+    formWrapper.querySelectorAll('.hs_zip').forEach((container) => {
+      const zipInput = container.querySelector('input[name="zip"]');
+
+      zipInput?.addEventListener('input', () => {
+        validatePostalCode(zipInput, container);
+        validateForm(submitBtn);
+      });
+    });
+  };
+
+  const validatePostalCode = (input, container) => {
+    const zipRegex = /^\d{4}\s?[a-zA-Z]{2}$/;
+    const isValid = zipRegex.test(input.value);
+    const errorContainer = container.querySelector('.hs-error-msgs');
+
+    if (!input.value) {
+      errorContainer?.remove();
+      return;
+    }
+
+    if (!isValid) {
+      input.classList.add('error');
+      if (!errorContainer) showError(container, t('form_postcode_error'));
+    } else {
+      input.classList.remove('error');
+      errorContainer?.remove();
+    }
+  };
+
+  const showError = (container, message) => {
+    const errorHTML = `
+      <ul class="no-list hs-error-msgs inputs-list" role="alert">
+        <li><label class="hs-error-msg hs-main-font-element">${message}</label></li>
+      </ul>
+    `;
+    const errorDiv = document.createElement('div');
+    errorDiv.innerHTML = errorHTML;
+    container.appendChild(errorDiv);
+  };
+
+  const addRecaptchaText = (formWrapper) => {
+    const legalTextContainer = formWrapper.querySelector('.legal-consent-container .hs-richtext p');
+    if (legalTextContainer) {
+      legalTextContainer.innerHTML += `
+        Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google 
+        <a href="https://policies.google.com/privacy">privacybeleid</a> en 
+        <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.
+      `;
+    }
+  };
+
+  const handleScriptError = () => {
+    if (!trackErrors) return;
+
+    const errorData = {
+      date: new Date().toISOString(),
+      url: window.location.href,
+      browser: navigator.userAgent,
+    };
+
+    fetch('/api/csl-form-errors', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(errorData),
+    }).catch(console.error);
+
+    document.querySelector(`#hubspotForm-${id}`).innerHTML = `<p style="color:red">${t('hubspot_error_privacy')}</p>`;
+  };
+
   return (
     <>
-      <Script
-        src="https://js.hsforms.net/forms/v2.js"
-        onLoad={() => {
-          window.hbspt.forms.create({
-            region: region,
-            portalId: portalId,
-            formId: formId,
-            target: `#hubspotForm-${id}`,
-            locale: 'nl',
-            translations: {
-              nl: {
-                required: 'Verplicht veld',
-                invalidEmail: 'Geen geldig e-mailadres',
-                invalidEmailFormat: 'Geen geldig e-mailadres',
-                phoneInvalidCharacters: 'Telefoonnummer mag alleen nummers, +, en haakjes () bevatten.',
-                phoneInvalidCharactersWithoutCountryCode:
-                  'Telefoonnummer mag alleen nummers, +, en haakjes () bevatten.',
-              },
-            },
-            onFormReady: (ctx) => {
-              const { id } = ctx;
-
-              // Handlers
-              const inputs = document.querySelectorAll(`#${id} .hs-input`);
-              inputs.forEach((input) => input.setAttribute('autocomplete', 'off'));
-
-              inputs.forEach((input) => {
-                input.addEventListener('input', () => {
-                  if (input.value.trim() !== '') {
-                    input.setAttribute('data-input', 'load');
-                  } else {
-                    input.setAttribute('data-input', 'empty');
-                  }
-                });
-              });
-
-              document.querySelectorAll(`#${id} .hs-form-field`).forEach((e) => {
-                const labelElement = e.querySelector('label');
-                const inputElement = e.querySelector('input');
-
-                if (inputElement && inputElement.value.trim() !== '') {
-                  labelElement?.classList.add('focused');
-                }
-
-                e.addEventListener('focusin', function () {
-                  labelElement?.classList.add('focused');
-                  checkIfFormHasErrors();
-                });
-
-                e.addEventListener('focusout', function () {
-                  labelElement?.classList.remove('focused');
-
-                  if (inputElement && inputElement.value.trim() !== '') {
-                    labelElement?.classList.add('focused');
-                  }
-
-                  checkIfFormHasErrors();
-                  setTimeout(() => {
-                    checkIfFormHasErrors();
-                  }, 100);
-                });
-
-                e.addEventListener('input', (input) => {
-                  const formWrapper = document.querySelector(`#${id}`);
-                  const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
-                  const hasError = input.target.classList.contains('error');
-                  submitBtn.disabled = hasError;
-                });
-              });
-
-              // General logic
-              function checkIfFormHasErrors() {
-                const formWrapper = document.querySelector(`#${id}`);
-                const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
-                const fields = formWrapper.querySelectorAll('input.hs-input');
-
-                const hasError = Array.from(fields).some((input) => input.classList.contains('error'));
-                submitBtn.disabled = hasError;
-
-                // Homepage form fixes
-                if (style === 'homepage') {
-                  const heroHomepage = document.querySelector('.wrapper-hero');
-                  const nextElementOfHome = heroHomepage.nextElementSibling;
-
-                  if (!nextElementOfHome) return;
-                  homepageFormIssues();
-                }
-              }
-
-              // Postal code custom logic
-              const zipInput = document.querySelectorAll('.hs_zip');
-              zipInput.forEach((hsZipContainer) => {
-                const zipInput = hsZipContainer.querySelector('input[name="zip"]');
-
-                hsZipContainer.addEventListener('input', () => {
-                  verifyPostalCode(zipInput, hsZipContainer);
-                  checkIfFormHasErrors();
-                });
-              });
-
-              function verifyPostalCode(input, hsZipContainer) {
-                const zipValue = input.value;
-                const zipRegex = /^\d{4}\s?[a-zA-Z]{2}$/;
-                const errorContainer = hsZipContainer.querySelector('.hs-error-msgs');
-
-                const invalidInput = !zipRegex.test(zipValue);
-                if (zipValue === '') {
-                  const tempDivId = hsZipContainer.querySelectorAll('#to-delete');
-                  if (tempDivId) {
-                    tempDivId.forEach((div) => (div.innerHTML = ``));
-                  }
-
-                  return;
-                }
-
-                const submitBtn = document.querySelector('input[type="submit"].hs-button');
-
-                if (invalidInput) {
-                  input.classList.add('invalid', 'error');
-                  submitBtn.disabled = true;
-                } else {
-                  input.classList.remove('invalid', 'error');
-
-                  const tempDivId = hsZipContainer.querySelectorAll('#to-delete');
-                  if (tempDivId) {
-                    tempDivId.forEach((div) => (div.innerHTML = ``));
-                    return;
-                  }
-                }
-
-                if (!errorContainer) {
-                  const errorMessage = `
-                    <ul class="no-list hs-error-msgs inputs-list" role="alert">
-                      <li>
-                        <label class="hs-error-msg hs-main-font-element">Voer een geldige postcode in</label>
-                      </li>
-                    </ul>
-                  `;
-
-                  const tempDiv = document.createElement('div');
-                  tempDiv.id = `to-delete`;
-                  tempDiv.innerHTML = errorMessage;
-                  hsZipContainer.appendChild(tempDiv);
-                }
-              }
-
-              // Custom logic if needed
-              if (extraLogic) extraLogic();
-            },
-          });
-        }}
-        onError={async (e) => {
-          if (window !== undefined && trackErrors) {
-            try {
-              const bodyError = {
-                date: new Date().toISOString(),
-                url: window.location.href,
-                browser: navigator.userAgent,
-              };
-              await fetch('/api/csl-form-errors', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bodyError),
-              });
-
-              console.log('[Hubspot] Tracking errors.');
-            } catch (e) {
-              console.log(e);
-            }
-          }
-
-          document.querySelector(`#hubspotForm-${id}`).innerHTML =
-            `<p style="color:red">Je instellingen blokkeren de weergave van dit formulier. Voeg onze website toe aan de uitzonderingenlijst van je adblocker, browser- of netwerkfilter en vernieuw de pagina</p>`;
-        }}
-      />
-
-      <div
-        id={`hubspotForm-${id}`}
-        className={`form-hubspot ${style ? style : ''} ${columns ? `columns-${columns}` : ''}`}
-      ></div>
+      <Script src="https://js.hsforms.net/forms/v2.js" onLoad={initializeForm} onError={handleScriptError} />
+      <div id={`hubspotForm-${id}`} className={`ui-form-hubspot ${style} ${columns ? `columns-${columns}` : ''}`} />
     </>
   );
 };

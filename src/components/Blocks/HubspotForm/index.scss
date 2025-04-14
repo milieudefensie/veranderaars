@@ -1,7 +1,11 @@
-.form-hubspot {
+.ui-form-hubspot {
   form {
     display: flex;
     gap: 16px;
+
+    .hs_recaptcha {
+      display: none;
+    }
 
     .hs-form-field {
       position: relative;
@@ -74,14 +78,27 @@
         padding: 0;
 
         .hs-form-booleancheckbox {
+          margin-bottom: .5rem;
 
           input {
-            width: 24px !important;
-            height: 24px;
+            width: 25px;
+            height: 25px;
           }
 
-          label span * {
-            font-size: 16px;
+          label {
+
+            span {
+              margin: 0;
+
+              * {
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 150%;
+                color: #000;
+                margin-bottom: 3px;
+              }
+            }
           }
         }
       }
@@ -143,16 +160,16 @@
               }
 
               input {
-                width: auto;
+                // width: auto;
               }
 
               span {
-                color: var(--white);
-                font-size: 13px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 130%;
-                margin-left: 10px;
+                // color: var(--white);
+                // font-size: 13px;
+                // font-style: normal;
+                // font-weight: 400;
+                // line-height: 130%;
+                // margin-left: 10px;
               }
             }
           }
@@ -248,20 +265,20 @@
           .hs-form-booleancheckbox {
             .hs-form-booleancheckbox-display {
               input {
-                width: 15px !important;
-                height: 15px;
+                // width: 15px !important;
+                // height: 15px;
               }
 
               span {
-                padding: 0;
-                margin: 0;
+                // padding: 0;
+                // margin: 0;
 
-                * {
-                  color: #6F6F6E;
-                  font-size: 13px;
-                  font-weight: 400;
-                  line-height: 150%;
-                }
+                // * {
+                //   color: #6F6F6E;
+                //   font-size: 13px;
+                //   font-weight: 400;
+                //   line-height: 150%;
+                // }
               }
             }
           }
@@ -285,9 +302,9 @@
             padding: 0 !important;
 
             input {
-              width: auto;
-              width: 20px;
-              height: 20px;
+              // width: auto;
+              // width: 20px;
+              // height: 20px;
 
               &:checked {
                 accent-color: var(--dark);
@@ -295,12 +312,12 @@
             }
 
             span {
-              color: var(--dark);
-              font-family: var(--nb-secondary-font);
-              font-size: 16px;
-              font-style: normal;
-              font-weight: 500;
-              line-height: 150%;
+              // color: var(--dark);
+              // font-family: var(--nb-secondary-font);
+              // font-size: 16px;
+              // font-style: normal;
+              // font-weight: 500;
+              // line-height: 150%;
             }
           }
         }
@@ -566,15 +583,82 @@
       }
     }
 
+    .hs-fieldtype-radio,
+    .hs-fieldtype-booleancheckbox,
     .legal-consent-container,
     .hs_submit {
       flex: 1 1 100%;
+    }
+
+    .hs-fieldtype-booleancheckbox {
+      legend {
+        color: #49454F;
+        letter-spacing: 0.5px;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 16px;
+        margin-bottom: 5px;
+      }
+
+      .input .inputs-list {
+        padding: 0;
+        margin: 0;
+
+        .hs-form-booleancheckbox label {
+          position: initial;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 10px;
+
+          input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--dark);
+          }
+
+          span {
+            color: var(--dark);
+            font-family: var(--nb-secondary-font);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 150%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.recaptcha-text {
+  margin-top: .5rem;
+
+  p {
+    color: var(--nb-grey);
+    font-family: var(--nb-secondary-font);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%;
+  }
+
+  a {
+    color: var(--dark);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  &.default {
+    p {
+      color: var(--dark);
     }
   }
 }
 
 @media screen and (max-width: 992px) {
-  .form-hubspot {
+  .ui-form-hubspot {
     form {
       grid-template-columns: 1fr;
     }
@@ -601,8 +685,8 @@
 
       form .hs-fieldtype-booleancheckbox .inputs-list .hs-form-booleancheckbox .hs-form-booleancheckbox-display input,
       form .hs-fieldtype-radio .inputs-list .hs-form-radio-display .hs-input {
-        width: 15px;
-        height: 15px;
+        width: 20px;
+        height: 20px;
       }
 
       form .hs-fieldtype-booleancheckbox .inputs-list {
@@ -610,5 +694,9 @@
         margin-bottom: 0;
       }
     }
+  }
+
+  .ui-form-hubspot.columns-three form .hs-fieldtype-booleancheckbox .input .inputs-list .hs-form-booleancheckbox label span {
+    font-size: 13px;
   }
 }

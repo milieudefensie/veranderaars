@@ -7,7 +7,7 @@ export default function CtaHandler({ title, icon = null, handleOnClick, isPrimar
       className={`custom-btn with-handler ${isPrimaryButton ? 'custom-btn-primary' : ''} ${variant ? variant : ''}`}
       onClick={handleOnClick}
     >
-      {title || 'Click here'}
+      {title || 'Klik hier'}
       {icon && icon}
     </div>
   );

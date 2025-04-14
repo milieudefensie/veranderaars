@@ -1,4 +1,4 @@
-.highlight-tools-section {
+.highlight-tools-section2 {
   margin-top: 50px;
   padding-bottom: 115px;
 
@@ -34,7 +34,7 @@
     }
   }
 
-  &+.highlight-tools-section {
+  &+.highlight-tools-section2 {
     margin-top: 0;
     padding-bottom: 60px;
   }
@@ -84,6 +84,11 @@
       margin: 0;
       padding: 0;
       margin-bottom: 30px;
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+      word-wrap: break-word;
     }
 
     .introduction {
@@ -113,7 +118,7 @@
 }
 
 @media screen and (max-width: 992px) {
-  .highlight-tools-section {
+  .highlight-tools-section2 {
     padding-bottom: 30px;
     margin-top: 20px;
 
@@ -127,7 +132,7 @@
     }
 
     .row>* {
-      margin-top: 0;
+      // margin-top: 0;
     }
   }
 
@@ -161,6 +166,9 @@
       h3 {
         font-size: 29px;
         margin-bottom: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
       }
 
       .introduction {

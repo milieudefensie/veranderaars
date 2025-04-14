@@ -68,7 +68,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
             </div>
           )}
 
-          {title && <h1>{title}</h1>}
+          {title && <h1 className="main-heading">{title}</h1>}
 
           {/* Form  */}
           {registrationForm && (
@@ -128,7 +128,16 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
 export default Event;
 
 export const PageQuery = graphql`
-  query EventById($id: String) {
+  query EventById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -174,6 +183,7 @@ export const PageQuery = graphql`
         value
         blocks {
           __typename
+          ...BlockEmbedIframe
           ... on DatoCmsNarrativeBlock {
             id: originalId
             title
@@ -207,134 +217,14 @@ export const PageQuery = graphql`
               }
             }
             ctas {
-              ... on DatoCmsCta {
-                id
-                title
-                style
-                link {
-                  ... on DatoCmsGlobalLink {
-                    id
-                    content {
-                      ... on DatoCmsListTool {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsBasicPage {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsEvent {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsListEvent {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsListGroup {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsTool {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsGroup {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              ...AppCta
             }
           }
           ... on DatoCmsHighlightEvent {
             id: originalId
             sectionTitle
             cta {
-              ... on DatoCmsCta {
-                id
-                title
-                style
-                link {
-                  ... on DatoCmsGlobalLink {
-                    id
-                    content {
-                      ... on DatoCmsListTool {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsBasicPage {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsEvent {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsListEvent {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsListGroup {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsTool {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                      ... on DatoCmsGroup {
-                        id
-                        slug
-                        model {
-                          apiKey
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              ...AppCta
             }
             items {
               ... on DatoCmsEvent {
@@ -379,67 +269,7 @@ export const PageQuery = graphql`
                 iconFontPicker
                 backgroundColor
                 cta {
-                  ... on DatoCmsCta {
-                    id
-                    title
-                    style
-                    link {
-                      ... on DatoCmsGlobalLink {
-                        id
-                        content {
-                          ... on DatoCmsListTool {
-                            id
-                            slug
-                            model {
-                              apiKey
-                            }
-                          }
-                          ... on DatoCmsBasicPage {
-                            id
-                            slug
-                            model {
-                              apiKey
-                            }
-                          }
-                          ... on DatoCmsEvent {
-                            id
-                            slug
-                            model {
-                              apiKey
-                            }
-                          }
-                          ... on DatoCmsListEvent {
-                            id
-                            slug
-                            model {
-                              apiKey
-                            }
-                          }
-                          ... on DatoCmsListGroup {
-                            id
-                            slug
-                            model {
-                              apiKey
-                            }
-                          }
-                          ... on DatoCmsTool {
-                            id
-                            slug
-                            model {
-                              apiKey
-                            }
-                          }
-                          ... on DatoCmsGroup {
-                            id
-                            slug
-                            model {
-                              apiKey
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                  ...AppCta
                 }
               }
             }

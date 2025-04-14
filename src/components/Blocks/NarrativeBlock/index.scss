@@ -1,6 +1,7 @@
 .component-narrative-block {
   padding-top: 80px;
   padding-bottom: 115px;
+  overflow: hidden;
 
   h2 {
     margin: 0;
@@ -48,14 +49,14 @@
     padding: 0 !important;
     border-radius: 10px;
     border: 2px solid var(--Zwart, #000);
-    margin-bottom: 32px;
+    margin: 16px 0 32px 0;
 
     .row {
       width: 100%;
       align-items: stretch !important;
     }
 
-    .main-content {
+    .nb-content {
       padding-top: 15px;
       padding-bottom: 40px;
       width: 50%;
@@ -67,6 +68,7 @@
 
     .img-wrapper-nb {
       width: 50%;
+      padding: 0;
 
       .image-wrapper {
         margin: 0 !important;
@@ -115,7 +117,7 @@
       order: 1;
     }
 
-    .main-content {
+    .nb-content {
       order: 2;
     }
 
@@ -132,7 +134,7 @@
         margin: 0;
         flex-direction: column !important;
 
-        .main-content,
+        .nb-content,
         .img-wrapper-nb {
           width: 100%;
         }

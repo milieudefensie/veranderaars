@@ -156,11 +156,23 @@ export const convertTime = (dateTimeString) => {
   return formattedTime;
 };
 
-export const truncateText = (text, maxLength) => {
-  if (text.length <= maxLength) {
-    return text;
+function stripHtml(html) {
+  if (typeof document !== 'undefined') {
+    let temporalDivElement = document.createElement('div');
+    temporalDivElement.innerHTML = html;
+    return temporalDivElement.textContent || temporalDivElement.innerText || '';
   } else {
-    return text.substring(0, maxLength) + '...';
+    return html;
+  }
+}
+
+export const truncateText = (text, maxLength) => {
+  const cleanedText = stripHtml(text);
+
+  if (cleanedText.length <= maxLength) {
+    return cleanedText;
+  } else {
+    return cleanedText.substring(0, maxLength) + '...';
   }
 };
 
@@ -294,4 +306,60 @@ export const mapCslEvents = (events) => {
         },
       }))
     : [];
+};
+
+export const formatCslEvents = (e) => {
+  if (!e) return null;
+  return {
+    id: e.slug.replace(' ', '_'),
+    address: e.location?.query,
+    coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
+    region: e.location?.region,
+    rawStartDate: e.raw_start,
+    rawEndDate: e.raw_end,
+    rawDate: e.start_at,
+    date: e.start_at ? formatDate(e.start_at) : null,
+    hourStart: e.start_at ? convertTime(e.start_at) : null,
+    hourEnd: e.end_at ? convertTime(e.end_at) : null,
+    startInZone: e.start_in_zone,
+    endInZone: e.end_in_zone,
+    introduction: e.description,
+    slug: e.slug,
+    url: e.url,
+    title: e.title,
+    image: { url: e.image_url },
+    labels: e.labels || [],
+    type: e.type,
+    model: e.model,
+    calendar: e.calendar,
+    waiting_list_enabled: e.waiting_list_enabled,
+    max_attendees_count: e.max_attendees_count,
+    model: {
+      apiKey: 'ExternalEvent',
+    },
+    type: 'CSL',
+  };
+};
+
+export const detectService = (url) => {
+  try {
+    const parsedUrl = new URL(url);
+    const hostname = parsedUrl.hostname;
+
+    const allowedWhatsAppHosts = ['chat.whatsapp.com', 'whatsapp.com', 'whatsapp.net'];
+    const allowedSignalHosts = ['signal.org', 'signal.group'];
+    const allowedZoomHosts = ['zoom.us', 'us06web.zoom.us'];
+
+    if (allowedWhatsAppHosts.includes(hostname)) {
+      return 'WhatsApp';
+    } else if (allowedSignalHosts.includes(hostname)) {
+      return 'Signal';
+    } else if (allowedZoomHosts.includes(hostname)) {
+      return 'Zoom';
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
 };

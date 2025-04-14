@@ -1,10 +1,11 @@
 require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 });
+const { languages, defaultLanguage } = require('./languages');
+
 /**
  * @type {import('gatsby').GatsbyConfig}
  */
-
 module.exports = {
   siteMetadata: {
     title: `Milieudefensie`,
@@ -34,5 +35,29 @@ module.exports = {
     'gatsby-plugin-advanced-sitemap',
     'gatsby-plugin-react-helmet',
     `gatsby-plugin-netlify`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `${__dirname}/locales`,
+        name: `locale`,
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-react-i18next',
+      options: {
+        languages,
+        defaultLanguage,
+        siteUrl: `https://veranderaars.milieudefensie.nl/`,
+        i18nextOptions: {
+          debug: true,
+          fallbackLng: 'nl',
+          supportedLngs: ['nl'],
+          defaultNS: 'common',
+          interpolation: {
+            escapeValue: false,
+          },
+        },
+      },
+    },
   ],
 };

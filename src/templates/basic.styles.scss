@@ -4,7 +4,7 @@
   .float-layout {
     min-height: 250px;
 
-    h1 {
+    .main-heading {
       color: var(--black);
       font-family: var(--nb-primary-font);
       font-size: 45px;
@@ -118,8 +118,11 @@
       }
 
       a {
-        color: inherit;
-        text-decoration: underline;
+        color: var(--dark);
+        font-family: var(--nb-primary-font);
+        font-style: normal;
+        font-weight: 600;
+        line-height: 150%;
       }
     }
 
@@ -148,138 +151,6 @@
     }
 
     .content {
-      table {
-        border: 0;
-        width: 100%;
-        margin-bottom: 1rem;
-
-        * {
-          color: var(--dark);
-          font-family: var(--nb-secondary-font);
-          vertical-align: middle;
-        }
-
-        th {
-          padding: 20px;
-          background-color: #EEF5FF;
-          color: var(--dark);
-          font-family: var(--nb-secondary-font);
-          font-size: 16px !important;
-          font-weight: 700 !important;
-          line-height: 150% !important;
-          text-transform: uppercase;
-        }
-
-        tr {
-          border-bottom: 1px solid #CBDFFE;
-
-          td {
-            padding: 20px;
-            color: var(--dark);
-            font-family: var(--nb-secondary-font);
-            font-size: 16px !important;
-            font-style: normal;
-            font-weight: 500 !important;
-            line-height: 150% !important;
-          }
-        }
-      }
-
-      a {
-        color: var(--dark);
-        font-weight: 600;
-        line-height: 150%;
-      }
-
-      ul,
-      ol,
-      p,
-      span {
-        color: var(--black);
-        font-family: var(--nb-secondary-font);
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 140%;
-      }
-
-      ul,
-      ol {
-        padding-left: 2rem;
-        margin: 1rem 0;
-      }
-
-      ul {
-        list-style: disc;
-      }
-
-      ol {
-        list-style: decimal;
-      }
-
-      em {
-        font-style: italic;
-      }
-
-      b,
-      strong {
-        font-weight: bolder;
-      }
-
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        color: var(--dark);
-        font-family: var(--nb-primary-font);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 120%;
-        margin: 1rem 0;
-      }
-
-      h1,
-      h2 {
-        font-size: 39px;
-      }
-
-      h3 {
-        font-size: 31px;
-      }
-
-      h4 {
-        font-size: 25px;
-      }
-
-      h5 {
-        font-size: 22px;
-      }
-
-      h6 {
-        font-size: 20px;
-      }
-
-      blockquote {
-        margin: 20px 0;
-        border-left: 4px solid var(--primary-color);
-        padding-left: 20px;
-
-        * {
-          color: var(--dark);
-          font-family: var(--nb-primary-font);
-          font-size: 31px;
-          font-style: normal;
-          font-weight: 600;
-          line-height: 120%;
-          margin: 0;
-        }
-      }
-
-      p {
-        margin-bottom: 1rem;
-      }
 
       .image-wrapper {
         margin: 1rem 0;
@@ -298,7 +169,7 @@
         }
       }
 
-      .highlight-tools-section {
+      .highlight-tools-section2 {
         padding-bottom: 50px;
 
         .header {
@@ -359,6 +230,13 @@
         padding: 20px;
         background-color: var(--primary-color);
       }
+
+      .spinner-wrapper {
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
 
     .external-register {
@@ -380,12 +258,12 @@
     }
   }
 
-  .float-layout+.highlight-tools-section {
+  .float-layout+.highlight-tools-section2 {
     margin-top: -100px;
   }
 
   .related-section {
-    padding-top: 130px;
+    padding-top: 110px;
     background-image: url('../components/Icons/bg-related.svg');
     background-repeat: no-repeat;
     background-size: cover;
@@ -408,7 +286,7 @@
       }
 
       .main-heading {
-        font-size: 29px !important;
+        font-size: 23px !important;
       }
 
       .pre-header {
@@ -446,10 +324,10 @@
       }
 
       .introduction {
-        font-size: 19px;
+        font-size: 16px;
         font-style: normal;
         font-weight: 700;
-        line-height: 130%;
+        line-height: 135%;
         margin-bottom: 20px;
       }
 
@@ -487,6 +365,12 @@
 
         img {
           object-fit: cover;
+        }
+      }
+
+      .form-wrapper {
+        .spinner-wrapper {
+          min-height: auto;
         }
       }
     }

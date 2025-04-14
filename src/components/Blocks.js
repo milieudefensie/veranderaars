@@ -20,7 +20,7 @@ import ImageGallery from './Blocks/ImageGallery/ImageGallery';
 import Columns from './Blocks/Columns/Columns';
 import { ProtectedLink } from './Global/BotProtection/BotProtection';
 
-export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage = false }) {
+export default function Blocks({ blocks, context, usePrimaryHeading = false, isHomepage = false }) {
   return (
     <>
       {blocks.map((block, index) => {
@@ -36,9 +36,9 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
           case 'DatoCmsTable':
             return <Table key={block.id} content={block} />;
           case 'DatoCmsVideoBlock':
-            return <Video key={block.id} content={block} withContainer />;
+            return <Video key={block.id} content={block} />;
           case 'DatoCmsHighlightEvent':
-            return <ListHighlightEvent key={block.id} block={block} />;
+            return <ListHighlightEvent key={block.id} block={block} context={isHomepage ? context : null} />;
           case 'DatoCmsHighlightTool':
             return <HighlightTools key={block.id} block={block} />;
           case 'DatoCmsTextHubspotForm':
@@ -61,16 +61,11 @@ export default function Blocks({ blocks, usePrimaryHeading = false, isHomepage =
                   justifyContent: block?.alignment ? alignment[block.alignment] : '',
                 }}
               >
-                { !block.whatsappCommunity && (
-                <Cta cta={block} />
-                )}
-                { block.whatsappCommunity && (
-                <ProtectedLink 
-                  to={ block.link.externalUrl }
-                  className="custom-btn custom-btn-primary"
-                >
-                  { block.title }
-                </ProtectedLink>
+                {!block.whatsappCommunity && <Cta cta={block} />}
+                {block.whatsappCommunity && (
+                  <ProtectedLink to={block.link.externalUrl} className="custom-btn custom-btn-primary">
+                    {block.title}
+                  </ProtectedLink>
                 )}
               </div>
             );

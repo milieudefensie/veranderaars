@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { navigate } from 'gatsby';
+import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributor';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';
 
-const Form = ({ event, inputs = [] }) => {
+const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false }) => {
+  const { t } = useTranslation();
+
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
   const [formData, setFormData] = useState({
@@ -22,13 +26,13 @@ const Form = ({ event, inputs = [] }) => {
     setFormData({ ...formData, [name]: value });
 
     const empty = value === '';
-    setErrors({ ...errors, [name]: empty ? 'Verplicht veld' : null });
+    setErrors({ ...errors, [name]: empty ? t('form_required') : null });
 
     if (!empty) {
       if (name === 'email') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValidEmail = emailRegex.test(value);
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: isValidEmail ? null : 'Geen geldig e-mailadres' }));
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: isValidEmail ? null : t('form_invalid_email') }));
       }
 
       if (name === 'postcode') {
@@ -36,7 +40,7 @@ const Form = ({ event, inputs = [] }) => {
         const isValidPostcode = postcodeRegex.test(value);
         setErrors((prevErrors) => ({
           ...prevErrors,
-          [name]: isValidPostcode ? null : 'Voer een geldige postcode in',
+          [name]: isValidPostcode ? null : t('form_postcode_error'),
         }));
       }
     }
@@ -63,18 +67,18 @@ const Form = ({ event, inputs = [] }) => {
 
     Object.keys(formData).forEach((key) => {
       if (formData[key] === '' && key !== 'phone') {
-        newErrors[key] = 'Verplicht veld';
+        newErrors[key] = t('form_required');
       }
     });
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Geen geldig e-mailadres';
+      newErrors.email = t('form_invalid_email');
     }
 
     const postcodeRegex = /^\d{4}\s?[A-Za-z]{2}$/;
     if (!postcodeRegex.test(formData.postcode)) {
-      newErrors.postcode = 'Voer een geldige postcode in';
+      newErrors.postcode = t('form_postcode_error');
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -87,16 +91,25 @@ const Form = ({ event, inputs = [] }) => {
       const submit = await fetch('/api/submit-form', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, waiting_list: isWaitingList }),
       });
 
       const response = await submit.json();
       if (submit.status !== 200) {
         setStatus('fail');
         setErrorMsg(response.message);
+        return;
       } else {
-        navigate('/bedankt-dat-je-komt/');
+        if (!conferenceUrl) {
+          if (isWaitingList) {
+            navigate('/aanmelding-wachtlijst/');
+          } else {
+            navigate('/bedankt-dat-je-komt/');
+          }
+        }
       }
+
+      setStatus('success');
     } catch (error) {
       setStatus('error');
       console.error(error);
@@ -111,13 +124,17 @@ const Form = ({ event, inputs = [] }) => {
   const hasErrors = Object.values(errors).some((e) => e);
   const isLoading = status === 'loading';
 
+  if (conferenceUrl && status === 'success') {
+    return <ConferenceDistributor conferenceUrl={conferenceUrl} />;
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit} className="custom-form">
         {isFieldPresent('first_name') && (
           <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
             <label className="custom-label" htmlFor="firstName">
-              <span>Voornaam</span>
+              <span>{t('form_first_name')}</span>
               <span className="required">*</span>
             </label>
 
@@ -146,7 +163,7 @@ const Form = ({ event, inputs = [] }) => {
         {isFieldPresent('last_name') && (
           <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
             <label className="custom-label" htmlFor="lastName">
-              <span>Achternaam</span>
+              <span>{t('form_last_name')}</span>
               <span className="required">*</span>
             </label>
 
@@ -175,7 +192,7 @@ const Form = ({ event, inputs = [] }) => {
         {isFieldPresent('postcode') && (
           <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
             <label className="custom-label" htmlFor="postcode">
-              <span>Postcode</span>
+              <span>{t('form_postcode')}</span>
               <span className="required">*</span>
             </label>
 
@@ -204,7 +221,7 @@ const Form = ({ event, inputs = [] }) => {
         {isFieldPresent('email') && (
           <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
             <label className="custom-label" htmlFor="email">
-              <span>E-mail</span>
+              <span>{t('form_email')}</span>
               <span className="required">*</span>
             </label>
 
@@ -233,7 +250,7 @@ const Form = ({ event, inputs = [] }) => {
         {isFieldPresent('phone_number') && (
           <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
             <label className="custom-label" htmlFor="phone">
-              <span>Telefoonnummer</span>
+              <span>{t('form_phone')}</span>
             </label>
 
             <div className="input">
@@ -261,7 +278,7 @@ const Form = ({ event, inputs = [] }) => {
 
         <div className="form-field-checkbox" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
           <fieldset>
-            <legend>Ik wil emails ontvangen over de beweging</legend>
+            <legend>{t('form_checkbox')}</legend>
 
             <div className="options">
               <div className="opt">
@@ -273,7 +290,7 @@ const Form = ({ event, inputs = [] }) => {
                   onChange={handleChange}
                   required
                 />
-                <label htmlFor="consent_email_yes">Ja</label>
+                <label htmlFor="consent_email_yes">{t('form_checkbox_yes')}</label>
               </div>
 
               <div className="opt">
@@ -285,7 +302,7 @@ const Form = ({ event, inputs = [] }) => {
                   onChange={handleChange}
                   required
                 />
-                <label htmlFor="consent_email_no">Nee</label>
+                <label htmlFor="consent_email_no">{t('form_checkbox_no')}</label>
               </div>
             </div>
           </fieldset>
@@ -293,7 +310,7 @@ const Form = ({ event, inputs = [] }) => {
 
         <input
           type="submit"
-          value={isLoading ? 'Sending...' : 'Ik ben er bij!'}
+          value={isLoading ? t('form_sending') : isWaitingList ? t('waiting_list_message') : t('form_submit')}
           className={`send-btn ${hasErrors ? 'disabled' : ''}`}
           disabled={hasErrors || isLoading}
         />

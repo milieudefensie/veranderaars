@@ -23,11 +23,10 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
         <HeroBasic image={heroBackgroundImage} backgroundColor={backgroundColor} overlay={false} />
 
         <FloatLayout reduceOverlap>
-          <h1>{title}</h1>
+          <h1 className="main-heading">{title}</h1>
           <SimpleText
             limitedWidth
             block={{ text: introduction }}
-            container={false}
             extraClassNames={true ? 'introduction' : 'introduction-normal'}
           />
 
@@ -37,10 +36,12 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
 
           <BotProtectionProvider
             turnstileMode="managed"
-            onVerificationComplete={(success) => {
-              console.log('Verification status:', success);
+            sessionDuration={60} // Verification valid for 60 minutes
+            onVerificationComplete={(success, error) => {
+              console.log('Verification status:', success, error);
             }}
           >
+            <BotProtectionStatus />
             <div className="row mt-5">
               {ctaBlocks.map((block, index) => {
                 if (block.__typename === 'DatoCmsBlockCta') {
@@ -54,8 +55,6 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
                 }
               })}
             </div>
-
-            <BotProtectionStatus />
           </BotProtectionProvider>
         </FloatLayout>
       </div>
@@ -66,7 +65,16 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
 export default Page;
 
 export const PageQuery = graphql`
-  query PageById($id: String) {
+  query PageById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

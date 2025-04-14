@@ -2,14 +2,14 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import Blocks from '../components/Blocks';
 import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import SimpleText from '../components/Blocks/SimpleText/SimpleText';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 
 const ListTool = ({ pageContext, data: { page, favicon } }) => {
-  const { seo, title, introduction, backgroundColor, heroBackgroundImage, blocks = [] } = page;
+  const { seo, title, introduction, backgroundColor, heroBackgroundImage, content } = page;
 
   return (
     <Layout heroBgColor={backgroundColor}>
@@ -26,7 +26,7 @@ const ListTool = ({ pageContext, data: { page, favicon } }) => {
         <FloatLayout reduceOverlap>
           <h1 className="main-heading">{title}</h1>
           {introduction && <SimpleText limitedWidth block={{ text: introduction }} extraClassNames="single" />}
-          <Blocks blocks={blocks} />
+          <StructuredTextDefault content={content} />
         </FloatLayout>
       </WrapperLayout>
     </Layout>
@@ -36,7 +36,16 @@ const ListTool = ({ pageContext, data: { page, favicon } }) => {
 export default ListTool;
 
 export const PageQuery = graphql`
-  query ListToolById($id: String) {
+  query ListToolById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -53,63 +62,27 @@ export const PageQuery = graphql`
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags
       }
-      blocks {
-        ... on DatoCmsMap {
+      content {
+        value
+        blocks {
+          __typename
           ...BlockMap
-        }
-        ... on DatoCmsColumn {
-          ...BlockColumns
-        }
-        ... on DatoCmsCountdown {
-          ...BlockCountdown
-        }
-        ... on DatoCmsCtaList {
-          ...BlockCtaList
-        }
-        ... on DatoCmsCtaIconsList {
-          ...BlockCtaIconsList
-        }
-        ... on DatoCmsImageGallery {
-          ...BlockImageGallery
-        }
-        ... on DatoCmsNarrativeBlock {
           ...BlockNarrativeBlock
-        }
-        ... on DatoCmsHighlightEvent {
-          ...BlockHighlightEvent
-        }
-        ... on DatoCmsHighlightTool {
-          ...BlockHighlightTools
-        }
-        ... on DatoCmsTextHubspotForm {
-          ...BlockTextHubspot
-        }
-        ... on DatoCmsTable {
-          ...BlockTable
-        }
-        ... on DatoCmsShare {
-          ...BlockShare
-        }
-        ... on DatoCmsImage {
-          ...BlockImage
-        }
-        ... on DatoCmsEmbedIframe {
-          ...BlockEmbedIframe
-        }
-        ... on DatoCmsAcordion {
           ...BlockAccordion
-        }
-        ... on DatoCmsVideoBlock {
+          ...BlockImage
+          ...BlockShare
+          ...BlockHighlightTools
+          ...BlockHighlightEvent
+          ...BlockTable
+          ...BlockEmbedIframe
           ...BlockVideo
-        }
-        ... on DatoCmsSimpleText {
-          ...BlockText
-        }
-        ... on DatoCmsBlockCta {
+          ...BlockTextHubspot
+          ...BlockColumns
+          ...BlockCountdown
+          ...BlockCtaList
+          ...BlockCtaIconsList
+          ...BlockImageGallery
           ...BlockCustomCta
-        }
-        ... on DatoCmsMap {
-          ...BlockMap
         }
       }
     }

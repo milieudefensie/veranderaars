@@ -6,13 +6,13 @@ import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import Map from '../components/Global/Map/Map';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import ListGroupBlock from '../components/Blocks/HighlightGroup/ListGroups';
-import Blocks from '../components/Blocks';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 import FloatCta from '../components/Global/FloatCta/FloatCta';
 
 import './list-basic.styles.scss';
 
 const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) => {
-  const { seo, title, blocks = [] } = page;
+  const { seo, title, content } = page;
   const mappedGroups = Array.isArray(allGroups.edges) ? allGroups.edges.map((raw) => raw.node) : [];
   const [mobileShowMap, setMobileShowMap] = useState(false);
 
@@ -83,15 +83,15 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
               }}
             />
 
-            {Array.isArray(mappedGroups) && <ListGroupBlock items={mappedGroups} withContainer={false} />}
+            {Array.isArray(mappedGroups) && <ListGroupBlock items={mappedGroups} />}
 
             {/* Fixed cta to view all */}
             <FloatCta title="Bekijk lijst" id="groups-list" />
           </div>
 
-          {Array.isArray(blocks) && blocks.length > 0 && (
-            <div className="mt-5 pb-5">
-              <Blocks blocks={blocks} />
+          {content && (
+            <div className="container mt-5 pb-5">
+              <StructuredTextDefault content={content} />
             </div>
           )}
         </div>
@@ -103,7 +103,16 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
 export default ListGroups;
 
 export const PageQuery = graphql`
-  query ListGroupById($id: String) {
+  query ListGroupById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -115,7 +124,6 @@ export const PageQuery = graphql`
           id
           title
           slug
-          address
           coordinates {
             latitude
             longitude
@@ -124,6 +132,7 @@ export const PageQuery = graphql`
             apiKey
           }
           image {
+            url
             gatsbyImageData(width: 900, height: 505)
           }
           tags {
@@ -139,63 +148,27 @@ export const PageQuery = graphql`
       id
       title
       slug
-      blocks {
-        ... on DatoCmsMap {
+      content {
+        value
+        blocks {
+          __typename
           ...BlockMap
-        }
-        ... on DatoCmsColumn {
-          ...BlockColumns
-        }
-        ... on DatoCmsCountdown {
-          ...BlockCountdown
-        }
-        ... on DatoCmsCtaList {
-          ...BlockCtaList
-        }
-        ... on DatoCmsCtaIconsList {
-          ...BlockCtaIconsList
-        }
-        ... on DatoCmsImageGallery {
-          ...BlockImageGallery
-        }
-        ... on DatoCmsNarrativeBlock {
           ...BlockNarrativeBlock
-        }
-        ... on DatoCmsHighlightEvent {
-          ...BlockHighlightEvent
-        }
-        ... on DatoCmsHighlightTool {
-          ...BlockHighlightTools
-        }
-        ... on DatoCmsTextHubspotForm {
-          ...BlockTextHubspot
-        }
-        ... on DatoCmsTable {
-          ...BlockTable
-        }
-        ... on DatoCmsShare {
-          ...BlockShare
-        }
-        ... on DatoCmsImage {
-          ...BlockImage
-        }
-        ... on DatoCmsEmbedIframe {
-          ...BlockEmbedIframe
-        }
-        ... on DatoCmsAcordion {
           ...BlockAccordion
-        }
-        ... on DatoCmsVideoBlock {
+          ...BlockImage
+          ...BlockShare
+          ...BlockHighlightTools
+          ...BlockHighlightEvent
+          ...BlockTable
+          ...BlockEmbedIframe
           ...BlockVideo
-        }
-        ... on DatoCmsSimpleText {
-          ...BlockText
-        }
-        ... on DatoCmsBlockCta {
+          ...BlockTextHubspot
+          ...BlockColumns
+          ...BlockCountdown
+          ...BlockCtaList
+          ...BlockCtaIconsList
+          ...BlockImageGallery
           ...BlockCustomCta
-        }
-        ... on DatoCmsMap {
-          ...BlockMap
         }
       }
       seo: seoMetaTags {

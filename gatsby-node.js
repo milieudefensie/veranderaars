@@ -35,7 +35,9 @@ exports.createSchemaCustomization = ({ actions }) => {
       internal: Internal
       location: Location
       calendar: Calendar
-      hiddenAddress: Boolean      
+      hiddenAddress: Boolean     
+      web_conference_url: String 
+      waiting_list_enabled: Boolean
     }
     type Calendar {
       name: String
@@ -62,6 +64,17 @@ exports.createSchemaCustomization = ({ actions }) => {
     }
   `;
   createTypes(externalEvent);
+
+  const typeDefs = `
+    type DatoCmsRedirect implements Node {
+      sourcePath: String!
+      destinationPath: String!
+      statusCode: String!
+      active: Boolean!
+    }
+  `;
+
+  createTypes(typeDefs);
 };
 
 exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
@@ -81,8 +94,9 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
-
   const receivedToken = await accessToken.json();
+
+  // console.log('New token: ', receivedToken.access_token);
 
   for (const event of allEvents) {
     const result = await fetch(`${cslPath}/api/v1/events/${event.slug}?access_token=${receivedToken.access_token}`, {
@@ -94,6 +108,35 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     if (shouldCreateEvent(eventResponse)) {
       console.log('[CSL Source] Creating: ', eventResponse.title);
       const cslInputs = await scrapingFormInputs(eventResponse);
+
+      let isWaitingListEnabled = false;
+      if (eventResponse.max_attendees_count) {
+        let allAttendees = [];
+        let currentPage = 1;
+
+        do {
+          const response = await fetch(
+            `${cslPath}/api/v1/events/${event.slug}/attendees?access_token=${receivedToken.access_token}&page=${currentPage}`,
+            { method: 'GET', headers: { Accept: 'application/json', 'Content-Type': 'application/json' } }
+          );
+
+          const data = await response.json();
+          allAttendees = allAttendees.concat(data.attendees);
+          currentPage = data.meta.next_page;
+          totalPages = data.meta.total_pages;
+        } while (currentPage);
+
+        const attendeesWithAttendingStatus = allAttendees.filter(
+          (attendee) => attendee.attending_status === 'attending'
+        );
+        if (attendeesWithAttendingStatus.length >= eventResponse.max_attendees_count) {
+          console.log(
+            `Event ${event.slug} has waiting list enabled. Total attendees: ${attendeesWithAttendingStatus.length}. Max attendees: ${eventResponse.max_attendees_count}`
+          );
+
+          isWaitingListEnabled = true;
+        }
+      }
 
       createNode({
         ...eventResponse,
@@ -110,6 +153,9 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         time_zone: eventResponse.time_zone,
         inputs: cslInputs || [],
         hiddenAddress: event.hiddenAddress,
+        web_conference_url: eventResponse.web_conference_url,
+        max_attendees_count: eventResponse.max_attendees_count,
+        waiting_list_enabled: isWaitingListEnabled,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(eventResponse),
@@ -121,8 +167,13 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   }
 
   // Extras events
-  const slugs = ['shell-borrel-in-maastricht'];
-  const slugsFiltered = slugs.filter((slug) => allEvents.find((e) => e.slug === slug));
+  const slugsFiltered = [
+    //'shell-borrel-in-maastricht',
+    'test-event-whatsapp-link',
+    'test-event-zoom',
+  ];
+  // const slugsFiltered = slugs.filter((slug) => allEvents.find((e) => e.slug === slug));
+
   for (const eventSlug of slugsFiltered) {
     const result = await fetch(`${cslPath}/api/v1/events/${eventSlug}?access_token=${receivedToken.access_token}`, {
       method: 'GET',
@@ -161,13 +212,14 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 };
 
 exports.createPages = ({ graphql, actions }) => {
-  const { createPage, createSlice } = actions;
+  const { createPage, createSlice, createRedirect } = actions;
 
   createSlice({ id: `header`, component: require.resolve(`./src/components/Layout/Header.js`) });
   createSlice({ id: `footer`, component: require.resolve(`./src/components/Layout/Footer/Footer.js`) });
 
   return new Promise((resolve, reject) => {
     const templates = {
+      home: path.resolve('./src/templates/home.js'),
       page: path.resolve('./src/templates/page.js'),
       event: path.resolve('./src/templates/event.js'),
       listEvents: path.resolve('./src/templates/listEvents.js'),
@@ -188,8 +240,10 @@ exports.createPages = ({ graphql, actions }) => {
               url
               alt
             }
+            slugOfHighlightedEvent
+            slugOfHighlightedEventAgenda
+            eventsHidden
           }
-
           pages: allDatoCmsBasicPage {
             edges {
               node {
@@ -264,12 +318,53 @@ exports.createPages = ({ graphql, actions }) => {
             slug
             title
           }
+
+          redirects: allDatoCmsRedirect(filter: { active: { eq: true } }) {
+            edges {
+              node {
+                sourcePath
+                destinationPath
+                statusCode
+              }
+            }
+          }
         }
       `).then((result) => {
         if (result.errors) {
           console.log(result.errors);
           reject(result.errors);
         }
+
+        const cslHighlightedEvent = result.data.configuration.slugOfHighlightedEvent;
+        const cslHighlightedEventAgenda = result.data.configuration.slugOfHighlightedEventAgenda;
+        const cslSlugsOfEventsHidden = result.data.configuration.eventsHidden;
+
+        // Create homepage
+        createPage({
+          path: '/',
+          component: templates.home,
+          context: {
+            cslHighlightedEvent: cslHighlightedEvent,
+          },
+        });
+
+        // Debug output - check what's coming from the API
+        console.log('Redirects data:', JSON.stringify(result.data.redirects, null, 2));
+
+        const redirects = result.data.redirects.edges;
+        redirects.forEach(({ node }) => {
+          if (typeof node.sourcePath === 'string' && typeof node.destinationPath === 'string') {
+            createRedirect({
+              fromPath: node.sourcePath,
+              toPath: node.destinationPath,
+              statusCode: parseInt(node.statusCode || '301'),
+              isPermanent: (node.statusCode || '301') === '301',
+            });
+            console.log(`Created redirect: ${node.sourcePath} → ${node.destinationPath}`);
+          } else {
+            console.warn(`Skipping invalid redirect: ${JSON.stringify(node)}`);
+          }
+        });
 
         // create the pages
         const pages = result.data.pages.edges;
@@ -292,7 +387,9 @@ exports.createPages = ({ graphql, actions }) => {
             component: templates.listEvents,
             context: {
               slug: listEvents.slug,
+              cslHighlightedEvent: cslHighlightedEventAgenda,
               currentDate: new Date().toISOString().split('T')[0],
+              cslEventsHidden: cslSlugsOfEventsHidden,
             },
           });
         }
@@ -334,8 +431,19 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
+        // Group detail
+        const RADIUS_KM = 15;
+        const KM_PER_DEGREE_LAT = 111;
+        const KM_PER_DEGREE_LNG = 111;
+
         const groups = result.data.groups.edges;
         for (const group of groups) {
+          const latitude = group.node.coordinates?.latitude;
+          const longitude = group.node.coordinates?.longitude;
+
+          const latRange = RADIUS_KM / KM_PER_DEGREE_LAT;
+          const lngRange = RADIUS_KM / (KM_PER_DEGREE_LNG * Math.cos((latitude * Math.PI) / 180));
+
           createPage({
             path: `/groep/${group.node.slug}`,
             component: templates.group,
@@ -345,14 +453,14 @@ exports.createPages = ({ graphql, actions }) => {
               currentDate: new Date().toISOString().split('T')[0],
 
               // latitude
-              latitude: group.node.coordinates?.latitude,
-              maxLat: group.node.coordinates?.latitude ? group.node.coordinates.latitude + 1 : null,
-              minLat: group.node.coordinates?.latitude ? group.node.coordinates.latitude - 1 : null,
+              latitude: latitude,
+              maxLat: latitude ? latitude + latRange : null,
+              minLat: latitude ? latitude - latRange : null,
 
               // longitude
-              longitude: group.node.coordinates?.longitude,
-              maxLon: group.node.coordinates?.longitude ? group.node.coordinates.longitude + 1 : null,
-              minLon: group.node.coordinates?.longitude ? group.node.coordinates.longitude - 1 : null,
+              longitude: longitude,
+              maxLon: longitude ? longitude + lngRange : null,
+              minLon: longitude ? longitude - lngRange : null,
             },
           });
         }

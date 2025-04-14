@@ -1,5 +1,6 @@
 import React from 'react';
-import { StructuredText } from 'react-datocms';
+import { renderNodeRule, StructuredText } from 'react-datocms';
+import { isHeading, isParagraph, isLink } from 'datocms-structured-text-utils';
 import ImageWrapper from '../../Global/Image/ImageWrapper';
 import Accordion from '../../Blocks/Accordion/Accordion';
 import EmbedIframe from '../../Blocks/EmbedIframe/EmbedIframe';
@@ -20,6 +21,8 @@ import Columns from '../Columns/Columns';
 import MapFilter from '../MapFilter/MapFilter';
 
 const StructuredTextDefault = ({ content }) => {
+  if (!content || !content.value) return null;
+
   return (
     <StructuredText
       data={content}
@@ -78,6 +81,27 @@ const StructuredTextDefault = ({ content }) => {
             return null;
         }
       }}
+      customNodeRules={[
+        renderNodeRule(isParagraph, ({ adapter: { renderNode }, node, children, key, ancestors }) => {
+          return renderNode('p', { className: 'ui-text' }, children);
+        }),
+        renderNodeRule(isHeading, ({ adapter: { renderNode }, node, children, key, ancestors }) => {
+          return renderNode(`h${node.level}`, { className: 'ui-heading' }, children);
+        }),
+        renderNodeRule(isLink, ({ adapter: { renderNode }, node, children, key, ancestors }) => {
+          const { url, target, rel } = node;
+          return renderNode(
+            'a',
+            {
+              className: 'ui-link',
+              href: url,
+              target: target || '_self',
+              rel: rel || 'noopener noreferrer',
+            },
+            children
+          );
+        }),
+      ]}
     />
   );
 };
