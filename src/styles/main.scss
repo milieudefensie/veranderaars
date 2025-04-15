@@ -28,15 +28,19 @@
 }
 
 .ui-form-hubspot form .hs-fieldtype-checkbox label,
-.ui-form-hubspot form .hs-fieldtype-radio label {
+.ui-form-hubspot form .hs-fieldtype-radio label, .ui-form-hubspot form .hs-fieldtype-booleancheckbox label {
   display: flex;
   align-items: center;
   margin-bottom:12px;
 }
 
 .ui-form-hubspot form .hs-fieldtype-checkbox input,
-.ui-form-hubspot form .hs-fieldtype-radio input {
+.ui-form-hubspot form .hs-fieldtype-radio input, .ui-form-hubspot form .hs-fieldtype-booleancheckbox input {
   height: 32px !important;
   width: 32px !important;
   margin-right: 12px;
+}
+
+.ui-form-hubspot form #hsForm_7702d1a0-c166-4248-99ff-5ebdbe1d30b5 .legal-consent-container{
+  order: auto !important
 }
