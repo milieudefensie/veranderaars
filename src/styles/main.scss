@@ -11,3 +11,14 @@
 
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
+
+// QUICK & DIRTY FIX (so that we can go live today)
+hs-form-checkbox
+
+.ui-form-hubspot form .hs-form-field.hs-fieldtype-checkbox label {
+position: static;
+}
+
+.ui-form-hubspot form .hs-form-field.hs-fieldtype-checkbox .input input{
+width: auto;
+}
