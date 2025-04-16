@@ -202,7 +202,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         time_zone: event.time_zone,
         inputs: cslInputs || [],
         hiddenAddress: event.hidden_address,
-        rich_description: eventResponse.rich_description,
+        rich_description: event.rich_description,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(event),
