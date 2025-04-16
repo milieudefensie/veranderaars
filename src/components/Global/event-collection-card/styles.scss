@@ -1,0 +1,120 @@
+.ui-event-collection-card {
+  display: grid;
+  background-color: var(--white);
+  cursor: pointer;
+
+  position: relative;
+  outline: 0 solid #0000;
+  outline-offset: 2px;
+  position: relative;
+  transition: all .2s ease-in-out;
+  border-radius: .5rem;
+  overflow: hidden;
+
+  .ui-event-card-v2 {
+    border-radius: unset;
+
+    &:hover {
+      translate: unset;
+    }
+  }
+
+  .related-events {
+    border-color: oklch(.922 0 0);
+    border-top-width: 2px;
+    border-style: solid;
+
+    ul {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding: 0;
+      margin: 0;
+
+      a {
+        color: var(--black);
+        text-decoration: inherit;
+
+        li {
+          align-items: center;
+          margin-inline: calc(.25rem * 0);
+
+          --list-grid-cols: minmax(0, auto) 1fr;
+          border-radius: var(--radius-box);
+          display: grid;
+          gap: 1rem;
+          grid-auto-flow: column;
+          grid-template-columns: var(--list-grid-cols);
+          padding: 1rem;
+          position: relative;
+          word-break: break-word;
+
+          .icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: calc(.25rem * 10);
+            width: calc(.25rem * 10);
+
+            grid-row-start: 1;
+            color: oklch(76.04% .1741 129.85);
+            background-color:
+              color-mix(in oklab, oklch(76.04% .1741 129.85) 10%, transparent);
+            border-radius: 3.40282e+38px;
+          }
+
+          .metadata {
+            grid-row-start: 1;
+
+            .date {
+              font-size: .7rem;
+              font-weight: 700;
+            }
+
+            .type {
+              opacity: .6;
+              text-transform: uppercase;
+              font-weight: 600;
+              font-size: .6rem;
+              line-height: 1.33333;
+            }
+
+            .intro {
+              color: var(--black);
+              font-size: .65rem;
+              line-height: 1.42857;
+            }
+          }
+        }
+
+        &:hover {
+          background-color: color-mix(in oklab, oklch(76.04% .1741 129.85) 20%, transparent);
+        }
+      }
+    }
+  }
+
+  &.vertical-layout {
+    display: flex;
+    flex-direction: column;
+
+    .related-events ul {
+      display: flex;
+      flex-direction: column;
+
+      li {
+        .icon {
+          svg {
+            width: 21px;
+            height: 21px;
+          }
+        }
+      }
+    }
+  }
+
+  &:hover {
+    translate: 0 calc(0.25rem * -1);
+  }
+}

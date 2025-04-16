@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-
 export const pathToModel = (model = null, slug = '') => {
   if (model === 'basicPage') {
     return `/${slug}`;
@@ -363,3 +362,116 @@ export const detectService = (url) => {
     return null;
   }
 };
+
+// test
+const ZONE = 'Europe/Amsterdam';
+
+function parseCmsEventDate(rawDate, hour, fallback) {
+  const cleanHour = typeof hour === 'string' ? extractNumericHour(hour) : fallback;
+  return DateTime.fromFormat(`${rawDate} ${cleanHour}`, 'yyyy-MM-dd HH:mm').setZone(ZONE);
+}
+
+function parseCslEventDate(dateString) {
+  return dateString ? DateTime.fromFormat(dateString, "yyyy-MM-dd'T'HH:mm:ssZZ") : null;
+}
+
+function shouldIncludeEvent(event, hiddenSlugs, hideInAgendaPage) {
+  if (!hideInAgendaPage) return true;
+  if (event.type === 'CSL' && hiddenSlugs.includes(event.slug)) return false;
+  return !event.labels?.includes('exclude_in_agenda');
+}
+
+function dedupeEventsBySlug(events) {
+  const slugsSeen = new Set();
+  return events.filter((event) => {
+    if (slugsSeen.has(event.slug)) return false;
+    slugsSeen.add(event.slug);
+    return true;
+  });
+}
+
+export function getCombinedEvents(cmsEvents, cslEvents, hideInAgendaPage = false, slugsOfHiddenCSLEvents = null) {
+  const currentDateTime = DateTime.now().setZone(ZONE);
+  const hiddenSlugs = slugsOfHiddenCSLEvents ? slugsOfHiddenCSLEvents.split(',') : [];
+
+  const formattedCsl = cslEvents.map(formatCslEvents);
+
+  const combinedEvents = [...cmsEvents, ...formattedCsl]
+    .filter((event) => shouldIncludeEvent(event, hiddenSlugs, hideInAgendaPage))
+    .map((event) => {
+      let startDate, endDate;
+
+      if (event.type === 'CSL') {
+        startDate = parseCslEventDate(event.startInZone);
+        endDate = parseCslEventDate(event.endInZone) || startDate;
+      } else {
+        startDate = parseCmsEventDate(event.rawDate, event.hourStart, '00:00');
+        endDate = parseCmsEventDate(event.rawDate, event.hourEnd, '23:59');
+      }
+
+      return {
+        ...event,
+        startDateToCompare: startDate,
+        endDateToCompare: endDate,
+      };
+    })
+    .filter((event) => {
+      const { startDateToCompare, endDateToCompare } = event;
+      if (!startDateToCompare?.isValid || !endDateToCompare?.isValid) return false;
+      return (
+        startDateToCompare > currentDateTime ||
+        (startDateToCompare <= currentDateTime && endDateToCompare >= currentDateTime)
+      );
+    })
+    .sort((a, b) => a.startDateToCompare - b.startDateToCompare);
+
+  return dedupeEventsBySlug(combinedEvents);
+}
+
+function getEventsInRange(events, startDate, endDate) {
+  return events.filter((event) => event.startDateToCompare >= startDate && event.startDateToCompare <= endDate);
+}
+
+export function getEventsToday(events) {
+  const now = DateTime.now().setZone(ZONE);
+  const start = now.startOf('day');
+  const end = now.endOf('day');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsTomorrow(events) {
+  const tomorrow = DateTime.now().setZone(ZONE).plus({ days: 1 });
+  const start = tomorrow.startOf('day');
+  const end = tomorrow.endOf('day');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsDayAfterTomorrow(events) {
+  const dayAfterTomorrow = DateTime.now().setZone(ZONE).plus({ days: 2 });
+  const start = dayAfterTomorrow.startOf('day');
+  const end = dayAfterTomorrow.endOf('day');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsRestOfWeek(events) {
+  const today = DateTime.now().setZone(ZONE);
+  const start = today.plus({ days: 3 }).startOf('day');
+  const end = today.endOf('week');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsNextWeek(events) {
+  const today = DateTime.now().setZone(ZONE);
+  const start = today.plus({ weeks: 1 }).startOf('week');
+  const end = today.plus({ weeks: 1 }).endOf('week');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsRestOfMonth(events) {
+  const today = DateTime.now().setZone(ZONE);
+  const endOfThisWeek = today.endOf('week');
+  const endOfNextWeek = today.plus({ weeks: 1 }).endOf('week');
+  const start = endOfNextWeek.plus({ days: 1 }).startOf('day');
+  const end = today.endOf('month');
+  return getEventsInRange(events, start, end);
+}

@@ -1,1 +1,86 @@
-.ui-event-layout {}
+.ui-event-layout {
+  padding-bottom: 150px;
+
+  header {
+    padding-top: 20vh;
+    padding-bottom: 20vh;
+    padding-inline: calc(.25rem * 4);
+    text-align: center;
+    background-color: oklch(58.2% .2226 304.59);
+
+    h1 {
+      font-size: 6rem;
+      line-height: 1;
+      font-family: var(--nb-primary-font);
+      color: var(--white);
+      margin: 0;
+    }
+
+    p {
+      font-size: 1.25rem;
+      line-height: 1.4;
+      color: var(--white);
+    }
+  }
+
+  .negative-margin {
+    margin-top: -16vh;
+  }
+
+  .featured-collection {
+    padding-block: calc(.25rem * 7);
+  }
+
+  .heading {
+    padding-block: calc(.25rem * 6);
+    font-size: 1.8em;
+    line-height: 1.11111;
+    font-weight: 700;
+    color: oklch(14% .004 49.25);
+  }
+
+  .grid-events {
+    display: grid;
+    gap: calc(.25rem * 4);
+    margin-bottom: 1rem;
+
+    &.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .map-container {
+    .map-wrapper {
+      margin-bottom: 1rem;
+
+      .mapboxgl-map {
+        font: 12px/20px Helvetica Neue, Arial, Helvetica, sans-serif;
+        border-radius: .375rem;
+      }
+    }
+
+    .alert-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      background-color: oklch(92% .003 48.717);
+      border: 2px solid oklch(92% .003 48.717);
+      border-radius: .5rem;
+      color: oklch(14% .004 49.25);
+
+      padding-block: .75rem;
+      padding-inline: 1rem;
+
+      span {
+        color: oklch(14% .004 49.25);
+        font-size: .7rem;
+        line-height: 1.25rem;
+      }
+    }
+  }
+}
