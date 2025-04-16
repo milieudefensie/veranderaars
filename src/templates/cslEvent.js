@@ -26,6 +26,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     image_url,
     additional_image_sizes_url,
     description,
+    rich_description,
     start_in_zone,
     end_in_zone,
     location,
@@ -166,9 +167,9 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             </div>
           )}
 
-          {description && (
+          {rich_description && (
             <div className="content" style={{ whiteSpace: 'break-spaces' }}>
-              <p dangerouslySetInnerHTML={{ __html: description }} />
+              <p dangerouslySetInnerHTML={{ __html: rich_description }} />
             </div>
           )}
         </FloatLayout>
@@ -206,6 +207,7 @@ export const PageQuery = graphql`
       title
       url
       description
+      rich_description
       raw_start
       raw_end
       start_at

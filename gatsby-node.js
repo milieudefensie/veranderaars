@@ -14,6 +14,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       title: String!
       url: String
       description: String
+      rich_description: String
       start_at: Date
       start_tz: String
       raw_start: String
@@ -156,6 +157,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         web_conference_url: eventResponse.web_conference_url,
         max_attendees_count: eventResponse.max_attendees_count,
         waiting_list_enabled: isWaitingListEnabled,
+        rich_description: eventResponse.rich_description,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(eventResponse),
@@ -200,6 +202,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         time_zone: event.time_zone,
         inputs: cslInputs || [],
         hiddenAddress: event.hidden_address,
+        rich_description: eventResponse.rich_description,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(event),
