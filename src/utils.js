@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+
 export const pathToModel = (model = null, slug = '') => {
   if (model === 'basicPage') {
     return `/${slug}`;
@@ -312,6 +313,7 @@ export const formatCslEvents = (e) => {
   return {
     id: e.slug.replace(' ', '_'),
     address: e.location?.query,
+    location: e.location,
     coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
     region: e.location?.region,
     rawStartDate: e.raw_start,
@@ -429,7 +431,10 @@ export function getCombinedEvents(cmsEvents, cslEvents, hideInAgendaPage = false
 }
 
 function getEventsInRange(events, startDate, endDate) {
-  return events.filter((event) => event.startDateToCompare >= startDate && event.startDateToCompare <= endDate);
+  return events.filter((event) => {
+    const eventDate = DateTime.fromISO(event.startDateToCompare, { zone: ZONE });
+    return eventDate >= startDate && eventDate <= endDate;
+  });
 }
 
 export function getEventsToday(events) {
@@ -475,3 +480,165 @@ export function getEventsRestOfMonth(events) {
   const end = today.endOf('month');
   return getEventsInRange(events, start, end);
 }
+
+export function getWeekendEvents(events) {
+  const today = DateTime.now().setZone(ZONE);
+  const saturday = today.endOf('week').minus({ days: 1 }).startOf('day');
+  const sunday = today.endOf('week').startOf('day');
+  const end = today.endOf('week').endOf('day');
+  return getEventsInRange(events, saturday, end);
+}
+
+export function getEventsWeekDays(events, fromDayOffset, toDayOffset) {
+  const today = DateTime.now().setZone(ZONE);
+  const start = today.plus({ days: fromDayOffset }).startOf('day');
+  const end = today.plus({ days: toDayOffset }).endOf('day');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsGroupedByFutureMonths(events) {
+  const now = DateTime.now().setZone(ZONE).endOf('month');
+  const futureEvents = events.filter((event) => {
+    const eventDate = DateTime.fromISO(event.date).setZone(ZONE);
+    return eventDate > now;
+  });
+
+  const grouped = futureEvents.reduce((acc, event) => {
+    const eventDate = DateTime.fromISO(event.date).setZone(ZONE);
+    const monthKey = eventDate.toFormat('yyyy-MM'); // e.g., "2025-05"
+    if (!acc[monthKey]) acc[monthKey] = [];
+    acc[monthKey].push(event);
+    return acc;
+  }, {});
+
+  return grouped;
+}
+
+export function getDayAfterTomorrowLabel() {
+  const dayAfterTomorrow = DateTime.now().setZone(ZONE).plus({ days: 2 });
+  return dayAfterTomorrow.setLocale('nl').toFormat('cccc'); // e.g. "woensdag"
+}
+
+export function formatEventDate(dateStr, hourStr) {
+  const isTimeValid = /^\d{2}:\d{2}$/.test(hourStr);
+  const now = DateTime.local().setLocale('nl');
+
+  let dt;
+
+  if (isTimeValid) {
+    dt = DateTime.fromISO(`${dateStr}T${hourStr}`, { locale: 'nl' });
+  } else {
+    dt = DateTime.fromISO(dateStr, { locale: 'nl' });
+  }
+
+  if (dt.hasSame(now, 'day')) {
+    return isTimeValid ? `Vandaag ${dt.toFormat('HH:mm')}` : 'Vandaag';
+  }
+
+  if (dt.hasSame(now.plus({ days: 1 }), 'day')) {
+    return isTimeValid ? `Morgen ${dt.toFormat('HH:mm')}` : 'Morgen';
+  }
+
+  const dayFormatted = dt.toFormat(isTimeValid ? 'cccc, d LLLL HH:mm' : 'cccc, d LLLL');
+  return dayFormatted.charAt(0).toUpperCase() + dayFormatted.slice(1);
+}
+
+export const dummyEvents = [
+  // Hoy
+  {
+    id: '1',
+    type: 'concert',
+    title: 'Concert Vandaag',
+    introduction: 'Een geweldig concert op dezelfde dag.',
+    date: DateTime.now().setZone(ZONE),
+    // hourStart: '20:00',
+    image: {
+      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
+    },
+  },
+  {
+    id: '2',
+    type: 'expo',
+    title: 'Expo Vandaag zonder tijd',
+    introduction: 'Geen vast tijdstip voor deze expo.',
+    date: DateTime.now().setZone(ZONE),
+    hourStart: 'tijd en locatie verschilt per AVA',
+    image: {
+      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
+    },
+  },
+
+  // Mañana
+  {
+    id: '3',
+    type: 'workshop',
+    title: 'Workshop Morgen',
+    introduction: 'Leer iets nieuws morgen.',
+    date: DateTime.now().setZone(ZONE).plus({ days: 1 }).toISODate(),
+    hourStart: '15:00',
+    image: {
+      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
+    },
+  },
+
+  // Esta semana
+  {
+    id: '4',
+    type: 'talk',
+    title: 'Lezing deze week',
+    introduction: 'Een interessante lezing in deze week.',
+    date: DateTime.now().setZone(ZONE).plus({ days: 3 }).toISODate(),
+    hourStart: '18:30',
+    image: {
+      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
+    },
+  },
+
+  // Próxima semana
+  {
+    id: '5',
+    type: 'performance',
+    title: 'Performance volgende week',
+    introduction: 'Een performance die volgende week plaatsvindt.',
+    date: DateTime.now().setZone(ZONE).plus({ weeks: 1 }).toISODate(),
+    hourStart: '21:00',
+    hourEnd: '22:30',
+    image: {
+      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
+    },
+  },
+
+  // Próximos meses
+  {
+    id: '6',
+    type: 'festival',
+    title: 'Zomerfestival',
+    introduction: 'Een festival in de zomer.',
+    date: DateTime.now().setZone(ZONE).plus({ months: 2 }).toISODate(),
+    // hourStart: '16:00',
+    image: {
+      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
+    },
+  },
+  {
+    id: '7',
+    type: 'meeting',
+    title: 'Netwerkbijeenkomst herfst',
+    introduction: 'Een zakelijke netwerkbijeenkomst.',
+    date: DateTime.now().setZone(ZONE).plus({ months: 5 }).toISODate(),
+    // hourStart: 'tijd en locatie verschilt per AVA',
+    image: {
+      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
+    },
+  },
+].map((event) => {
+  const isTimeValid = /^\d{2}:\d{2}$/.test(event.hourStart);
+  const dateTime = isTimeValid
+    ? DateTime.fromISO(`${event.date}T${event.hourStart}`, { zone: ZONE })
+    : DateTime.fromISO(event.date, { zone: ZONE });
+
+  return {
+    ...event,
+    startDateToCompare: dateTime.toISO(),
+  };
+});

@@ -118,3 +118,14 @@
     translate: 0 calc(0.25rem * -1);
   }
 }
+
+@media screen and (max-width: 992px) {
+  .ui-event-collection-card {
+    .related-events {
+      ul {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}

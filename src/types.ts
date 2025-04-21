@@ -1,21 +1,41 @@
 export type EventType = {
   id: string;
-  __typename: string;
+  __typename?: string;
   type: string;
   title: string;
-  slug: string;
-  model: Model;
+  slug?: string;
+  model?: ModelType;
   introduction: string;
-  date: string;
-  location: string;
-  image: {
-    gatsbyImageData?: unknown;
-    url: string;
-  };
+  date?: string;
+  hourStart?: string;
+  hourEnd?: string;
+  image?: ImageType;
   image_url?: string;
   tags?: any[];
   externalLink?: string;
   url?: string;
+  online_event?: boolean;
+  address?: string;
+  region?: string;
+  location?: LocationType;
+};
+
+export type ImageType = {
+  gatsbyImageData?: unknown;
+  url: string;
+};
+
+export type LocationType = {
+  latitude: number;
+  longitude: number;
+  postal_code: string;
+  country: string;
+  region: string;
+  locality: string;
+  query: string;
+  street: string;
+  street_number: string;
+  venue: string;
 };
 
 export type EventCollectionType = {
@@ -24,9 +44,11 @@ export type EventCollectionType = {
   subtitle: string;
   description: string;
   ctas?: CtaType[];
+  image?: ImageType;
+  relatedEvents?: EventType[];
 };
 
-export type Model = {
+export type ModelType = {
   apiKey: string;
 };
 

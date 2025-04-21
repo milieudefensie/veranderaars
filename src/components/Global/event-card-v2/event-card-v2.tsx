@@ -10,10 +10,11 @@ type Props = {
   event: EventType;
   vertical?: boolean;
   isHighlighted?: boolean;
+  lessInfo?: boolean;
 };
 
-const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted = false }) => {
-  const { title, introduction, image, image_url, tags, externalLink, url, __typename, type } = event || {};
+const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted = false, lessInfo }) => {
+  const { title, introduction, image, image_url, tags, externalLink, url, __typename, type, location } = event || {};
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
   const withImage = image?.gatsbyImageData || image?.url || image_url;
@@ -27,7 +28,7 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
         <div>
           {Array.isArray(tags) && tags.length > 0 ? <TagList tags={tags} /> : null}
           <h3>{title}</h3>
-          <div className="type">Online</div>
+          <div className="type">{isCslEvent ? location?.street : type}</div>
           <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
         </div>
 
@@ -41,7 +42,7 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
       <a
         href={externalLink || url}
         target={`${externalLink ? '' : '_blank'}`}
-        className={`event-card ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'}`}
+        className={`event-card ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'} ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} `}
       >
         {cardContent()}
       </a>
@@ -49,7 +50,7 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
   }
 
   return (
-    <Link to={event} className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''}`}>
+    <Link to={event} className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''}`}>
       {cardContent()}
     </Link>
   );

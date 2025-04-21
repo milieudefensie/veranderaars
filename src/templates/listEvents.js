@@ -11,70 +11,21 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
-  const { title, seo, highlighEvent, buttonOnMap, content } = page;
+  const { title, seo, highlighEvent, highlightedEventCollection, secondaryFeaturedCollection, buttonOnMap, content } =
+    page;
   const mergedEvents = getCombinedEvents(cmsEvents, cslEvents, true, pageContext?.cslEventsHidden);
-  const maybeEventHighlighted = cslHighlightEvent ? formatCslEvents(cslHighlightEvent) : highlighEvent;
+  // const maybeEventHighlighted = cslHighlightEvent ? formatCslEvents(cslHighlightEvent) : highlighEvent;
 
   return (
     <Layout bgColor="secondary-bg" extraClassNames="list-pages">
       <SeoDatoCMS seo={seo} favicon={favicon} />
-      <EventLayout events={mergedEvents} highlighEvent={maybeEventHighlighted} />
+      <EventLayout
+        events={mergedEvents}
+        featuredCollection={highlightedEventCollection}
+        extraCollection={secondaryFeaturedCollection}
+      />
     </Layout>
   );
-
-  // return (
-  //   <Layout bgColor="secondary-bg" extraClassNames="list-pages">
-  //     <SeoDatoCMS seo={seo} favicon={favicon} />
-
-  //     <WrapperLayout variant="white" responsiveVariant="secondary-bg">
-  //       <HeroBasic backgroundColor="light" responsiveVariant="event" />
-
-  //       <div className="list-event-wrapper">
-  //         <div className="container">
-  //           {title && <h1>{title}</h1>}
-
-  //           {(cslHighlightEvent || highlighEvent) && (
-  //             <div className="highlighted-event-wrapper">
-  //               <EventCard event={formatCslEvents(cslHighlightEvent) || highlighEvent} isHighlighted />
-  //             </div>
-  //           )}
-
-  //           <div className={`${mobileShowMap ? 'mobile-map' : ''}`}>
-  //             <Map
-  //               type="event"
-  //               floatButton={buttonOnMap}
-  //               title={title}
-  //               data={filteredEvents}
-  //               mobileView={mobileShowMap}
-  //               setMobileView={setMobileShowMap}
-  //               extraLogic={() => {
-  //                 if (window !== undefined && window.innerWidth < 992) {
-  //                   setMobileShowMap((prev) => !prev);
-  //                 }
-  //               }}
-  //             />
-
-  //             <FilterEvents
-  //               events={filteredEvents}
-  //               locations={locationOptions}
-  //               handleOnApplyNewFilters={(newFilterValues) =>
-  //                 setFilterValues((prev) => ({ ...prev, ...newFilterValues }))
-  //               }
-  //             />
-
-  //             <FloatCta title="Bekijk lijst" id="filter-events-list" isArrowVisible={isArrowVisible} />
-  //           </div>
-  //         </div>
-
-  //         {content && (
-  //           <div className="container mt-5 pb-5">
-  //             <StructuredTextDefault content={content} />
-  //           </div>
-  //         )}
-  //       </div>
-  //     </WrapperLayout>
-  //   </Layout>
-  // );
 };
 
 export default ListEvents;
@@ -98,99 +49,19 @@ export const ListEventQuery = graphql`
     allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true }, date: { gte: $currentDate } }) {
       edges {
         node {
-          id
-          title
-          slug
-          externalLink
-          introduction
-          date
-          rawDate: date
-          hourStart
-          hourEnd
-          onlineEvent
-          address
-          region
-          coordinates {
-            latitude
-            longitude
-          }
-          tags {
-            ... on DatoCmsTag {
-              id
-              title
-            }
-          }
-          image {
-            url
-            gatsbyImageData
-          }
-          model {
-            apiKey
-          }
+          ...EventCard
         }
       }
     }
     allCSLEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
       edges {
         node {
-          __typename
-          id: slug
-          slug
-          title
-          description
-          start_at
-          end_at
-          raw_start
-          raw_end
-          image_url
-          labels
-          start_in_zone
-          end_in_zone
-          location {
-            latitude
-            longitude
-            venue
-            query
-            region
-          }
-          calendar {
-            name
-            slug
-          }
-          hiddenAddress
-          waiting_list_enabled
-          max_attendees_count
+          ...CSLEventCard
         }
       }
     }
     cslHighlightEvent: externalEvent(slug: { eq: $cslHighlightedEvent }) {
-      __typename
-      id: slug
-      slug
-      title
-      description
-      start_at
-      end_at
-      raw_start
-      raw_end
-      image_url
-      labels
-      start_in_zone
-      end_in_zone
-      location {
-        latitude
-        longitude
-        venue
-        query
-        region
-      }
-      calendar {
-        name
-        slug
-      }
-      hiddenAddress
-      waiting_list_enabled
-      max_attendees_count
+      ...CSLEventCard
     }
     page: datoCmsListEvent(id: { eq: $id }) {
       id
@@ -200,28 +71,13 @@ export const ListEventQuery = graphql`
         ...AppCta
       }
       highlighEvent {
-        ... on DatoCmsEvent {
-          id
-          title
-          slug
-          externalLink
-          introduction
-          date
-          hourStart
-          hourEnd
-          tags {
-            ... on DatoCmsTag {
-              id
-              title
-            }
-          }
-          image {
-            gatsbyImageData(width: 900, height: 505)
-          }
-          model {
-            apiKey
-          }
-        }
+        ...EventCard
+      }
+      highlightedEventCollection {
+        ...EventCollectionCard
+      }
+      secondaryFeaturedCollection {
+        ...EventCollectionCard
       }
       content {
         value

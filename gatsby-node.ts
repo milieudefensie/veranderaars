@@ -534,6 +534,7 @@ const scrapingFormInputs = async (event: any) => {
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: chromium.path,
+      timeout: 50_000,
     });
 
     const page = await browser.newPage();

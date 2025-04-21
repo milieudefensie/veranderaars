@@ -47,7 +47,7 @@ const config: GatsbyConfig = {
         defaultLanguage,
         siteUrl: `https://veranderaars.milieudefensie.nl/`,
         i18nextOptions: {
-          debug: true,
+          debug: false,
           fallbackLng: 'nl',
           supportedLngs: ['nl'],
           defaultNS: 'common',

@@ -1,6 +1,8 @@
 import React from 'react';
 import { EventCollectionType } from '../../../types';
 import EventCardV2 from '../event-card-v2/event-card-v2';
+import Link from '../../Global/Link/Link';
+import { formatEventDate } from '../../../utils';
 
 import './styles.scss';
 
@@ -10,30 +12,40 @@ type Props = {
 };
 
 const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false }) => {
-  const { title, subtitle, description, ctas } = collection || {};
+  const { id, title, subtitle, description, ctas, image, relatedEvents } = collection || {};
 
   return (
     <div className={`ui-event-collection-card ${vertical ? 'vertical-layout' : ''} transition-transform`}>
-      {/* @ts-ignore */}
-      <EventCardV2 event={{}} vertical={vertical} />
-      <div className="related-events">
-        <ul>
-          {[1, 2, 3].map((_) => (
-            <a href="" className="transition-all">
-              <li>
-                <div className="icon">
-                  <CalendarIcon />
-                </div>
-                <div className="metadata">
-                  <div className="date">Morgen 20:00</div>
-                  <div className="type">Online</div>
-                  <div className="intro">Intro-avond</div>
-                </div>
-              </li>
-            </a>
-          ))}
-        </ul>
-      </div>
+      <EventCardV2
+        event={{
+          id: `card-${id}`,
+          image,
+          title,
+          introduction: description,
+          type: subtitle,
+        }}
+        vertical={vertical}
+      />
+      {relatedEvents && (
+        <div className="related-events">
+          <ul>
+            {relatedEvents.map((e) => (
+              <Link to={e} className="transition-all">
+                <li>
+                  <div className="icon">
+                    <CalendarIcon />
+                  </div>
+                  <div className="metadata">
+                    <div className="date">{formatEventDate(e.date, e.hourStart)}</div>
+                    <div className="type">Online</div>
+                    <div className="intro">Intro-avond</div>
+                  </div>
+                </li>
+              </Link>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

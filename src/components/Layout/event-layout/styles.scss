@@ -37,6 +37,7 @@
     line-height: 1.11111;
     font-weight: 700;
     color: oklch(14% .004 49.25);
+    text-transform: capitalize;
   }
 
   .grid-events {
@@ -50,6 +51,15 @@
 
     &.three {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .ui-event-card-v2 {
+      &:hover {
+        .content-container .btn {
+          opacity: 1;
+          background-color: oklch(76.04% .1741 129.85);
+        }
+      }
     }
   }
 
@@ -66,7 +76,8 @@
     .alert-container {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: .5rem;
+      margin-bottom: 1.5rem;
 
       background-color: oklch(92% .003 48.717);
       border: 2px solid oklch(92% .003 48.717);
@@ -80,6 +91,42 @@
         color: oklch(14% .004 49.25);
         font-size: .7rem;
         line-height: 1.25rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .ui-event-layout {
+    header {
+      padding-top: 15vh;
+      padding-bottom: 15vh;
+
+      h1 {
+        font-size: 2.25rem;
+      }
+
+      p {
+        font-size: 1rem;
+        line-height: normal;
+      }
+    }
+
+    .heading {
+      padding-block: calc(.25rem * 4);
+    }
+
+    .grid-events {
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      display: flex;
+
+      &>.ui-event-collection-card,
+      &>.ui-event-card-v2 {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        width: 75vw;
       }
     }
   }
