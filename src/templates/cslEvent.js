@@ -107,7 +107,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
                 <span>
                   {formatDateCSL(start_in_zone)} {raw_end ? `- ${formatDateCSL(end_in_zone)}` : ''}
                 </span>
-                <span>{location.query}</span>
+                {location?.query && <span>{location.query}</span>}
               </div>
             }
             headerComponents={
