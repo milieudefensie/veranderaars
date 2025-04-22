@@ -39,5 +39,5 @@
   "form_sending": "Sending... (Indicates that the form is being sent)",
   "back_to_list": "Back to list (Used to return to the list of events)",
   "open_map": "Open map (Used to view the event location on a map)",
-  "share_label": "Share (Label used in the Share component, indicating to the user that they can share the current page on different social networks: Twitter, Facebook, etc.)"
+  "share_label": "Share (Label used in the Share component, indicating to the user that they can share the current page on different social networks: Twitter, Facebook, etc)"
 }
