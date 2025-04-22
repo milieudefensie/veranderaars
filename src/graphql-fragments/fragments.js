@@ -575,29 +575,30 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment HubspotBlock on DatoCmsHubspot {
+    id
+    formId
+    region
+    portalId
+    columns
+    trackErrors
+    disclaimerText
+    introductionText
+  }
+
   fragment FormStepBlock on DatoCmsForm2Step {
     id
     firstForm {
-      ... on DatoCmsHubspot {
-        id
-        formId
-        region
-        portalId
-        columns
-        trackErrors
-      }
+      ...HubspotBlock
     }
     secondForm {
-      ... on DatoCmsHubspot {
-        id
-        formId
-        region
-        portalId
-        columns
-        trackErrors
-      }
+      ...HubspotBlock
+    }
+    forms {
+      ...HubspotBlock
     }
     legalText
+    legalTextSecond
     firstStepIntroduction
     secondStepIntroduction
   }

@@ -54,7 +54,7 @@ const HubspotForm = ({
     setupPostalCodeValidation(formWrapper, submitBtn);
     addRecaptchaText(formWrapper);
 
-    if (extraLogic) extraLogic();
+    if (extraLogic) extraLogic(ctx);
   };
 
   const setupInputObserver = (input, submitBtn) => {

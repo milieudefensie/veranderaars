@@ -5,39 +5,46 @@ import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 
 import './styles.scss';
 
-const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
-  const { firstForm, secondForm, legalText, firstStepIntroduction, secondStepIntroduction } = form[0];
-  const location = useLocation();
+const FormSteps = ({ title, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
+  const { forms = [] } = form[0];
 
-  const [currentStep, setCurrentStep] = useState(location.search.includes('form_step=2') ? 1 : 0);
+  const location = useLocation();
+  const [currentStep, setCurrentStep] = useState(0);
   const [email, setEmail] = useState(null);
-  const isFirstStep = currentStep === 0;
 
   useEffect(() => {
-    if (location.search.includes('form_step=2')) {
-      setCurrentStep(1);
+    const query = new URLSearchParams(location.search);
+    const stepParam = parseInt(query.get('form_step'));
+    if (!isNaN(stepParam) && stepParam < forms.length) {
+      setCurrentStep(stepParam);
     } else {
       setCurrentStep(0);
     }
-  }, [location]);
+  }, [location, forms.length]);
 
-  const handleOnFirstStepSubmitted = (_, data) => {
-    const emailSubmitted = data.submissionValues.email;
-    setEmail(emailSubmitted);
-    navigate('?form_step=2', { replace: false });
+  const handleStepSubmitted = (_, data) => {
+    if (data?.submissionValues?.email) {
+      setEmail(data.submissionValues.email);
+    }
+    const nextStep = currentStep + 1;
+    if (nextStep < forms.length) {
+      navigate(`?form_step=${nextStep}`, { replace: false });
+    }
   };
 
-  const initializeSecondStepForm = (ctx) => {
-    const inputs = document.querySelectorAll(`#hubspotForm-${secondForm.id} input`);
+  const initializeForm = (ctx) => {
+    const inputs = document.querySelectorAll(`#hubspotForm-${forms[currentStep]?.id} input`);
     const emailInput = document.querySelector(`#${ctx.id} input[name="email"]`);
 
-    if (inputs.length > 1) {
+    if (inputs.length > 1 && emailInput && email) {
       emailInput.value = email;
       emailInput.dispatchEvent(new Event('input', { bubbles: true }));
 
       inputs[1].focus();
     }
   };
+
+  const isFirstStep = currentStep === 0;
 
   return (
     <div className="container container-steps">
@@ -46,31 +53,18 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
         className={`ui-form-steps ${variant && isFirstStep ? variant : ''} ${isFirstStep ? 'first-step' : 'second-step'}`}
       >
         <div className="metadata">
-          <h1>{isFirstStep ? title : 'Bijna klaar...'}</h1>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: isFirstStep ? firstStepIntroduction || description : secondStepIntroduction,
-            }}
-          />
-          {isFirstStep ? (
+          <h1>{title}</h1>
+          <div dangerouslySetInnerHTML={{ __html: forms[currentStep]?.introductionText }} />
+          {forms[currentStep] && (
             <HubspotForm
               key={currentStep}
-              {...firstForm}
-              onFormSubmitted={handleOnFirstStepSubmitted}
-              style={variant ? variant : 'purple'}
+              {...forms[currentStep]}
+              onFormSubmitted={handleStepSubmitted}
+              style={isFirstStep ? variant || 'purple' : 'gray'}
               extraLogic={(ctx) => {
                 extraLogic && extraLogic(ctx);
+                initializeForm(ctx);
               }}
-            />
-          ) : (
-            <HubspotForm
-              key={currentStep}
-              {...secondForm}
-              extraLogic={(ctx) => {
-                extraLogic && extraLogic(ctx);
-                initializeSecondStepForm(ctx);
-              }}
-              style="gray"
             />
           )}
         </div>
@@ -80,7 +74,11 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
       </div>
       <div
         className={`legal-text ${isFirstStep ? 'first-step' : 'second-step'}`}
-        dangerouslySetInnerHTML={{ __html: legalText }}
+        dangerouslySetInnerHTML={{
+          __html:
+            forms[currentStep]?.disclaimerText ||
+            `<p>We houden je op de hoogte over onze beweging en acties bij jou in de buurt via je ingevulde e-mailadres. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze <a href="http://milieudefensie.nl/over-ons/cookies-en-privacy">privacybepaling</a> voor alle details. Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google <a href="https://policies.google.com/privacy">privacybeleid</a> en <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.</p>`,
+        }}
       />
     </div>
   );
