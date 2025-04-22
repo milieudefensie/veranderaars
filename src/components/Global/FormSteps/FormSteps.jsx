@@ -6,7 +6,7 @@ import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 import './styles.scss';
 
 const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
-  const { firstForm, secondForm, legalText, secondStepIntroduction } = form[0];
+  const { firstForm, secondForm, legalText, firstStepIntroduction, secondStepIntroduction } = form[0];
   const location = useLocation();
 
   const [currentStep, setCurrentStep] = useState(location.search.includes('form_step=2') ? 1 : 0);
@@ -47,7 +47,11 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
       >
         <div className="metadata">
           <h1>{isFirstStep ? title : 'Bijna klaar...'}</h1>
-          <div dangerouslySetInnerHTML={{ __html: isFirstStep ? description : secondStepIntroduction }} />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: isFirstStep ? firstStepIntroduction || description : secondStepIntroduction,
+            }}
+          />
           {isFirstStep ? (
             <HubspotForm
               key={currentStep}

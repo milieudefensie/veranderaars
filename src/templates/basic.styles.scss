@@ -298,6 +298,22 @@
       }
     }
   }
+
+  .event-introduction {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    span {
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 140%;
+    }
+  }
 }
 
 @media screen and (max-width: 992px) {

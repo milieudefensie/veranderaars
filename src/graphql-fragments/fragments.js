@@ -598,6 +598,7 @@ export const DatoCMS = graphql`
       }
     }
     legalText
+    firstStepIntroduction
     secondStepIntroduction
   }
 `;

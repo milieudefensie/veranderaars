@@ -6,7 +6,16 @@ import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';
 
-const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUrl = null, isWaitingList = false }) => {
+const Form = ({
+  title,
+  introduction,
+  event,
+  inputs = [],
+  image,
+  headerComponents,
+  conferenceUrl = null,
+  isWaitingList = false,
+}) => {
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -157,10 +166,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
       <div className={`ui-form-steps ${isFirstStep ? 'green first-step agenda' : 'second-step'}`}>
         <div className="metadata">
           <h1>{isFirstStep ? title : 'Bijna klaar...'}</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur. Commodo aenean scelerisque non gravida mauris eu ornare turpis duis.
-            Donec eget vestibulum mattis nibh est gravida.
-          </p>
+          {isFirstStep ? <p>{introduction}</p> : null}
 
           {isFirstStep ? (
             <>
@@ -429,6 +435,7 @@ const Form = ({ title, event, inputs = [], image, headerComponents, conferenceUr
         className={`legal-text ${isFirstStep ? 'first-step' : 'second-step'}`}
         dangerouslySetInnerHTML={{
           __html:
+            // '<p>Als we je mogen mailen, dan houden we je op de hoogte over onze beweging en acties bij jou in de buurt. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy" rel="noopener">privacybepaling</a> voor alle details. Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google <a href="https://policies.google.com/privacy">privacybeleid</a> en <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.</p>',
             '<p>We willen je graag op de hoogte houden over onze beweging en acties bij jou in de buurt via je ingevulde e-mailadres. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen.</p>',
         }}
       />

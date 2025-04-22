@@ -1,4 +1,8 @@
 .ui-form-hubspot {
+  .submitted-message {
+    display: none;
+  }
+
   form {
     display: flex;
     gap: 16px;

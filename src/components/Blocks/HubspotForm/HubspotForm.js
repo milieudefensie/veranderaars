@@ -36,6 +36,9 @@ const HubspotForm = ({
         },
       },
       onFormReady: handleFormReady,
+      onFormSubmitted: ($form, data) => {
+        onFormSubmitted && onFormSubmitted($form, data);
+      },
     });
   };
 

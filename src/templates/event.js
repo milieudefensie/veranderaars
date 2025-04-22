@@ -15,9 +15,9 @@ import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import { formatDate, isArray } from '../utils';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
+import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 
 import './basic.styles.scss';
-import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 
 const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
   const {
