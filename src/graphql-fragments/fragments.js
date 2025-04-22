@@ -584,6 +584,7 @@ export const DatoCMS = graphql`
     trackErrors
     disclaimerText
     introductionText
+    title
   }
 
   fragment FormStepBlock on DatoCmsForm2Step {

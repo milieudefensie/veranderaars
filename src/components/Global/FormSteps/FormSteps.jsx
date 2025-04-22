@@ -5,12 +5,14 @@ import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 
 import './styles.scss';
 
-const FormSteps = ({ title, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
+const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
   const { forms = [] } = form[0];
 
   const location = useLocation();
   const [currentStep, setCurrentStep] = useState(0);
   const [email, setEmail] = useState(null);
+
+  const isFirstStep = currentStep === 0;
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -44,8 +46,6 @@ const FormSteps = ({ title, bgImageUrl, form, variant, extraLogic, headerCompone
     }
   };
 
-  const isFirstStep = currentStep === 0;
-
   return (
     <div className="container container-steps">
       {headerComponents}
@@ -53,8 +53,12 @@ const FormSteps = ({ title, bgImageUrl, form, variant, extraLogic, headerCompone
         className={`ui-form-steps ${variant && isFirstStep ? variant : ''} ${isFirstStep ? 'first-step' : 'second-step'}`}
       >
         <div className="metadata">
-          <h1>{title}</h1>
-          <div dangerouslySetInnerHTML={{ __html: forms[currentStep]?.introductionText }} />
+          <h1>{isFirstStep ? title : forms[currentStep]?.title}</h1>
+          {isFirstStep && description ? (
+            <p>{description}</p>
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: forms[currentStep]?.introductionText }} />
+          )}
           {forms[currentStep] && (
             <HubspotForm
               key={currentStep}

@@ -8,15 +8,7 @@ function HomeHero({ title, subtitle, image, form = null }) {
 
   return (
     <div id="hero-homepage" className="wrapper-hero">
-      <FormSteps
-        title={title}
-        description={
-          subtitle ||
-          '<p>Lorem ipsum dolor sit amet consectetur. Commodo aenean scelerisque non gravida mauris eu ornare turpis duis. Donec eget vestibulum mattis nibh est gravida. </p>'
-        }
-        form={form}
-        bgImageUrl={bgImageUrl}
-      />
+      <FormSteps title={title} description={subtitle} form={form} bgImageUrl={bgImageUrl} />
     </div>
   );
 }

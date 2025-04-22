@@ -56,7 +56,16 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
         {isArray(formSteps) && (
           <FormSteps
             title={title}
-            description={introduction}
+            // description={introduction}
+            description={
+              <div className="event-introduction">
+                <span>{formatDate(date)}</span>
+                <span>
+                  {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
+                </span>
+                {address && <span>{address}</span>}
+              </div>
+            }
             bgImageUrl={image?.url}
             form={formSteps}
             variant="green agenda"
