@@ -3,10 +3,12 @@ import Link from '../Link/Link';
 import telegram from '../../Icons/wp-share.svg';
 import facebook from '../../Icons/facebook-share.svg';
 import twitter from '../../Icons/twitter-share.svg';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './index.scss';
 
 function ShareButtons() {
+  const { t } = useTranslation();
   const [isFixed, setIsFixed] = useState('');
   const [shareUrl, setShareUrl] = useState('');
 
@@ -51,7 +53,7 @@ function ShareButtons() {
         </Link>
       </div>
 
-      <span>SHARE</span>
+      <span>{t('share_label')}</span>
     </div>
   );
 }

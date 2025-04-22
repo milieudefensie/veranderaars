@@ -154,7 +154,16 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
 export default ListEvents;
 
 export const PageQuery = graphql`
-  query ListEventById($id: String, $currentDate: Date!, $cslHighlightedEvent: String) {
+  query ListEventById($id: String, $currentDate: Date!, $cslHighlightedEvent: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -223,6 +232,8 @@ export const PageQuery = graphql`
             slug
           }
           hiddenAddress
+          waiting_list_enabled
+          max_attendees_count
         }
       }
     }
@@ -252,6 +263,8 @@ export const PageQuery = graphql`
         slug
       }
       hiddenAddress
+      waiting_list_enabled
+      max_attendees_count
     }
     page: datoCmsListEvent(id: { eq: $id }) {
       id

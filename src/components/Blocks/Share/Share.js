@@ -3,10 +3,12 @@ import SocialLinkList from '../../Global/SocialLink/SocialLinkList';
 import CtaList from '../../Global/Cta/CtaList';
 import { ReactSVG } from 'react-svg';
 import wpIcon from '../../Icons/wp-icon.svg';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';
 
 const Share = ({ block }) => {
+  const { t } = useTranslation();
   const { title, socialLinks = [], ctas = [], whatsappGroup } = block;
 
   return (
@@ -18,7 +20,7 @@ const Share = ({ block }) => {
 
       {whatsappGroup && (
         <a className="wp-button" href={`${whatsappGroup}`} target="_blank" rel="noopener noreferrer">
-          <span>Join Us to Our WhatsApp Community</span>
+          <span>{t('join_whatsapp')}</span>
           <ReactSVG src={wpIcon} alt="Wp icon" />
         </a>
       )}

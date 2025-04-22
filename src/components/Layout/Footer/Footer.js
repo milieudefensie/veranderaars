@@ -4,10 +4,12 @@ import Link from '../../Global/Link/Link';
 import { ReactSVG } from 'react-svg';
 import wpIcon from '../../Icons/wp-icon.svg';
 import Cta from '../../Global/Cta/Cta';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './index.scss';
 
 function Footer({ isLanding = false, customLogo = null }) {
+  const { t } = useTranslation();
   const data = useStaticQuery(graphql`
     query FooterData {
       configuration: datoCmsSiteConfiguration {
@@ -120,7 +122,6 @@ function Footer({ isLanding = false, customLogo = null }) {
   return (
     <div className={`footer-container ${isLanding ? 'landing' : ''}`}>
       <div className="container">
-        {/* First row */}
         <div className="first-row">
           <div>
             <Link to={'/'}>
@@ -131,7 +132,7 @@ function Footer({ isLanding = false, customLogo = null }) {
           {data.configuration?.whatsappPage ? (
             <Link className="wp-button" to={data.configuration.whatsappPage}>
               <div className="wp-btn">
-                <span>WhatsApp groep</span>
+                <span>{t('whatsapp_group')}</span>
                 <ReactSVG src={wpIcon} />
               </div>
             </Link>
@@ -143,16 +144,14 @@ function Footer({ isLanding = false, customLogo = null }) {
               rel="noopener noreferrer"
             >
               <div className="wp-btn">
-                <span>WhatsApp groep</span>
+                <span>{t('whatsapp_group')}</span>
                 <ReactSVG src={wpIcon} />
               </div>
             </a>
           ) : null}
         </div>
 
-        {/* Second row */}
         <div className="row">
-          {/* Columns links items */}
           {hasColumnsLinks &&
             columns.map((column) => (
               <div key={column.id} className="col-lg-3 col-6 columns-links">
@@ -164,7 +163,6 @@ function Footer({ isLanding = false, customLogo = null }) {
           <div className="col extra-data">
             <Cta url="https://milieudefensie.nl/" externalTitle="milieudefensie.nl" customVariant="outlined" />
 
-            {/* Extra links */}
             <div className="extra-links">
               {bottomLinks.map((link) => (
                 <Link key={link.id} to={link}>
@@ -174,7 +172,7 @@ function Footer({ isLanding = false, customLogo = null }) {
             </div>
 
             <div className="extra-text">
-              <span>Milieudefensie is onderdeel van Friends of the Earth International</span>
+              <span>{t('footer_extra_text')}</span>
             </div>
           </div>
         </div>

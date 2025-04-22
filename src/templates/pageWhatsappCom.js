@@ -65,7 +65,16 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
 export default Page;
 
 export const PageQuery = graphql`
-  query PageById($id: String) {
+  query PageById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

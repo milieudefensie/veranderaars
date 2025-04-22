@@ -13,6 +13,8 @@ import hourIcon from '../components/Icons/calendar-hour.svg';
 import locationIcon from '../components/Icons/calendar-location.svg';
 import wpIcon from '../components/Icons/wp-icon.svg';
 import Form from '../components/Global/Form/Form';
+import axios from 'axios';
+import Spinner from '../components/Global/Spinner/Spinner';
 
 import './basic.styles.scss';
 
@@ -23,16 +25,21 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     image_url,
     additional_image_sizes_url,
     description,
+    rich_description,
     start_in_zone,
     end_in_zone,
     location,
     inputs = [],
     hiddenAddress = false,
     web_conference_url,
+    waiting_list_enabled,
+    max_attendees_count,
   } = page;
-  const heroImage = pageContext?.heroImage?.url || image_url;
 
+  const heroImage = pageContext?.heroImage?.url || image_url;
   const [shareWpText, setShareWpText] = useState('');
+  const [isWaitingListActive, setIsWaitingListActive] = useState(false);
+  const [status, setStatus] = useState('loading');
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -41,28 +48,44 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
     // Share WP
     const currentURL = encodeURIComponent(window.location.href);
     setShareWpText(`https://wa.me/?text=${currentURL}`);
-  }, []);
 
-  let mainImage = null;
-  if (additional_image_sizes_url) {
-    mainImage = additional_image_sizes_url.find((i) => i.style === 'original');
-  }
+    // Determine the max_attendees
+    const checkIfEventHasReachedLimit = async () => {
+      const response = await axios.post('/api/get-csl-attendees', {
+        data: { slug, max_attendees_count },
+      });
+      const { isWaitingListActive, attendeesCount } = response.data;
+
+      setIsWaitingListActive(isWaitingListActive);
+      setStatus('idle');
+
+      console.log({ slug, max_attendees_count, isWaitingListActive, attendeesCount });
+    };
+
+    if (max_attendees_count) {
+      checkIfEventHasReachedLimit();
+    } else {
+      setStatus('idle');
+    }
+  }, []);
 
   const conferenceType = detectService(web_conference_url);
   const isConferenceWp = conferenceType === 'WhatsApp';
+  const formattedTitle = isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+  let mainImage = additional_image_sizes_url ? additional_image_sizes_url.find((i) => i.style === 'original') : null;
 
   return (
     <Layout>
       <SeoDatoCMS favicon={favicon}>
-        <title>{title}</title>
+        <title>{formattedTitle}</title>
         <meta name="description" content={description} />
 
-        <meta property="og:title" content={title} />
+        <meta property="og:title" content={formattedTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={image_url || ''} />
         <meta property="og:site_name" content="Milieudefensie" />
 
-        <meta name="twitter:title" content={title} />
+        <meta name="twitter:title" content={formattedTitle} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image_url || ''} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -75,6 +98,8 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             event={slug}
             inputs={inputs}
             image={heroImage}
+            conferenceUrl={web_conference_url}
+            isWaitingList={isWaitingListActive}
             headerComponents={
               <>
                 {listEvent && (
@@ -135,9 +160,9 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             </div>
           )}
 
-          {description && (
+          {rich_description && (
             <div className="content" style={{ whiteSpace: 'break-spaces' }}>
-              <p dangerouslySetInnerHTML={{ __html: description }} />
+              <p dangerouslySetInnerHTML={{ __html: rich_description }} />
             </div>
           )}
         </FloatLayout>
@@ -149,7 +174,16 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 export default CSLEvent;
 
 export const PageQuery = graphql`
-  query CslEventById($id: String) {
+  query CslEventById($id: String, $language: String!) {
+    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -166,6 +200,7 @@ export const PageQuery = graphql`
       title
       url
       description
+      rich_description
       raw_start
       raw_end
       start_at
@@ -193,6 +228,8 @@ export const PageQuery = graphql`
       labels
       inputs
       web_conference_url
+      max_attendees_count
+      waiting_list_enabled
     }
   }
 `;

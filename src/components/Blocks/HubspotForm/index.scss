@@ -583,9 +583,51 @@
       }
     }
 
+    .hs-fieldtype-radio,
+    .hs-fieldtype-booleancheckbox,
     .legal-consent-container,
     .hs_submit {
       flex: 1 1 100%;
+    }
+
+    .hs-fieldtype-booleancheckbox {
+      legend {
+        color: #49454F;
+        letter-spacing: 0.5px;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 16px;
+        margin-bottom: 5px;
+      }
+
+      .input .inputs-list {
+        padding: 0;
+        margin: 0;
+
+        .hs-form-booleancheckbox label {
+          position: initial;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 10px;
+
+          input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--dark);
+          }
+
+          span {
+            color: var(--dark);
+            font-family: var(--nb-secondary-font);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 150%;
+          }
+        }
+      }
     }
   }
 
@@ -867,5 +909,9 @@
         gap: 15px;
       }
     }
+  }
+
+  .ui-form-hubspot.columns-three form .hs-fieldtype-booleancheckbox .input .inputs-list .hs-form-booleancheckbox label span {
+    font-size: 13px;
   }
 }

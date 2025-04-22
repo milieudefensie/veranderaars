@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ImageWrapper from '../../Global/Image/ImageWrapper';
 import { formatDate, formatDateCSL, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/TagList';
 import Link from '../../Global/Link/Link';
+import axios from 'axios';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
+import Spinner from '../../Global/Spinner/Spinner';
 
 import './styles.scss';
 
 const EventCard = ({ event, isHighlighted = false }) => {
+  const { t } = useTranslation();
+
   const {
     __typename,
     type,
+    slug,
     title,
     introduction,
     image,
@@ -26,10 +32,37 @@ const EventCard = ({ event, isHighlighted = false }) => {
     url,
     externalLink,
     hiddenAddress = false,
+    waiting_list_enabled,
+    max_attendees_count,
   } = event;
+
+  const [isWaitingListActive, setIsWaitingListActive] = useState(false);
+  const [status, setStatus] = useState('loading');
+
+  useEffect(() => {
+    // Determine the max_attendees
+    const checkIfEventHasReachedLimit = async () => {
+      const response = await axios.post('/api/get-csl-attendees', {
+        data: { slug, max_attendees_count },
+      });
+      const { isWaitingListActive, attendeesCount } = response.data;
+
+      setIsWaitingListActive(isWaitingListActive);
+      setStatus('idle');
+      console.log({ slug, max_attendees_count, isWaitingListActive, attendeesCount });
+    };
+
+    if (isCslEvent && max_attendees_count) {
+      checkIfEventHasReachedLimit();
+    } else {
+      setStatus('idle');
+    }
+  }, []);
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
   const withImage = image?.gatsbyImageData || image?.url || image_url;
+
+  const formattedTitle = isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
 
   const renderContent = () => (
     <>
@@ -49,12 +82,14 @@ const EventCard = ({ event, isHighlighted = false }) => {
       </div>
 
       <div className="basic-info">
-        {title && <h4>{title}</h4>}
+        {formattedTitle && <h4>{formattedTitle}</h4>}
         {introduction && (
           <div className="introduction" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
         )}
 
-        <span className="custom-btn custom-btn-primary">Meld je aan</span>
+        <span className="custom-btn custom-btn-primary">
+          {status === 'loading' ? <Spinner /> : isWaitingListActive ? t('waiting_list_message') : t('sign_up')}
+        </span>
       </div>
 
       {withImage && (

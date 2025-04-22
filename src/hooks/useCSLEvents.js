@@ -69,8 +69,6 @@ function useCSLEvents(cmsEvents, cslEvents, hideInAgendaPage = false, slugsOfHid
         return a.startDateToCompare - b.startDateToCompare;
       });
 
-    console.log({ events });
-
     const uniqueEvents = [];
     const slugsSeen = new Set();
     events.forEach((event) => {

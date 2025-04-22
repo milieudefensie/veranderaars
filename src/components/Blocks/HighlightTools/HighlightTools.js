@@ -16,7 +16,6 @@ const HighlightTools = ({ block }) => {
         </div>
       )}
 
-      {/* Items */}
       <div className="content-tool">
         <div className="row gy-4">
           {items.map((item) => (

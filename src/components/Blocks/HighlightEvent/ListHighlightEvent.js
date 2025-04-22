@@ -28,7 +28,6 @@ const ListHighlightEvent = ({ block, context }) => {
         </div>
       </div>
 
-      {/* Items */}
       <div className="content">
         {items.map((item) => (
           <EventCard event={item} key={item.id} />
