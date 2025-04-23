@@ -17,6 +17,7 @@ export const createSchemaCustomization: GatsbyNode['createSchemaCustomization'] 
       title: String!
       url: String
       description: String
+      rich_description: String
       start_at: Date
       start_tz: String
       raw_start: String
@@ -159,6 +160,7 @@ export const sourceNodes: GatsbyNode['sourceNodes'] = async ({ actions: { create
         web_conference_url: eventResponse.web_conference_url,
         max_attendees_count: eventResponse.max_attendees_count,
         waiting_list_enabled: isWaitingListEnabled,
+        rich_description: eventResponse.rich_description,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(eventResponse),
@@ -203,6 +205,7 @@ export const sourceNodes: GatsbyNode['sourceNodes'] = async ({ actions: { create
         time_zone: event.time_zone,
         inputs: cslInputs || [],
         hiddenAddress: event.hidden_address,
+        rich_description: event.rich_description,
         internal: {
           type: 'ExternalEvent',
           contentDigest: createContentDigest(event),

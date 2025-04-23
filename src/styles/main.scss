@@ -2,12 +2,45 @@
 // Bootstrap always bellow reset
 
 // BASICS
-@import "foundation/reset";
-@import "helpers/bootstrap";
-@import "foundation/typography";
-@import "foundation/colors";
-@import "foundation/buttons";
-@import "global.scss";
+@import 'foundation/reset';
+@import 'helpers/bootstrap';
+@import 'foundation/typography';
+@import 'foundation/colors';
+@import 'foundation/buttons';
+@import 'global.scss';
 
-@import "~slick-carousel/slick/slick.css";
-@import "~slick-carousel/slick/slick-theme.css";
+@import '~slick-carousel/slick/slick.css';
+@import '~slick-carousel/slick/slick-theme.css';
+
+// QUICK & DIRTY FIX (so that we can go live today)
+.ui-form-hubspot form .hs-form-field.hs-fieldtype-checkbox label {
+  position: static;
+}
+
+.ui-form-hubspot form .hs-form-field.hs-fieldtype-checkbox .input input {
+  width: auto;
+}
+
+.ui-form-hubspot form .hs-fieldtype-checkbox span,
+.ui-form-hubspot form .hs-fieldtype-radio span {
+  color: black;
+  font-weight: 500;
+}
+
+.ui-form-hubspot form .hs-fieldtype-checkbox label,
+.ui-form-hubspot form .hs-fieldtype-radio label, .ui-form-hubspot form .hs-fieldtype-booleancheckbox label {
+  display: flex;
+  align-items: center;
+  margin-bottom:12px;
+}
+
+.ui-form-hubspot form .hs-fieldtype-checkbox input,
+.ui-form-hubspot form .hs-fieldtype-radio input, .ui-form-hubspot form .hs-fieldtype-booleancheckbox input {
+  height: 32px !important;
+  width: 32px !important;
+  margin-right: 12px;
+}
+
+.ui-form-hubspot form#hsForm_7702d1a0-c166-4248-99ff-5ebdbe1d30b5 .legal-consent-container{
+  order: 0 !important
+}
