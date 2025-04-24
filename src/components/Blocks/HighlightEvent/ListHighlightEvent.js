@@ -10,7 +10,8 @@ const ListHighlightEvent = ({ block, context }) => {
   const hasItems = Array.isArray(items) && items.length > 0;
 
   const highlightedEvent = context?.cslHighlightEvent ? formatCslEvents(context.cslHighlightEvent) : null;
-  if (hasItems && highlightedEvent) {
+
+  if (highlightedEvent && !items.some((item) => item.id === highlightedEvent.id)) {
     items.push(highlightedEvent);
 
     items.sort((a, b) => {
