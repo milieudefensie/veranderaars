@@ -1,8 +1,7 @@
 import React from 'react';
 import { EventType } from '../../../types';
-import { truncateText } from '../../../utils';
+import { truncateText, formatEventDate, formatDateCSL, formatDate } from '../../../utils';
 import Link from '../../Global/Link/Link';
-import TagList from '../../Global/Tag/TagList';
 
 import './styles.scss';
 
@@ -14,21 +13,33 @@ type Props = {
 };
 
 const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted = false, lessInfo }) => {
-  const { title, introduction, image, image_url, tags, externalLink, url, __typename, type, location } = event || {};
+  const { title, introduction, image, image_url, externalLink, url, __typename, type, location, address, collection } =
+    event || {};
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
   const withImage = image?.gatsbyImageData || image?.url || image_url;
 
   const cardContent = () => (
     <>
-      <div className="image-container">
-        <img src={image?.url} alt="Event" />
-      </div>
+      {withImage && (
+        <div className="image-container">
+          <img src={image?.url} alt="Event" />
+        </div>
+      )}
       <div className="content-container">
         <div>
-          {Array.isArray(tags) && tags.length > 0 ? <TagList tags={tags} /> : null}
+          {collection && <div className="collection-wrapper">{collection.title}</div>}
           <h3>{title}</h3>
-          <div className="type">{isCslEvent ? location?.street : type}</div>
+          <div className="type">{isCslEvent ? location?.street : address ? address : type}</div>
+          <div className="date">
+            {isCslEvent ? (
+              <span>{formatDate(event.rawDate)}</span>
+            ) : (
+              <>
+                <span>{formatEventDate(event.date, event.hourStart)}</span>
+              </>
+            )}
+          </div>
           <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
         </div>
 
@@ -42,7 +53,7 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
       <a
         href={externalLink || url}
         target={`${externalLink ? '' : '_blank'}`}
-        className={`event-card ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'} ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} `}
+        className={`ui-event-card-v2 ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'} ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} `}
       >
         {cardContent()}
       </a>

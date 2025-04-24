@@ -593,6 +593,17 @@ export const dummyEvents = [
       url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
     },
   },
+  {
+    id: '4',
+    type: 'talk',
+    title: 'TEST EVENT',
+    introduction: 'Een interessante lezing in deze week.',
+    date: DateTime.now().setZone(ZONE).plus({ days: 2 }).toISODate(),
+    hourStart: '22:30',
+    image: {
+      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
+    },
+  },
 
   // Próxima semana
   {

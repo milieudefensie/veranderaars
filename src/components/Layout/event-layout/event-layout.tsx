@@ -1,5 +1,5 @@
 import React from 'react';
-import { EventType, EventCollectionType } from '../../../types';
+import { EventType, EventCollectionType, CategorizedEvents } from '../../../types';
 import EventCollectionCard from '../../Global/event-collection-card/event-collection-card';
 import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
 import Map from '../../Global/Map/Map';
@@ -17,6 +17,7 @@ import {
   getEventsGroupedByFutureMonths,
 } from '../../../utils';
 import { DateTime } from 'luxon';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';
 
@@ -26,18 +27,9 @@ type Props = {
   extraCollection?: EventCollectionType[];
 };
 
-type CategorizedEvents = {
-  today: EventType[];
-  tomorrow: EventType[];
-  dayAfterTomorrow: EventType[];
-  weekdays: EventType[]; // resto de la semana laboral
-  weekend: EventType[];
-  nextWeek: EventType[];
-  restOfMonth: EventType[];
-};
-
 const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection }) => {
-  const allEvents = [...events, ...dummyEvents];
+  const { t } = useTranslation();
+  const allEvents = [...events]; // ...dummyEvents
 
   const categorizedEvents = setEventCategories();
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
@@ -67,7 +59,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         categorized.nextWeek = getEventsNextWeek(allEvents);
         break;
       case 3: // Wednesday
-        categorized.weekdays = getEventsWeekDays(allEvents, 2, 2); // Friday
+        categorized.weekdays = getEventsWeekDays(allEvents, 3, 3); // Friday
         categorized.weekend = getWeekendEvents(allEvents);
         categorized.nextWeek = getEventsNextWeek(allEvents);
         break;
@@ -84,6 +76,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         categorized.nextWeek = getEventsNextWeek(allEvents);
         break;
       case 0: // Sunday
+        categorized.tomorrow = [];
         categorized.nextWeek = getEventsNextWeek(allEvents);
         break;
     }
@@ -117,27 +110,31 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
           </div>
         </div>
         <div>
-          <h3 className="heading">Uitgelichte evenementen</h3>
+          <h3 className="heading">{t('featured_events')}</h3>
           <div className="grid-events two">
             {extraCollection?.map((c) => <EventCollectionCard collection={c} vertical />)}
           </div>
         </div>
         {categorizedEvents.today.length > 0 && (
           <>
-            <h3 className="heading">Vandaag</h3>
-            <div className={`grid-events ${categorizedEvents.today.length % 2 === 0 ? 'two' : 'three'}`}>
+            <h3 className="heading">{t('today')}</h3>
+            <div
+              className={`grid-events ${categorizedEvents.today.length === 1 ? 'one' : categorizedEvents.today.length % 2 === 0 ? 'two' : 'three'}`}
+            >
               {categorizedEvents.today.map((e) => (
-                <EventCardV2 key={e.id} event={e} lessInfo />
+                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.today.length > 1} />
               ))}
             </div>
           </>
         )}
         {categorizedEvents.tomorrow.length > 0 && (
           <>
-            <h3 className="heading">Morgen</h3>
-            <div className={`grid-events ${categorizedEvents.tomorrow.length % 2 === 0 ? 'two' : 'three'}`}>
+            <h3 className="heading">{t('tomorrow')}</h3>
+            <div
+              className={`grid-events ${categorizedEvents.tomorrow.length === 1 ? 'one' : categorizedEvents.tomorrow.length % 2 === 0 ? 'two' : 'three'}`}
+            >
               {categorizedEvents.tomorrow.map((e) => (
-                <EventCardV2 key={e.id} event={e} vertical lessInfo />
+                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.tomorrow.length > 1} />
               ))}
             </div>
           </>
@@ -145,63 +142,72 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         {categorizedEvents.dayAfterTomorrow.length > 0 && (
           <>
             <h3 className="heading">{getDayAfterTomorrowLabel()}</h3>
-            <div className={`grid-events ${categorizedEvents.dayAfterTomorrow.length % 2 === 0 ? 'two' : 'three'}`}>
+            <div
+              className={`grid-events ${categorizedEvents.dayAfterTomorrow.length === 1 ? 'one' : categorizedEvents.dayAfterTomorrow.length % 2 === 0 ? 'two' : 'three'}`}
+            >
               {categorizedEvents.dayAfterTomorrow.map((e) => (
-                <EventCardV2 key={e.id} event={e} vertical lessInfo />
+                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.dayAfterTomorrow.length > 1} />
               ))}
             </div>
           </>
         )}
         {categorizedEvents.weekdays.length > 0 && (
           <>
-            <h3 className="heading">Weekdagen</h3>
-            <div className={`grid-events ${categorizedEvents.weekdays.length % 2 === 0 ? 'two' : 'three'}`}>
+            <h3 className="heading">{t('weekdays')}</h3>
+            <div
+              className={`grid-events ${categorizedEvents.weekdays.length === 1 ? 'one' : categorizedEvents.weekdays.length % 2 === 0 ? 'two' : 'three'}`}
+            >
               {categorizedEvents.weekdays.map((e) => (
-                <EventCardV2 key={e.id} event={e} vertical lessInfo />
+                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.weekdays.length > 1} />
               ))}
             </div>
           </>
         )}
         {categorizedEvents.weekend.length > 0 && (
           <>
-            <h3 className="heading">Dit weekend</h3>
-            <div className={`grid-events ${categorizedEvents.weekend.length % 2 === 0 ? 'two' : 'three'}`}>
+            <h3 className="heading">{t('weekend')}</h3>
+            <div
+              className={`grid-events ${categorizedEvents.weekend.length === 1 ? 'one' : categorizedEvents.weekend.length % 2 === 0 ? 'two' : 'three'}`}
+            >
               {categorizedEvents.weekend.map((e) => (
-                <EventCardV2 key={e.id} event={e} vertical lessInfo />
+                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.weekend.length > 1} />
               ))}
             </div>
           </>
         )}
         {categorizedEvents.nextWeek.length > 0 && (
           <>
-            <h3 className="heading">Komende week</h3>
-            <div className={`grid-events ${categorizedEvents.nextWeek.length % 2 === 0 ? 'two' : 'three'}`}>
+            <h3 className="heading">{t('next_week')}</h3>
+            <div
+              className={`grid-events ${categorizedEvents.nextWeek.length === 1 ? 'one' : categorizedEvents.nextWeek.length % 2 === 0 ? 'two' : 'three'}`}
+            >
               {categorizedEvents.nextWeek.map((e) => (
-                <EventCardV2 key={e.id} event={e} vertical lessInfo />
+                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.nextWeek.length > 1} />
               ))}
             </div>
           </>
         )}
         {categorizedEvents.restOfMonth.length > 0 && (
           <>
-            <h3 className="heading">Later deze maand</h3>
-            <div className={`grid-events ${categorizedEvents.restOfMonth.length % 2 === 0 ? 'two' : 'three'}`}>
+            <h3 className="heading">{t('rest_of_month')}</h3>
+            <div
+              className={`grid-events ${events.length === 1 ? 'one' : categorizedEvents.restOfMonth.length % 2 === 0 ? 'two' : 'three'}`}
+            >
               {categorizedEvents.restOfMonth.map((e) => (
-                <EventCardV2 key={e.id} event={e} vertical lessInfo />
+                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.restOfMonth.length > 1} />
               ))}
             </div>
           </>
         )}
-
         {Object.entries(futureEvents).map(([monthKey, events]) => {
           const monthLabel = DateTime.fromFormat(monthKey, 'yyyy-MM').setLocale('nl').toFormat('LLLL'); // e.g. "Mei", "Juni"
 
           return (
             <div key={monthKey}>
               <h3 className="heading">{monthLabel}</h3>
-              <div className={`grid-events ${events.length % 2 === 0 ? 'two' : 'three'}`}>
+              <div className={`grid-events ${events.length === 1 ? 'one' : events.length % 2 === 0 ? 'two' : 'three'}`}>
                 {events.map((e: EventType) => (
-                  <EventCardV2 key={e.id} event={e} vertical lessInfo />
+                  <EventCardV2 key={e.id} event={e} lessInfo vertical={events.length > 1} />
                 ))}
               </div>
             </div>

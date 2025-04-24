@@ -45,6 +45,10 @@
     gap: calc(.25rem * 4);
     margin-bottom: 1rem;
 
+    &.one {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
     &.two {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }

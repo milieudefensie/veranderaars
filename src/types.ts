@@ -18,6 +18,7 @@ export type EventType = {
   address?: string;
   region?: string;
   location?: LocationType;
+  collection?: EventCollectionType;
 };
 
 export type ImageType = {
@@ -53,3 +54,13 @@ export type ModelType = {
 };
 
 export type CtaType = {};
+
+export type CategorizedEvents = {
+  today: EventType[];
+  tomorrow: EventType[];
+  dayAfterTomorrow: EventType[];
+  weekdays: EventType[];
+  weekend: EventType[];
+  nextWeek: EventType[];
+  restOfMonth: EventType[];
+};

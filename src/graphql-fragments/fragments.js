@@ -605,6 +605,12 @@ export const DatoCMS = graphql`
       latitude
       longitude
     }
+    collection {
+      ... on DatoCmsEventCollection {
+        id
+        title
+      }
+    }
   }
 
   fragment EventCollectionCard on DatoCmsEventCollection {
