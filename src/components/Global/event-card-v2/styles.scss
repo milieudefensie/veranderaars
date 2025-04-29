@@ -9,6 +9,7 @@
 
   .image-container {
     width: 33.3333%;
+    aspect-ratio: 1 / 1;
 
     img {
       max-width: 100%;
@@ -24,6 +25,7 @@
     align-content: space-between;
     gap: .5rem;
     padding: 2rem;
+    flex: 1;
 
     h3 {
       font-size: 1.6rem;
@@ -82,6 +84,13 @@
       background-color: oklch(76.04% .1741 129.85);
       border-radius: .5rem;
       margin-bottom: .5rem;
+    }
+
+    .date {
+      span {
+        color: var(--black);
+        font-size: 17px;
+      }
     }
   }
 

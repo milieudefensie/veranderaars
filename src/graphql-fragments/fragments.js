@@ -627,6 +627,7 @@ export const DatoCMS = graphql`
     image {
       url
     }
+    cslCalendarSlug
   }
 
   fragment CSLEventCard on ExternalEvent {

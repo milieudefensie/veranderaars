@@ -32,13 +32,13 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
           <h3>{title}</h3>
           <div className="type">{isCslEvent ? location?.street : address ? address : type}</div>
           <div className="date">
-            {isCslEvent ? (
-              <span>{formatDate(event.rawDate)}</span>
-            ) : (
+            {isCslEvent && event.rawDate ? (
+              <span id={event.rawDate}>{formatDate(event.rawDate)}</span>
+            ) : event.date ? (
               <>
-                <span>{formatEventDate(event.date, event.hourStart)}</span>
+                <span id={`${event.date}--${event.hourStart}`}>{formatEventDate(event.date, event.hourStart)}</span>
               </>
-            )}
+            ) : null}
           </div>
           <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
         </div>

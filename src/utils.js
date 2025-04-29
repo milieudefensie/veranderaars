@@ -365,7 +365,7 @@ export const detectService = (url) => {
   }
 };
 
-// test
+// Agenda date utils
 const ZONE = 'Europe/Amsterdam';
 
 function parseCmsEventDate(rawDate, hour, fallback) {
@@ -425,16 +425,26 @@ export function getCombinedEvents(cmsEvents, cslEvents, hideInAgendaPage = false
         (startDateToCompare <= currentDateTime && endDateToCompare >= currentDateTime)
       );
     })
-    .sort((a, b) => a.startDateToCompare - b.startDateToCompare);
+    .sort((a, b) => {
+      const dateA = DateTime.fromISO(a.startDateToCompare, { zone: ZONE });
+      const dateB = DateTime.fromISO(b.startDateToCompare, { zone: ZONE });
+      return dateA.toMillis() - dateB.toMillis();
+    });
 
   return dedupeEventsBySlug(combinedEvents);
 }
 
 function getEventsInRange(events, startDate, endDate) {
-  return events.filter((event) => {
-    const eventDate = DateTime.fromISO(event.startDateToCompare, { zone: ZONE });
-    return eventDate >= startDate && eventDate <= endDate;
-  });
+  return events
+    .filter((event) => {
+      const eventDate = DateTime.fromISO(event.startDateToCompare, { zone: ZONE });
+      return eventDate >= startDate && eventDate <= endDate;
+    })
+    .sort((a, b) => {
+      const dateA = DateTime.fromISO(a.startDateToCompare, { zone: ZONE });
+      const dateB = DateTime.fromISO(b.startDateToCompare, { zone: ZONE });
+      return dateA.toMillis() - dateB.toMillis();
+    });
 }
 
 export function getEventsToday(events) {
@@ -653,3 +663,23 @@ export const dummyEvents = [
     startDateToCompare: dateTime.toISO(),
   };
 });
+
+export function getClosestEvents(relatedEvents, calendarEvents, max = 3) {
+  const merged = Array.from(
+    new Map(
+      [...(relatedEvents || []), ...(calendarEvents || [])]
+        .filter((e) => Boolean(e) && Boolean(e.date))
+        .map((e) => [e.id, e])
+    ).values()
+  );
+
+  const now = DateTime.now().setZone(ZONE);
+
+  return merged
+    .map((e) => ({
+      ...e,
+      startDateToCompare: e.type === 'CSL' ? e.startDateToCompare : parseCmsEventDate(e.rawDate, e.hourStart, '00:00'),
+    }))
+    .sort((a, b) => a.startDateToCompare.toMillis() - b.startDateToCompare.toMillis())
+    .slice(0, max);
+}

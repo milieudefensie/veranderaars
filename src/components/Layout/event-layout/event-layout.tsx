@@ -7,7 +7,6 @@ import {
   getEventsToday,
   getEventsTomorrow,
   getEventsDayAfterTomorrow,
-  getEventsRestOfWeek,
   getEventsNextWeek,
   getEventsRestOfMonth,
   dummyEvents,
@@ -29,7 +28,7 @@ type Props = {
 
 const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection }) => {
   const { t } = useTranslation();
-  const allEvents = [...events]; // ...dummyEvents
+  const allEvents: EventType[] = [...events, ...dummyEvents]; // ...dummyEvents
 
   const categorizedEvents = setEventCategories();
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
@@ -96,7 +95,16 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
       <div className="container negative-margin">
         {featuredCollection && (
           <div className="featured-collection">
-            <EventCollectionCard collection={featuredCollection} />
+            <EventCollectionCard
+              collection={featuredCollection}
+              calendarEvents={
+                featuredCollection?.cslCalendarSlug
+                  ? allEvents.filter((event) => {
+                      return event.calendar?.slug === featuredCollection?.cslCalendarSlug;
+                    })
+                  : []
+              }
+            />
           </div>
         )}
         <div className="map-container">
@@ -111,9 +119,19 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         </div>
         <div>
           <h3 className="heading">{t('featured_events')}</h3>
-          <div className="grid-events two">
-            {extraCollection?.map((c) => <EventCollectionCard collection={c} vertical />)}
-          </div>
+          {extraCollection && extraCollection.length > 0 && (
+            <div className={`grid-events ${extraCollection.length > 1 ? 'two' : 'one'}`}>
+              {extraCollection?.map((c) => (
+                <EventCollectionCard
+                  collection={c}
+                  vertical={extraCollection.length > 1}
+                  calendarEvents={
+                    c.cslCalendarSlug ? allEvents.filter((event) => event.calendar?.slug === c.cslCalendarSlug) : []
+                  }
+                />
+              ))}
+            </div>
+          )}
         </div>
         {categorizedEvents.today.length > 0 && (
           <>
@@ -199,14 +217,14 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
             </div>
           </>
         )}
-        {Object.entries(futureEvents).map(([monthKey, events]) => {
+        {Object.entries(futureEvents as Record<string, EventType[]>).map(([monthKey, events]) => {
           const monthLabel = DateTime.fromFormat(monthKey, 'yyyy-MM').setLocale('nl').toFormat('LLLL'); // e.g. "Mei", "Juni"
 
           return (
             <div key={monthKey}>
               <h3 className="heading">{monthLabel}</h3>
-              <div className={`grid-events ${events.length === 1 ? 'one' : events.length % 2 === 0 ? 'two' : 'three'}`}>
-                {events.map((e: EventType) => (
+              <div className={`grid-events ${events.length === 1 ? 'one' : events.length === 2 ? 'two' : 'three'}`}>
+                {events.map((e) => (
                   <EventCardV2 key={e.id} event={e} lessInfo vertical={events.length > 1} />
                 ))}
               </div>

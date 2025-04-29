@@ -1,18 +1,21 @@
 import React from 'react';
-import { EventCollectionType } from '../../../types';
+import { EventCollectionType, EventType } from '../../../types';
 import EventCardV2 from '../event-card-v2/event-card-v2';
 import Link from '../../Global/Link/Link';
-import { formatEventDate } from '../../../utils';
+import { formatEventDate, getClosestEvents, formatDate } from '../../../utils';
 
 import './styles.scss';
 
 type Props = {
   collection: EventCollectionType;
   vertical?: boolean;
+  calendarEvents?: EventType[];
 };
 
-const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false }) => {
+const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, calendarEvents }) => {
   const { id, title, subtitle, description, ctas, image, relatedEvents } = collection || {};
+
+  const closestEvents = getClosestEvents(relatedEvents, calendarEvents);
 
   return (
     <div className={`ui-event-collection-card ${vertical ? 'vertical-layout' : ''} transition-transform`}>
@@ -26,19 +29,29 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false }) 
         }}
         vertical={vertical}
       />
-      {relatedEvents && (
+      {closestEvents.length > 0 && (
         <div className="related-events">
           <ul>
-            {relatedEvents.map((e) => (
+            {closestEvents.map((e: EventType) => (
               <Link to={e} className="transition-all">
                 <li>
                   <div className="icon">
                     <CalendarIcon />
                   </div>
                   <div className="metadata">
-                    <div className="date">{formatEventDate(e.date, e.hourStart)}</div>
-                    <div className="type">Online</div>
-                    <div className="intro">Intro-avond</div>
+                    <div className="date">
+                      {e.__typename === 'ExternalEvent' || e.type === 'CSL'
+                        ? formatEventDate(e.rawDate)
+                        : formatEventDate(e.date, e.hourStart)}
+                    </div>
+                    <div className="type">
+                      {e.__typename === 'ExternalEvent' || e.type === 'CSL'
+                        ? e.location?.street
+                        : e.address
+                          ? e.address
+                          : e.type}
+                    </div>
+                    <div className="intro">{e.title}</div>
                   </div>
                 </li>
               </Link>

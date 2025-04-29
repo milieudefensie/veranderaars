@@ -69,6 +69,7 @@
     "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "devDependencies": {
+    "@types/luxon": "^3.6.2",
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.2",

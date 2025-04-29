@@ -19,6 +19,15 @@ export type EventType = {
   region?: string;
   location?: LocationType;
   collection?: EventCollectionType;
+  rawDate?: string;
+  calendar?: EventCalendar;
+};
+
+export type EventCalendar = {
+  name: string;
+  title: string;
+  slug: string;
+  url: string;
 };
 
 export type ImageType = {
@@ -47,6 +56,7 @@ export type EventCollectionType = {
   ctas?: CtaType[];
   image?: ImageType;
   relatedEvents?: EventType[];
+  cslCalendarSlug?: string;
 };
 
 export type ModelType = {
