@@ -1,10 +1,12 @@
-import type { GatsbyConfig } from 'gatsby';
-import { languages, defaultLanguage } from './languages';
-import { configDotenv } from 'dotenv';
+require('dotenv').config({
+  path: `.env.${process.env.NODE_ENV}`,
+});
+const { languages, defaultLanguage } = require('./languages');
 
-configDotenv({ path: `.env.${process.env.NODE_ENV}` });
-
-const config: GatsbyConfig = {
+/**
+ * @type {import('gatsby').GatsbyConfig}
+ */
+module.exports = {
   siteMetadata: {
     title: `Milieudefensie`,
     siteUrl: `https://veranderaars.milieudefensie.nl`,
@@ -47,7 +49,7 @@ const config: GatsbyConfig = {
         defaultLanguage,
         siteUrl: `https://veranderaars.milieudefensie.nl/`,
         i18nextOptions: {
-          debug: false,
+          debug: true,
           fallbackLng: 'nl',
           supportedLngs: ['nl'],
           defaultNS: 'common',
@@ -59,5 +61,3 @@ const config: GatsbyConfig = {
     },
   ],
 };
-
-export default config;

@@ -1,9 +1,9 @@
-import { join } from 'path';
-import { readdirSync, lstatSync } from 'fs';
+const { join } = require('path');
+const { readdirSync, lstatSync } = require('fs');
 
-export const defaultLanguage = 'nl';
+const defaultLanguage = 'nl';
 
-export const languages = readdirSync(join(__dirname, 'locales')).filter((fileName) => {
+const languages = readdirSync(join(__dirname, 'locales')).filter((fileName) => {
   const joinedPath = join(join(__dirname, 'locales'), fileName);
   const isDirectory = lstatSync(joinedPath).isDirectory();
   return isDirectory;
@@ -11,3 +11,5 @@ export const languages = readdirSync(join(__dirname, 'locales')).filter((fileNam
 
 languages.splice(languages.indexOf(defaultLanguage), 1);
 languages.unshift(defaultLanguage);
+
+module.exports = { languages, defaultLanguage };
