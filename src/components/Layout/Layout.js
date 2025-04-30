@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Slice } from 'gatsby';
 import Header from './Header';
 import { Tolgee, DevTools, TolgeeProvider, FormatSimple, BackendFetch } from '@tolgee/react';
+import Spinner from '../Global/Spinner/Spinner';
 
 import '../../styles/main.scss';
 
@@ -42,7 +43,14 @@ function Layout({ children, bgColor = null, extraClassNames = null, heroBgColor 
   }, [navOpen]);
 
   return (
-    <TolgeeProvider tolgee={tolgee} loadingFallback={<div>Loading...</div>}>
+    <TolgeeProvider
+      tolgee={tolgee}
+      loadingFallback={
+        <div className="full-screen-loader">
+          <Spinner />
+        </div>
+      }
+    >
       <Header alias="header" setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
       <div className={`nav-open-overlay`} />
 
