@@ -12,7 +12,7 @@
     "netlify-dev": "yarn clean && netlify dev",
     "develop": "gatsby clean && gatsby develop",
     "start": "gatsby develop",
-    "build": "gatsby clean && gatsby build",
+    "build": "rm -rf .netlify/cache && gatsby clean && gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
