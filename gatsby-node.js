@@ -1,14 +1,11 @@
-import type { GatsbyNode } from 'gatsby';
-import puppeteer from 'puppeteer-core';
-import path from 'path';
-import { configDotenv } from 'dotenv';
-import chromium from 'chromium';
-import FilterWarningsPlugin from 'webpack-filter-warnings-plugin';
-
-configDotenv({ path: `.env.${process.env.NODE_ENV}` });
+const puppeteer = require('puppeteer-core');
+const chromium = require('chromium');
+const path = require(`path`);
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
+const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 // node source from CSL
-export const createSchemaCustomization: GatsbyNode['createSchemaCustomization'] = ({ actions }) => {
+exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions;
   const externalEvent = `
     type ExternalEvent implements Node {
@@ -80,7 +77,7 @@ export const createSchemaCustomization: GatsbyNode['createSchemaCustomization'] 
   createTypes(typeDefs);
 };
 
-export const sourceNodes: GatsbyNode['sourceNodes'] = async ({ actions: { createNode }, createContentDigest }) => {
+exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
   const clientId = process.env.CSL_CLIENT_ID;
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
@@ -101,7 +98,7 @@ export const sourceNodes: GatsbyNode['sourceNodes'] = async ({ actions: { create
 
   // console.log('New token: ', accessToken);
 
-  const fetchEventDetails = async (slug: string) => {
+  const fetchEventDetails = async (slug) => {
     const res = await fetch(`${cslPath}/api/v1/events/${slug}?access_token=${accessToken}`, {
       method: 'GET',
       headers: jsonHeaders,
@@ -110,8 +107,8 @@ export const sourceNodes: GatsbyNode['sourceNodes'] = async ({ actions: { create
     return event;
   };
 
-  const fetchAllAttendees = async (eventSlug: string) => {
-    let attendees: any[] = [];
+  const fetchAllAttendees = async (eventSlug) => {
+    let attendees = [];
     let currentPage = 1;
     let hasMore = true;
 
@@ -129,7 +126,7 @@ export const sourceNodes: GatsbyNode['sourceNodes'] = async ({ actions: { create
     return attendees.filter((a) => a.attending_status === 'attending');
   };
 
-  const createEventNode = async (event: any, originalSlug: string) => {
+  const createEventNode = async (event, originalSlug) => {
     const shouldCreate = shouldCreateEvent(event);
     if (!shouldCreate) return console.log(`Event ${originalSlug} not created.`);
 
@@ -183,7 +180,7 @@ export const sourceNodes: GatsbyNode['sourceNodes'] = async ({ actions: { create
   }
 };
 
-export const createPages: GatsbyNode['createPages'] = ({ graphql, actions }) => {
+exports.createPages = ({ graphql, actions }) => {
   const { createPage, createSlice, createRedirect } = actions;
 
   createSlice({ id: `header`, component: path.resolve(`./src/components/Layout/Header.js`) });
@@ -477,7 +474,7 @@ export const createPages: GatsbyNode['createPages'] = ({ graphql, actions }) => 
   });
 };
 
-export const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({ stage, actions, getConfig }) => {
+exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
   actions.setWebpackConfig({
     plugins: [
       new FilterWarningsPlugin({
@@ -488,12 +485,12 @@ export const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({ sta
 };
 
 // Utils
-const shouldCreateEvent = (event: any) => Array.isArray(event.labels) && !event.labels.includes('hidden');
+const shouldCreateEvent = (event) => Array.isArray(event.labels) && !event.labels.includes('hidden');
 
 chromium.setHeadlessMode = true;
 chromium.setGraphicsMode = false;
 
-const scrapingFormInputs = async (event: any) => {
+const scrapingFormInputs = async (event) => {
   const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
   console.log('Start web scraping. URL: ', url);
 
