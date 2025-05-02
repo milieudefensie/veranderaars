@@ -28,7 +28,7 @@ type Props = {
 
 const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection }) => {
   const { t } = useTranslation();
-  const allEvents: EventType[] = [...events, ...dummyEvents]; // ...dummyEvents
+  const allEvents: EventType[] = [...events, ...dummyEvents];
 
   const categorizedEvents = setEventCategories();
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
@@ -120,7 +120,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         <div>
           <h3 className="heading">{t('featured_events')}</h3>
           {extraCollection && extraCollection.length > 0 && (
-            <div className={`grid-events ${extraCollection.length > 1 ? 'two' : 'one'}`}>
+            <div className={`event-collection grid-events ${extraCollection.length > 1 ? 'two' : 'one'}`}>
               {extraCollection?.map((c) => (
                 <EventCollectionCard
                   collection={c}

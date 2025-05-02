@@ -125,6 +125,18 @@
       ul {
         display: flex;
         flex-direction: column;
+
+        a li {
+          .icon {
+            height: calc(.2rem * 10);
+            width: calc(.2rem * 10);
+
+            svg {
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
       }
     }
   }

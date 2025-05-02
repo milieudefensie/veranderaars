@@ -117,13 +117,15 @@
     }
 
     .heading {
+      font-size: 1.1rem;
       padding-block: calc(.25rem * 4);
     }
 
     .grid-events {
-      overflow-x: scroll;
+      overflow-x: auto;
       scroll-snap-type: x mandatory;
       display: flex;
+      padding: 0 1rem .25rem 0;
 
       &>.ui-event-collection-card,
       &>.ui-event-card-v2 {
@@ -132,6 +134,28 @@
         scroll-snap-stop: always;
         width: 75vw;
       }
+
+      &.one {
+        padding: 0;
+
+        &>.ui-event-collection-card,
+        &>.ui-event-card-v2 {
+          width: 100%;
+        }
+      }
+
+      &.event-collection {
+        flex-direction: column;
+        padding: 0;
+
+        &>.ui-event-collection-card {
+          width: 100%;
+        }
+      }
+    }
+
+    .map-container .alert-container {
+      display: none;
     }
   }
 }
