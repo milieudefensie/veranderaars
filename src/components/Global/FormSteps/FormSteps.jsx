@@ -6,10 +6,19 @@ import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 import './styles.scss';
 
 const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
+  const location = useLocation();
   const { forms = [] } = form[0];
 
-  const location = useLocation();
-  const [currentStep, setCurrentStep] = useState(0);
+  const getInitialStep = () => {
+    if (typeof window !== 'undefined') {
+      const query = new URLSearchParams(window.location.search);
+      const stepParam = parseInt(query.get('form_step'));
+      return !isNaN(stepParam) ? stepParam : 0;
+    }
+    return 0;
+  };
+
+  const [currentStep, setCurrentStep] = useState(getInitialStep);
   const [email, setEmail] = useState(null);
 
   const isFirstStep = currentStep === 0;
@@ -20,9 +29,9 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
     if (!isNaN(stepParam) && stepParam < forms.length) {
       setCurrentStep(stepParam);
     } else {
-      setCurrentStep(0);
+      setCurrentStep(0); // fallback si no hay param o es inválido
     }
-  }, [location, forms.length]);
+  }, [location.search, forms.length]);
 
   const handleStepSubmitted = (_, data) => {
     if (data?.submissionValues?.email) {
@@ -59,9 +68,9 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
           ) : (
             <div dangerouslySetInnerHTML={{ __html: forms[currentStep]?.introductionText }} />
           )}
-          {forms[currentStep] && (
+          {Array.isArray(forms) && forms.length > 0 && forms[currentStep] && (
             <HubspotForm
-              key={currentStep}
+              key={forms[currentStep]?.id}
               {...forms[currentStep]}
               onFormSubmitted={handleStepSubmitted}
               style={isFirstStep ? variant || 'purple' : 'gray'}

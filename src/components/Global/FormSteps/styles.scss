@@ -94,11 +94,13 @@
   }
 
   &.group {
-    height: 620px;
+    height: 100%;
+    min-height: 620px;
     grid-template-columns: 1fr 620px;
 
     .image-container {
-      height: 620px;
+      height: 100%;
+      min-height: 620px;
       width: 620px;
     }
   }
