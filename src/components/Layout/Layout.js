@@ -9,15 +9,11 @@ import '../../styles/main.scss';
 export const tolgee = Tolgee()
   .use(DevTools())
   .use(FormatSimple())
-  .use(
-    BackendFetch({
-      prefix: 'https://cdn.tolg.ee/bf0c713a0235c5dcaeb14c9d6081e18d', //process.env.GATSBY_APP_TOLGEE_CDN_URL
-    })
-  )
+  .use(BackendFetch({ prefix: process.env.GATSBY_APP_TOLGEE_CDN_URL }))
   .init({
     language: 'nl',
-    apiUrl: 'https://app.tolgee.io', //process.env.GATSBY_APP_TOLGEE_API_URL,
-    apiKey: 'tgpak_ge3tambtl5zwqmldhb3g6z3smq3w2mdkovwdmn3sorqws2tnorrq', // process.env.GATSBY_APP_TOLGEE_API_KEY,
+    apiUrl: process.env.GATSBY_APP_TOLGEE_API_URL,
+    apiKey: process.env.GATSBY_APP_TOLGEE_API_KEY,
     staticData: {
       en: () => import(`../../../locales/en.json`),
       nl: () => import('../../../locales/nl.json'),
