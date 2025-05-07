@@ -2,10 +2,10 @@
   border-radius: 10px;
   background: var(--nb-secondary-color);
   display: grid;
-  grid-template-columns: 1fr 536px;
+  grid-template-columns: 3fr 1fr;
   overflow: hidden;
   margin-bottom: 13px;
-  height: 536px;
+  min-height: 536px;
 
   .metadata {
     padding: 65px 44px 65px 50px;
@@ -32,8 +32,9 @@
   }
 
   .image-container {
-    width: 536px;
-    height: 536px;
+    // width: 536px;
+    // height: 536px;
+    aspect-ratio: 1 / 1;
 
     img {
       width: 100%;
@@ -47,6 +48,7 @@
     background: var(--nb-bg-light);
     padding: 69px 45px;
     height: auto;
+    min-height: auto;
 
     .metadata {
       padding: 0;
@@ -84,24 +86,24 @@
   }
 
   &.agenda {
-    height: 590px;
-    grid-template-columns: 1fr 590px;
+    // height: 590px;
+    // grid-template-columns: 1fr 590px;
 
     .image-container {
-      height: 590px;
-      width: 590px;
+      // height: 590px;
+      // width: 590px;
     }
   }
 
   &.group {
-    height: 100%;
-    min-height: 620px;
-    grid-template-columns: 1fr 620px;
+    // height: 100%;
+    // min-height: 620px;
+    // grid-template-columns: 1fr 620px;
 
     .image-container {
-      height: 100%;
-      min-height: 620px;
-      width: 620px;
+      // height: 100%;
+      // min-height: 620px;
+      // width: 620px;
     }
   }
 }
@@ -122,85 +124,101 @@
   }
 }
 
-@media screen and (max-width: 1400px) {
-
-  .ui-form-steps.agenda,
-  .ui-form-steps.group {
-    height: 530px;
-    grid-template-columns: 1fr 530px;
-
-    .metadata {
-      padding: 30px 24px;
-
-      h1 {
-        font-size: 40px;
-      }
-
-      p {
-        font-size: 18px;
-        margin-bottom: 25px;
-      }
-    }
-
-    .image-container {
-      height: 530px;
-      width: 530px;
-    }
-  }
-}
-
 @media screen and (max-width: 1200px) {
-  .ui-form-steps.first-step {
-    height: 374px;
-    grid-template-columns: 1fr 374px;
-
-    .metadata {
-      padding: 30px 24px;
-
-      h1 {
-        font-size: 33px;
-        margin-bottom: 15px;
-      }
-
-      p {
-        font-size: 16px;
-        margin-bottom: 20px;
-      }
-    }
-
-    .image-container {
-      height: 374px;
-      width: 374px;
-    }
+  .ui-form-steps {
+    min-height: auto;
   }
 
-  .ui-form-steps.agenda.first-step {
-    height: 500px;
-    grid-template-columns: 1fr 500px;
-
-    .image-container {
-      height: 500px;
-      width: 500px;
-    }
+  .ui-form-steps .metadata h1 {
+    font-size: 30px;
+    margin-bottom: 15px;
   }
 
-  .ui-form-steps.group.first-step {
-    height: 500px;
-    grid-template-columns: 1fr 500px;
-
-    .image-container {
-      height: 500px;
-      width: 500px;
-    }
+  .ui-form-steps .metadata p {
+    font-size: 16px;
+    margin-bottom: 15px;
   }
 }
+
+// @media screen and (max-width: 1400px) {
+
+//   .ui-form-steps.agenda,
+//   .ui-form-steps.group {
+//     height: 530px;
+//     grid-template-columns: 1fr 530px;
+
+//     .metadata {
+//       padding: 30px 24px;
+
+//       h1 {
+//         font-size: 40px;
+//       }
+
+//       p {
+//         font-size: 18px;
+//         margin-bottom: 25px;
+//       }
+//     }
+
+//     .image-container {
+//       height: 530px;
+//       width: 530px;
+//     }
+//   }
+// }
+
+// @media screen and (max-width: 1200px) {
+//   .ui-form-steps.first-step {
+//     height: 374px;
+//     grid-template-columns: 1fr 374px;
+
+//     .metadata {
+//       padding: 30px 24px;
+
+//       h1 {
+//         font-size: 33px;
+//         margin-bottom: 15px;
+//       }
+
+//       p {
+//         font-size: 16px;
+//         margin-bottom: 20px;
+//       }
+//     }
+
+//     .image-container {
+//       height: 374px;
+//       width: 374px;
+//     }
+//   }
+
+//   .ui-form-steps.agenda.first-step {
+//     height: 500px;
+//     grid-template-columns: 1fr 500px;
+
+//     .image-container {
+//       height: 500px;
+//       width: 500px;
+//     }
+//   }
+
+//   .ui-form-steps.group.first-step {
+//     height: 500px;
+//     grid-template-columns: 1fr 500px;
+
+//     .image-container {
+//       height: 500px;
+//       width: 500px;
+//     }
+//   }
+// }
 
 @media screen and (max-width: 992px) {
   .ui-form-steps {
     display: flex;
     flex-direction: column-reverse;
     height: auto;
-    width: 696px;
+    // width: 696px;
     margin: 0 auto;
     margin-bottom: 13px;
 
@@ -223,13 +241,13 @@
     &.agenda.first-step,
     &.group.first-step {
       // width: 100%;
-      height: auto;
-      max-width: 696px;
+      // height: auto;
+      // max-width: 696px;
 
       .image-container {
-        width: 100%;
-        max-width: 696px;
-        height: 696px;
+        // width: 100%;
+        // max-width: 696px;
+        // height: 696px;
       }
     }
   }
@@ -239,50 +257,50 @@
   }
 }
 
-@media screen and (max-width: 767px) {
-  .container-steps {
-    max-width: 636px;
-  }
+// @media screen and (max-width: 767px) {
+//   .container-steps {
+//     max-width: 636px;
+//   }
 
-  .ui-form-steps.first-step,
-  .ui-form-steps.agenda.first-step,
-  .ui-form-steps.group.first-step {
-    max-width: 606px;
-    width: 100%;
+//   .ui-form-steps.first-step,
+//   .ui-form-steps.agenda.first-step,
+//   .ui-form-steps.group.first-step {
+//     max-width: 606px;
+//     width: 100%;
 
-    .image-container {
-      max-width: 606px;
-      height: 606px;
-    }
-  }
+//     .image-container {
+//       max-width: 606px;
+//       height: 606px;
+//     }
+//   }
 
-  .legal-text.first-step {
-    max-width: 606px;
-  }
+//   .legal-text.first-step {
+//     max-width: 606px;
+//   }
 
-  .ui-form-steps.second-step {
-    max-width: 100%;
-  }
-}
+//   .ui-form-steps.second-step {
+//     max-width: 100%;
+//   }
+// }
 
-@media screen and (max-width: 650px) {
-  .container-steps {
-    max-width: 650px;
-  }
+// @media screen and (max-width: 650px) {
+//   .container-steps {
+//     max-width: 650px;
+//   }
 
-  .ui-form-steps.first-step,
-  .ui-form-steps.agenda.first-step,
-  .ui-form-steps.group.first-step {
-    max-width: 343px;
+//   .ui-form-steps.first-step,
+//   .ui-form-steps.agenda.first-step,
+//   .ui-form-steps.group.first-step {
+//     max-width: 343px;
 
-    .image-container {
-      max-width: 343px;
-      height: 343px;
-    }
-  }
+//     .image-container {
+//       max-width: 343px;
+//       height: 343px;
+//     }
+//   }
 
-  .legal-text.first-step {
-    max-width: 343px;
-    margin: 0 auto;
-  }
-}
+//   .legal-text.first-step {
+//     max-width: 343px;
+//     margin: 0 auto;
+//   }
+// }
