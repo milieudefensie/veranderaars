@@ -103,11 +103,18 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             isWaitingList={isWaitingListActive}
             introduction={
               <div className="event-introduction">
-                <span>{formatDate(raw_start)}</span>
-                <span>
-                  {formatDateCSL(start_in_zone)} {raw_end ? `- ${formatDateCSL(end_in_zone)}` : ''}
+                <span className="date">
+                  <img src={dateIcon} alt="Date icon" />
+                  {formatDate(raw_start)} {formatDateCSL(start_in_zone)}{' '}
+                  {raw_end ? `- ${formatDateCSL(end_in_zone)}` : ''}
                 </span>
-                {location?.query && <span>{location.query}</span>}
+                {location?.query && (
+                  <span className="date">
+                    {' '}
+                    <img src={locationIcon} alt="Location icon" />
+                    {location.query}
+                  </span>
+                )}
               </div>
             }
             headerComponents={
@@ -128,6 +135,18 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
         </div>
 
         <FloatLayout reduceOverlap>
+          {mainImage?.url && (
+            <div className="image-event">
+              <img src={mainImage.url} alt={title} />
+            </div>
+          )}
+
+          {rich_description && (
+            <div className="content" style={{ whiteSpace: 'break-spaces' }}>
+              <p dangerouslySetInnerHTML={{ __html: rich_description }} />
+            </div>
+          )}
+
           <div className="brief-information">
             <div className="metadata">
               {start_in_zone && (
@@ -162,18 +181,6 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
               </a>
             )}
           </div>
-
-          {mainImage?.url && (
-            <div className="image-event">
-              <img src={mainImage.url} alt={title} />
-            </div>
-          )}
-
-          {rich_description && (
-            <div className="content" style={{ whiteSpace: 'break-spaces' }}>
-              <p dangerouslySetInnerHTML={{ __html: rich_description }} />
-            </div>
-          )}
         </FloatLayout>
       </WrapperLayout>
     </Layout>
