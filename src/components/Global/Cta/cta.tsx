@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from '../Link/Link';
+import Link from '../Link/link';
 import './index.scss';
 
 interface CtaProps {

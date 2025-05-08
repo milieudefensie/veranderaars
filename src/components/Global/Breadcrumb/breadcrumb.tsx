@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from '../Link/Link';
+import Link from '../Link/link';
 import separatorIcon from '../../Icons/breadcrumb-separator.svg';
 import separatorWhiteIcon from '../../Icons/breadcrumb-white-separator.svg';
 

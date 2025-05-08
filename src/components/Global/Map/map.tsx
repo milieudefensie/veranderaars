@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Map, Marker, Popup, NavigationControl, MapProps } from 'react-map-gl';
 import GroupMarker from './Marker/group-marker';
-import CustomMarker from './Marker/Marker';
+import CustomMarker from './Marker/marker';
 import MapPopup from './MapPopup/map-popup';
 import useSupercluster from 'use-supercluster';
 import CtaHandler from '../Cta/cta-handler';
-import Cta from '../Cta/Cta';
+import Cta from '../Cta/cta';
 import WPGroupMarker from './Marker/wp-group-marker';
 import { useTranslation } from 'gatsby-plugin-react-i18next';
 

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { graphql, PageProps } from 'gatsby';
-import Layout from '../components/Layout/Layout';
-import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import Blocks from '../components/Blocks';
-import HomeHero from '../components/Global/HomeHero/HomeHero';
-import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
+import Layout from '../components/Layout/layout';
+import SeoDatoCMS from '../components/Layout/seo-datocms';
+import Blocks from '../components/blocks';
+import HomeHero from '../components/Global/HomeHero/home-hero';
+import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import type { HomepageTemplate } from '../types';
 
 const IndexPage: React.FC<PageProps<HomepageTemplate>> = ({

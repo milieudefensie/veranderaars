@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react';
-import Link from '../Link/Link';
-import Spinner from '../Spinner/Spinner';
+import Link from '../Link/link';
+import Spinner from '../Spinner/spinner';
 import axios from 'axios';
 
 import './index.scss';

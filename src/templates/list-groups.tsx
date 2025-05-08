@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { graphql, PageProps } from 'gatsby';
-import Layout from '../components/Layout/Layout';
-import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
+import Layout from '../components/Layout/layout';
+import SeoDatoCMS from '../components/Layout/seo-datocms';
+import HeroBasic from '../components/Global/HeroBasic/hero-basic';
 import Map from '../components/Global/Map/Map';
-import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
-import ListGroupBlock from '../components/Blocks/HighlightGroup/ListGroups';
-import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
-import FloatCta from '../components/Global/FloatCta/FloatCta';
+import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
+import ListGroupBlock from '../components/Blocks/HighlightGroup/list-groups';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
+import FloatCta from '../components/Global/FloatCta/float-cta';
 import type { ListGroupTemplate } from '../types';
 
 import './list-basic.styles.scss';

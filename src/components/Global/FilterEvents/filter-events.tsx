@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import EventCard from '../../Blocks/HighlightEvent/EventCard';
-import Dropdown from '../Inputs/Dropdown/Dropdown';
-import TextInput from '../Inputs/TextInput/TextInput';
-import ListPaginated from '../Pagination/ListPaginated';
+import EventCard from '../../Blocks/HighlightEvent/event-card';
+import Dropdown from '../Inputs/Dropdown/dropdown';
+import TextInput from '../Inputs/TextInput/text-input';
+import ListPaginated from '../Pagination/list-paginated';
 import { MapCountry } from '../../../utils';
 import searchIcon from '../../Icons/search-icon.svg';
 

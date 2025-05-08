@@ -1,8 +1,8 @@
 import React from 'react';
 import TagList from '../../Tag/tag-list';
 import { formatDate, formatDateCSL } from '../../../../utils';
-import Cta from '../../Cta/Cta';
-import Link from '../../Link/Link';
+import Cta from '../../Cta/cta';
+import Link from '../../Link/link';
 import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './styles.scss';

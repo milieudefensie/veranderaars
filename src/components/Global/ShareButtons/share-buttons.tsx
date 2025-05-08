@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Link from '../Link/Link';
+import Link from '../Link/link';
 import telegram from '../../Icons/wp-share.svg';
 import facebook from '../../Icons/facebook-share.svg';
 import twitter from '../../Icons/twitter-share.svg';

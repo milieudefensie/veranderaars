@@ -1,5 +1,10 @@
 import { GatsbyImageProps } from 'gatsby-plugin-image';
 
+declare module '*.svg' {
+  const content: string;
+  export default content;
+}
+
 // Templates
 export type CSLEventTemplate = {
   page: {

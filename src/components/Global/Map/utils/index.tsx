@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import mapboxgl, { Map } from '!mapbox-gl';
-import Marker from '../Marker/Marker';
+import Marker from '../Marker/marker';
 import ReactDOMServer from 'react-dom/server';
 import GroupMarker from '../Marker/group-marker';
 import MapPopup from '../MapPopup/map-popup';

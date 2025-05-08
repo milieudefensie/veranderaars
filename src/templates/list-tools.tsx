@@ -1,12 +1,12 @@
 import React from 'react';
 import { graphql, PageProps } from 'gatsby';
-import Layout from '../components/Layout/Layout';
-import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
-import SimpleText from '../components/Blocks/SimpleText/SimpleText';
-import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
-import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
-import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
+import Layout from '../components/Layout/layout';
+import SeoDatoCMS from '../components/Layout/seo-datocms';
+import HeroBasic from '../components/Global/HeroBasic/hero-basic';
+import SimpleText from '../components/Blocks/SimpleText/simple-text';
+import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
+import FloatLayout from '../components/Global/FloatLayout/float-layout';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
 import type { ListToolsTemplate } from '../types';
 
 const ListTool: React.FC<PageProps<ListToolsTemplate>> = ({ data }) => {

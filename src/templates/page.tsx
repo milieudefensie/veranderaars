@@ -1,11 +1,11 @@
 import React from 'react';
 import { graphql, PageProps } from 'gatsby';
-import Layout from '../components/Layout/Layout';
-import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
-import SimpleText from '../components/Blocks/SimpleText/SimpleText';
-import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
-import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
+import Layout from '../components/Layout/layout';
+import SeoDatoCMS from '../components/Layout/seo-datocms';
+import HeroBasic from '../components/Global/HeroBasic/hero-basic';
+import SimpleText from '../components/Blocks/SimpleText/simple-text';
+import FloatLayout from '../components/Global/FloatLayout/float-layout';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
 import type { BasicPageTemplate } from '../types';
 
 interface PageContext {

@@ -1,5 +1,5 @@
 import React from 'react';
-import Blocks from '../../Blocks';
+import Blocks from '../../blocks';
 
 import './styles.scss';
 

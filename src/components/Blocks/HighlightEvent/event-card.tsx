@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import ImageWrapper from '../../Global/Image/image-wrapper';
 import { formatDate, formatDateCSL, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/tag-list';
-import Link from '../../Global/Link/Link';
+import Link from '../../Global/Link/link';
 import axios from 'axios';
 import { useTranslation } from 'gatsby-plugin-react-i18next';
-import Spinner from '../../Global/Spinner/Spinner';
+import Spinner from '../../Global/Spinner/spinner';
 
 import './styles.scss';
 

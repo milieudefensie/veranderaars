@@ -1,7 +1,7 @@
 import React from 'react';
 import ImageWrapper from '../../Global/Image/image-wrapper';
 import CtaList from '../../Global/Cta/cta-list';
-import Link from '../../Global/Link/Link';
+import Link from '../../Global/Link/link';
 
 import './styles.scss';
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import { graphql, PageProps } from 'gatsby';
-import Layout from '../components/Layout/Layout';
+import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import HeroBasic from '../components/Global/HeroBasic/hero-basic';
-import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
-import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
-import Link from '../components/Global/Link/Link';
+import FloatLayout from '../components/Global/FloatLayout/float-layout';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
+import Link from '../components/Global/Link/link';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import backBtnIcon from '../components/Icons/back-btn.svg';
 import type { ToolTemplate } from '../types';

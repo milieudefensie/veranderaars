@@ -1,5 +1,3 @@
-// components/Layout/SeoDatoCMS.tsx
-
 import React, { ReactNode } from 'react';
 import { HelmetDatoCms } from 'gatsby-source-datocms';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import SocialLinkList from '../../Global/SocialLink/social-link-list';
-import SocialMediaWidget from '../SocialMediaWidget/SocialMediaWidget';
+import SocialMediaWidget from '../SocialMediaWidget/social-media-widget';
 
 import './index.scss';
 

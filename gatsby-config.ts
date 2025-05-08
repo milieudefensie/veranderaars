@@ -1,12 +1,11 @@
+import type { GatsbyConfig } from 'gatsby';
+import { languages, defaultLanguage } from './languages';
+
 require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 });
-const { languages, defaultLanguage } = require('./languages');
 
-/**
- * @type {import('gatsby').GatsbyConfig}
- */
-module.exports = {
+const config: GatsbyConfig = {
   siteMetadata: {
     title: `Milieudefensie`,
     siteUrl: `https://veranderaars.milieudefensie.nl`,
@@ -61,3 +60,5 @@ module.exports = {
     },
   ],
 };
+
+export default config;

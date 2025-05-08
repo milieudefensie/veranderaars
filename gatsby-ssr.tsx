@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { GatsbySSR } from 'gatsby';
 
-// Preload font example
-export const onRenderBody = ({ setHeadComponents }) => {
+export const onRenderBody: GatsbySSR['onRenderBody'] = ({ setHeadComponents }) => {
   setHeadComponents([
     <link
       rel="stylesheet"

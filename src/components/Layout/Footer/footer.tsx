@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
-import Link from '../../Global/Link/Link';
+import Link from '../../Global/Link/link';
 import { ReactSVG } from 'react-svg';
 import wpIcon from '../../Icons/wp-icon.svg';
 import Cta from '../../Global/Cta/Cta';

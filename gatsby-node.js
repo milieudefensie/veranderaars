@@ -217,22 +217,22 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 exports.createPages = ({ graphql, actions }) => {
   const { createPage, createSlice, createRedirect } = actions;
 
-  createSlice({ id: `header`, component: require.resolve(`./src/components/Layout/Header.js`) });
-  createSlice({ id: `footer`, component: require.resolve(`./src/components/Layout/Footer/Footer.js`) });
+  createSlice({ id: `header`, component: require.resolve(`./src/components/Layout/header.tsx`) });
+  createSlice({ id: `footer`, component: require.resolve(`./src/components/Layout/Footer/footer.tsx`) });
 
   return new Promise((resolve, reject) => {
     const templates = {
-      home: path.resolve('./src/templates/home.js'),
-      page: path.resolve('./src/templates/page.js'),
-      event: path.resolve('./src/templates/event.js'),
+      home: path.resolve('./src/templates/home.tsx'),
+      page: path.resolve('./src/templates/page.tsx'),
+      event: path.resolve('./src/templates/event.tsx'),
       listEvents: path.resolve('./src/templates/listEvents.js'),
-      group: path.resolve('./src/templates/group.js'),
-      listGroups: path.resolve('./src/templates/listGroups.js'),
-      tool: path.resolve('./src/templates/tool.js'),
-      listTools: path.resolve('./src/templates/listTools.js'),
-      cslEvent: path.resolve('./src/templates/cslEvent.js'),
-      listWhatsAppGroups: path.resolve('./src/templates/listWhatsappGroups.js'),
-      pageWhatsAppGroups: path.resolve('./src/templates/pageWhatsappCom.js'),
+      group: path.resolve('./src/templates/group.tsx'),
+      listGroups: path.resolve('./src/templates/list-groups.tsx'),
+      tool: path.resolve('./src/templates/tool.tsx'),
+      listTools: path.resolve('./src/templates/list-tools.tsx'),
+      cslEvent: path.resolve('./src/templates/csl-event.tsx'),
+      listWhatsAppGroups: path.resolve('./src/templates/list-whatsapp-groups.tsx'),
+      pageWhatsAppGroups: path.resolve('./src/templates/page-whatsapp-com.tsx'),
     };
 
     resolve(

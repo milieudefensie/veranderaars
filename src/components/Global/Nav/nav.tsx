@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Link from '../Link/Link';
+import Link from '../Link/link';
 import headerUpdatedLogo from '../../Icons/md-new-logo.svg';
 import { ReactSVG } from 'react-svg';
 import hamburgerIcon from '../../Icons/Hamburguer Icon.svg';
 import wpNavigationIcon from '../../Icons/Whatsapp Navigation.svg';
-import Cta from '../Cta/Cta';
+import Cta from '../Cta/cta';
 
 import './index.scss';
 

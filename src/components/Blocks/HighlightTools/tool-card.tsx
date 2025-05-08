@@ -2,7 +2,7 @@ import React from 'react';
 import ImageWrapper from '../../Global/Image/image-wrapper';
 import CtaList from '../../Global/Cta/cta-list';
 import { ReactSVG } from 'react-svg';
-import Link from '../../Global/Link/Link';
+import Link from '../../Global/Link/link';
 
 import './styles.scss';
 
