@@ -565,7 +565,7 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
 };
 
 // Status indicator component
-export const BotProtectionStatus = ({ className = '' }) => {
+export const BotProtectionStatus = ({ buttonLabel = 'Open WhatsApp', className = '' }) => {
   const [isOpen, setIsOpen] = useState(true);
   const context = useContext(BotProtectionContext);
 
@@ -607,7 +607,7 @@ export const BotProtectionStatus = ({ className = '' }) => {
             </span>
             <div className="verification-error my-4">
               <ProtectedLink to={buttonClicked} className="custom-btn custom-btn-primary w-100 mb-4">
-                Open WhatsApp
+                {buttonLabel}
               </ProtectedLink>
               {isLoading && <div className="text-blue-600">Verifiëren...</div>}
               {/*error*/}Gaat er iets mis? Stuur een mailtje naar
