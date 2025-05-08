@@ -4,13 +4,14 @@ import { formatDate, formatDateCSL, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/TagList';
 import Link from '../../Global/Link/Link';
 import axios from 'axios';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
+
 import Spinner from '../../Global/Spinner/Spinner';
 
 import './styles.scss';
 
 const EventCard = ({ event, isHighlighted = false }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const {
     __typename,

@@ -3,12 +3,12 @@ import SocialLinkList from '../../Global/SocialLink/SocialLinkList';
 import CtaList from '../../Global/Cta/CtaList';
 import { ReactSVG } from 'react-svg';
 import wpIcon from '../../Icons/wp-icon.svg';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
 const Share = ({ block }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { title, socialLinks = [], ctas = [], whatsappGroup } = block;
 
   return (

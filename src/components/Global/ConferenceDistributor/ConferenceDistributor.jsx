@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { detectService } from '../../../utils';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
 const ConferenceDistributor = ({ conferenceUrl }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const ConferenceDistributor = ({ conferenceUrl }) => {
 
 // Utils
 const WhatsAppQR = ({ url }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   return (
     <div className="ui-whatsapp-qr">
       <QRCodeSVG
@@ -77,7 +77,7 @@ const WhatsAppQR = ({ url }) => {
 };
 
 const SignalQR = ({ url }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   return (
     <div className="ui-signal-qr">
       <QRCodeSVG
@@ -110,7 +110,7 @@ const SignalQR = ({ url }) => {
 };
 
 const ZoomMessage = ({ url }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   return (
     <div className="ui-zoom-message">
       <div className="img">

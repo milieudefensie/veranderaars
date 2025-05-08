@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
 const Dropdown = ({ title, options, onSelect }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const dropdownRef = useRef(null);
 
   const [isOpen, setIsOpen] = useState(false);

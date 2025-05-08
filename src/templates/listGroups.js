@@ -103,16 +103,7 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
 export default ListGroups;
 
 export const PageQuery = graphql`
-  query ListGroupById($id: String, $language: String!) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query ListGroupById($id: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

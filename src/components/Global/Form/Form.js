@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { navigate } from 'gatsby';
 import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributor';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
 const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);

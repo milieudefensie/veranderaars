@@ -3,12 +3,12 @@ import Link from '../Link/Link';
 import telegram from '../../Icons/wp-share.svg';
 import facebook from '../../Icons/facebook-share.svg';
 import twitter from '../../Icons/twitter-share.svg';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './index.scss';
 
 function ShareButtons() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const [isFixed, setIsFixed] = useState('');
   const [shareUrl, setShareUrl] = useState('');
 

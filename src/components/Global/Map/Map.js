@@ -7,7 +7,7 @@ import useSupercluster from 'use-supercluster';
 import CtaHandler from '../Cta/CtaHandler';
 import Cta from '../Cta/Cta';
 import WPGroupMarker from './Marker/WPGroupMarker';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles.scss';
@@ -21,7 +21,7 @@ const MapWrapper = ({
   floatButton = null,
   extraLogic = null,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const mapRef = useRef(null);
 
   const [viewport, setViewport] = useState({
