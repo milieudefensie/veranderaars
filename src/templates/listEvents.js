@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { graphql } from 'gatsby';
-import Layout from '../components/Layout/Layout';
-import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
-import EventCard from '../components/Blocks/HighlightEvent/EventCard';
+import Layout from '../components/Layout/layout';
+import SeoDatoCMS from '../components/Layout/seo-datocms';
+import HeroBasic from '../components/Global/HeroBasic/hero-basic';
+import EventCard from '../components/Blocks/HighlightEvent/event-card';
 import Map from '../components/Global/Map/Map';
-import FilterEvents from '../components/Global/FilterEvents/FilterEvents';
-import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
-import FloatCta from '../components/Global/FloatCta/FloatCta';
+import FilterEvents from '../components/Global/FilterEvents/filter-events';
+import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
+import FloatCta from '../components/Global/FloatCta/float-cta';
 import useCSLEvents from '../hooks/useCSLEvents';
 import { formatCslEvents, mapCmsEvents, mapCslEvents } from '../utils';
-import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
 
 import './list-basic.styles.scss';
 
