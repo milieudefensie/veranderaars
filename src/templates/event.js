@@ -59,11 +59,16 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
             // description={introduction}
             description={
               <div className="event-introduction">
-                <span>{formatDate(date)}</span>
-                <span>
-                  {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
+                <span className="date">
+                  <img src={dateIcon} alt="Date icon" />
+                  {formatDate(date)} {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
                 </span>
-                {address && <span>{address}</span>}
+                {address && (
+                  <span className="date">
+                    <img src={locationIcon} alt="Location icon" />
+                    {address}
+                  </span>
+                )}
               </div>
             }
             bgImageUrl={image?.url}
@@ -93,6 +98,14 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
           {registrationForm && !isArray(formSteps) && (
             <div className={`form-wrapper ${formBackgroundColor}`}>
               <HubspotForm {...registrationForm} style={`${formBackgroundColor === 'dark-green' ? '' : 'event'}`} />
+            </div>
+          )}
+
+          {introduction && <div className="introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
+
+          {content?.value && (
+            <div className="content">
+              <StructuredTextDefault content={content} />
             </div>
           )}
 
@@ -130,14 +143,6 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
               </a>
             )}
           </div>
-
-          {introduction && <div className="introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
-
-          {content?.value && (
-            <div className="content">
-              <StructuredTextDefault content={content} />
-            </div>
-          )}
         </FloatLayout>
       </WrapperLayout>
     </Layout>

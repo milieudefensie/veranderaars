@@ -110,7 +110,6 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
                 </span>
                 {location?.query && (
                   <span className="date">
-                    {' '}
                     <img src={locationIcon} alt="Location icon" />
                     {location.query}
                   </span>
