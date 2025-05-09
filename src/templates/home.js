@@ -17,7 +17,7 @@ const IndexPage = ({ pageContext, data: { page, cslHighlightEvent, configuration
           subtitle={page?.subtitle}
           image={page?.heroImage}
           mobileImage={page?.mobileHeroImage}
-          form={page?.form}
+          form={page?.formStep}
         />
 
         {page?.blocks && (
@@ -82,6 +82,9 @@ export const HomeQuery = graphql`
       id
       title
       subtitle
+      formStep {
+        ...FormStepBlock
+      }
       heroImage {
         gatsbyImageData(width: 1500, height: 800)
       }
