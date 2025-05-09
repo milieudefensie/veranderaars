@@ -2,22 +2,22 @@ import React from 'react';
 import { renderNodeRule, StructuredText } from 'react-datocms';
 import { isHeading, isParagraph, isLink } from 'datocms-structured-text-utils';
 import ImageWrapper from '../../Global/Image/image-wrapper';
-import Accordion from '../Accordion/Accordion';
+import Accordion from '../Accordion/accordion';
 import EmbedIframe from '../../Blocks/EmbedIframe/embed-iframe';
-import Video from '../Video/Video';
-import Table from '../Table/Table';
+import Video from '../Video/video';
+import Table from '../Table/table';
 import NarrativeBlock from '../NarrativeBlock/narrative-block';
 import ListHighlightEvent from '../HighlightEvent/list-highlight-event';
 import HighlightTools from '../HighlightTools/highlight-tools';
 import FormBlock from '../FormBlock/form-block';
 import Cta from '../../Global/Cta/cta';
 import SimpleText from '../SimpleText/simple-text';
-import Share from '../Share/Share';
-import CountDown from '../Countdown/Countdown';
+import Share from '../Share/share';
+import CountDown from '../Countdown/countdown';
 import BlockCtaList from '../CtaList/cta-list';
 import BlockCtaIconsList from '../CtaIconsList/cta-icons-list';
 import ImageGallery from '../ImageGallery/image-gallery';
-import Columns from '../Columns/Columns';
+import Columns from '../Columns/columns';
 import MapFilter from '../MapFilter/map-filter';
 
 interface StructuredTextDefaultProps {
