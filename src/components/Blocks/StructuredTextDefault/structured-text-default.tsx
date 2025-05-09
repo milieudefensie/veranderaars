@@ -10,7 +10,7 @@ import NarrativeBlock from '../NarrativeBlock/narrative-block';
 import ListHighlightEvent from '../HighlightEvent/list-highlight-event';
 import HighlightTools from '../HighlightTools/highlight-tools';
 import FormBlock from '../FormBlock/form-block';
-import Cta from '../../Global/Cta/Cta';
+import Cta from '../../Global/Cta/cta';
 import SimpleText from '../SimpleText/simple-text';
 import Share from '../Share/Share';
 import CountDown from '../Countdown/Countdown';

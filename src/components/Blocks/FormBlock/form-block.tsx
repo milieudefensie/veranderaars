@@ -1,6 +1,6 @@
 import React from 'react';
-import formVector from '../../Icons/new-form-icon.svg';
 import HubspotForm from '../HubspotForm/HubspotForm';
+import formVector from '../../Icons/new-form-icon.svg';
 
 import './styles.scss';
 

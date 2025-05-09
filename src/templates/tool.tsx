@@ -7,8 +7,8 @@ import FloatLayout from '../components/Global/FloatLayout/float-layout';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
 import Link from '../components/Global/Link/link';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import backBtnIcon from '../components/Icons/back-btn.svg';
 import type { ToolTemplate } from '../types';
+import backBtnIcon from '../components/Icons/back-btn.svg';
 
 import './basic.styles.scss';
 

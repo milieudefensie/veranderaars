@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import MapWrapper from '../../Global/Map/Map';
+import MapWrapper from '../../Global/Map/map';
 import { graphql, useStaticQuery } from 'gatsby';
 import { mapCmsEvents, mapCslEvents } from '../../../utils';
 import ListPaginated from '../../Global/Pagination/list-paginated';

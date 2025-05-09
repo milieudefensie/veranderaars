@@ -1,23 +1,23 @@
 import React from 'react';
 import NarrativeBlock from './Blocks/NarrativeBlock/narrative-block';
-import Accordion from './Blocks/Accordion/Accordion';
-import Logos from './Blocks/Logos/Logos';
+import Accordion from './Blocks/Accordion/accordion';
+import Logos from './Blocks/Logos/logos';
 import SimpleText from './Blocks/SimpleText/simple-text';
-import Video from './Blocks/Video/Video';
-import Table from './Blocks/Table/Table';
+import Video from './Blocks/Video/video';
+import Table from './Blocks/Table/table';
 import ListHighlightEvent from './Blocks/HighlightEvent/list-highlight-event';
 import HighlightTools from './Blocks/HighlightTools/highlight-tools';
 import FormBlock from './Blocks/FormBlock/form-block';
-import Share from './Blocks/Share/Share';
+import Share from './Blocks/Share/share';
 import ImageWrapper from './Global/Image/image-wrapper';
 import EmbedIframe from './Blocks/EmbedIframe/embed-iframe';
-import Cta from './Global/Cta/Cta';
+import Cta from './Global/Cta/cta';
 import MapFilter from './Blocks/MapFilter/map-filter';
-import CountDown from './Blocks/Countdown/Countdown';
+import CountDown from './Blocks/Countdown/countdown';
 import BlockCtaList from './Blocks/CtaList/cta-list';
 import BlockCtaIconsList from './Blocks/CtaIconsList/cta-icons-list';
 import ImageGallery from './Blocks/ImageGallery/image-gallery';
-import Columns from './Blocks/Columns/Columns';
+import Columns from './Blocks/Columns/columns';
 import { ProtectedLink } from './Global/BotProtection/BotProtection';
 
 interface Block {

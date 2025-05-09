@@ -2,9 +2,9 @@ import React from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
 import Link from '../../Global/Link/link';
 import { ReactSVG } from 'react-svg';
-import wpIcon from '../../Icons/wp-icon.svg';
-import Cta from '../../Global/Cta/Cta';
+import Cta from '../../Global/Cta/cta';
 import { useTranslation } from 'gatsby-plugin-react-i18next';
+import wpIcon from '../../Icons/wp-icon.svg';
 
 import './index.scss';
 

@@ -3,7 +3,7 @@ import { graphql, PageProps } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import HeroBasic from '../components/Global/HeroBasic/hero-basic';
-import Map from '../components/Global/Map/Map';
+import Map from '../components/Global/Map/map';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import ListGroupBlock from '../components/Blocks/HighlightGroup/list-groups';
 import Blocks from '../components/blocks';

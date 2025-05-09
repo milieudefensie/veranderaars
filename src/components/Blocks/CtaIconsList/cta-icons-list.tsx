@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from '../../Global/Link/link';
+
 import './styles.scss';
 
 interface IconItem {

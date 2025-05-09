@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Link from '../Link/link';
+import { useTranslation } from 'gatsby-plugin-react-i18next';
+
 import telegram from '../../Icons/wp-share.svg';
 import facebook from '../../Icons/facebook-share.svg';
 import twitter from '../../Icons/twitter-share.svg';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
 
 import './index.scss';
 

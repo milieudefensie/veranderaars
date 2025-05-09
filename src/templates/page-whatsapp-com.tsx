@@ -1,13 +1,16 @@
 import React from 'react';
 import { graphql, PageProps } from 'gatsby';
-import Layout from '../components/Layout/Layout';
+import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
-import Blocks from '../components/Blocks';
+import Blocks from '../components/blocks';
 import HeroBasic from '../components/Global/HeroBasic/hero-basic';
 import SimpleText from '../components/Blocks/SimpleText/simple-text';
 import FloatLayout from '../components/Global/FloatLayout/float-layout';
-import { BotProtectionProvider, BotProtectionStatus } from '../components/Global/BotProtection/BotProtection';
-import { ProtectedLink } from '../components/Global/BotProtection/BotProtection';
+import {
+  BotProtectionProvider,
+  BotProtectionStatus,
+  ProtectedLink,
+} from '../components/Global/BotProtection/BotProtection';
 import type { PageWhatsappComTemplate } from '../types';
 
 type PageWhatsappComProps = PageProps<PageWhatsappComTemplate>;

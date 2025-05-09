@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 import { homepageFormIssues } from '../../../utils';
+
 import './index.scss';
 
 interface HomeHeroProps {

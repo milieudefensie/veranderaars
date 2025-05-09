@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStaticQuery, graphql } from 'gatsby';
-import Nav from '../Global/Nav/Nav';
+import Nav from '../Global/Nav/nav';
 
 interface HeaderProps {
   setNavOpen: (open: boolean) => void;
