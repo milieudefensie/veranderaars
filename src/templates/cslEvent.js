@@ -17,7 +17,7 @@ import axios from 'axios';
 
 import './basic.styles.scss';
 
-const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
+const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon } }) => {
   const {
     title,
     slug,
@@ -101,11 +101,12 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
             image={mainImage ?? heroImage}
             conferenceUrl={web_conference_url}
             isWaitingList={isWaitingListActive}
+            configuration={configuration}
             introduction={
               <div className="event-introduction">
                 <span className="date">
                   <img src={dateIcon} alt="Date icon" />
-                  {formatDate(raw_start)} {formatDateCSL(start_in_zone)}{' '}
+                  {formatDate(raw_start, true)} {formatDateCSL(start_in_zone)}{' '}
                   {raw_end ? `- ${formatDateCSL(end_in_zone)}` : ''}
                 </span>
                 {location?.query && (
@@ -148,10 +149,10 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
           <div className="brief-information">
             <div className="metadata">
-              {start_in_zone && (
+              {raw_start && (
                 <span>
                   <img src={dateIcon} alt="Date icon" />
-                  <span>{formatDate(start_in_zone)}</span>
+                  <span>{formatDate(raw_start, true)}</span>
                 </span>
               )}
 
@@ -165,10 +166,10 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
                 </span>
               )}
 
-              {!hiddenAddress && location && (
+              {!hiddenAddress && location?.query && (
                 <span>
                   <img src={locationIcon} alt="Location icon" />
-                  <span>{location.venue}</span>
+                  <span>{location.query}</span>
                 </span>
               )}
             </div>
@@ -207,6 +208,12 @@ export const PageQuery = graphql`
     listEvent: datoCmsListEvent {
       id
       slug
+    }
+    configuration: datoCmsSiteConfiguration {
+      formFirstStepDisclaimer
+      formSecondStepTitle
+      formSecondStepDescription
+      formSecondStepDisclaimer
     }
     page: externalEvent(id: { eq: $id }) {
       __typename

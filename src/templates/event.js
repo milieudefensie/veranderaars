@@ -61,7 +61,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
               <div className="event-introduction">
                 <span className="date">
                   <img src={dateIcon} alt="Date icon" />
-                  {formatDate(date)} {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
+                  {formatDate(date, true)} {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
                 </span>
                 {address && (
                   <span className="date">
@@ -115,7 +115,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
               {date && (
                 <span>
                   <img src={dateIcon} alt="Date icon" />
-                  <span>{formatDate(date)}</span>
+                  <span>{formatDate(date, true)}</span>
                 </span>
               )}
 

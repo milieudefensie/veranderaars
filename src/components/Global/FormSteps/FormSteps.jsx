@@ -13,7 +13,7 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
     if (typeof window !== 'undefined') {
       const query = new URLSearchParams(window.location.search);
       const stepParam = parseInt(query.get('form_step'));
-      return !isNaN(stepParam) ? stepParam : 0;
+      return !isNaN(stepParam) && stepParam > 0 ? stepParam - 1 : 0;
     }
     return 0;
   };
@@ -26,10 +26,10 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const stepParam = parseInt(query.get('form_step'));
-    if (!isNaN(stepParam) && stepParam < forms.length) {
-      setCurrentStep(stepParam);
+    if (!isNaN(stepParam) && stepParam > 0 && stepParam <= forms.length) {
+      setCurrentStep(stepParam - 1);
     } else {
-      setCurrentStep(0); // fallback si no hay param o es inválido
+      setCurrentStep(0);
     }
   }, [location.search, forms.length]);
 
@@ -39,7 +39,7 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
     }
     const nextStep = currentStep + 1;
     if (nextStep < forms.length) {
-      navigate(`?form_step=${nextStep}`, { replace: false });
+      navigate(`?form_step=${nextStep + 1}`, { replace: false });
     }
   };
 

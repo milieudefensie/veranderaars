@@ -15,6 +15,7 @@ const Form = ({
   headerComponents,
   conferenceUrl = null,
   isWaitingList = false,
+  configuration,
 }) => {
   const location = useLocation();
   const { t } = useTranslation();
@@ -171,8 +172,12 @@ const Form = ({
 
       <div className={`ui-form-steps ${isFirstStep ? 'green first-step agenda' : 'second-step'}`}>
         <div className="metadata">
-          <h1>{isFirstStep ? title : 'Bijna klaar...'}</h1>
-          {isFirstStep ? <p>{introduction}</p> : null}
+          <h1>{isFirstStep ? title : configuration.formSecondStepTitle}</h1>
+          {isFirstStep ? (
+            <p>{introduction}</p>
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: configuration.formSecondStepDescription }} />
+          )}
 
           {isFirstStep ? (
             <>
@@ -261,6 +266,35 @@ const Form = ({
                   </div>
                 )}
 
+                {isFieldPresent('postcode') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="postcode">
+                      <span>{t('form_postcode')}</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="postcode"
+                        name="postcode"
+                        type="text"
+                        className={`input ${errors.postcode ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.postcode && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.postcode}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
                 {isFieldPresent('first_name') && (
                   <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
                     <label className="custom-label" htmlFor="firstName">
@@ -313,35 +347,6 @@ const Form = ({
                       <ul className="no-list hs-error-msgs inputs-list" role="alert">
                         <li>
                           <label className="hs-error-msg hs-main-font-element">{errors.lastName}</label>
-                        </li>
-                      </ul>
-                    )}
-                  </div>
-                )}
-
-                {isFieldPresent('postcode') && (
-                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-                    <label className="custom-label" htmlFor="postcode">
-                      <span>{t('form_postcode')}</span>
-                      <span className="required">*</span>
-                    </label>
-
-                    <div className="input">
-                      <input
-                        id="postcode"
-                        name="postcode"
-                        type="text"
-                        className={`input ${errors.postcode ? 'error' : ''} `}
-                        inputMode="text"
-                        autoComplete="off"
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    {errors.postcode && (
-                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                        <li>
-                          <label className="hs-error-msg hs-main-font-element">{errors.postcode}</label>
                         </li>
                       </ul>
                     )}
@@ -440,9 +445,7 @@ const Form = ({
       <div
         className={`legal-text ${isFirstStep ? 'first-step' : 'second-step'}`}
         dangerouslySetInnerHTML={{
-          __html:
-            // '<p>Als we je mogen mailen, dan houden we je op de hoogte over onze beweging en acties bij jou in de buurt. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy" rel="noopener">privacybepaling</a> voor alle details. Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google <a href="https://policies.google.com/privacy">privacybeleid</a> en <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.</p>',
-            '<p>We willen je graag op de hoogte houden over onze beweging en acties bij jou in de buurt via je ingevulde e-mailadres. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen.</p>',
+          __html: isFirstStep ? configuration.formFirstStepDisclaimer : configuration.formSecondStepDisclaimer,
         }}
       />
     </div>

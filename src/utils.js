@@ -52,7 +52,7 @@ export const getCtaUrl = (cta) => {
   return url;
 };
 
-export const formatDate = (rawDate) => {
+export const formatDate = (rawDate, includeDay = false) => {
   if (!rawDate) {
     return 'Invalid date';
   }
@@ -67,7 +67,14 @@ export const formatDate = (rawDate) => {
     return 'Morgen';
   } else {
     if (date.year === today.year) {
+      if (includeDay) {
+        return date.toFormat('cccc dd LLL');
+      }
       return date.toLocaleString({ month: 'short', day: '2-digit' }).replace('-', ' ');
+    }
+
+    if (includeDay) {
+      return date.toFormat('cccc dd LLL yyyy');
     }
     return date.toLocaleString({ year: 'numeric', month: 'short', day: '2-digit' });
   }
