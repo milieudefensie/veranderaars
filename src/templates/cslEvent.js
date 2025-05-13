@@ -141,7 +141,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, favicon } }) => {
           )}
 
           {rich_description && (
-            <div className="content" style={{ whiteSpace: 'break-spaces' }}>
+            <div className="content csl-variant" style={{ whiteSpace: 'break-spaces' }}>
               <p dangerouslySetInnerHTML={{ __html: rich_description }} />
             </div>
           )}
