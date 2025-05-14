@@ -41,7 +41,7 @@ function Layout({ children, bgColor = null, extraClassNames = null, heroBgColor 
   return (
     <TolgeeProvider
       tolgee={tolgee}
-      loadingFallback={
+      fallback={
         <div className="full-screen-loader">
           <Spinner />
         </div>
