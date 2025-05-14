@@ -4,12 +4,12 @@ import Link from '../../Global/Link/Link';
 import { ReactSVG } from 'react-svg';
 import wpIcon from '../../Icons/wp-icon.svg';
 import Cta from '../../Global/Cta/Cta';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './index.scss';
 
 function Footer({ isLanding = false, customLogo = null }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const data = useStaticQuery(graphql`
     query FooterData {
       configuration: datoCmsSiteConfiguration {

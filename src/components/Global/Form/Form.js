@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { navigate } from 'gatsby';
 import { useLocation } from '@reach/router';
 import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributor';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
@@ -18,7 +18,7 @@ const Form = ({
   configuration,
 }) => {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Script } from 'gatsby';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './index.scss';
 
@@ -15,7 +15,7 @@ const HubspotForm = ({
   extraLogic = null,
   onFormSubmitted,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const initializeForm = () => {
     if (!window.hbspt) return;
