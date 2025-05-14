@@ -7,7 +7,7 @@ import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import backBtnIcon from '../components/Icons/back-btn.svg';
 import Link from '../components/Global/Link/Link';
 import { ReactSVG } from 'react-svg';
-import { detectService, formatDate, formatDateCSL } from '../utils';
+import { cleanLocation, detectService, formatDate, formatDateCSL } from '../utils';
 import dateIcon from '../components/Icons/calendar-date.svg';
 import hourIcon from '../components/Icons/calendar-hour.svg';
 import locationIcon from '../components/Icons/calendar-location.svg';
@@ -112,7 +112,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon
                 {location?.query && (
                   <span className="date">
                     <img src={locationIcon} alt="Location icon" />
-                    {location.query}
+                    {cleanLocation(location.query)}
                   </span>
                 )}
               </div>
@@ -169,7 +169,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon
               {!hiddenAddress && location?.query && (
                 <span>
                   <img src={locationIcon} alt="Location icon" />
-                  <span>{location.query}</span>
+                  <span>{cleanLocation(location.query)}</span>
                 </span>
               )}
             </div>
