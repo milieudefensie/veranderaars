@@ -1,8 +1,24 @@
 import React, { useEffect, useState, ReactNode } from 'react';
 import { Slice } from 'gatsby';
 import Header from './header';
+import { Tolgee, DevTools, TolgeeProvider, FormatSimple, BackendFetch } from '@tolgee/react';
+import Spinner from '../Global/Spinner/Spinner';
 
 import '../../styles/main.scss';
+
+export const tolgee = Tolgee()
+  .use(DevTools())
+  .use(FormatSimple())
+  .use(BackendFetch({ prefix: process.env.GATSBY_APP_TOLGEE_CDN_URL }))
+  .init({
+    language: 'nl',
+    apiUrl: process.env.GATSBY_APP_TOLGEE_API_URL,
+    apiKey: process.env.GATSBY_APP_TOLGEE_API_KEY,
+    staticData: {
+      en: () => import(`../../../locales/en.json`),
+      nl: () => import('../../../locales/nl.json'),
+    },
+  });
 
 interface LayoutProps {
   children: ReactNode;
@@ -37,16 +53,23 @@ const Layout: React.FC<LayoutProps> = ({
   }, [navOpen]);
 
   return (
-    <>
-      <Header setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
+    <TolgeeProvider
+      tolgee={tolgee}
+      fallback={
+        <div className="full-screen-loader">
+          <Spinner />
+        </div>
+      }
+    >
+      <Header alias="header" setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
+      <div className={`nav-open-overlay`} />
 
-      <div className="nav-open-overlay" />
-      <main id={bgColor || ''} className={`main-content ${extraClassNames || ''}`}>
+      <main id={`${bgColor ? bgColor : ''}`} className={`main-content ${extraClassNames ? extraClassNames : ''}`}>
         {children}
       </main>
 
       <Slice alias="footer" />
-    </>
+    </TolgeeProvider>
   );
 };
 

@@ -37,16 +37,7 @@ const ListTool: React.FC<PageProps<ListToolsTemplate>> = ({ data }) => {
 export default ListTool;
 
 export const PageQuery = graphql`
-  query ListToolById($id: String, $language: String!) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query ListToolById($id: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

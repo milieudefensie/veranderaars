@@ -3,7 +3,7 @@ import { graphql, useStaticQuery } from 'gatsby';
 import Link from '../../Global/Link/link';
 import { ReactSVG } from 'react-svg';
 import Cta from '../../Global/Cta/cta';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 import wpIcon from '../../Icons/wp-icon.svg';
 
 import './index.scss';
@@ -19,7 +19,7 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ isLanding = false, customLogo = null }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const data = useStaticQuery(graphql`
     query FooterDataTS {

@@ -2,7 +2,7 @@ import React from 'react';
 import SocialLinkList from '../../Global/SocialLink/social-link-list';
 import CtaList from '../../Global/Cta/cta-list';
 import { ReactSVG } from 'react-svg';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 import wpIcon from '../../Icons/wp-icon.svg';
 
 import './styles.scss';
@@ -32,7 +32,7 @@ interface ShareBlockProps {
 }
 
 const Share: React.FC<ShareBlockProps> = ({ block }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { title, socialLinks = [], ctas = [], whatsappGroup } = block;
 
   return (

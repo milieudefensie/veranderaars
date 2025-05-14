@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { detectService } from '../../../utils';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
@@ -10,7 +10,7 @@ interface ConferenceDistributorProps {
 }
 
 const ConferenceDistributor: React.FC<ConferenceDistributorProps> = ({ conferenceUrl }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ interface QRProps {
 }
 
 const WhatsAppQR: React.FC<QRProps> = ({ url }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   return (
     <div className="ui-whatsapp-qr">
       <QRCodeSVG
@@ -85,7 +85,7 @@ const WhatsAppQR: React.FC<QRProps> = ({ url }) => {
 };
 
 const SignalQR: React.FC<QRProps> = ({ url }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   return (
     <div className="ui-signal-qr">
       <QRCodeSVG
@@ -118,7 +118,7 @@ const SignalQR: React.FC<QRProps> = ({ url }) => {
 };
 
 const ZoomMessage: React.FC<{ url: string }> = ({ url }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   return (
     <div className="ui-zoom-message">
       <div className="img">

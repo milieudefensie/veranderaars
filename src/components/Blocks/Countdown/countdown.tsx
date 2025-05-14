@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTimer } from 'react-timer-hook';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
@@ -14,7 +14,7 @@ interface CountDownProps {
 }
 
 const CountDown: React.FC<CountDownProps> = ({ block }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { headline, date, successMessage, colorVariant } = block;
 
   const expiryTimestamp = Date.parse(date);

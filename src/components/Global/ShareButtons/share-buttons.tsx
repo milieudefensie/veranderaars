@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from '../Link/link';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import telegram from '../../Icons/wp-share.svg';
 import facebook from '../../Icons/facebook-share.svg';
@@ -9,7 +9,7 @@ import twitter from '../../Icons/twitter-share.svg';
 import './index.scss';
 
 function ShareButtons(): JSX.Element {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const [isFixed, setIsFixed] = useState<string>('');
   const [shareUrl, setShareUrl] = useState<string>('');
 

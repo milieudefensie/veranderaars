@@ -72,16 +72,7 @@ const Page: React.FC<PageWhatsappComProps> = ({ pageContext, data: { page, favic
 export default Page;
 
 export const PageQuery = graphql`
-  query PageById($id: String, $language: String!) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query PageById($id: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

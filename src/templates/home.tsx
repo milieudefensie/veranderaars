@@ -37,16 +37,7 @@ const IndexPage: React.FC<PageProps<HomepageTemplate>> = ({
 export default IndexPage;
 
 export const HomeQuery = graphql`
-  query Home($cslHighlightedEvent: String, $language: String!) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query Home($cslHighlightedEvent: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

@@ -172,7 +172,7 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
           )}
 
           {rich_description && (
-            <div className="content" style={{ whiteSpace: 'break-spaces' }}>
+            <div className="content csl-variant" style={{ whiteSpace: 'break-spaces' }}>
               <p dangerouslySetInnerHTML={{ __html: rich_description }} />
             </div>
           )}
@@ -185,16 +185,7 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
 export default CSLEvent;
 
 export const PageQuery = graphql`
-  query CslEventById($id: String, $language: String!) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query CslEventById($id: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

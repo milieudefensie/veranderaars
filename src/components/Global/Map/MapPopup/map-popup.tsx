@@ -3,7 +3,7 @@ import TagList from '../../Tag/tag-list';
 import { formatDate, formatDateCSL } from '../../../../utils';
 import Cta from '../../Cta/cta';
 import Link from '../../Link/link';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
@@ -31,7 +31,7 @@ interface MapPopupProps {
 }
 
 const MapPopup: React.FC<MapPopupProps> = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const {
     slug,

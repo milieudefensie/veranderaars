@@ -4,7 +4,7 @@ import { formatDate, formatDateCSL, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/tag-list';
 import Link from '../../Global/Link/link';
 import axios from 'axios';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 import Spinner from '../../Global/Spinner/spinner';
 
 import './styles.scss';
@@ -39,7 +39,7 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event, isHighlighted = false }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const {
     __typename,
