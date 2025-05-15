@@ -408,6 +408,7 @@ export const PageQuery = graphql`
             id: originalId
             title
             description
+            variant
             hubspot {
               ... on DatoCmsHubspot {
                 formId
