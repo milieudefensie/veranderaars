@@ -18,12 +18,12 @@ import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
 import { mapCmsEvents, mapCslEvents } from '../utils';
 import useCSLEvents from '../hooks/useCSLEvents';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './basic.styles.scss';
 
 const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], listGroup, listEvent, favicon } }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const {
     seo,
