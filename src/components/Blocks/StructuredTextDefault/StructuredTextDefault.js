@@ -19,6 +19,7 @@ import BlockCtaIconsList from '../CtaIconsList/CtaIconsList';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Columns from '../Columns/Columns';
 import MapFilter from '../MapFilter/MapFilter';
+import BlockGroupsSignal from '../BlockGroupsSignal/BlockGroupsSignal';
 
 const StructuredTextDefault = ({ content }) => {
   if (!content || !content.value) return null;
@@ -76,6 +77,8 @@ const StructuredTextDefault = ({ content }) => {
             return <Columns key={record.id} block={record} />;
           case 'DatoCmsMap':
             return <MapFilter key={record.id} block={record} />;
+          case 'DatoCmsGroupsSignalChat':
+            return <BlockGroupsSignal key={record.id} block={record} />;
 
           default:
             return null;

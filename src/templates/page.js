@@ -10,13 +10,6 @@ import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/St
 const Page = ({ pageContext, data: { page, favicon } }) => {
   const { seo, title, introduction, backgroundColor, heroBackgroundImage, smallHero = false, content } = page;
 
-  const renderMainContent = () => (
-    <>
-      {introduction && <SimpleText limitedWidth block={{ text: introduction }} extraClassNames={'introduction'} />}
-      <StructuredTextDefault content={content} />
-    </>
-  );
-
   return (
     <Layout heroBgColor={backgroundColor}>
       <SeoDatoCMS seo={seo} favicon={favicon} />
@@ -26,7 +19,8 @@ const Page = ({ pageContext, data: { page, favicon } }) => {
 
         <FloatLayout reduceOverlap>
           <h1 className="main-heading">{title}</h1>
-          {renderMainContent()}
+          {introduction && <SimpleText limitedWidth block={{ text: introduction }} extraClassNames={'introduction'} />}
+          <StructuredTextDefault content={content} />
         </FloatLayout>
       </div>
     </Layout>
@@ -75,6 +69,9 @@ export const PageQuery = graphql`
           ...BlockCtaIconsList
           ...BlockImageGallery
           ...BlockCustomCta
+          ... on DatoCmsGroupsSignalChat {
+            id: originalId
+          }
         }
       }
     }
