@@ -7,7 +7,7 @@ import './styles.scss';
 const BlockGroupsSignal = ({ block }) => {
   const { allDatoCmsGroup: signalGroups } = useStaticQuery(graphql`
     query SignalChat {
-      allDatoCmsGroup(filter: { signalChat: { ne: "" } }) {
+      allDatoCmsGroup(filter: { signalChat: { ne: "" } }, sort: { title: ASC }) {
         nodes {
           id
           title
