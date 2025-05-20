@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { createMapMarkers, createMapReference } from './utils';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './styles.scss';
 
 const BasicMap = ({ title, data = [], type = 'event', mobileView = false, setMobileView }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const mapContainerRef = useRef(null);
 
   useEffect(() => {

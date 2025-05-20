@@ -128,16 +128,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
 export default Event;
 
 export const PageQuery = graphql`
-  query EventById($id: String, $language: String!) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query EventById($id: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -278,6 +269,7 @@ export const PageQuery = graphql`
             id: originalId
             title
             description
+            variant
             hubspot {
               ... on DatoCmsHubspot {
                 formId

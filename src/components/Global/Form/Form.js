@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { navigate } from 'gatsby';
 import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributor';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
 const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
   const [errorMsg, setErrorMsg] = useState(null);
@@ -26,7 +26,13 @@ const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false 
     setFormData({ ...formData, [name]: value });
 
     const empty = value === '';
-    setErrors({ ...errors, [name]: empty ? t('form_required') : null });
+    const requiredFields = ['firstName', 'lastName', 'email', 'postcode', 'consent_email'];
+
+    if (requiredFields.includes(name)) {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: empty ? t('form_required') : null }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: null }));
+    }
 
     if (!empty) {
       if (name === 'email') {
@@ -269,7 +275,7 @@ const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false 
             {errors.phone && (
               <ul className="no-list hs-error-msgs inputs-list" role="alert">
                 <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
+                  <label className="hs-error-msg hs-main-font-element">{errors.phone}</label>
                 </li>
               </ul>
             )}
