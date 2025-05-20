@@ -18,13 +18,10 @@ import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
 import { mapCmsEvents, mapCslEvents } from '../utils';
 import useCSLEvents from '../hooks/useCSLEvents';
-import { useTranslate } from '@tolgee/react';
 
 import './basic.styles.scss';
 
 const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], listGroup, listEvent, favicon } }) => {
-  const { t } = useTranslate();
-
   const {
     seo,
     title,
@@ -118,7 +115,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
                     <img src={messageIcon} alt="Signal Group icon" />
                     <span>
                       <a href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
-                        {t('signal_chat')}
+                        Signal chat
                       </a>
                     </span>
                   </span>
@@ -135,7 +132,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
               {signalChat && (
                 <div>
                   <a className="wp-button stretched" href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
-                    <span> {t('signal_chat')}</span>
+                    <span>Signal chat</span>
                     <ReactSVG src={wpIcon} alt="Signal icon" />
                   </a>
                 </div>
