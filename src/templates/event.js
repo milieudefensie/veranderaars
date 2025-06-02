@@ -57,6 +57,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
           <FormSteps
             title={title}
             // description={introduction}
+            descriptionAsHtml
             description={
               <div className="event-introduction">
                 <span className="date">

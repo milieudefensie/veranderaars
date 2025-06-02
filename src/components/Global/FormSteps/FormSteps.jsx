@@ -5,7 +5,16 @@ import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 
 import './styles.scss';
 
-const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, headerComponents }) => {
+const FormSteps = ({
+  title,
+  description,
+  bgImageUrl,
+  form,
+  variant,
+  extraLogic,
+  headerComponents,
+  descriptionAsHtml = false,
+}) => {
   const location = useLocation();
   const { forms = [] } = form[0];
 
@@ -64,10 +73,15 @@ const FormSteps = ({ title, description, bgImageUrl, form, variant, extraLogic, 
         <div className="metadata">
           <h1>{isFirstStep ? title : forms[currentStep]?.title}</h1>
           {isFirstStep && description ? (
-            <p>{description}</p>
+            descriptionAsHtml ? (
+              <div>{description}</div>
+            ) : (
+              <div dangerouslySetInnerHTML={{ __html: description }} />
+            )
           ) : (
             <div dangerouslySetInnerHTML={{ __html: forms[currentStep]?.introductionText }} />
           )}
+
           {Array.isArray(forms) && forms.length > 0 && forms[currentStep] && (
             <HubspotForm
               key={forms[currentStep]?.id}
