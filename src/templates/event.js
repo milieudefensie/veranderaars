@@ -18,6 +18,7 @@ import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 
 import './basic.styles.scss';
+import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 
 const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
   const {
@@ -48,15 +49,16 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
     setShareWpText(shareMessage ? `https://wa.me/?text=${shareMessage}` : `https://wa.me/?text=${currentURL}`);
   }, []);
 
+  const withFormsSteps = isArray(formSteps);
+
   return (
     <Layout>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="white event-detail">
-        {isArray(formSteps) && (
+      <WrapperLayout variant={`white ${withFormsSteps ? 'event-detail' : ''}`}>
+        {withFormsSteps ? (
           <FormSteps
             title={title}
-            // description={introduction}
             descriptionAsHtml
             description={
               <div className="event-introduction">
@@ -92,9 +94,64 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
               </>
             }
           />
+        ) : (
+          <HeroBasic image={image} overlay={false} />
         )}
 
         <FloatLayout reduceOverlap>
+          {!withFormsSteps && (
+            <>
+              {listEvent && (
+                <div className="pre-header">
+                  <div className="back-btn">
+                    <Link to={listEvent}>
+                      <img src={backBtnIcon} alt="Back button icon" />
+                      <span>Alle evenementen</span>
+                    </Link>
+                  </div>
+
+                  {Array.isArray(tags) && <TagList tags={tags} />}
+                </div>
+              )}
+              {title && <h1 className="main-heading">{title}</h1>}
+
+              {/* Brief information */}
+              <div className="brief-information">
+                <div className="metadata">
+                  {date && (
+                    <span>
+                      <img src={dateIcon} alt="Date icon" />
+                      <span>{formatDate(date, true)}</span>
+                    </span>
+                  )}
+
+                  {hourStart && (
+                    <span>
+                      <img src={hourIcon} alt="Hour icon" />
+                      <span>
+                        {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
+                      </span>
+                    </span>
+                  )}
+
+                  {address && (
+                    <span>
+                      <img src={locationIcon} alt="Location icon" />
+                      <span>{address}</span>
+                    </span>
+                  )}
+                </div>
+
+                {shareMessage && (
+                  <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
+                    <span>Deel op WhatsApp</span>
+                    <ReactSVG src={wpIcon} alt="Wp icon" />
+                  </a>
+                )}
+              </div>
+            </>
+          )}
+
           {/* Form  */}
           {registrationForm && !isArray(formSteps) && (
             <div className={`form-wrapper ${formBackgroundColor}`}>
@@ -111,39 +168,41 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
           )}
 
           {/* Brief information */}
-          <div className="brief-information">
-            <div className="metadata">
-              {date && (
-                <span>
-                  <img src={dateIcon} alt="Date icon" />
-                  <span>{formatDate(date, true)}</span>
-                </span>
-              )}
-
-              {hourStart && (
-                <span>
-                  <img src={hourIcon} alt="Hour icon" />
+          {withFormsSteps && (
+            <div className="brief-information">
+              <div className="metadata">
+                {date && (
                   <span>
-                    {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
+                    <img src={dateIcon} alt="Date icon" />
+                    <span>{formatDate(date, true)}</span>
                   </span>
-                </span>
-              )}
+                )}
 
-              {address && (
-                <span>
-                  <img src={locationIcon} alt="Location icon" />
-                  <span>{address}</span>
-                </span>
+                {hourStart && (
+                  <span>
+                    <img src={hourIcon} alt="Hour icon" />
+                    <span>
+                      {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
+                    </span>
+                  </span>
+                )}
+
+                {address && (
+                  <span>
+                    <img src={locationIcon} alt="Location icon" />
+                    <span>{address}</span>
+                  </span>
+                )}
+              </div>
+
+              {shareMessage && (
+                <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
+                  <span>Deel op WhatsApp</span>
+                  <ReactSVG src={wpIcon} alt="Wp icon" />
+                </a>
               )}
             </div>
-
-            {shareMessage && (
-              <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
-                <span>Deel op WhatsApp</span>
-                <ReactSVG src={wpIcon} alt="Wp icon" />
-              </a>
-            )}
-          </div>
+          )}
         </FloatLayout>
       </WrapperLayout>
     </Layout>
