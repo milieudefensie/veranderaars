@@ -159,19 +159,19 @@ const HubspotForm = ({
   };
 
   const handleScriptError = () => {
-    if (!trackErrors) return;
+    // if (!trackErrors) return;
 
-    const errorData = {
-      date: new Date().toISOString(),
-      url: window.location.href,
-      browser: navigator.userAgent,
-    };
+    // const errorData = {
+    //   date: new Date().toISOString(),
+    //   url: window.location.href,
+    //   browser: navigator.userAgent,
+    // };
 
-    fetch('/api/csl-form-errors', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(errorData),
-    }).catch(console.error);
+    // fetch('/api/csl-form-errors', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(errorData),
+    // }).catch(console.error);
 
     document.querySelector(`#hubspotForm-${id}`).innerHTML = `<p style="color:red">${t('hubspot_error_privacy')}</p>`;
   };

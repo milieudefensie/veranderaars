@@ -20,10 +20,14 @@ const ListGroups = ({ pageContext, data: { page, allGroups = [], favicon } }) =>
     const ctaView = document.querySelector('#cta-view-list');
 
     const handleScroll = () => {
+      if (!ctaView) return;
+
       // Hide float container on footer
       const testElement = document.getElementById('groups-list');
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       const testElementPosition = testElement?.offsetTop;
+
+      if (!testElement || !scrollPosition || !testElementPosition) return;
 
       if (scrollPosition + 700 < testElementPosition) {
         ctaView.classList.remove('hide');

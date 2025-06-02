@@ -312,6 +312,7 @@ export const DatoCMS = graphql`
     id: originalId
     title
     description
+    variant
     hubspot {
       ... on DatoCmsHubspot {
         formId
