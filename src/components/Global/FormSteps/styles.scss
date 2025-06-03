@@ -1,4 +1,4 @@
-.ui-form-steps {
+.ui-form-steps2 {
   border-radius: 10px;
   background: var(--nb-secondary-color);
   display: grid;
@@ -145,23 +145,23 @@
 }
 
 @media screen and (max-width: 1200px) {
-  .ui-form-steps {
+  .ui-form-steps2 {
     min-height: auto;
   }
 
-  .ui-form-steps .metadata h1 {
+  .ui-form-steps2 .metadata h1 {
     font-size: 30px;
     margin-bottom: 15px;
   }
 
-  .ui-form-steps .metadata p {
+  .ui-form-steps2 .metadata p {
     font-size: 16px;
     margin-bottom: 15px;
   }
 }
 
 @media screen and (max-width: 992px) {
-  .ui-form-steps {
+  .ui-form-steps2 {
     display: flex;
     flex-direction: column-reverse;
     height: auto;

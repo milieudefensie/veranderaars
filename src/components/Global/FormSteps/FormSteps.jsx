@@ -68,7 +68,7 @@ const FormSteps = ({
     <div className="container container-steps">
       {headerComponents}
       <div
-        className={`ui-form-steps ${variant && isFirstStep ? variant : ''} ${isFirstStep ? 'first-step' : 'second-step'}`}
+        className={`ui-form-steps2 ${variant && isFirstStep ? variant : ''} ${isFirstStep ? 'first-step' : 'second-step'}`}
       >
         <div className="metadata">
           <h1>{isFirstStep ? title : forms[currentStep]?.title}</h1>

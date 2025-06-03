@@ -170,7 +170,7 @@ const Form = ({
     <div className="container container-steps">
       {headerComponents}
 
-      <div className={`ui-form-steps ${isFirstStep ? 'green first-step agenda' : 'second-step'}`}>
+      <div className={`ui-form-steps2 ${isFirstStep ? 'green first-step agenda' : 'second-step'}`}>
         <div className="metadata">
           <h1>{isFirstStep ? title : configuration.formSecondStepTitle}</h1>
           {isFirstStep ? (
