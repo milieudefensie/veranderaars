@@ -2,3 +2,7 @@
   functions = 'functions'
 [functions]
   node_bundler = "esbuild"
+[[redirects]]
+  from = "/whatsapp"
+  to = "/signal"
+  status = 302
