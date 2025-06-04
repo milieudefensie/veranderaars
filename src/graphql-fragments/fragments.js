@@ -575,4 +575,9 @@ export const DatoCMS = graphql`
       }
     }
   }
+
+  fragment BlockGroupsSignal on DatoCmsGroupsSignalChat {
+    id: originalId
+    internalName
+  }
 `;
