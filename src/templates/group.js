@@ -19,6 +19,7 @@ import useCSLEvents from '../hooks/useCSLEvents';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 
 import './basic.styles.scss';
+import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 
 const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], listGroup, listEvent, favicon } }) => {
   const {
@@ -102,27 +103,6 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
         )}
 
         <FloatLayout reduceOverlap alternative={alternativeHero}>
-          {listGroup && (
-            <div className="pre-header">
-              <div className="back-btn">
-                <Link to={listGroup}>
-                  <img src={backBtnIcon} alt="Back button icon" />
-                  <span>Bekijk alle groepen</span>
-                </Link>
-              </div>
-
-              {Array.isArray(tags) && <TagList tags={tags} />}
-            </div>
-          )}
-
-          {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
-          {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
-          {registrationForm && (
-            <div className="form-wrapper">
-              <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
-            </div>
-          )}
-
           {/* Brief information */}
           {(email || signalChat || organizer) && (
             <div className="brief-information">
