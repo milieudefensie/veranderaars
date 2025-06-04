@@ -2,9 +2,9 @@ import React from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
 import Link from '../../Global/Link/link';
 import { ReactSVG } from 'react-svg';
-import Cta from '../../Global/Cta/cta';
+import wpIcon from '../../Icons/signal-dark.svg';
+import Cta from '../../Global/Cta/Cta';
 import { useTranslate } from '@tolgee/react';
-import wpIcon from '../../Icons/wp-icon.svg';
 
 import './index.scss';
 
@@ -143,14 +143,14 @@ const Footer: React.FC<FooterProps> = ({ isLanding = false, customLogo = null })
           {data.configuration?.whatsappPage ? (
             <Link className="wp-button" to={data.configuration.whatsappPage}>
               <div className="wp-btn">
-                <span>{t('whatsapp_group')}</span>
+                <span>{t('signal_chat')}</span>
                 <ReactSVG src={wpIcon} />
               </div>
             </Link>
           ) : data.configuration?.whatsappGroup ? (
             <a className="wp-button" href={data.configuration.whatsappGroup} target="_blank" rel="noopener noreferrer">
               <div className="wp-btn">
-                <span>{t('whatsapp_group')}</span>
+                <span>{t('signal_chat')}</span>
                 <ReactSVG src={wpIcon} />
               </div>
             </a>

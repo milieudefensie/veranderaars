@@ -5,7 +5,7 @@ import Cta from '../Cta/cta';
 
 import hamburgerIcon from '../../Icons/Hamburguer Icon.svg';
 import headerUpdatedLogo from '../../Icons/md-new-logo.svg';
-import wpNavigationIcon from '../../Icons/Whatsapp Navigation.svg';
+import signalNavigationIcon from '../../Icons/signal.svg';
 
 import './index.scss';
 
@@ -145,11 +145,11 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }: NavPro
 
               {config.whatsappPage ? (
                 <Link className="wp-button" to={config.whatsappPage}>
-                  <ReactSVG src={wpNavigationIcon} />
+                  <ReactSVG src={signalNavigationIcon} />
                 </Link>
               ) : config?.whatsappGroup ? (
                 <a className="wp-button" href={`${config.whatsappGroup}`} target="_blank" rel="noopener noreferrer">
-                  <ReactSVG src={wpNavigationIcon} />
+                  <ReactSVG src={signalNavigationIcon} />
                 </a>
               ) : null}
             </div>
@@ -187,11 +187,11 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }: NavPro
 
               {config.whatsappPage ? (
                 <Link className="wp-button" to={config.whatsappPage}>
-                  <ReactSVG src={wpNavigationIcon} />
+                  <ReactSVG src={signalNavigationIcon} />
                 </Link>
               ) : config?.whatsappGroup ? (
                 <a className="wp-button" href={`${config.whatsappGroup}`} target="_blank" rel="noopener noreferrer">
-                  <ReactSVG src={wpNavigationIcon} />
+                  <ReactSVG src={signalNavigationIcon} />
                 </a>
               ) : null}
             </div>

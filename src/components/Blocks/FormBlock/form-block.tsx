@@ -17,23 +17,24 @@ interface FormBlockProps {
     title?: string;
     description?: string;
     hubspot: HubspotConfig;
+    variant?: string;
   };
   isHomepage?: boolean;
 }
 
 const FormBlock: React.FC<FormBlockProps> = ({ block, isHomepage = false }) => {
-  const { title, description, hubspot } = block;
+  const { title, description, hubspot, variant = null } = block;
+  const withTopTitle = variant === 'top-title' || description;
 
   return (
     <div className={`form-block-wrapper ${isHomepage ? 'home-form' : ''}`}>
       <div className={`form-block`}>
         <div className={`row`}>
           {title && (
-            <div className={`${description ? 'col-lg-12' : 'col-lg-3'}`}>
+            <div className={`${withTopTitle ? 'col-lg-12' : 'col-lg-3'}`}>
               <h2>{title}</h2>
 
               {description && <div className="description" dangerouslySetInnerHTML={{ __html: description }} />}
-
               {!description && <img className="left-img" src={formVector} alt="Form icon" />}
             </div>
           )}

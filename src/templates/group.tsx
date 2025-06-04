@@ -19,7 +19,7 @@ import backBtnIcon from '../components/Icons/back-btn.svg';
 import emailIcon from '../components/Icons/email.svg';
 import messageIcon from '../components/Icons/message.svg';
 import organizerIcon from '../components/Icons/organizer.svg';
-import wpIcon from '../components/Icons/wp-icon.svg';
+import wpIcon from '../components/Icons/signal-dark.svg';
 
 import './basic.styles.scss';
 
@@ -42,6 +42,7 @@ const Group: React.FC<GroupProps> = ({
     content,
     email,
     whatsappGroup,
+    signalChat,
     organizer,
     coordinates,
     tags = [],
@@ -102,14 +103,14 @@ const Group: React.FC<GroupProps> = ({
 
           {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
           {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
-
           {registrationForm && (
             <div className="form-wrapper">
               <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
             </div>
           )}
 
-          {(email || whatsappGroup || organizer) && (
+          {/* Brief information */}
+          {(email || signalChat || organizer) && (
             <div className="brief-information">
               <div className="metadata">
                 {email && (
@@ -121,12 +122,12 @@ const Group: React.FC<GroupProps> = ({
                   </span>
                 )}
 
-                {whatsappGroup && (
+                {signalChat && (
                   <span>
-                    <img src={messageIcon} alt="Whatsapp Group icon" />
+                    <img src={messageIcon} alt="Signal Group icon" />
                     <span>
-                      <a href={whatsappGroup} target="_blank" rel="noopener noreferrer">
-                        WhatsApp groep
+                      <a href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
+                        Signal chat
                       </a>
                     </span>
                   </span>
@@ -140,11 +141,11 @@ const Group: React.FC<GroupProps> = ({
                 )}
               </div>
 
-              {whatsappGroup && (
+              {signalChat && (
                 <div>
-                  <a className="wp-button stretched" href={whatsappGroup} target="_blank" rel="noopener noreferrer">
-                    <span>WhatsApp groep</span>
-                    <ReactSVG src={wpIcon} />
+                  <a className="wp-button stretched" href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
+                    <span>Signal chat</span>
+                    <ReactSVG src={wpIcon} alt="Signal icon" />
                   </a>
                 </div>
               )}
@@ -276,6 +277,7 @@ export const PageQuery = graphql`
       address
       email
       whatsappGroup
+      signalChat
       organizer
       introduction
       alternativeHero
@@ -412,6 +414,7 @@ export const PageQuery = graphql`
             id: originalId
             title
             description
+            variant
             hubspot {
               ... on DatoCmsHubspot {
                 formId

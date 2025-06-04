@@ -19,6 +19,7 @@ import BlockCtaIconsList from '../CtaIconsList/cta-icons-list';
 import ImageGallery from '../ImageGallery/image-gallery';
 import Columns from '../Columns/columns';
 import MapFilter from '../MapFilter/map-filter';
+import BlockGroupsSignal from '../BlockGroupsSignal/BlockGroupsSignal';
 
 interface StructuredTextDefaultProps {
   content: any;
@@ -80,6 +81,8 @@ const StructuredTextDefault: React.FC<StructuredTextDefaultProps> = ({ content }
             return <Columns key={record.id} block={record} />;
           case 'DatoCmsMap':
             return <MapFilter key={record.id} block={record} />;
+          case 'DatoCmsGroupsSignalChat':
+            return <BlockGroupsSignal key={record.id} block={record} />;
 
           default:
             return null;

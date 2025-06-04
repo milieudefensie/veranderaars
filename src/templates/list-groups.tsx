@@ -24,16 +24,19 @@ const ListGroups: React.FC<ListGroupsProps> = ({ data: { page, allGroups = { edg
     const ctaView = document.querySelector('#cta-view-list');
 
     const handleScroll = () => {
+      if (!ctaView) return;
+
+      // Hide float container on footer
       const testElement = document.getElementById('groups-list');
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       const testElementPosition = testElement?.offsetTop;
 
-      if (ctaView) {
-        if (scrollPosition + 700 < (testElementPosition || 0)) {
-          ctaView.classList.remove('hide');
-        } else {
-          ctaView.classList.add('hide');
-        }
+      if (!testElement || !scrollPosition || !testElementPosition) return;
+
+      if (scrollPosition + 700 < testElementPosition) {
+        ctaView.classList.remove('hide');
+      } else {
+        ctaView.classList.add('hide');
       }
     };
 

@@ -75,6 +75,9 @@ export const PageQuery = graphql`
           ...BlockCtaIconsList
           ...BlockImageGallery
           ...BlockCustomCta
+          ... on DatoCmsGroupsSignalChat {
+            id: originalId
+          }
         }
       }
     }
