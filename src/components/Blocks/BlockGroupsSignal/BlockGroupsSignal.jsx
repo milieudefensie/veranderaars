@@ -29,7 +29,13 @@ const BlockGroupsSignal = ({ block }) => {
           {signalGroups.nodes.map((group) => {
             return (
               <div className="col-md-6 mb-3">
-                <ProtectedLink to={group.signalChat} className="custom-btn custom-btn-primary w-100">
+                <ProtectedLink
+                  to={group.signalChat}
+                  className="custom-btn custom-btn-primary w-100"
+                  onClick={() => {
+                    navigate(group.signalChat);
+                  }}
+                >
                   {group.title}
                 </ProtectedLink>
               </div>
