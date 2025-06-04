@@ -6,6 +6,7 @@ require('dotenv').config({
  * @type {import('gatsby').GatsbyConfig}
  */
 module.exports = {
+  trailingSlash: 'never',
   siteMetadata: {
     title: `Milieudefensie`,
     siteUrl: `https://veranderaars.milieudefensie.nl`,
