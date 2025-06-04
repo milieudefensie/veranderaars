@@ -1,7 +1,6 @@
 require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 });
-const { languages, defaultLanguage } = require('./languages');
 
 /**
  * @type {import('gatsby').GatsbyConfig}

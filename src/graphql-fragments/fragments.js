@@ -604,4 +604,9 @@ export const DatoCMS = graphql`
     firstStepIntroduction
     secondStepIntroduction
   }
+
+  fragment BlockGroupsSignal on DatoCmsGroupsSignalChat {
+    id: originalId
+    internalName
+  }
 `;
