@@ -32,6 +32,11 @@
       &:last-child {
         margin-bottom: 30px;
       }
+
+      a {
+        color: inherit;
+        font-weight: bold;
+      }
     }
 
     .ui-form-hubspot form .legal-consent-container .input .inputs-list {
