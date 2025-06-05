@@ -154,7 +154,7 @@ const Form = ({
     navigate('?form_step=2', { replace: false });
 
     setTimeout(() => {
-      const nameInput = document.querySelector('#firstName');
+      const nameInput = document.querySelector('#postcode');
       if (nameInput) nameInput.focus();
     }, 100);
   };
