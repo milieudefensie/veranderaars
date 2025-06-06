@@ -117,9 +117,10 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
             </span>
           </div>
         </div>
-        <div>
-          <h3 className="heading">{t('featured_events')}</h3>
-          {extraCollection && extraCollection.length > 0 && (
+        {extraCollection && extraCollection.length > 0 && (
+          <div>
+            <h3 className="heading">{t('featured_events')}</h3>
+
             <div className={`event-collection grid-events ${extraCollection.length > 1 ? 'two' : 'one'}`}>
               {extraCollection?.map((c) => (
                 <EventCollectionCard
@@ -131,8 +132,8 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
                 />
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
         {categorizedEvents.today.length > 0 && (
           <>
             <h3 className="heading">{t('today')}</h3>

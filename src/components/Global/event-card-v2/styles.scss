@@ -53,26 +53,8 @@
       color: var(--black);
     }
 
-    .btn {
+    .custom-btn {
       width: fit-content;
-      font-weight: 700;
-
-      cursor: pointer;
-      outline-offset: 2px;
-      text-align: center;
-
-      background-color: oklch(76.04% .1741 129.85);
-      border-color: color-mix(in oklab, oklch(76.04% .1741 129.85), #000 calc(0*5%));
-      border-style: solid;
-      border-width: 2px;
-      font-size: .75rem;
-      border-radius: .5rem;
-      color: var(--black);
-      padding: .5rem 1rem;
-
-      &:hover {
-        opacity: .7;
-      }
     }
 
     .collection-wrapper {

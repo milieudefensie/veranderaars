@@ -2,6 +2,7 @@ import React from 'react';
 import { EventType } from '../../../types';
 import { truncateText, formatEventDate, formatDateCSL, formatDate } from '../../../utils';
 import Link from '../../Global/Link/Link';
+import Cta from '../Cta/Cta';
 
 import './styles.scss';
 
@@ -43,7 +44,7 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
           <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
         </div>
 
-        <span className="btn">Meld je aan</span>
+        <Cta externalTitle="Meld je aan" isButton off />
       </div>
     </>
   );
