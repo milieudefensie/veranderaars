@@ -39,6 +39,11 @@ exports.createSchemaCustomization = ({ actions }) => {
       hiddenAddress: Boolean     
       web_conference_url: String 
       waiting_list_enabled: Boolean
+      additional_image_sizes_url: [ImageCSLType]
+    }
+    type ImageCSLType {
+      url: String
+      style: String
     }
     type Calendar {
       name: String
@@ -157,6 +162,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
         web_conference_url: eventResponse.web_conference_url,
         max_attendees_count: eventResponse.max_attendees_count,
         waiting_list_enabled: isWaitingListEnabled,
+        additional_image_sizes_url: eventResponse.additional_image_sizes_url,
         rich_description: eventResponse.rich_description,
         internal: {
           type: 'ExternalEvent',
@@ -269,6 +275,24 @@ exports.createPages = ({ graphql, actions }) => {
                 id
                 slug
                 title
+                externalLink
+                introduction
+                date
+                hourStart
+                hourEnd
+                onlineEvent
+                tags {
+                  ... on DatoCmsTag {
+                    id
+                    title
+                  }
+                }
+                image {
+                  gatsbyImageData(width: 900, height: 505)
+                }
+                model {
+                  apiKey
+                }
               }
             }
           }
@@ -348,6 +372,10 @@ exports.createPages = ({ graphql, actions }) => {
           component: templates.home,
           context: {
             cslHighlightedEvent: cslHighlightedEvent,
+            latestEvent: result.data.events.edges
+              .filter((e) => new Date(e.node.date).getTime() >= Date.now())
+              .slice(0, 2)
+              .map((e) => e.node),
           },
         });
 
