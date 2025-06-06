@@ -252,6 +252,30 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment EventCard on DatoCmsEvent {
+    id
+    title
+    slug
+    externalLink
+    introduction
+    date
+    hourStart
+    hourEnd
+    onlineEvent
+    tags {
+      ... on DatoCmsTag {
+        id
+        title
+      }
+    }
+    image {
+      gatsbyImageData(width: 900, height: 505)
+    }
+    model {
+      apiKey
+    }
+  }
+
   fragment BlockHighlightEvent on DatoCmsHighlightEvent {
     __typename
     id: originalId
@@ -260,29 +284,7 @@ export const DatoCMS = graphql`
       ...AppCta
     }
     items {
-      ... on DatoCmsEvent {
-        id
-        title
-        slug
-        externalLink
-        introduction
-        date
-        hourStart
-        hourEnd
-        onlineEvent
-        tags {
-          ... on DatoCmsTag {
-            id
-            title
-          }
-        }
-        image {
-          gatsbyImageData(width: 900, height: 505)
-        }
-        model {
-          apiKey
-        }
-      }
+      ...EventCard
     }
   }
 
@@ -574,6 +576,35 @@ export const DatoCMS = graphql`
         }
       }
     }
+  }
+
+  fragment HubspotBlock on DatoCmsHubspot {
+    id
+    formId
+    region
+    portalId
+    columns
+    trackErrors
+    disclaimerText
+    introductionText
+    title
+  }
+
+  fragment FormStepBlock on DatoCmsForm2Step {
+    id
+    firstForm {
+      ...HubspotBlock
+    }
+    secondForm {
+      ...HubspotBlock
+    }
+    forms {
+      ...HubspotBlock
+    }
+    legalText
+    legalTextSecond
+    firstStepIntroduction
+    secondStepIntroduction
   }
 
   fragment BlockGroupsSignal on DatoCmsGroupsSignalChat {

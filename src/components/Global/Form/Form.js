@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { navigate } from 'gatsby';
+import { useLocation } from '@reach/router';
 import ConferenceDistributor from '../ConferenceDistributor/ConferenceDistributor';
 import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
-const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false }) => {
+const Form = ({
+  title,
+  introduction,
+  event,
+  inputs = [],
+  image,
+  headerComponents,
+  conferenceUrl = null,
+  isWaitingList = false,
+  configuration,
+}) => {
+  const location = useLocation();
   const { t } = useTranslate();
 
   const [status, setStatus] = useState('idle'); // idle | loading | fail | success
@@ -20,6 +32,16 @@ const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false 
     slug: event,
   });
   const [errors, setErrors] = useState({});
+  const [currentStep, setCurrentStep] = useState(location.search.includes('form_step=2') ? 1 : 0);
+  const isFirstStep = currentStep === 0;
+
+  useEffect(() => {
+    if (location.search.includes('form_step=2')) {
+      setCurrentStep(1);
+    } else {
+      setCurrentStep(0);
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -127,6 +149,16 @@ const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false 
     return inputs.some((input) => input.includes(`name="attendee[${fieldName}]"`));
   };
 
+  const handleOnFirstStepSubmitted = (e) => {
+    e.preventDefault();
+    navigate('?form_step=2', { replace: false });
+
+    setTimeout(() => {
+      const nameInput = document.querySelector('#postcode');
+      if (nameInput) nameInput.focus();
+    }, 100);
+  };
+
   const hasErrors = Object.values(errors).some((e) => e);
   const isLoading = status === 'loading';
 
@@ -135,215 +167,288 @@ const Form = ({ event, inputs = [], conferenceUrl = null, isWaitingList = false 
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="custom-form">
-        {isFieldPresent('first_name') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="firstName">
-              <span>{t('form_first_name')}</span>
-              <span className="required">*</span>
-            </label>
+    <div className="container container-steps">
+      {headerComponents}
 
-            <div className="input">
-              <input
-                id="firstName"
-                name="firstName"
-                type="text"
-                className={`input ${errors.firstName ? 'error' : ''} `}
-                inputMode="text"
-                autoComplete="off"
-                onChange={handleChange}
-              />
-            </div>
+      <div className={`ui-form-steps2 ${isFirstStep ? 'green first-step agenda' : 'second-step'}`}>
+        <div className="metadata">
+          <h1>{isFirstStep ? title : configuration.formSecondStepTitle}</h1>
+          {isFirstStep ? (
+            <p>{introduction}</p>
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: configuration.formSecondStepDescription }} />
+          )}
 
-            {errors.firstName && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.firstName}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
+          {isFirstStep ? (
+            <>
+              <form className="custom-form first" onSubmit={handleOnFirstStepSubmitted}>
+                {isFieldPresent('email') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="email">
+                      <span>E-mail</span>
+                      <span className="required">*</span>
+                    </label>
 
-        {isFieldPresent('last_name') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="lastName">
-              <span>{t('form_last_name')}</span>
-              <span className="required">*</span>
-            </label>
+                    <div className="input">
+                      <input
+                        id="email"
+                        name="email"
+                        type="text"
+                        className={`input ${errors.email ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
 
-            <div className="input">
-              <input
-                id="lastName"
-                name="lastName"
-                type="text"
-                className={`input ${errors.lastName ? 'error' : ''} `}
-                inputMode="text"
-                autoComplete="off"
-                onChange={handleChange}
-              />
-            </div>
+                    {errors.email && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
 
-            {errors.lastName && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.lastName}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        {isFieldPresent('postcode') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="postcode">
-              <span>{t('form_postcode')}</span>
-              <span className="required">*</span>
-            </label>
-
-            <div className="input">
-              <input
-                id="postcode"
-                name="postcode"
-                type="text"
-                className={`input ${errors.postcode ? 'error' : ''} `}
-                inputMode="text"
-                autoComplete="off"
-                onChange={handleChange}
-              />
-            </div>
-
-            {errors.postcode && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.postcode}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        {isFieldPresent('email') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="email">
-              <span>{t('form_email')}</span>
-              <span className="required">*</span>
-            </label>
-
-            <div className="input">
-              <input
-                id="email"
-                name="email"
-                type="text"
-                className={`input ${errors.email ? 'error' : ''} `}
-                inputMode="text"
-                autoComplete="off"
-                onChange={handleChange}
-              />
-            </div>
-
-            {errors.email && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        {isFieldPresent('phone_number') && (
-          <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-            <label className="custom-label" htmlFor="phone">
-              <span>{t('form_phone')}</span>
-            </label>
-
-            <div className="input">
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                className={`input ${errors.phone ? 'error' : ''} `}
-                inputMode="tel"
-                autoComplete="off"
-                required={false}
-                onChange={handleChange}
-              />
-            </div>
-
-            {errors.phone && (
-              <ul className="no-list hs-error-msgs inputs-list" role="alert">
-                <li>
-                  <label className="hs-error-msg hs-main-font-element">{errors.phone}</label>
-                </li>
-              </ul>
-            )}
-          </div>
-        )}
-
-        <div className="form-field-checkbox" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
-          <fieldset>
-            <legend>{t('form_checkbox')}</legend>
-
-            <div className="options">
-              <div className="opt">
                 <input
-                  type="radio"
-                  id="consent_email_yes"
-                  name="consent_email"
-                  value="yes"
-                  onChange={handleChange}
-                  required
+                  type="submit"
+                  value={isLoading ? 'Versturen...' : 'Ik ben er bij!'}
+                  className={`send-btn ${hasErrors ? 'disabled' : ''}`}
+                  disabled={hasErrors || isLoading}
                 />
-                <label htmlFor="consent_email_yes">{t('form_checkbox_yes')}</label>
-              </div>
+              </form>
 
-              <div className="opt">
+              {/* Error messages */}
+              {status === 'fail' && errorMsg && (
+                <div className="error-wrapper white">
+                  <ul>
+                    {errorMsg
+                      .split(';')
+                      .filter((str) => str.trim().length) // Avoid empty fields
+                      .map((e) => (
+                        <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className="custom-form second second-step">
+                {isFieldPresent('email') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="email">
+                      <span>{t('form_email')}</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="email"
+                        name="email"
+                        type="text"
+                        className={`input ${errors.email ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.email && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.email}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {isFieldPresent('postcode') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="postcode">
+                      <span>{t('form_postcode')}</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="postcode"
+                        name="postcode"
+                        type="text"
+                        className={`input ${errors.postcode ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.postcode && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.postcode}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {isFieldPresent('first_name') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="firstName">
+                      <span>{t('form_first_name')}</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        className={`input ${errors.firstName ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.firstName && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.firstName}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {isFieldPresent('last_name') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="lastName">
+                      <span>{t('form_last_name')}</span>
+                      <span className="required">*</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        className={`input ${errors.lastName ? 'error' : ''} `}
+                        inputMode="text"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.lastName && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.lastName}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {isFieldPresent('phone_number') && (
+                  <div className="form-field" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                    <label className="custom-label" htmlFor="phone">
+                      <span>{t('form_phone')}</span>
+                    </label>
+
+                    <div className="input">
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        className={`input ${errors.phone ? 'error' : ''} `}
+                        inputMode="tel"
+                        autoComplete="off"
+                        required={false}
+                        onChange={handleChange}
+                      />
+                    </div>
+
+                    {errors.phone && (
+                      <ul className="no-list hs-error-msgs inputs-list" role="alert">
+                        <li>
+                          <label className="hs-error-msg hs-main-font-element">{errors.phone}</label>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                <div className="form-field-checkbox" onFocus={handleOnFocus} onBlur={handleOnFocusOut}>
+                  <fieldset>
+                    <legend>{t('form_checkbox')}</legend>
+
+                    <div className="options">
+                      <div className="opt">
+                        <input
+                          type="radio"
+                          id="consent_email_yes"
+                          name="consent_email"
+                          value="yes"
+                          onChange={handleChange}
+                          required
+                        />
+                        <label htmlFor="consent_email_yes">{t('form_checkbox_yes')}</label>
+                      </div>
+
+                      <div className="opt">
+                        <input
+                          type="radio"
+                          id="consent_email_no"
+                          name="consent_email"
+                          value="no"
+                          onChange={handleChange}
+                          required
+                        />
+                        <label htmlFor="consent_email_no">{t('form_checkbox_no')}</label>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+
                 <input
-                  type="radio"
-                  id="consent_email_no"
-                  name="consent_email"
-                  value="no"
-                  onChange={handleChange}
-                  required
+                  type="submit"
+                  value={isLoading ? t('form_sending') : isWaitingList ? t('waiting_list_message') : t('form_submit')}
+                  className={`send-btn ${hasErrors ? 'disabled' : ''}`}
+                  disabled={hasErrors || isLoading}
                 />
-                <label htmlFor="consent_email_no">{t('form_checkbox_no')}</label>
-              </div>
-            </div>
-          </fieldset>
-        </div>
+              </form>
 
-        <input
-          type="submit"
-          value={isLoading ? t('form_sending') : isWaitingList ? t('waiting_list_message') : t('form_submit')}
-          className={`send-btn ${hasErrors ? 'disabled' : ''}`}
-          disabled={hasErrors || isLoading}
-        />
-
-        <div className="legal-consent-container">
-          <p>
-            Als we je mogen mailen, dan houden we je op de hoogte over onze beweging en acties bij jou in de buurt. Als
-            je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze{' '}
-            <a href="https://milieudefensie.nl/over-ons/cookies-en-privacy">privacybepaling</a> voor alle details.
-          </p>
+              {/* Error messages */}
+              {status === 'fail' && errorMsg && (
+                <div className="error-wrapper">
+                  <ul>
+                    {errorMsg
+                      .split(';')
+                      .filter((str) => str.trim().length) // Avoid empty fields
+                      .map((e) => (
+                        <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          )}
         </div>
-      </form>
-
-      {/* Error messages */}
-      {status === 'fail' && errorMsg && (
-        <div className="error-wrapper">
-          <ul>
-            {errorMsg
-              .split(';')
-              .filter((str) => str.trim().length) // Avoid empty fields
-              .map((e) => (
-                <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
-              ))}
-          </ul>
+        <div className="image-container">
+          <img src={image} />
         </div>
-      )}
-    </>
+      </div>
+      <div
+        className={`legal-text ${isFirstStep ? 'first-step' : 'second-step'}`}
+        dangerouslySetInnerHTML={{
+          __html: isFirstStep ? configuration.formFirstStepDisclaimer : configuration.formSecondStepDisclaimer,
+        }}
+      />
+    </div>
   );
 };
 

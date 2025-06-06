@@ -52,7 +52,16 @@ export const getCtaUrl = (cta) => {
   return url;
 };
 
-export const formatDate = (rawDate) => {
+const capitalizeFirstLetter = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const cleanLocation = (location) => {
+  if (!location) return '';
+  return location.endsWith(', Nederland') ? location.slice(0, -', Nederland'.length) : location;
+};
+
+export const formatDate = (rawDate, includeDay = false) => {
   if (!rawDate) {
     return 'Invalid date';
   }
@@ -67,7 +76,14 @@ export const formatDate = (rawDate) => {
     return 'Morgen';
   } else {
     if (date.year === today.year) {
+      if (includeDay) {
+        return capitalizeFirstLetter(date.toFormat('cccc dd LLL'));
+      }
       return date.toLocaleString({ month: 'short', day: '2-digit' }).replace('-', ' ');
+    }
+
+    if (includeDay) {
+      return capitalizeFirstLetter(date.toFormat('cccc dd LLL yyyy'));
     }
     return date.toLocaleString({ year: 'numeric', month: 'short', day: '2-digit' });
   }
