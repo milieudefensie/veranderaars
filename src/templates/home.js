@@ -22,7 +22,7 @@ const IndexPage = ({ pageContext, data: { page, cslHighlightEvent, configuration
 
         {page?.blocks && (
           <div className="container">
-            <Blocks blocks={page.blocks} context={{ cslHighlightEvent }} isHomepage />
+            <Blocks blocks={page.blocks} context={{ cslHighlightEvent, buildContext: pageContext }} isHomepage />
           </div>
         )}
       </WrapperLayout>
