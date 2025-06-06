@@ -24,7 +24,7 @@
     "@sparticuz/chromium": "^126.0.0",
     "@tolgee/react": "^6.2.5",
     "@types/mapbox-gl": "^2.7.19",
-    "axios": "^1.8.2",
+    "axios": "^1.8.3",
     "chromium": "^3.0.3",
     "datocms-search": "^0.1.10",
     "dotenv": "16.3.1",
