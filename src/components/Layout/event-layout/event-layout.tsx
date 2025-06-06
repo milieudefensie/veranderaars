@@ -16,7 +16,7 @@ import {
   getEventsGroupedByFutureMonths,
 } from '../../../utils';
 import { DateTime } from 'luxon';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
@@ -27,7 +27,7 @@ type Props = {
 };
 
 const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const allEvents: EventType[] = [...events, ...dummyEvents];
 
   const categorizedEvents = setEventCategories();
