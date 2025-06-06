@@ -2,14 +2,14 @@ import React from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
 import Link from '../../Global/Link/Link';
 import { ReactSVG } from 'react-svg';
-import wpIcon from '../../Icons/wp-icon.svg';
+import wpIcon from '../../Icons/signal-dark.svg';
 import Cta from '../../Global/Cta/Cta';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './index.scss';
 
 function Footer({ isLanding = false, customLogo = null }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const data = useStaticQuery(graphql`
     query FooterData {
       configuration: datoCmsSiteConfiguration {
@@ -132,7 +132,7 @@ function Footer({ isLanding = false, customLogo = null }) {
           {data.configuration?.whatsappPage ? (
             <Link className="wp-button" to={data.configuration.whatsappPage}>
               <div className="wp-btn">
-                <span>{t('whatsapp_group')}</span>
+                <span>{t('signal_chat')}</span>
                 <ReactSVG src={wpIcon} />
               </div>
             </Link>
@@ -144,7 +144,7 @@ function Footer({ isLanding = false, customLogo = null }) {
               rel="noopener noreferrer"
             >
               <div className="wp-btn">
-                <span>{t('whatsapp_group')}</span>
+                <span>{t('signal_chat')}</span>
                 <ReactSVG src={wpIcon} />
               </div>
             </a>

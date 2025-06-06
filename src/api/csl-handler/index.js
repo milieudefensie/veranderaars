@@ -3,7 +3,7 @@ import trackRequest from '../_utils/track-request';
 
 const WEBHOOK_ENDPOINTS = {
   USER: 'https://api-eu1.hubapi.com/automation/v4/webhook-triggers/139720471/YfoJAHB',
-  EVENT: 'https://api-eu1.hubapi.com/automation/v4/webhook-triggers/139720471/wNTGt4x',
+  // EVENT: 'https://api-eu1.hubapi.com/automation/v4/webhook-triggers/139720471/wNTGt4x',
 };
 const USER_CASES = [
   'user.created',
@@ -14,11 +14,11 @@ const USER_CASES = [
   'attendee.confirmed',
   'unsubscribe.created',
 ];
-const EVENT_CASES = ['event.created', 'event.updated'];
+// const EVENT_CASES = ['event.created', 'event.updated'];
 
 const getWebhookEndpoint = (type) => {
   if (USER_CASES.includes(type)) return WEBHOOK_ENDPOINTS.USER;
-  if (EVENT_CASES.includes(type)) return WEBHOOK_ENDPOINTS.EVENT;
+  // if (EVENT_CASES.includes(type)) return WEBHOOK_ENDPOINTS.EVENT;
   return null;
 };
 

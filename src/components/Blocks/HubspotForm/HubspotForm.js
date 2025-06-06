@@ -1,6 +1,6 @@
 import React from 'react';
 import { Script } from 'gatsby';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './index.scss';
 
@@ -13,8 +13,9 @@ const HubspotForm = ({
   style = 'default',
   columns,
   extraLogic = null,
+  onFormSubmitted,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const initializeForm = () => {
     if (!window.hbspt) return;
@@ -35,6 +36,9 @@ const HubspotForm = ({
         },
       },
       onFormReady: handleFormReady,
+      onFormSubmitted: ($form, data) => {
+        onFormSubmitted && onFormSubmitted($form, data);
+      },
     });
   };
 
@@ -50,7 +54,7 @@ const HubspotForm = ({
     setupPostalCodeValidation(formWrapper, submitBtn);
     addRecaptchaText(formWrapper);
 
-    if (extraLogic) extraLogic();
+    if (extraLogic) extraLogic(ctx);
   };
 
   const setupInputObserver = (input, submitBtn) => {
@@ -155,19 +159,19 @@ const HubspotForm = ({
   };
 
   const handleScriptError = () => {
-    if (!trackErrors) return;
+    // if (!trackErrors) return;
 
-    const errorData = {
-      date: new Date().toISOString(),
-      url: window.location.href,
-      browser: navigator.userAgent,
-    };
+    // const errorData = {
+    //   date: new Date().toISOString(),
+    //   url: window.location.href,
+    //   browser: navigator.userAgent,
+    // };
 
-    fetch('/api/csl-form-errors', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(errorData),
-    }).catch(console.error);
+    // fetch('/api/csl-form-errors', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(errorData),
+    // }).catch(console.error);
 
     document.querySelector(`#hubspotForm-${id}`).innerHTML = `<p style="color:red">${t('hubspot_error_privacy')}</p>`;
   };

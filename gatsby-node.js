@@ -39,6 +39,11 @@ exports.createSchemaCustomization = ({ actions }) => {
       hiddenAddress: Boolean     
       web_conference_url: String 
       waiting_list_enabled: Boolean
+      additional_image_sizes_url: [ImageCSLType]
+    }
+    type ImageCSLType {
+      url: String
+      style: String
     }
     type Calendar {
       name: String
@@ -235,6 +240,24 @@ exports.createPages = ({ graphql, actions }) => {
                 id
                 slug
                 title
+                externalLink
+                introduction
+                date
+                hourStart
+                hourEnd
+                onlineEvent
+                tags {
+                  ... on DatoCmsTag {
+                    id
+                    title
+                  }
+                }
+                image {
+                  gatsbyImageData(width: 900, height: 505)
+                }
+                model {
+                  apiKey
+                }
               }
             }
           }
@@ -314,25 +337,11 @@ exports.createPages = ({ graphql, actions }) => {
           component: templates.home,
           context: {
             cslHighlightedEvent: cslHighlightedEvent,
+            latestEvent: result.data.events.edges
+              .filter((e) => new Date(e.node.date).getTime() >= Date.now())
+              .slice(0, 2)
+              .map((e) => e.node),
           },
-        });
-
-        // Debug output - check what's coming from the API
-        // console.log('Redirects data:', JSON.stringify(result.data?.redirects, null, 2));
-
-        const redirects = result.data?.redirects.edges;
-        redirects.forEach(({ node }) => {
-          if (typeof node.sourcePath === 'string' && typeof node.destinationPath === 'string') {
-            createRedirect({
-              fromPath: node.sourcePath,
-              toPath: node.destinationPath,
-              statusCode: parseInt(node.statusCode || '301'),
-              isPermanent: (node.statusCode || '301') === '301',
-            });
-            console.log(`Created redirect: ${node.sourcePath} → ${node.destinationPath}`);
-          } else {
-            console.warn(`Skipping invalid redirect: ${JSON.stringify(node)}`);
-          }
         });
 
         // create the pages
@@ -469,6 +478,24 @@ exports.createPages = ({ graphql, actions }) => {
             },
           });
         }
+
+        // Debug output - check what's coming from the API
+        console.log('Redirects data:', JSON.stringify(result.data.redirects, null, 2));
+
+        const redirects = result.data.redirects.edges;
+        redirects.forEach(({ node }) => {
+          if (typeof node.sourcePath === 'string' && typeof node.destinationPath === 'string') {
+            createRedirect({
+              fromPath: node.sourcePath,
+              toPath: node.destinationPath,
+              statusCode: parseInt(node.statusCode || '301'),
+              isPermanent: (node.statusCode || '301') === '301',
+            });
+            console.log(`Created redirect: ${node.sourcePath} → ${node.destinationPath}`);
+          } else {
+            console.warn(`Skipping invalid redirect: ${JSON.stringify(node)}`);
+          }
+        });
       })
     );
   });

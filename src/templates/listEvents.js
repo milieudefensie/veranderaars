@@ -31,16 +31,7 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
 export default ListEvents;
 
 export const ListEventQuery = graphql`
-  query ListEventById($id: String, $currentDate: Date!, $cslHighlightedEvent: String, $language: String!) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query ListEventById($id: String, $currentDate: Date!, $cslHighlightedEvent: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags

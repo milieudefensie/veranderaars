@@ -282,7 +282,7 @@ export const BotProtectionProvider = ({
   children,
   turnstileMode = 'invisible',
   onVerificationComplete,
-  sessionDuration = 30, // Minutes the verification remains valid
+  sessionDuration = 60, // Minutes the verification remains valid
 }) => {
   const [verificationState, setVerificationState] = useState({
     isVerified: false,
@@ -496,9 +496,6 @@ export const BotProtectionProvider = ({
 
         {/* Error message */}
         {verificationState.error && !verificationState.isLoading && (
-          // <div className="text-red-500 p-2 text-sm" role="alert">
-          //   {verificationState.error}
-          // </div>
           <div className="text-red d-none" role="alert">
             {verificationState.error}
           </div>
@@ -544,7 +541,6 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
         navigate(to);
       } else {
         setButtonClicked(to);
-        // console.log('buttonClicked', buttonClicked);
       }
     } finally {
       setIsNavigating(false);
@@ -565,7 +561,7 @@ export const ProtectedLink = ({ to, children, className = '', onClick }) => {
 };
 
 // Status indicator component
-export const BotProtectionStatus = ({ className = '' }) => {
+export const BotProtectionStatus = ({ buttonLabel = 'Open WhatsApp', className = '' }) => {
   const [isOpen, setIsOpen] = useState(true);
   const context = useContext(BotProtectionContext);
 
@@ -584,12 +580,6 @@ export const BotProtectionStatus = ({ className = '' }) => {
       {isVerified && (
         <div className="text-green-600 flex items-center d-none">
           <span className="mr-2 text-green-600">✓ geverifieerd</span>
-          {/* <button 
-            onClick={resetVerification}
-            className="text-xs text-gray-500 hover:text-gray-700"
-          >
-            Reset
-          </button> */}
         </div>
       )}
       {isLoading && <div className="text-blue-600 d-none">Verifiëren...</div>}
@@ -598,7 +588,7 @@ export const BotProtectionStatus = ({ className = '' }) => {
           <div className="popup-content">
             <span className="popup-close" onClick={() => setIsOpen(false)}>
               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <circle cx="15" cy="15" r="14" stroke="black" stroke-width="2" />
+                <circle cx="15" cy="15" r="14" stroke="black" strokeWidth="2" />
                 <path
                   d="M22 9.41L20.59 8L15 13.59L9.41 8L8 9.41L13.59 15L8 20.59L9.41 22L15 16.41L20.59 22L22 20.59L16.41 15L22 9.41Z"
                   fill="black"
@@ -607,7 +597,7 @@ export const BotProtectionStatus = ({ className = '' }) => {
             </span>
             <div className="verification-error my-4">
               <ProtectedLink to={buttonClicked} className="custom-btn custom-btn-primary w-100 mb-4">
-                Open WhatsApp
+                {buttonLabel}
               </ProtectedLink>
               {isLoading && <div className="text-blue-600">Verifiëren...</div>}
               {/*error*/}Gaat er iets mis? Stuur een mailtje naar

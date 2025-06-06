@@ -260,29 +260,7 @@ export const DatoCMS = graphql`
       ...AppCta
     }
     items {
-      ... on DatoCmsEvent {
-        id
-        title
-        slug
-        externalLink
-        introduction
-        date
-        hourStart
-        hourEnd
-        onlineEvent
-        tags {
-          ... on DatoCmsTag {
-            id
-            title
-          }
-        }
-        image {
-          gatsbyImageData(width: 900, height: 505)
-        }
-        model {
-          apiKey
-        }
-      }
+      ...EventCard
     }
   }
 
@@ -312,6 +290,7 @@ export const DatoCMS = graphql`
     id: originalId
     title
     description
+    variant
     hubspot {
       ... on DatoCmsHubspot {
         formId
@@ -659,5 +638,39 @@ export const DatoCMS = graphql`
     hiddenAddress
     waiting_list_enabled
     max_attendees_count
+  }
+
+  fragment HubspotBlock on DatoCmsHubspot {
+    id
+    formId
+    region
+    portalId
+    columns
+    trackErrors
+    disclaimerText
+    introductionText
+    title
+  }
+
+  fragment FormStepBlock on DatoCmsForm2Step {
+    id
+    firstForm {
+      ...HubspotBlock
+    }
+    secondForm {
+      ...HubspotBlock
+    }
+    forms {
+      ...HubspotBlock
+    }
+    legalText
+    legalTextSecond
+    firstStepIntroduction
+    secondStepIntroduction
+  }
+
+  fragment BlockGroupsSignal on DatoCmsGroupsSignalChat {
+    id: originalId
+    internalName
   }
 `;

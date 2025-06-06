@@ -6,6 +6,10 @@
   &.light {
     background-color: var(--nb-bg-light);
   }
+
+  &.event-detail:has(.related-section) {
+    padding-bottom: 0 !important;
+  }
 }
 
 @media screen and (max-width:992px) {

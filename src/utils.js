@@ -52,13 +52,22 @@ export const getCtaUrl = (cta) => {
   return url;
 };
 
-export const formatDate = (rawDate) => {
+const capitalizeFirstLetter = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const cleanLocation = (location) => {
+  if (!location) return '';
+  return location.endsWith(', Nederland') ? location.slice(0, -', Nederland'.length) : location;
+};
+
+export const formatDate = (rawDate, includeDay = false) => {
   if (!rawDate) {
     return 'Invalid date';
   }
 
-  const date = DateTime.fromJSDate(new Date(rawDate)).setZone('Europe/Amsterdam');
-  const today = DateTime.now().setZone('Europe/Amsterdam');
+  const date = DateTime.fromJSDate(new Date(rawDate)).setZone('Europe/Amsterdam').setLocale('nl');
+  const today = DateTime.now().setZone('Europe/Amsterdam').setLocale('nl');
   const tomorrow = today.plus({ days: 1 });
 
   if (date.hasSame(today, 'day')) {
@@ -67,15 +76,16 @@ export const formatDate = (rawDate) => {
     return 'Morgen';
   } else {
     if (date.year === today.year) {
-      return date.toLocaleString({ month: 'short', day: '2-digit', timeZone: 'Europe/Amsterdam' }).replace('-', ' ');
+      if (includeDay) {
+        return capitalizeFirstLetter(date.toFormat('cccc dd LLL'));
+      }
+      return date.toLocaleString({ month: 'short', day: '2-digit' }).replace('-', ' ');
     }
 
-    return date.toLocaleString({
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      timeZone: 'Europe/Amsterdam',
-    });
+    if (includeDay) {
+      return capitalizeFirstLetter(date.toFormat('cccc dd LLL yyyy'));
+    }
+    return date.toLocaleString({ year: 'numeric', month: 'short', day: '2-digit' });
   }
 };
 

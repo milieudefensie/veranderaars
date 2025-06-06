@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import ImageWrapper from '../../Global/Image/ImageWrapper';
-import { formatDate, formatDateCSL, truncateText } from '../../../utils';
+import { cleanLocation, formatDate, formatDateCSL, truncateText } from '../../../utils';
 import TagList from '../../Global/Tag/TagList';
 import Link from '../../Global/Link/Link';
 import axios from 'axios';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
+
 import Spinner from '../../Global/Spinner/Spinner';
 
 import './styles.scss';
 
 const EventCard = ({ event, isHighlighted = false }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const {
     __typename,
@@ -49,7 +50,6 @@ const EventCard = ({ event, isHighlighted = false }) => {
 
       setIsWaitingListActive(isWaitingListActive);
       setStatus('idle');
-      console.log({ slug, max_attendees_count, isWaitingListActive, attendeesCount });
     };
 
     if (isCslEvent && max_attendees_count) {
@@ -75,7 +75,7 @@ const EventCard = ({ event, isHighlighted = false }) => {
             {isCslEvent && rawEndDate ? `- ${formatDateCSL(endInZone)}` : ''}
           </span>
 
-          {address && !hiddenAddress && <span>{address}</span>}
+          {address && !hiddenAddress && <span>{cleanLocation(address)}</span>}
         </div>
 
         {Array.isArray(tags) && tags.length > 0 ? <TagList tags={tags} /> : null}

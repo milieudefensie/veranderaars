@@ -1,4 +1,8 @@
 .ui-form-hubspot {
+  .submitted-message {
+    display: none;
+  }
+
   form {
     display: flex;
     gap: 16px;
@@ -630,6 +634,209 @@
       }
     }
   }
+
+  // Two steps variants
+  &.purple,
+  &.green {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      .hs-form-field {
+        label {
+          position: unset;
+          padding: 0 !important;
+
+          span {
+            color: var(--white);
+            font-family: var(--nb-secondary-font);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 100%;
+            letter-spacing: 0.5px;
+          }
+        }
+
+        .input {
+          input {
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid var(--nb-grey);
+            background: var(--white);
+
+            color: var(--dark);
+            font-family: var(--nb-secondary-font);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: 0.5px;
+          }
+        }
+
+        // Error messages
+        .hs-error-msgs.inputs-list {
+
+          label,
+          label a {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: 0.5px;
+            color: #B3261E !important;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .hs-submit .actions .hs-button {
+        border: 1.5px solid var(--dark);
+        background: var(--dark);
+        color: var(--white);
+        transition: all .25s ease;
+
+        &:hover {
+          color: var(--dark);
+          background-color: transparent;
+        }
+      }
+
+      .legal-consent-container {
+        order: unset;
+
+        .hs-dependent-field {
+          label {
+            align-items: flex-start !important;
+          }
+
+          input {
+            width: 20px;
+            height: 20px;
+          }
+
+          span {
+            color: var(--nb-gray);
+            font-family: var(--nb-secondary-font);
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 150%;
+          }
+        }
+      }
+    }
+  }
+
+  &.purple {
+
+    form .hs-form-field .hs-error-msgs.inputs-list label.hs-error-msg,
+    form .hs-form-field .hs-error-msgs label a {
+      color: var(--white) !important;
+    }
+
+    form .legal-consent-container .hs-dependent-field span {
+      color: var(--white);
+    }
+
+    form .hs-submit .actions .hs-button:hover {
+      color: var(--white);
+    }
+  }
+
+  &.gray {
+    form {
+      .hs-form-field {
+        label {
+          position: unset;
+          padding: 0 !important;
+
+          span {
+            color: var(--dark);
+            font-family: Poppins;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 100%;
+            letter-spacing: 0.5px;
+          }
+        }
+
+        .input {
+          input {
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid var(--nb-grey);
+            background: var(--white);
+
+            color: var(--dark);
+            font-family: var(--nb-secondary-font);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: 0.5px;
+
+            &:focus {
+              border: 2px solid var(--dark) !important;
+              outline: none !important;
+            }
+          }
+        }
+      }
+
+      .legal-consent-container {
+        order: unset;
+
+        .hs-dependent-field {
+          label {
+            align-items: flex-start !important;
+          }
+
+          input {
+            width: 20px;
+            height: 20px;
+          }
+
+          span {
+            color: var(--nb-gray);
+            font-family: var(--nb-secondary-font);
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 150%;
+          }
+        }
+      }
+
+      // Error messages
+      .hs-error-msgs {
+        label a {
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 24px;
+          letter-spacing: 0.5px;
+          color: #B3261E !important;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  &.green {
+    form {
+      .hs-form-field {
+        label span {
+          color: var(--dark);
+        }
+      }
+
+      .legal-consent-container .hs-dependent-field span {
+        color: var(--dark);
+      }
+    }
+  }
 }
 
 .recaptcha-text {
@@ -692,6 +899,18 @@
       form .hs-fieldtype-booleancheckbox .inputs-list {
         padding-bottom: 15px;
         margin-bottom: 0;
+      }
+    }
+
+    &.purple {
+      form {
+        gap: 10px;
+      }
+    }
+
+    &.gray {
+      form {
+        gap: 15px;
       }
     }
   }

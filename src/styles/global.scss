@@ -182,7 +182,7 @@ html {
   .container-sm,
   .container-xl,
   .container-xxl {
-    max-width: 1140px;
+    max-width: 1300px;
   }
 }
 
@@ -238,4 +238,17 @@ html {
   transition-duration: .15s;
   transition-property: transform, translate, scale, rotate;
   transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+.full-screen-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--white);
 }

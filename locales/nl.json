@@ -40,11 +40,5 @@
   "back_to_list": "Bekijk lijst",
   "open_map": "Open kaart",
   "share_label": "Deel",
-  "today": "Vandaag",
-  "tomorrow": "Morgen",
-  "weekdays": "Weekdagen",
-  "weekend": "Dit weekend",
-  "next_week": "Komende week",
-  "rest_of_month": "Later deze maand",
-  "featured_events": "Uitgelichte evenementen"
+  "signal_chat": "Signal chat"
 }

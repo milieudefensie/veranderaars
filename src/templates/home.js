@@ -17,12 +17,12 @@ const IndexPage = ({ pageContext, data: { page, cslHighlightEvent, configuration
           subtitle={page?.subtitle}
           image={page?.heroImage}
           mobileImage={page?.mobileHeroImage}
-          form={page?.form}
+          form={page?.formStep}
         />
 
         {page?.blocks && (
           <div className="container">
-            <Blocks blocks={page.blocks} context={{ cslHighlightEvent }} isHomepage />
+            <Blocks blocks={page.blocks} context={{ cslHighlightEvent, buildContext: pageContext }} isHomepage />
           </div>
         )}
       </WrapperLayout>
@@ -33,16 +33,7 @@ const IndexPage = ({ pageContext, data: { page, cslHighlightEvent, configuration
 export default IndexPage;
 
 export const HomeQuery = graphql`
-  query Home($cslHighlightedEvent: String, $language: String!) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query Home($cslHighlightedEvent: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -82,6 +73,9 @@ export const HomeQuery = graphql`
       id
       title
       subtitle
+      formStep {
+        ...FormStepBlock
+      }
       heroImage {
         gatsbyImageData(width: 1500, height: 800)
       }

@@ -3,12 +3,12 @@ import TagList from '../../Tag/TagList';
 import { formatDate, formatDateCSL } from '../../../../utils';
 import Cta from '../../Cta/Cta';
 import Link from '../../Link/Link';
-import { useTranslation } from 'gatsby-plugin-react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
 const MapPopup = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const {
     slug,

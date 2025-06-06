@@ -2,24 +2,25 @@ import React, { useEffect } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 import emailIcon from '../components/Icons/email.svg';
 import messageIcon from '../components/Icons/message.svg';
 import organizerIcon from '../components/Icons/organizer.svg';
-import wpIcon from '../components/Icons/wp-icon.svg';
+import wpIcon from '../components/Icons/signal-dark.svg';
 import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/Link';
 import backBtnIcon from '../components/Icons/back-btn.svg';
-import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
 import TagList from '../components/Global/Tag/TagList';
 import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
-import { mapCmsEvents, mapCslEvents } from '../utils';
+import { isArray, mapCmsEvents, mapCslEvents } from '../utils';
 import useCSLEvents from '../hooks/useCSLEvents';
+import FormSteps from '../components/Global/FormSteps/FormSteps';
 
 import './basic.styles.scss';
+import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
+import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 
 const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], listGroup, listEvent, favicon } }) => {
   const {
@@ -31,12 +32,14 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
     content,
     email,
     whatsappGroup,
+    signalChat,
     organizer,
     coordinates,
     tags = [],
     relatedEvents = [],
     localGroupId,
     alternativeHero = false,
+    formSteps,
   } = page;
 
   useEffect(() => {
@@ -68,38 +71,70 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
     }
   };
 
+  const withFormsSteps = isArray(formSteps);
+
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="white">
-        <HeroBasic image={image} overlay={alternativeHero || false} alternative={alternativeHero} />
+      <WrapperLayout variant={`white ${withFormsSteps ? 'event-detail' : ''}`}>
+        {withFormsSteps ? (
+          <FormSteps
+            title={title}
+            description={introduction}
+            bgImageUrl={image?.url}
+            form={formSteps}
+            variant="green group"
+            headerComponents={
+              <>
+                {listGroup && (
+                  <div className="pre-header">
+                    <div className="back-btn">
+                      <Link to={listGroup}>
+                        <img src={backBtnIcon} alt="Back button icon" />
+                        <span>Bekijk alle groepen</span>
+                      </Link>
+                    </div>
+
+                    {Array.isArray(tags) && <TagList tags={tags} />}
+                  </div>
+                )}
+              </>
+            }
+            extraLogic={hubspotFormSetGroupId}
+          />
+        ) : (
+          <HeroBasic image={image} overlay={false} />
+        )}
+
         <FloatLayout reduceOverlap alternative={alternativeHero}>
-          {listGroup && (
-            <div className="pre-header">
-              <div className="back-btn">
-                <Link to={listGroup}>
-                  <img src={backBtnIcon} alt="Back button icon" />
-                  <span>Bekijk alle groepen</span>
-                </Link>
-              </div>
+          {!withFormsSteps && (
+            <>
+              {listGroup && (
+                <div className="pre-header">
+                  <div className="back-btn">
+                    <Link to={listGroup}>
+                      <img src={backBtnIcon} alt="Back button icon" />
+                      <span>Bekijk alle groepen</span>
+                    </Link>
+                  </div>
 
-              {Array.isArray(tags) && <TagList tags={tags} />}
-            </div>
-          )}
+                  {Array.isArray(tags) && <TagList tags={tags} />}
+                </div>
+              )}
 
-          {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
-          {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
-
-          {/* Form  */}
-          {registrationForm && (
-            <div className="form-wrapper">
-              <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
-            </div>
+              {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
+              {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
+              {registrationForm && (
+                <div className="form-wrapper">
+                  <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
+                </div>
+              )}
+            </>
           )}
 
           {/* Brief information */}
-          {(email || whatsappGroup || organizer) && (
+          {(email || signalChat || organizer) && (
             <div className="brief-information">
               <div className="metadata">
                 {email && (
@@ -111,12 +146,12 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
                   </span>
                 )}
 
-                {whatsappGroup && (
+                {signalChat && (
                   <span>
-                    <img src={messageIcon} alt="Whatsapp Group icon" />
+                    <img src={messageIcon} alt="Signal Group icon" />
                     <span>
-                      <a href={`${whatsappGroup}`} target="_blank" rel="noopener noreferrer">
-                        WhatsApp groep
+                      <a href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
+                        Signal chat
                       </a>
                     </span>
                   </span>
@@ -130,16 +165,11 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
                 )}
               </div>
 
-              {whatsappGroup && (
+              {signalChat && (
                 <div>
-                  <a
-                    className="wp-button stretched"
-                    href={`${whatsappGroup}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <span>WhatsApp groep</span>
-                    <ReactSVG src={wpIcon} alt="Wp icon" />
+                  <a className="wp-button stretched" href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
+                    <span>Signal chat</span>
+                    <ReactSVG src={wpIcon} alt="Signal icon" />
                   </a>
                 </div>
               )}
@@ -175,24 +205,7 @@ const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], l
 export default Group;
 
 export const PageQuery = graphql`
-  query GroupById(
-    $id: String
-    $currentDate: Date!
-    $maxLat: Float
-    $minLat: Float
-    $maxLon: Float
-    $minLon: Float
-    $language: String!
-  ) {
-    locales: allLocale(filter: { ns: { in: ["index"] }, language: { eq: $language } }) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query GroupById($id: String, $currentDate: Date!, $maxLat: Float, $minLat: Float, $maxLon: Float, $minLon: Float) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -289,9 +302,13 @@ export const PageQuery = graphql`
       address
       email
       whatsappGroup
+      signalChat
       organizer
       introduction
       alternativeHero
+      formSteps {
+        ...FormStepBlock
+      }
       registrationForm {
         ... on DatoCmsHubspot {
           formId
@@ -425,6 +442,7 @@ export const PageQuery = graphql`
             id: originalId
             title
             description
+            variant
             hubspot {
               ... on DatoCmsHubspot {
                 formId
