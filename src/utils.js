@@ -113,9 +113,7 @@ export const compareIfIsFuture = (event) => {
 
   if (event.type === 'CSL') {
     // 2024-03-29T09:00:00Z
-    const eventDate = DateTime.fromFormat(`${event.rawDate}`, "yyyy-MM-dd'T'HH:mm:ss'Z'", {
-      zone: 'Europe/Amsterdam',
-    });
+    const eventDate = DateTime.fromFormat(`${event.rawDate}`, "yyyy-MM-dd'T'HH:mm:ss'Z'", { zone: 'Europe/Amsterdam' });
     return eventDate >= DateTime.local();
   }
 
@@ -123,12 +121,7 @@ export const compareIfIsFuture = (event) => {
     zone: 'Europe/Amsterdam',
   });
 
-  return (
-    eventDate >=
-    DateTime.local({
-      zone: 'Europe/Amsterdam',
-    })
-  );
+  return eventDate >= DateTime.local({ zone: 'Europe/Amsterdam' });
 };
 
 export const isEventFuture = (event) => {
@@ -307,13 +300,9 @@ export const mapCslEvents = (events) => {
           latitude: parseFloat(parseFloat(raw.node.location?.latitude).toFixed(6)),
           longitude: parseFloat(parseFloat(raw.node.location?.longitude).toFixed(6)),
         },
-        model: {
-          apiKey: 'ExternalEvent',
-        },
+        model: { apiKey: 'ExternalEvent' },
         type: 'CSL',
-        image: {
-          url: raw.node.image_url,
-        },
+        image: { url: raw.node.image_url },
       }))
     : [];
 };
@@ -345,9 +334,7 @@ export const formatCslEvents = (e) => {
     calendar: e.calendar,
     waiting_list_enabled: e.waiting_list_enabled,
     max_attendees_count: e.max_attendees_count,
-    model: {
-      apiKey: 'ExternalEvent',
-    },
+    model: { apiKey: 'ExternalEvent' },
     type: 'CSL',
   };
 };
@@ -421,11 +408,7 @@ export function getCombinedEvents(cmsEvents, cslEvents, hideInAgendaPage = false
         endDate = parseCmsEventDate(event.rawDate, event.hourEnd, '23:59');
       }
 
-      return {
-        ...event,
-        startDateToCompare: startDate,
-        endDateToCompare: endDate,
-      };
+      return { ...event, startDateToCompare: startDate, endDateToCompare: endDate };
     })
     .filter((event) => {
       const { startDateToCompare, endDateToCompare } = event;
@@ -568,99 +551,83 @@ export const dummyEvents = [
   {
     id: '1',
     type: 'concert',
-    title: 'Concert Vandaag',
+    title: '[TEST] Concert Vandaag',
     introduction: 'Een geweldig concert op dezelfde dag.',
     date: DateTime.now().setZone(ZONE),
     // hourStart: '20:00',
-    image: {
-      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
-    },
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
   },
   {
     id: '2',
     type: 'expo',
-    title: 'Expo Vandaag zonder tijd',
+    title: '[TEST] Expo Vandaag zonder tijd',
     introduction: 'Geen vast tijdstip voor deze expo.',
     date: DateTime.now().setZone(ZONE),
     hourStart: 'tijd en locatie verschilt per AVA',
-    image: {
-      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
-    },
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
   },
 
   // Mañana
   {
     id: '3',
     type: 'workshop',
-    title: 'Workshop Morgen',
+    title: '[TEST] Workshop Morgen',
     introduction: 'Leer iets nieuws morgen.',
     date: DateTime.now().setZone(ZONE).plus({ days: 1 }).toISODate(),
     hourStart: '15:00',
-    image: {
-      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
-    },
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
   },
 
   // Esta semana
   {
     id: '4',
     type: 'talk',
-    title: 'Lezing deze week',
+    title: '[TEST] Lezing deze week',
     introduction: 'Een interessante lezing in deze week.',
     date: DateTime.now().setZone(ZONE).plus({ days: 3 }).toISODate(),
     hourStart: '18:30',
-    image: {
-      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
-    },
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
   },
   {
     id: '4',
     type: 'talk',
-    title: 'TEST EVENT',
+    title: '[TEST] Event',
     introduction: 'Een interessante lezing in deze week.',
     date: DateTime.now().setZone(ZONE).plus({ days: 2 }).toISODate(),
     hourStart: '22:30',
-    image: {
-      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
-    },
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
   },
 
   // Próxima semana
   {
     id: '5',
     type: 'performance',
-    title: 'Performance volgende week',
+    title: '[TEST] Performance volgende week',
     introduction: 'Een performance die volgende week plaatsvindt.',
     date: DateTime.now().setZone(ZONE).plus({ weeks: 1 }).toISODate(),
     hourStart: '21:00',
     hourEnd: '22:30',
-    image: {
-      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
-    },
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
   },
 
   // Próximos meses
   {
     id: '6',
     type: 'festival',
-    title: 'Zomerfestival',
+    title: '[TEST] Zomerfestival',
     introduction: 'Een festival in de zomer.',
     date: DateTime.now().setZone(ZONE).plus({ months: 2 }).toISODate(),
     // hourStart: '16:00',
-    image: {
-      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
-    },
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
   },
   {
     id: '7',
     type: 'meeting',
-    title: 'Netwerkbijeenkomst herfst',
+    title: '[TEST] Netwerkbijeenkomst herfst',
     introduction: 'Een zakelijke netwerkbijeenkomst.',
     date: DateTime.now().setZone(ZONE).plus({ months: 5 }).toISODate(),
     // hourStart: 'tijd en locatie verschilt per AVA',
-    image: {
-      url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format',
-    },
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
   },
 ].map((event) => {
   const isTimeValid = /^\d{2}:\d{2}$/.test(event.hourStart);
@@ -668,10 +635,7 @@ export const dummyEvents = [
     ? DateTime.fromISO(`${event.date}T${event.hourStart}`, { zone: ZONE })
     : DateTime.fromISO(event.date, { zone: ZONE });
 
-  return {
-    ...event,
-    startDateToCompare: dateTime.toISO(),
-  };
+  return { ...event, startDateToCompare: dateTime.toISO() };
 });
 
 export function getClosestEvents(relatedEvents, calendarEvents, max = 3) {
