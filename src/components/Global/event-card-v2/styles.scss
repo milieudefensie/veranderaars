@@ -124,7 +124,8 @@
 
 @media screen and (max-width: 992px) {
   .ui-event-card-v2 {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 50% 50%;
 
     .image-container {
       aspect-ratio: 1 / 1;
@@ -152,5 +153,16 @@
         font-size: .7rem;
       }
     }
+
+    &.vertical-layout {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .ui-event-card-v2 {
+    display: flex;
+    flex-direction: column;
   }
 }

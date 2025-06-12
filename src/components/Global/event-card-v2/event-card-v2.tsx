@@ -1,6 +1,6 @@
 import React from 'react';
-import { EventType } from '../../../types';
-import { truncateText, formatEventDate, formatDateCSL, formatDate } from '../../../utils';
+import { CtaType, EventType } from '../../../types';
+import { truncateText, formatEventDate, formatDate } from '../../../utils';
 import Link from '../../Global/Link/Link';
 import Cta from '../Cta/Cta';
 
@@ -11,11 +11,24 @@ type Props = {
   vertical?: boolean;
   isHighlighted?: boolean;
   lessInfo?: boolean;
+  cta?: CtaType;
 };
 
-const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted = false, lessInfo }) => {
-  const { title, introduction, image, image_url, externalLink, url, __typename, type, location, address, collection } =
-    event || {};
+const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted = false, lessInfo, cta }) => {
+  const {
+    title,
+    introduction,
+    image,
+    image_url,
+    externalLink,
+    url,
+    __typename,
+    type,
+    location,
+    address,
+    beknopteAddress,
+    collection,
+  } = event || {};
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
   const withImage = image?.gatsbyImageData || image?.url || image_url;
@@ -31,7 +44,9 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
         <div>
           {collection && <div className="collection-wrapper">{collection.title}</div>}
           <h3>{title}</h3>
-          <div className="type">{isCslEvent ? location?.street : address ? address : type}</div>
+          <div className="type">
+            {isCslEvent ? location?.street : beknopteAddress ? beknopteAddress : address ? address : type}
+          </div>
           <div className="date">
             {isCslEvent && event.rawDate ? (
               <span id={event.rawDate}>{formatDate(event.rawDate)}</span>
@@ -44,7 +59,11 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
           <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
         </div>
 
-        <Cta externalTitle="Meld je aan" isButton off />
+        {cta ? (
+          <Cta cta={cta} isButton customVariant="full-green" />
+        ) : (
+          <Cta externalTitle="Meld je aan" isButton customVariant="full-green" off />
+        )}
       </div>
     </>
   );

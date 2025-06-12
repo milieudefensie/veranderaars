@@ -569,6 +569,7 @@ export const DatoCMS = graphql`
     hourEnd
     onlineEvent
     address
+    beknopteAddress
     region
     tags {
       ... on DatoCmsTag {

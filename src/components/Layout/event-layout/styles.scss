@@ -3,7 +3,7 @@
 
   header {
     padding-top: 20vh;
-    padding-bottom: 20vh;
+    padding-bottom: 18vh;
     padding-inline: calc(.25rem * 4);
     text-align: center;
     background-color: oklch(58.2% .2226 304.59);
@@ -21,6 +21,10 @@
       line-height: 1.4;
       color: var(--white);
     }
+  }
+
+  .container {
+    max-width: 1050px;
   }
 
   .negative-margin {
@@ -133,6 +137,7 @@
         scroll-snap-align: start;
         scroll-snap-stop: always;
         width: 75vw;
+        width: 40%;
       }
 
       &.one {
@@ -152,10 +157,34 @@
           width: 100%;
         }
       }
+
+      &.mobile-two {
+        overflow-x: hidden;
+
+        .ui-event-card-v2 {
+          width: 50%;
+        }
+      }
     }
 
     .map-container .alert-container {
       display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .ui-event-layout {
+    .grid-events>.ui-event-card-v2 {
+      width: 80%;
+    }
+
+    .grid-events.mobile-two {
+      overflow-x: auto;
+
+      .ui-event-card-v2 {
+        width: 80%;
+      }
     }
   }
 }

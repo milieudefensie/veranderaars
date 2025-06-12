@@ -28,6 +28,7 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, ca
           type: subtitle,
         }}
         vertical={vertical}
+        cta={ctas?.length > 0 ? ctas![0] : null}
       />
       {closestEvents.length > 0 && (
         <div className="related-events">
@@ -47,9 +48,11 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, ca
                     <div className="type">
                       {e.__typename === 'ExternalEvent' || e.type === 'CSL'
                         ? e.location?.street
-                        : e.address
-                          ? e.address
-                          : e.type}
+                        : e.beknopteAddress
+                          ? e.beknopteAddress
+                          : e.address
+                            ? e.address
+                            : e.type}
                     </div>
                     <div className="intro">{e.title}</div>
                   </div>

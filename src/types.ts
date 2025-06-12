@@ -16,6 +16,7 @@ export type EventType = {
   url?: string;
   online_event?: boolean;
   address?: string;
+  beknopteAddress?: string;
   region?: string;
   location?: LocationType;
   collection?: EventCollectionType;
