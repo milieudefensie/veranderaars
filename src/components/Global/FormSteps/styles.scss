@@ -55,11 +55,11 @@
   }
 
   .image-container {
-    // width: 536px;
-    // height: 536px;
     aspect-ratio: 1 / 1;
+    height: 100%;
 
     img {
+      aspect-ratio: 1 / 1;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -130,6 +130,13 @@
         color: var(--dark);
       }
     }
+  }
+}
+
+// Fix for firefox
+@-moz-document url-prefix() {
+  .ui-form-steps2 {
+    grid-template-columns: 60% 40%;
   }
 }
 
