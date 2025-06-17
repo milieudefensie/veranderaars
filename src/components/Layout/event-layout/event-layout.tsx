@@ -14,6 +14,7 @@ import {
   getEventsWeekDays,
   getDayAfterTomorrowLabel,
   getEventsGroupedByFutureMonths,
+  capitalizeFirstLetter,
 } from '../../../utils';
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';
@@ -136,7 +137,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         )}
         {categorizedEvents.today.length > 0 && (
           <>
-            <h3 className="heading">{t('today')}</h3>
+            <h3 className="heading">{capitalizeFirstLetter(t('today'))}</h3>
             <div
               className={`grid-events ${categorizedEvents.today.length === 1 ? 'one' : categorizedEvents.today.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.today.length === 2 ? 'mobile-two' : ''}`}
             >
@@ -148,7 +149,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         )}
         {categorizedEvents.tomorrow.length > 0 && (
           <>
-            <h3 className="heading">{t('tomorrow')}</h3>
+            <h3 className="heading">{capitalizeFirstLetter(t('tomorrow'))}</h3>
             <div
               className={`grid-events ${categorizedEvents.tomorrow.length === 1 ? 'one' : categorizedEvents.tomorrow.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.tomorrow.length === 2 ? 'mobile-two' : ''}`}
             >
@@ -160,7 +161,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         )}
         {categorizedEvents.dayAfterTomorrow.length > 0 && (
           <>
-            <h3 className="heading">{getDayAfterTomorrowLabel()}</h3>
+            <h3 className="heading">{capitalizeFirstLetter(getDayAfterTomorrowLabel())}</h3>
             <div
               className={`grid-events ${categorizedEvents.dayAfterTomorrow.length === 1 ? 'one' : categorizedEvents.dayAfterTomorrow.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.dayAfterTomorrow.length === 2 ? 'mobile-two' : ''}`}
             >
@@ -172,7 +173,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         )}
         {categorizedEvents.weekdays.length > 0 && (
           <>
-            <h3 className="heading">{t('weekdays')}</h3>
+            <h3 className="heading">{capitalizeFirstLetter(t('weekdays'))}</h3>
             <div
               className={`grid-events ${categorizedEvents.weekdays.length === 1 ? 'one' : categorizedEvents.weekdays.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.weekdays.length === 2 ? 'mobile-two' : ''}`}
             >
@@ -184,7 +185,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         )}
         {categorizedEvents.weekend.length > 0 && (
           <>
-            <h3 className="heading">{t('weekend')}</h3>
+            <h3 className="heading">{capitalizeFirstLetter(t('weekend'))}</h3>
             <div
               className={`grid-events ${categorizedEvents.weekend.length === 1 ? 'one' : categorizedEvents.weekend.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.weekend.length === 2 ? 'mobile-two' : ''}`}
             >
@@ -196,7 +197,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         )}
         {categorizedEvents.nextWeek.length > 0 && (
           <>
-            <h3 className="heading">{t('next_week')}</h3>
+            <h3 className="heading">{capitalizeFirstLetter(t('next_week'))}</h3>
             <div
               className={`grid-events ${categorizedEvents.nextWeek.length === 1 ? 'one' : categorizedEvents.nextWeek.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.nextWeek.length === 2 ? 'mobile-two' : ''}`}
             >
@@ -208,7 +209,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
         )}
         {categorizedEvents.restOfMonth.length > 0 && (
           <>
-            <h3 className="heading">{t('rest_of_month')}</h3>
+            <h3 className="heading">{capitalizeFirstLetter(t('rest_of_month'))}</h3>
             <div
               className={`grid-events ${events.length === 1 ? 'one' : categorizedEvents.restOfMonth.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.restOfMonth.length === 2 ? 'mobile-two' : ''}`}
             >
@@ -223,7 +224,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
 
           return (
             <div key={monthKey}>
-              <h3 className="heading">{monthLabel}</h3>
+              <h3 className="heading">{capitalizeFirstLetter(monthLabel)}</h3>
               <div
                 className={`grid-events ${events.length === 1 ? 'one' : events.length === 2 ? 'two' : 'three'} ${events.length === 2 ? 'mobile-two' : ''}`}
               >

@@ -52,7 +52,7 @@ export const getCtaUrl = (cta) => {
   return url;
 };
 
-const capitalizeFirstLetter = (str) => {
+export const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
