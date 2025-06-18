@@ -50,11 +50,11 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
           {collection && <div className="collection-wrapper">{collection.title}</div>}
           <h3>{title}</h3>
           <div className="type">
-            {isCslEvent ? location?.street : beknopteAddress ? beknopteAddress : address ? address : type}
+            {isCslEvent ? location?.street || 'Online' : beknopteAddress ? beknopteAddress : address ? address : type}
           </div>
           <div className="date">
             {isCslEvent && event.rawDate ? (
-              <span id={event.rawDate}>{formatDate(event.rawDate)}</span>
+              <span id={event.rawDate}>{formatEventDate(event.rawDate, event.hourStart)}</span>
             ) : event.date ? (
               <>
                 <span id={`${event.date}--${event.hourStart}`}>{formatEventDate(event.date, event.hourStart)}</span>
@@ -85,8 +85,10 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
     );
   }
 
+  const link = event.__typename === 'EventCollection' ? cta : event;
+
   return (
-    <Link to={event} className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''}`}>
+    <Link to={link} className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''}`}>
       {cardContent()}
     </Link>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { EventCollectionType, EventType } from '../../../types';
 import EventCardV2 from '../event-card-v2/event-card-v2';
 import Link from '../../Global/Link/Link';
-import { formatEventDate, getClosestEvents, formatDate } from '../../../utils';
+import { formatEventDate, getClosestEvents } from '../../../utils';
 
 import './styles.scss';
 
@@ -14,7 +14,6 @@ type Props = {
 
 const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, calendarEvents }) => {
   const { id, title, subtitle, description, ctas, image, relatedEvents } = collection || {};
-
   const closestEvents = getClosestEvents(relatedEvents, calendarEvents);
 
   return (
@@ -26,6 +25,7 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, ca
           title,
           introduction: description,
           type: subtitle,
+          __typename: 'EventCollection',
         }}
         vertical={vertical}
         cta={ctas?.length > 0 ? ctas![0] : null}
@@ -42,12 +42,12 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, ca
                   <div className="metadata">
                     <div className="date">
                       {e.__typename === 'ExternalEvent' || e.type === 'CSL'
-                        ? formatEventDate(e.rawDate)
+                        ? formatEventDate(e.rawDate, e.hourStart)
                         : formatEventDate(e.date, e.hourStart)}
                     </div>
                     <div className="type">
                       {e.__typename === 'ExternalEvent' || e.type === 'CSL'
-                        ? e.location?.street
+                        ? e.location?.street || 'Online'
                         : e.beknopteAddress
                           ? e.beknopteAddress
                           : e.address

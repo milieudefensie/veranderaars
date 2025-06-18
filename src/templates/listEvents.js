@@ -2,7 +2,7 @@ import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/Layout';
 import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import { formatCslEvents, getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
+import { getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
 import EventLayout from '../components/Layout/event-layout/event-layout';
 
 import './list-basic.styles.scss';
