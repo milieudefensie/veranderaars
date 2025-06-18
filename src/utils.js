@@ -517,12 +517,14 @@ export function getEventsWeekDays(events, fromDayOffset, toDayOffset) {
 export function getEventsGroupedByFutureMonths(events) {
   const now = DateTime.now().setZone(ZONE).endOf('month');
   const futureEvents = events.filter((event) => {
-    const eventDate = DateTime.fromISO(event.date).setZone(ZONE);
+    const date = event.type === 'CSL' ? event.rawDate : event.date;
+    const eventDate = DateTime.fromISO(date).setZone(ZONE);
     return eventDate > now;
   });
 
   const grouped = futureEvents.reduce((acc, event) => {
-    const eventDate = DateTime.fromISO(event.date).setZone(ZONE);
+    const date = event.type === 'CSL' ? event.rawDate : event.date;
+    const eventDate = DateTime.fromISO(date).setZone(ZONE);
     const monthKey = eventDate.toFormat('yyyy-MM'); // e.g., "2025-05"
     if (!acc[monthKey]) acc[monthKey] = [];
     acc[monthKey].push(event);
