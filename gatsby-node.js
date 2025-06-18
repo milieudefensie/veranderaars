@@ -79,7 +79,6 @@ exports.createSchemaCustomization = ({ actions }) => {
       active: Boolean!
     }
   `;
-
   createTypes(typeDefs);
 };
 
@@ -88,143 +87,109 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
 
-  // All events (less details)
   const allEvents = await getAllGoodEvents();
 
-  const credentials = `${clientId}:${clientSecret}`;
-  const encodedCredentials = Buffer.from(credentials).toString('base64');
-  const accessToken = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
+  const encodedCredentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+  const tokenResponse = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
     method: 'POST',
     headers: {
       Authorization: `Basic ${encodedCredentials}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
-  const receivedToken = await accessToken.json();
 
-  // console.log('New token: ', receivedToken.access_token);
+  const { access_token: accessToken } = await tokenResponse.json();
+  const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json' };
+
+  // console.log('New token: ', accessToken);
+
+  const fetchEventDetails = async (slug) => {
+    const res = await fetch(`${cslPath}/api/v1/events/${slug}?access_token=${accessToken}`, {
+      method: 'GET',
+      headers: jsonHeaders,
+    });
+    const { event } = await res.json();
+    return event;
+  };
+
+  const fetchAllAttendees = async (eventSlug) => {
+    let attendees = [];
+    let currentPage = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const res = await fetch(
+        `${cslPath}/api/v1/events/${eventSlug}/attendees?access_token=${accessToken}&page=${currentPage}`,
+        { method: 'GET', headers: jsonHeaders }
+      );
+      const data = await res.json();
+      attendees = attendees.concat(data.attendees);
+      currentPage = data.meta.next_page;
+      hasMore = !!currentPage;
+    }
+
+    return attendees.filter((a) => a.attending_status === 'attending');
+  };
+
+  const createEventNode = async (event, originalSlug) => {
+    const shouldCreate = shouldCreateEvent(event);
+    if (!shouldCreate) return console.log(`Event ${originalSlug} not created.`);
+
+    console.log('[CSL Source] Creating:', event.title);
+    const cslInputs = await scrapingFormInputs(event);
+
+    let isWaitingListEnabled = false;
+    if (event.max_attendees_count) {
+      const attending = await fetchAllAttendees(originalSlug);
+      if (attending.length >= event.max_attendees_count) {
+        console.log(`Event ${originalSlug} has waiting list enabled.`);
+        isWaitingListEnabled = true;
+      }
+    }
+
+    createNode({
+      ...event,
+      id: String(event.id || originalSlug),
+      slug: originalSlug,
+      title: event.title,
+      calendar: event.calendar,
+      labels: event.labels || [],
+      start_at: event.start_at ? new Date(event.start_at).toISOString().split('T')[0] : null,
+      raw_start: event.start_at,
+      raw_end: event.end_at,
+      start_in_zone: event.start_in_zone,
+      end_in_zone: event.end_in_zone,
+      time_zone: event.time_zone,
+      inputs: cslInputs || [],
+      hiddenAddress: event.hiddenAddress || event.hidden_address,
+      web_conference_url: event.web_conference_url,
+      max_attendees_count: event.max_attendees_count,
+      waiting_list_enabled: isWaitingListEnabled,
+      rich_description: event.rich_description,
+      internal: {
+        type: 'ExternalEvent',
+        contentDigest: createContentDigest(event),
+      },
+    });
+  };
 
   for (const event of allEvents) {
-    const result = await fetch(`${cslPath}/api/v1/events/${event.slug}?access_token=${receivedToken.access_token}`, {
-      method: 'GET',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-    });
-    const { event: eventResponse } = await result.json();
-
-    if (shouldCreateEvent(eventResponse)) {
-      console.log('[CSL Source] Creating: ', eventResponse.title);
-      const cslInputs = await scrapingFormInputs(eventResponse);
-
-      let isWaitingListEnabled = false;
-      if (eventResponse.max_attendees_count) {
-        let allAttendees = [];
-        let currentPage = 1;
-
-        do {
-          const response = await fetch(
-            `${cslPath}/api/v1/events/${event.slug}/attendees?access_token=${receivedToken.access_token}&page=${currentPage}`,
-            { method: 'GET', headers: { Accept: 'application/json', 'Content-Type': 'application/json' } }
-          );
-
-          const data = await response.json();
-          allAttendees = allAttendees.concat(data.attendees);
-          currentPage = data.meta.next_page;
-          totalPages = data.meta.total_pages;
-        } while (currentPage);
-
-        const attendeesWithAttendingStatus = allAttendees.filter(
-          (attendee) => attendee.attending_status === 'attending'
-        );
-        if (attendeesWithAttendingStatus.length >= eventResponse.max_attendees_count) {
-          console.log(
-            `Event ${event.slug} has waiting list enabled. Total attendees: ${attendeesWithAttendingStatus.length}. Max attendees: ${eventResponse.max_attendees_count}`
-          );
-
-          isWaitingListEnabled = true;
-        }
-      }
-
-      createNode({
-        ...eventResponse,
-        id: String(event.id),
-        calendar: eventResponse.calendar,
-        slug: event.slug,
-        title: eventResponse.title,
-        labels: eventResponse.labels || [],
-        start_at: eventResponse.start_at ? new Date(eventResponse.start_at).toISOString().split('T')[0] : null,
-        raw_start: eventResponse.start_at,
-        raw_end: eventResponse.end_at,
-        start_in_zone: eventResponse.start_in_zone,
-        end_in_zone: eventResponse.end_in_zone,
-        time_zone: eventResponse.time_zone,
-        inputs: cslInputs || [],
-        hiddenAddress: event.hiddenAddress,
-        web_conference_url: eventResponse.web_conference_url,
-        max_attendees_count: eventResponse.max_attendees_count,
-        waiting_list_enabled: isWaitingListEnabled,
-        additional_image_sizes_url: eventResponse.additional_image_sizes_url,
-        rich_description: eventResponse.rich_description,
-        internal: {
-          type: 'ExternalEvent',
-          contentDigest: createContentDigest(eventResponse),
-        },
-      });
-    } else {
-      console.log(`Event ${event.slug} not created.`);
-    }
+    const fullEvent = await fetchEventDetails(event.slug);
+    await createEventNode(fullEvent, event.slug);
   }
 
-  // Extras events
-  const slugsFiltered = [
-    //'shell-borrel-in-maastricht',
-    'test-event-whatsapp-link',
-    'test-event-zoom',
-  ];
-  // const slugsFiltered = slugs.filter((slug) => allEvents.find((e) => e.slug === slug));
-
-  for (const eventSlug of slugsFiltered) {
-    const result = await fetch(`${cslPath}/api/v1/events/${eventSlug}?access_token=${receivedToken.access_token}`, {
-      method: 'GET',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-    });
-    const { event } = await result.json();
-
-    if (shouldCreateEvent(event)) {
-      console.log('[CSL Extra Source] Creating: ', event.title);
-      const cslInputs = await scrapingFormInputs(event);
-
-      createNode({
-        ...event,
-        id: String(event.slug),
-        calendar: event.calendar,
-        slug: event.slug,
-        title: event.title,
-        labels: event.labels || [],
-        start_at: event.start_at ? new Date(event.start_at).toISOString().split('T')[0] : null,
-        raw_start: event.start_at,
-        raw_end: event.end_at,
-        start_in_zone: event.start_in_zone,
-        end_in_zone: event.end_in_zone,
-        time_zone: event.time_zone,
-        inputs: cslInputs || [],
-        hiddenAddress: event.hidden_address,
-        rich_description: event.rich_description,
-        internal: {
-          type: 'ExternalEvent',
-          contentDigest: createContentDigest(event),
-        },
-      });
-    } else {
-      console.log(`Event ${event.slug} not created.`);
-    }
+  const extraSlugs = ['test-event-whatsapp-link', 'test-event-zoom'];
+  for (const slug of extraSlugs) {
+    const fullEvent = await fetchEventDetails(slug);
+    await createEventNode(fullEvent, slug);
   }
 };
 
 exports.createPages = ({ graphql, actions }) => {
   const { createPage, createSlice, createRedirect } = actions;
 
-  createSlice({ id: `header`, component: require.resolve(`./src/components/Layout/Header.js`) });
-  createSlice({ id: `footer`, component: require.resolve(`./src/components/Layout/Footer/Footer.js`) });
+  createSlice({ id: `header`, component: path.resolve(`./src/components/Layout/Header.js`) });
+  createSlice({ id: `footer`, component: path.resolve(`./src/components/Layout/Footer/Footer.js`) });
 
   return new Promise((resolve, reject) => {
     const templates = {
@@ -362,9 +327,9 @@ exports.createPages = ({ graphql, actions }) => {
           reject(result.errors);
         }
 
-        const cslHighlightedEvent = result.data.configuration.slugOfHighlightedEvent;
-        const cslHighlightedEventAgenda = result.data.configuration.slugOfHighlightedEventAgenda;
-        const cslSlugsOfEventsHidden = result.data.configuration.eventsHidden;
+        const cslHighlightedEvent = result.data?.configuration.slugOfHighlightedEvent;
+        const cslHighlightedEventAgenda = result.data?.configuration.slugOfHighlightedEventAgenda;
+        const cslSlugsOfEventsHidden = result.data?.configuration.eventsHidden;
 
         // Create homepage
         createPage({
@@ -380,7 +345,7 @@ exports.createPages = ({ graphql, actions }) => {
         });
 
         // create the pages
-        const pages = result.data.pages.edges;
+        const pages = result.data?.pages.edges;
         for (const page of pages) {
           createPage({
             path: page.node.slug,
@@ -393,7 +358,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list events
-        const listEvents = result.data.listEvents || [];
+        const listEvents = result.data?.listEvents || [];
         if (listEvents) {
           createPage({
             path: listEvents.slug,
@@ -407,7 +372,7 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
-        const events = result.data.events.edges;
+        const events = result.data?.events.edges;
         for (const event of events) {
           createPage({
             path: `/agenda/${event.node.slug}`,
@@ -419,7 +384,7 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
-        const CSLEvents = result.data.CSLevents.nodes;
+        const CSLEvents = result.data?.CSLevents.nodes;
         for (const event of CSLEvents) {
           createPage({
             path: `/lokaal/${event.slug}`,
@@ -427,13 +392,13 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: event.slug,
               id: event.id,
-              heroImage: result.data.configuration.cslGenericImage,
+              heroImage: result.data?.configuration.cslGenericImage,
             },
           });
         }
 
         // list groups
-        const listGroups = result.data.listGroups || [];
+        const listGroups = result.data?.listGroups || [];
         if (listGroups) {
           createPage({
             path: listGroups.slug,
@@ -449,7 +414,7 @@ exports.createPages = ({ graphql, actions }) => {
         const KM_PER_DEGREE_LAT = 111;
         const KM_PER_DEGREE_LNG = 111;
 
-        const groups = result.data.groups.edges;
+        const groups = result.data?.groups.edges;
         for (const group of groups) {
           const latitude = group.node.coordinates?.latitude;
           const longitude = group.node.coordinates?.longitude;
@@ -479,7 +444,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list tools
-        const listTools = result.data.listTools || [];
+        const listTools = result.data?.listTools || [];
         if (listTools) {
           createPage({
             path: listTools.slug,
@@ -490,7 +455,7 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
-        const tools = result.data.tools.edges;
+        const tools = result.data?.tools.edges;
         for (const tool of tools) {
           createPage({
             path: `/toolkit/${tool.node.slug}`,
@@ -503,7 +468,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list WhatsApp Groups
-        const listWhatsAppGroups = result.data.listWhatsAppGroups || [];
+        const listWhatsAppGroups = result.data?.listWhatsAppGroups || [];
         if (listWhatsAppGroups) {
           createPage({
             path: listWhatsAppGroups.slug,
@@ -547,7 +512,6 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 };
 
 // Utils
-// We will only show events that do not contain the 'hidden' tag.
 const shouldCreateEvent = (event) => Array.isArray(event.labels) && !event.labels.includes('hidden');
 
 chromium.setHeadlessMode = true;
@@ -562,6 +526,7 @@ const scrapingFormInputs = async (event) => {
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: chromium.path,
+      timeout: 50_000,
     });
 
     const page = await browser.newPage();

@@ -17,10 +17,10 @@ import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighligh
 import { isArray, mapCmsEvents, mapCslEvents } from '../utils';
 import useCSLEvents from '../hooks/useCSLEvents';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
-
-import './basic.styles.scss';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
+
+import './basic.styles.scss';
 
 const Group = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], listGroup, listEvent, favicon } }) => {
   const {

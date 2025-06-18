@@ -52,7 +52,7 @@ export const getCtaUrl = (cta) => {
   return url;
 };
 
-const capitalizeFirstLetter = (str) => {
+export const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
@@ -113,9 +113,7 @@ export const compareIfIsFuture = (event) => {
 
   if (event.type === 'CSL') {
     // 2024-03-29T09:00:00Z
-    const eventDate = DateTime.fromFormat(`${event.rawDate}`, "yyyy-MM-dd'T'HH:mm:ss'Z'", {
-      zone: 'Europe/Amsterdam',
-    });
+    const eventDate = DateTime.fromFormat(`${event.rawDate}`, "yyyy-MM-dd'T'HH:mm:ss'Z'", { zone: 'Europe/Amsterdam' });
     return eventDate >= DateTime.local();
   }
 
@@ -123,12 +121,7 @@ export const compareIfIsFuture = (event) => {
     zone: 'Europe/Amsterdam',
   });
 
-  return (
-    eventDate >=
-    DateTime.local({
-      zone: 'Europe/Amsterdam',
-    })
-  );
+  return eventDate >= DateTime.local({ zone: 'Europe/Amsterdam' });
 };
 
 export const isEventFuture = (event) => {
@@ -307,13 +300,9 @@ export const mapCslEvents = (events) => {
           latitude: parseFloat(parseFloat(raw.node.location?.latitude).toFixed(6)),
           longitude: parseFloat(parseFloat(raw.node.location?.longitude).toFixed(6)),
         },
-        model: {
-          apiKey: 'ExternalEvent',
-        },
+        model: { apiKey: 'ExternalEvent' },
         type: 'CSL',
-        image: {
-          url: raw.node.image_url,
-        },
+        image: { url: raw.node.image_url },
       }))
     : [];
 };
@@ -323,6 +312,7 @@ export const formatCslEvents = (e) => {
   return {
     id: e.slug.replace(' ', '_'),
     address: e.location?.query,
+    location: e.location,
     coordinates: { latitude: e.location?.latitude, longitude: e.location?.longitude },
     region: e.location?.region,
     rawStartDate: e.raw_start,
@@ -344,9 +334,7 @@ export const formatCslEvents = (e) => {
     calendar: e.calendar,
     waiting_list_enabled: e.waiting_list_enabled,
     max_attendees_count: e.max_attendees_count,
-    model: {
-      apiKey: 'ExternalEvent',
-    },
+    model: { apiKey: 'ExternalEvent' },
     type: 'CSL',
   };
 };
@@ -373,3 +361,299 @@ export const detectService = (url) => {
     return null;
   }
 };
+
+// Agenda date utils
+const ZONE = 'Europe/Amsterdam';
+
+function parseCmsEventDate(rawDate, hour, fallback) {
+  const cleanHour = typeof hour === 'string' ? extractNumericHour(hour) : fallback;
+  return DateTime.fromFormat(`${rawDate} ${cleanHour}`, 'yyyy-MM-dd HH:mm').setZone(ZONE);
+}
+
+function parseCslEventDate(dateString) {
+  return dateString ? DateTime.fromFormat(dateString, "yyyy-MM-dd'T'HH:mm:ssZZ") : null;
+}
+
+function shouldIncludeEvent(event, hiddenSlugs, hideInAgendaPage) {
+  if (!hideInAgendaPage) return true;
+  if (event.type === 'CSL' && hiddenSlugs.includes(event.slug)) return false;
+  return !event.labels?.includes('exclude_in_agenda');
+}
+
+function dedupeEventsBySlug(events) {
+  const slugsSeen = new Set();
+  return events.filter((event) => {
+    if (slugsSeen.has(event.slug)) return false;
+    slugsSeen.add(event.slug);
+    return true;
+  });
+}
+
+export function getCombinedEvents(cmsEvents, cslEvents, hideInAgendaPage = false, slugsOfHiddenCSLEvents = null) {
+  const currentDateTime = DateTime.now().setZone(ZONE);
+  const hiddenSlugs = slugsOfHiddenCSLEvents ? slugsOfHiddenCSLEvents.split(',') : [];
+
+  const formattedCsl = cslEvents.map(formatCslEvents);
+
+  const combinedEvents = [...cmsEvents, ...formattedCsl]
+    .filter((event) => shouldIncludeEvent(event, hiddenSlugs, hideInAgendaPage))
+    .map((event) => {
+      let startDate, endDate;
+
+      if (event.type === 'CSL') {
+        startDate = parseCslEventDate(event.startInZone);
+        endDate = parseCslEventDate(event.endInZone) || startDate;
+      } else {
+        startDate = parseCmsEventDate(event.rawDate, event.hourStart, '00:00');
+        endDate = parseCmsEventDate(event.rawDate, event.hourEnd, '23:59');
+      }
+
+      return { ...event, startDateToCompare: startDate, endDateToCompare: endDate };
+    })
+    .filter((event) => {
+      const { startDateToCompare, endDateToCompare } = event;
+      if (!startDateToCompare?.isValid || !endDateToCompare?.isValid) return false;
+      return (
+        startDateToCompare > currentDateTime ||
+        (startDateToCompare <= currentDateTime && endDateToCompare >= currentDateTime)
+      );
+    })
+    .sort((a, b) => {
+      const dateA = DateTime.fromISO(a.startDateToCompare, { zone: ZONE });
+      const dateB = DateTime.fromISO(b.startDateToCompare, { zone: ZONE });
+      return dateA.toMillis() - dateB.toMillis();
+    });
+
+  return dedupeEventsBySlug(combinedEvents);
+}
+
+function getEventsInRange(events, startDate, endDate) {
+  return events
+    .filter((event) => {
+      const eventDate = DateTime.fromISO(event.startDateToCompare, { zone: ZONE });
+      return eventDate >= startDate && eventDate <= endDate;
+    })
+    .sort((a, b) => {
+      const dateA = DateTime.fromISO(a.startDateToCompare, { zone: ZONE });
+      const dateB = DateTime.fromISO(b.startDateToCompare, { zone: ZONE });
+      return dateA.toMillis() - dateB.toMillis();
+    });
+}
+
+export function getEventsToday(events) {
+  const now = DateTime.now().setZone(ZONE);
+  const start = now.startOf('day');
+  const end = now.endOf('day');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsTomorrow(events) {
+  const tomorrow = DateTime.now().setZone(ZONE).plus({ days: 1 });
+  const start = tomorrow.startOf('day');
+  const end = tomorrow.endOf('day');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsDayAfterTomorrow(events) {
+  const dayAfterTomorrow = DateTime.now().setZone(ZONE).plus({ days: 2 });
+  const start = dayAfterTomorrow.startOf('day');
+  const end = dayAfterTomorrow.endOf('day');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsRestOfWeek(events) {
+  const today = DateTime.now().setZone(ZONE);
+  const start = today.plus({ days: 3 }).startOf('day');
+  const end = today.endOf('week');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsNextWeek(events) {
+  const today = DateTime.now().setZone(ZONE);
+  const start = today.plus({ weeks: 1 }).startOf('week');
+  const end = today.plus({ weeks: 1 }).endOf('week');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsRestOfMonth(events) {
+  const today = DateTime.now().setZone(ZONE);
+  const endOfThisWeek = today.endOf('week');
+  const endOfNextWeek = today.plus({ weeks: 1 }).endOf('week');
+  const start = endOfNextWeek.plus({ days: 1 }).startOf('day');
+  const end = today.endOf('month');
+  return getEventsInRange(events, start, end);
+}
+
+export function getWeekendEvents(events) {
+  const today = DateTime.now().setZone(ZONE);
+  const saturday = today.endOf('week').minus({ days: 1 }).startOf('day');
+  const sunday = today.endOf('week').startOf('day');
+  const end = today.endOf('week').endOf('day');
+  return getEventsInRange(events, saturday, end);
+}
+
+export function getEventsWeekDays(events, fromDayOffset, toDayOffset) {
+  const today = DateTime.now().setZone(ZONE);
+  const start = today.plus({ days: fromDayOffset }).startOf('day');
+  const end = today.plus({ days: toDayOffset }).endOf('day');
+  return getEventsInRange(events, start, end);
+}
+
+export function getEventsGroupedByFutureMonths(events) {
+  const now = DateTime.now().setZone(ZONE).endOf('month');
+  const futureEvents = events.filter((event) => {
+    const eventDate = DateTime.fromISO(event.date).setZone(ZONE);
+    return eventDate > now;
+  });
+
+  const grouped = futureEvents.reduce((acc, event) => {
+    const eventDate = DateTime.fromISO(event.date).setZone(ZONE);
+    const monthKey = eventDate.toFormat('yyyy-MM'); // e.g., "2025-05"
+    if (!acc[monthKey]) acc[monthKey] = [];
+    acc[monthKey].push(event);
+    return acc;
+  }, {});
+
+  return grouped;
+}
+
+export function getDayAfterTomorrowLabel() {
+  const dayAfterTomorrow = DateTime.now().setZone(ZONE).plus({ days: 2 });
+  return dayAfterTomorrow.setLocale('nl').toFormat('cccc'); // e.g. "woensdag"
+}
+
+export function formatEventDate(dateStr, hourStr) {
+  const isTimeValid = /^\d{2}:\d{2}$/.test(hourStr);
+  const now = DateTime.local().setLocale('nl');
+
+  let dt;
+
+  if (isTimeValid) {
+    dt = DateTime.fromISO(`${dateStr}T${hourStr}`, { locale: 'nl' });
+  } else {
+    dt = DateTime.fromISO(dateStr, { locale: 'nl' });
+  }
+
+  if (dt.hasSame(now, 'day')) {
+    return isTimeValid ? `Vandaag ${dt.toFormat('HH:mm')}` : 'Vandaag';
+  }
+
+  if (dt.hasSame(now.plus({ days: 1 }), 'day')) {
+    return isTimeValid ? `Morgen ${dt.toFormat('HH:mm')}` : 'Morgen';
+  }
+
+  const dayFormatted = dt.toFormat(isTimeValid ? 'cccc, d LLLL HH:mm' : 'cccc, d LLLL');
+  return dayFormatted.charAt(0).toUpperCase() + dayFormatted.slice(1);
+}
+
+export const dummyEvents = [
+  // Hoy
+  {
+    id: '1',
+    type: 'concert',
+    title: '[TEST] Concert Vandaag',
+    introduction: 'Een geweldig concert op dezelfde dag.',
+    date: DateTime.now().setZone(ZONE),
+    // hourStart: '20:00',
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  },
+  {
+    id: '2',
+    type: 'expo',
+    title: '[TEST] Expo Vandaag zonder tijd',
+    introduction: 'Geen vast tijdstip voor deze expo.',
+    date: DateTime.now().setZone(ZONE),
+    hourStart: 'tijd en locatie verschilt per AVA',
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  },
+
+  // Mañana
+  {
+    id: '3',
+    type: 'workshop',
+    title: '[TEST] Workshop Morgen',
+    introduction: 'Leer iets nieuws morgen.',
+    date: DateTime.now().setZone(ZONE).plus({ days: 1 }).toISODate(),
+    hourStart: '15:00',
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  },
+
+  // Esta semana
+  {
+    id: '4',
+    type: 'talk',
+    title: '[TEST] Lezing deze week',
+    introduction: 'Een interessante lezing in deze week.',
+    date: DateTime.now().setZone(ZONE).plus({ days: 3 }).toISODate(),
+    hourStart: '18:30',
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  },
+  {
+    id: '4',
+    type: 'talk',
+    title: '[TEST] Event',
+    introduction: 'Een interessante lezing in deze week.',
+    date: DateTime.now().setZone(ZONE).plus({ days: 2 }).toISODate(),
+    hourStart: '22:30',
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  },
+
+  // Próxima semana
+  {
+    id: '5',
+    type: 'performance',
+    title: '[TEST] Performance volgende week',
+    introduction: 'Een performance die volgende week plaatsvindt.',
+    date: DateTime.now().setZone(ZONE).plus({ weeks: 1 }).toISODate(),
+    hourStart: '21:00',
+    hourEnd: '22:30',
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  },
+
+  // Próximos meses
+  {
+    id: '6',
+    type: 'festival',
+    title: '[TEST] Zomerfestival',
+    introduction: 'Een festival in de zomer.',
+    date: DateTime.now().setZone(ZONE).plus({ months: 2 }).toISODate(),
+    // hourStart: '16:00',
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  },
+  {
+    id: '7',
+    type: 'meeting',
+    title: '[TEST] Netwerkbijeenkomst herfst',
+    introduction: 'Een zakelijke netwerkbijeenkomst.',
+    date: DateTime.now().setZone(ZONE).plus({ months: 5 }).toISODate(),
+    // hourStart: 'tijd en locatie verschilt per AVA',
+    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  },
+].map((event) => {
+  const isTimeValid = /^\d{2}:\d{2}$/.test(event.hourStart);
+  const dateTime = isTimeValid
+    ? DateTime.fromISO(`${event.date}T${event.hourStart}`, { zone: ZONE })
+    : DateTime.fromISO(event.date, { zone: ZONE });
+
+  return { ...event, startDateToCompare: dateTime.toISO() };
+});
+
+export function getClosestEvents(relatedEvents, calendarEvents, max = 3) {
+  const merged = Array.from(
+    new Map(
+      [...(relatedEvents || []), ...(calendarEvents || [])]
+        .filter((e) => Boolean(e) && Boolean(e.date))
+        .map((e) => [e.id, e])
+    ).values()
+  );
+
+  const now = DateTime.now().setZone(ZONE);
+
+  return merged
+    .map((e) => ({
+      ...e,
+      startDateToCompare: e.type === 'CSL' ? e.startDateToCompare : parseCmsEventDate(e.rawDate, e.hourStart, '00:00'),
+    }))
+    .sort((a, b) => a.startDateToCompare.toMillis() - b.startDateToCompare.toMillis())
+    .slice(0, max);
+}

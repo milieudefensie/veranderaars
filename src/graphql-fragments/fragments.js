@@ -252,30 +252,6 @@ export const DatoCMS = graphql`
     }
   }
 
-  fragment EventCard on DatoCmsEvent {
-    id
-    title
-    slug
-    externalLink
-    introduction
-    date
-    hourStart
-    hourEnd
-    onlineEvent
-    tags {
-      ... on DatoCmsTag {
-        id
-        title
-      }
-    }
-    image {
-      gatsbyImageData(width: 900, height: 505)
-    }
-    model {
-      apiKey
-    }
-  }
-
   fragment BlockHighlightEvent on DatoCmsHighlightEvent {
     __typename
     id: originalId
@@ -576,6 +552,93 @@ export const DatoCMS = graphql`
         }
       }
     }
+  }
+
+  fragment EventCard on DatoCmsEvent {
+    id
+    __typename
+    title
+    slug
+    model {
+      apiKey
+    }
+    introduction
+    date
+    rawDate: date
+    hourStart
+    hourEnd
+    onlineEvent
+    address
+    beknopteAddress
+    region
+    tags {
+      ... on DatoCmsTag {
+        id
+        title
+      }
+    }
+    externalLink
+    image {
+      url
+    }
+    coordinates {
+      latitude
+      longitude
+    }
+    collection {
+      ... on DatoCmsEventCollection {
+        id
+        title
+      }
+    }
+  }
+
+  fragment EventCollectionCard on DatoCmsEventCollection {
+    id
+    title
+    subtitle
+    description
+    ctas {
+      ...AppCta
+    }
+    relatedEvents {
+      ...EventCard
+    }
+    image {
+      url
+    }
+    cslCalendarSlug
+  }
+
+  fragment CSLEventCard on ExternalEvent {
+    __typename
+    id: slug
+    slug
+    title
+    description
+    start_at
+    end_at
+    raw_start
+    raw_end
+    image_url
+    labels
+    start_in_zone
+    end_in_zone
+    location {
+      latitude
+      longitude
+      venue
+      street
+      query
+      region
+    }
+    calendar {
+      name
+      slug
+    }
+    hiddenAddress
+    waiting_list_enabled
+    max_attendees_count
   }
 
   fragment HubspotBlock on DatoCmsHubspot {
