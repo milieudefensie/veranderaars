@@ -112,8 +112,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
           <div className="alert-container">
             <HelpIcon />
             <span>
-              Bekijk ook wat <strong>lokale groepen</strong> bij jou in de buurt doen, of{' '}
-              <strong>organiseer zelf een evenement</strong>.
+              Bekijk ook wat <strong>lokale groepen</strong> bij jou in de buurt doen.
             </span>
           </div>
         </div>

@@ -639,6 +639,10 @@ export const DatoCMS = graphql`
     hiddenAddress
     waiting_list_enabled
     max_attendees_count
+    additional_image_sizes_url {
+      url
+      style
+    }
   }
 
   fragment HubspotBlock on DatoCmsHubspot {

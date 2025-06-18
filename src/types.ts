@@ -22,6 +22,7 @@ export type EventType = {
   collection?: EventCollectionType;
   rawDate?: string;
   calendar?: EventCalendar;
+  additional_image_sizes_url: any;
 };
 
 export type EventCalendar = {

@@ -11,10 +11,8 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
-  const { title, seo, highlighEvent, highlightedEventCollection, secondaryFeaturedCollection, buttonOnMap, content } =
-    page;
+  const { title, seo, highlightedEventCollection, secondaryFeaturedCollection } = page;
   const mergedEvents = getCombinedEvents(cmsEvents, cslEvents, true, pageContext?.cslEventsHidden);
-  // const maybeEventHighlighted = cslHighlightEvent ? formatCslEvents(cslHighlightEvent) : highlighEvent;
 
   return (
     <Layout bgColor="secondary-bg" extraClassNames="list-pages">

@@ -336,6 +336,7 @@ export const formatCslEvents = (e) => {
     max_attendees_count: e.max_attendees_count,
     model: { apiKey: 'ExternalEvent' },
     type: 'CSL',
+    additional_image_sizes_url: e.additional_image_sizes_url,
   };
 };
 

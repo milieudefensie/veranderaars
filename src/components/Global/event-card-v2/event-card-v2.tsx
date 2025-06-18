@@ -20,6 +20,7 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
     introduction,
     image,
     image_url,
+    additional_image_sizes_url,
     externalLink,
     url,
     __typename,
@@ -31,13 +32,17 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
   } = event || {};
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
-  const withImage = image?.gatsbyImageData || image?.url || image_url;
+  let mainImage = Array.isArray(additional_image_sizes_url)
+    ? additional_image_sizes_url.find((i) => i.style === 'original')?.url
+    : null;
+
+  const withImage = mainImage || image?.gatsbyImageData || image?.url || image_url;
 
   const cardContent = () => (
     <>
       {withImage && (
         <div className="image-container">
-          <img src={image?.url} alt="Event" />
+          <img src={mainImage || image?.url} alt="Event" />
         </div>
       )}
       <div className="content-container">
