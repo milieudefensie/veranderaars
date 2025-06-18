@@ -1,6 +1,6 @@
 import React from 'react';
 import { CtaType, EventType } from '../../../types';
-import { truncateText, formatEventDate, formatDate } from '../../../utils';
+import { truncateText, formatEventDate, formatDateCSL } from '../../../utils';
 import Link from '../../Global/Link/Link';
 import Cta from '../Cta/Cta';
 
@@ -29,6 +29,11 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
     address,
     beknopteAddress,
     collection,
+    startInZone,
+    hourEnd,
+    hourStart,
+    rawEndDate,
+    endInZone,
   } = event || {};
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
@@ -54,7 +59,9 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
           </div>
           <div className="date">
             {isCslEvent && event.rawDate ? (
-              <span id={event.rawDate}>{formatEventDate(event.rawDate, event.hourStart)}</span>
+              <span id={event.rawDate}>
+                {formatEventDate(event.rawDate)} {formatDateCSL(startInZone)}
+              </span>
             ) : event.date ? (
               <>
                 <span id={`${event.date}--${event.hourStart}`}>{formatEventDate(event.date, event.hourStart)}</span>

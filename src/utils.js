@@ -308,7 +308,10 @@ export const mapCslEvents = (events) => {
 };
 
 export const formatCslEvents = (e) => {
-  if (!e) return null;
+  if (!e) {
+    console.log('NO EVENT');
+    return null;
+  }
   return {
     id: e.slug.replace(' ', '_'),
     address: e.location?.query,
@@ -376,8 +379,16 @@ function parseCslEventDate(dateString) {
 }
 
 function shouldIncludeEvent(event, hiddenSlugs, hideInAgendaPage) {
-  if (!hideInAgendaPage) return true;
-  if (event.type === 'CSL' && hiddenSlugs.includes(event.slug)) return false;
+  if (!hideInAgendaPage) {
+    console.log('hide in agenda page');
+    return true;
+  }
+  if (event.type === 'CSL' && hiddenSlugs.includes(event.slug)) {
+    console.log('excluding event...');
+    return false;
+  }
+
+  // console.log({ slug: event.slug, labels: event.labels });
   return !event.labels?.includes('exclude_in_agenda');
 }
 
@@ -413,7 +424,10 @@ export function getCombinedEvents(cmsEvents, cslEvents, hideInAgendaPage = false
     })
     .filter((event) => {
       const { startDateToCompare, endDateToCompare } = event;
-      if (!startDateToCompare?.isValid || !endDateToCompare?.isValid) return false;
+      if (!startDateToCompare?.isValid || !endDateToCompare?.isValid) {
+        console.log('hide');
+        return false;
+      }
       return (
         startDateToCompare > currentDateTime ||
         (startDateToCompare <= currentDateTime && endDateToCompare >= currentDateTime)

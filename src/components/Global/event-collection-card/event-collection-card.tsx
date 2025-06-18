@@ -2,7 +2,7 @@ import React from 'react';
 import { EventCollectionType, EventType } from '../../../types';
 import EventCardV2 from '../event-card-v2/event-card-v2';
 import Link from '../../Global/Link/Link';
-import { formatEventDate, getClosestEvents } from '../../../utils';
+import { formatDateCSL, formatEventDate, getClosestEvents } from '../../../utils';
 
 import './styles.scss';
 
@@ -42,7 +42,7 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, ca
                   <div className="metadata">
                     <div className="date">
                       {e.__typename === 'ExternalEvent' || e.type === 'CSL'
-                        ? formatEventDate(e.rawDate, e.hourStart)
+                        ? `${formatEventDate(e.rawDate)} ${formatDateCSL(e.startInZone)}`
                         : formatEventDate(e.date, e.hourStart)}
                     </div>
                     <div className="type">
