@@ -9,7 +9,6 @@ import {
   getEventsDayAfterTomorrow,
   getEventsNextWeek,
   getEventsRestOfMonth,
-  dummyEvents,
   getWeekendEvents,
   getEventsWeekDays,
   getDayAfterTomorrowLabel,
@@ -29,7 +28,7 @@ type Props = {
 
 const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection }) => {
   const { t } = useTranslate();
-  const allEvents: EventType[] = [...events, ...dummyEvents];
+  const allEvents: EventType[] = events;
 
   const categorizedEvents = setEventCategories();
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
