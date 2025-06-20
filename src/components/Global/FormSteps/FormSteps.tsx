@@ -5,7 +5,30 @@ import HubspotForm from '../../Blocks/HubspotForm/HubspotForm';
 
 import './styles.scss';
 
-const FormSteps = ({
+interface FormStep {
+  id: string;
+  title?: string;
+  introductionText?: string;
+  disclaimerText?: string;
+  formId: string;
+  portalId: string;
+  region: string;
+  signalChat?: string;
+  [key: string]: any;
+}
+
+interface FormStepsProps {
+  title: string;
+  description: string;
+  bgImageUrl: string;
+  form: { forms?: FormStep[] }[];
+  variant?: string;
+  extraLogic?: (ctx: any) => void;
+  headerComponents?: React.ReactNode;
+  descriptionAsHtml?: boolean;
+}
+
+const FormSteps: React.FC<FormStepsProps> = ({
   title,
   description,
   bgImageUrl,
@@ -16,25 +39,25 @@ const FormSteps = ({
   descriptionAsHtml = false,
 }) => {
   const location = useLocation();
-  const { forms = [] } = form[0];
+  const { forms = [] } = form[0] || {};
 
-  const getInitialStep = () => {
+  const getInitialStep = (): number => {
     if (typeof window !== 'undefined') {
       const query = new URLSearchParams(window.location.search);
-      const stepParam = parseInt(query.get('form_step'));
+      const stepParam = parseInt(query.get('form_step') || '', 10);
       return !isNaN(stepParam) && stepParam > 0 ? stepParam - 1 : 0;
     }
     return 0;
   };
 
-  const [currentStep, setCurrentStep] = useState(getInitialStep);
-  const [email, setEmail] = useState(null);
+  const [currentStep, setCurrentStep] = useState<number>(getInitialStep);
+  const [email, setEmail] = useState<string | null>(null);
 
   const isFirstStep = currentStep === 0;
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
-    const stepParam = parseInt(query.get('form_step'));
+    const stepParam = parseInt(query.get('form_step') || '', 10);
     if (!isNaN(stepParam) && stepParam > 0 && stepParam <= forms.length) {
       setCurrentStep(stepParam - 1);
     } else {
@@ -42,7 +65,7 @@ const FormSteps = ({
     }
   }, [location.search, forms.length]);
 
-  const handleStepSubmitted = (_, data) => {
+  const handleStepSubmitted = (_: any, data: any) => {
     if (data?.submissionValues?.email) {
       setEmail(data.submissionValues.email);
     }
@@ -52,14 +75,16 @@ const FormSteps = ({
     }
   };
 
-  const initializeForm = (ctx) => {
-    const inputs = document.querySelectorAll(`#hubspotForm-${forms[currentStep]?.id} input`);
-    const emailInput = document.querySelector(`#${ctx.id} input[name="email"]`);
+  const initializeForm = (ctx: { id: string }) => {
+    const formId = forms[currentStep]?.id;
+    if (!formId) return;
+
+    const inputs = document.querySelectorAll<HTMLInputElement>(`#hubspotForm-${formId} input`);
+    const emailInput = document.querySelector<HTMLInputElement>(`#${ctx.id} input[name="email"]`);
 
     if (inputs.length > 1 && emailInput && email) {
       emailInput.value = email;
       emailInput.dispatchEvent(new Event('input', { bubbles: true }));
-
       inputs[1].focus();
     }
   };
@@ -68,7 +93,9 @@ const FormSteps = ({
     <div className="container container-steps">
       {headerComponents}
       <div
-        className={`ui-form-steps2 ${variant && isFirstStep ? variant : ''} ${isFirstStep ? 'first-step' : 'second-step'}`}
+        className={`ui-form-steps2 ${
+          variant && isFirstStep ? variant : ''
+        } ${isFirstStep ? 'first-step' : 'second-step'}`}
       >
         <div className="metadata">
           <h1>{isFirstStep ? title : forms[currentStep]?.title}</h1>
@@ -79,7 +106,11 @@ const FormSteps = ({
               <div dangerouslySetInnerHTML={{ __html: description }} />
             )
           ) : (
-            <div dangerouslySetInnerHTML={{ __html: forms[currentStep]?.introductionText }} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: forms[currentStep]?.introductionText || '',
+              }}
+            />
           )}
 
           {Array.isArray(forms) && forms.length > 0 && forms[currentStep] && (
@@ -89,14 +120,14 @@ const FormSteps = ({
               onFormSubmitted={handleStepSubmitted}
               style={isFirstStep ? variant || 'purple' : 'gray'}
               extraLogic={(ctx) => {
-                extraLogic && extraLogic(ctx);
+                extraLogic?.(ctx);
                 initializeForm(ctx);
               }}
             />
           )}
         </div>
         <div className="image-container">
-          <img src={bgImageUrl} />
+          <img src={bgImageUrl} alt="" />
         </div>
       </div>
       <div

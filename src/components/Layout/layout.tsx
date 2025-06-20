@@ -2,7 +2,7 @@ import React, { useEffect, useState, ReactNode } from 'react';
 import { Slice } from 'gatsby';
 import Header from './header';
 import { Tolgee, DevTools, TolgeeProvider, FormatSimple, BackendFetch } from '@tolgee/react';
-import Spinner from '../Global/Spinner/Spinner';
+import Spinner from '../Global/Spinner/spinner';
 
 import '../../styles/main.scss';
 

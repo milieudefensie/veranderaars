@@ -8,7 +8,7 @@ import twitter from '../../Icons/twitter-share.svg';
 
 import './index.scss';
 
-function ShareButtons(): JSX.Element {
+function ShareButtons() {
   const { t } = useTranslate();
   const [isFixed, setIsFixed] = useState<string>('');
   const [shareUrl, setShareUrl] = useState<string>('');

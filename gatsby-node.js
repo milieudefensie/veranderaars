@@ -196,7 +196,7 @@ exports.createPages = ({ graphql, actions }) => {
       home: path.resolve('./src/templates/home.tsx'),
       page: path.resolve('./src/templates/page.tsx'),
       event: path.resolve('./src/templates/event.tsx'),
-      listEvents: path.resolve('./src/templates/listEvents.js'),
+      listEvents: path.resolve('./src/templates/listEvents.tsx'),
       group: path.resolve('./src/templates/group.tsx'),
       listGroups: path.resolve('./src/templates/list-groups.tsx'),
       tool: path.resolve('./src/templates/tool.tsx'),

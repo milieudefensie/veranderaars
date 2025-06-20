@@ -41,12 +41,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ block }) => {
       <div className="gallery">
         <Slider ref={sliderRef} {...Settings}>
           {imageItems.map((image, index) => (
-            <img
-              key={index}
-              src={image.image.url}
-              alt={image.image.alt || ''}
-              className="images-gallery-photo"
-            />
+            <img key={index} src={image.image.url} alt={image.image.alt || ''} className="images-gallery-photo" />
           ))}
         </Slider>
       </div>
@@ -54,7 +49,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ block }) => {
   );
 };
 
-function SampleNextArrow(props: { className: string; onClick: () => void }) {
+function SampleNextArrow(props: { className?: string; onClick?: () => void }) {
   const { className, onClick } = props;
   return (
     <div className={className} onClick={onClick}>
@@ -69,7 +64,7 @@ function SampleNextArrow(props: { className: string; onClick: () => void }) {
   );
 }
 
-function SamplePrevArrow(props: { className: string; onClick: () => void }) {
+function SamplePrevArrow(props: { className?: string; onClick?: () => void }) {
   const { className, onClick } = props;
   return (
     <div className={className} onClick={onClick}>

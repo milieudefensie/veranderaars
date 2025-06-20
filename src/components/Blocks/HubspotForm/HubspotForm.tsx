@@ -4,7 +4,25 @@ import { useTranslate } from '@tolgee/react';
 
 import './index.scss';
 
-const HubspotForm = ({
+interface HubspotFormProps {
+  id: string;
+  formId: string;
+  region: string;
+  portalId: string;
+  trackErrors?: boolean;
+  style?: string;
+  columns?: number;
+  extraLogic?: (ctx: any) => void;
+  onFormSubmitted?: (form: HTMLFormElement, data: any) => void;
+}
+
+declare global {
+  interface Window {
+    hbspt: any;
+  }
+}
+
+const HubspotForm: React.FC<HubspotFormProps> = ({
   id,
   formId,
   region,
@@ -36,18 +54,18 @@ const HubspotForm = ({
         },
       },
       onFormReady: handleFormReady,
-      onFormSubmitted: ($form, data) => {
-        onFormSubmitted && onFormSubmitted($form, data);
+      onFormSubmitted: (form: HTMLFormElement, data: any) => {
+        onFormSubmitted?.(form, data);
       },
     });
   };
 
-  const handleFormReady = (ctx) => {
-    const formWrapper = document.querySelector(`#${ctx.id}`);
+  const handleFormReady = (ctx: { id: string }) => {
+    const formWrapper = document.querySelector(`#${ctx.id}`) as HTMLElement | null;
     if (!formWrapper) return;
 
-    const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button');
-    const inputs = formWrapper.querySelectorAll('.hs-input');
+    const submitBtn = formWrapper.querySelector('input[type="submit"].hs-button') as HTMLInputElement | null;
+    const inputs = formWrapper.querySelectorAll<HTMLInputElement>('.hs-input');
 
     inputs.forEach((input) => setupInputObserver(input, submitBtn));
     setupFocusHandlers(formWrapper);
@@ -57,47 +75,39 @@ const HubspotForm = ({
     if (extraLogic) extraLogic(ctx);
   };
 
-  const setupInputObserver = (input, submitBtn) => {
+  const setupInputObserver = (input: HTMLInputElement, submitBtn: HTMLInputElement | null) => {
     input.autocomplete = 'off';
 
     const observer = new MutationObserver(() => {
-      validateForm(submitBtn);
+      if (submitBtn) validateForm(submitBtn);
     });
 
     observer.observe(input, { attributes: true, attributeFilter: ['value', 'class'] });
-    input.addEventListener('input', () => validateForm(submitBtn));
+    input.addEventListener('input', () => {
+      if (submitBtn) validateForm(submitBtn);
+    });
   };
 
-  const updateInputState = (input) => {
-    const label = input.closest('.hs-form-field')?.querySelector('label');
-    if (input.value.trim() !== '') {
-      input.setAttribute('data-input', 'load');
-      label?.classList.add('focused');
-    } else {
-      input.setAttribute('data-input', 'empty');
-      label?.classList.remove('focused');
-    }
-  };
-
-  const validateForm = (submitBtn) => {
-    const hasError = Array.from(document.querySelectorAll(`#hubspotForm-${id} .hs-input`)).some((input) =>
-      input.classList.contains('error')
+  const validateForm = (submitBtn: HTMLInputElement) => {
+    const hasError = Array.from(document.querySelectorAll<HTMLInputElement>(`#hubspotForm-${id} .hs-input`)).some(
+      (input) => input.classList.contains('error')
     );
+
     submitBtn.disabled = hasError;
     submitBtn.classList.toggle('disabled', hasError);
   };
 
-  const setupFocusHandlers = (formWrapper) => {
-    formWrapper.querySelectorAll('.hs-form-field').forEach((field) => {
+  const setupFocusHandlers = (formWrapper: HTMLElement) => {
+    formWrapper.querySelectorAll<HTMLElement>('.hs-form-field').forEach((field) => {
       const label = field.querySelector('label');
-      const input = field.querySelector('input');
+      const input = field.querySelector<HTMLInputElement>('input');
 
       if (input?.value.trim()) {
         label?.classList.add('focused');
       }
 
       field.addEventListener('focusin', () => {
-        label.classList.add('focused');
+        label?.classList.add('focused');
       });
 
       field.addEventListener('focusout', () => {
@@ -106,18 +116,20 @@ const HubspotForm = ({
     });
   };
 
-  const setupPostalCodeValidation = (formWrapper, submitBtn) => {
-    formWrapper.querySelectorAll('.hs_zip').forEach((container) => {
-      const zipInput = container.querySelector('input[name="zip"]');
+  const setupPostalCodeValidation = (formWrapper: HTMLElement, submitBtn: HTMLInputElement | null) => {
+    formWrapper.querySelectorAll<HTMLElement>('.hs_zip').forEach((container) => {
+      const zipInput = container.querySelector<HTMLInputElement>('input[name="zip"]');
 
       zipInput?.addEventListener('input', () => {
         validatePostalCode(zipInput, container);
-        validateForm(submitBtn);
+        if (submitBtn) validateForm(submitBtn);
       });
     });
   };
 
-  const validatePostalCode = (input, container) => {
+  const validatePostalCode = (input: HTMLInputElement | null, container: HTMLElement) => {
+    if (!input) return;
+
     const zipRegex = /^\d{4}\s?[a-zA-Z]{2}$/;
     const isValid = zipRegex.test(input.value);
     const errorContainer = container.querySelector('.hs-error-msgs');
@@ -136,7 +148,7 @@ const HubspotForm = ({
     }
   };
 
-  const showError = (container, message) => {
+  const showError = (container: HTMLElement, message: string) => {
     const errorHTML = `
       <ul class="no-list hs-error-msgs inputs-list" role="alert">
         <li><label class="hs-error-msg hs-main-font-element">${message}</label></li>
@@ -147,7 +159,7 @@ const HubspotForm = ({
     container.appendChild(errorDiv);
   };
 
-  const addRecaptchaText = (formWrapper) => {
+  const addRecaptchaText = (formWrapper: HTMLElement) => {
     const legalTextContainer = formWrapper.querySelector('.legal-consent-container .hs-richtext p');
     if (legalTextContainer) {
       legalTextContainer.innerHTML += `
@@ -159,21 +171,12 @@ const HubspotForm = ({
   };
 
   const handleScriptError = () => {
-    // if (!trackErrors) return;
+    if (!trackErrors) return;
 
-    // const errorData = {
-    //   date: new Date().toISOString(),
-    //   url: window.location.href,
-    //   browser: navigator.userAgent,
-    // };
-
-    // fetch('/api/csl-form-errors', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(errorData),
-    // }).catch(console.error);
-
-    document.querySelector(`#hubspotForm-${id}`).innerHTML = `<p style="color:red">${t('hubspot_error_privacy')}</p>`;
+    const errorContainer = document.querySelector(`#hubspotForm-${id}`);
+    if (errorContainer) {
+      errorContainer.innerHTML = `<p style="color:red">${t('hubspot_error_privacy')}</p>`;
+    }
   };
 
   return (

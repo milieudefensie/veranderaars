@@ -4,19 +4,20 @@ import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import FloatLayout from '../components/Global/FloatLayout/float-layout';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
-import dateIcon from '../components/Icons/calendar-date.svg';
-import hourIcon from '../components/Icons/calendar-hour.svg';
-import locationIcon from '../components/Icons/calendar-location.svg';
-import wpIcon from '../components/Icons/wp-icon.svg';
 import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/link';
-import backBtnIcon from '../components/Icons/back-btn.svg';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import TagList from '../components/Global/Tag/tag-list';
 import { formatDate, isArray } from '../utils';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import HeroBasic from '../components/Global/HeroBasic/hero-basic';
+
+import dateIcon from '../components/Icons/calendar-date.svg';
+import hourIcon from '../components/Icons/calendar-hour.svg';
+import locationIcon from '../components/Icons/calendar-location.svg';
+import wpIcon from '../components/Icons/wp-icon.svg';
+import backBtnIcon from '../components/Icons/back-btn.svg';
 
 import './basic.styles.scss';
 

@@ -7,7 +7,7 @@ import EventLayout from '../components/Layout/event-layout/event-layout';
 
 import './list-basic.styles.scss';
 
-const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], cslHighlightEvent, favicon } }) => {
+const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
