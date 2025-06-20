@@ -1,10 +1,11 @@
-import type { GatsbyConfig } from 'gatsby';
-
 require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 });
 
-const config: GatsbyConfig = {
+/**
+ * @type {import('gatsby').GatsbyConfig}
+ */
+module.exports = {
   trailingSlash: 'never',
   siteMetadata: {
     title: `Milieudefensie`,
@@ -52,5 +53,3 @@ const config: GatsbyConfig = {
     },
   ],
 };
-
-export default config;

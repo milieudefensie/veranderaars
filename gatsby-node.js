@@ -479,9 +479,6 @@ exports.createPages = ({ graphql, actions }) => {
           });
         }
 
-        // Debug output - check what's coming from the API
-        console.log('Redirects data:', JSON.stringify(result.data.redirects, null, 2));
-
         const redirects = result.data.redirects.edges;
         redirects.forEach(({ node }) => {
           if (typeof node.sourcePath === 'string' && typeof node.destinationPath === 'string') {
@@ -491,7 +488,6 @@ exports.createPages = ({ graphql, actions }) => {
               statusCode: parseInt(node.statusCode || '301'),
               isPermanent: (node.statusCode || '301') === '301',
             });
-            console.log(`Created redirect: ${node.sourcePath} → ${node.destinationPath}`);
           } else {
             console.warn(`Skipping invalid redirect: ${JSON.stringify(node)}`);
           }
@@ -518,31 +514,30 @@ chromium.setHeadlessMode = true;
 chromium.setGraphicsMode = false;
 
 const scrapingFormInputs = async (event) => {
-  return [];
-  // const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
-  // console.log('Start web scraping. URL: ', url);
+  const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
+  console.log('Start web scraping. URL: ', url);
 
-  // try {
-  //   const browser = await puppeteer.launch({
-  //     args: chromium.args,
-  //     defaultViewport: chromium.defaultViewport,
-  //     executablePath: chromium.path,
-  //     timeout: 50_000,
-  //   });
+  try {
+    const browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: chromium.path,
+      timeout: 50_000,
+    });
 
-  //   const page = await browser.newPage();
-  //   await page.goto(url);
+    const page = await browser.newPage();
+    await page.goto(url);
 
-  //   const inputs = await page.evaluate(() => {
-  //     return Array.from(document.querySelectorAll('.attend-event-form input')).map((input) => input.outerHTML);
-  //   });
-  //   await browser.close();
+    const inputs = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('.attend-event-form input')).map((input) => input.outerHTML);
+    });
+    await browser.close();
 
-  //   return inputs;
-  // } catch (error) {
-  //   console.error('Error on scraping:', error);
-  //   throw error;
-  // }
+    return inputs;
+  } catch (error) {
+    console.error('Error on scraping:', error);
+    throw error;
+  }
 };
 
 // CSL Utils
