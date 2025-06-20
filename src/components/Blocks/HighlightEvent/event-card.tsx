@@ -77,7 +77,6 @@ const EventCard: React.FC<EventCardProps> = ({ event, isHighlighted = false }) =
 
       setIsWaitingListActive(isWaitingListActive);
       setStatus('idle');
-      console.log({ slug, max_attendees_count, isWaitingListActive, attendeesCount });
     };
 
     if (isCslEvent && max_attendees_count) {
@@ -103,7 +102,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, isHighlighted = false }) =
             {isCslEvent && rawEndDate ? `- ${formatDateCSL(endInZone)}` : ''}
           </span>
 
-          {address && !hiddenAddress && <span>{address}</span>}
+          {address && !hiddenAddress && <span>{cleanLocation(address)}</span>}
         </div>
 
         {Array.isArray(tags) && tags.length > 0 ? <TagList tags={tags} /> : null}

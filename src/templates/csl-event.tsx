@@ -1,33 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { graphql, PageProps } from 'gatsby';
-import Layout from '../components/Layout/layout';
-import SeoDatoCMS from '../components/Layout/seo-datocms';
-import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import HeroBasic from '../components/Global/HeroBasic/hero-basic';
-import FloatLayout from '../components/Global/FloatLayout/float-layout';
-import Link from '../components/Global/Link/link';
-import { ReactSVG } from 'react-svg';
-import { detectService, formatDate, formatDateCSL } from '../utils';
-import Form from '../components/Global/Form/form';
-import axios from 'axios';
-import Spinner from '../components/Global/Spinner/spinner';
-import { CSLEventTemplate } from '../types';
-
+import { graphql } from 'gatsby';
+import Layout from '../components/Layout/Layout';
+import SeoDatoCMS from '../components/Layout/SeoDatocms';
+import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
+import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
 import backBtnIcon from '../components/Icons/back-btn.svg';
+import Link from '../components/Global/Link/Link';
+import { ReactSVG } from 'react-svg';
+import { cleanLocation, detectService, formatDate, formatDateCSL } from '../utils';
 import dateIcon from '../components/Icons/calendar-date.svg';
 import hourIcon from '../components/Icons/calendar-hour.svg';
 import locationIcon from '../components/Icons/calendar-location.svg';
 import wpIcon from '../components/Icons/wp-icon.svg';
+import Form from '../components/Global/Form/Form';
+import axios from 'axios';
 
 import './basic.styles.scss';
 
-type PageContextType = {
-  heroImage?: { url: string };
-};
-
-type EventPageProps = PageProps<CSLEventTemplate, PageContextType>;
-
-const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEvent, favicon } }) => {
+const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon } }) => {
   const {
     title,
     slug,
@@ -35,6 +25,8 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
     additional_image_sizes_url,
     description,
     rich_description,
+    raw_start,
+    raw_end,
     start_in_zone,
     end_in_zone,
     location,
@@ -45,10 +37,10 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
     max_attendees_count,
   } = page;
 
-  const heroImage = pageContext?.heroImage?.url || image_url;
-  const [shareWpText, setShareWpText] = useState<string>('');
-  const [isWaitingListActive, setIsWaitingListActive] = useState<boolean>(false);
-  const [status, setStatus] = useState<'loading' | 'idle'>('loading');
+  const heroImage = image_url || pageContext?.heroImage?.url;
+  const [shareWpText, setShareWpText] = useState('');
+  const [isWaitingListActive, setIsWaitingListActive] = useState(false);
+  const [status, setStatus] = useState('loading');
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -65,8 +57,6 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
 
       setIsWaitingListActive(isWaitingListActive);
       setStatus('idle');
-
-      console.log({ slug, max_attendees_count, isWaitingListActive, attendeesCount });
     };
 
     if (max_attendees_count) {
@@ -79,7 +69,9 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
   const conferenceType = detectService(web_conference_url);
   const isConferenceWp = conferenceType === 'WhatsApp';
   const formattedTitle = isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
-  const mainImage = additional_image_sizes_url?.find((i) => i.style === 'original') ?? null;
+  let mainImage = Array.isArray(additional_image_sizes_url)
+    ? additional_image_sizes_url.find((i) => i.style === 'original')?.url
+    : null;
 
   return (
     <Layout>
@@ -98,44 +90,67 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
         <meta name="twitter:card" content="summary_large_image" />
       </SeoDatoCMS>
 
-      <WrapperLayout variant="white">
-        <HeroBasic image={{ url: heroImage }} overlay={false} external />
+      <WrapperLayout variant="white event-detail">
+        <div className={`form-wrapper`}>
+          <Form
+            title={title}
+            event={slug}
+            inputs={inputs}
+            image={mainImage ?? heroImage}
+            conferenceUrl={web_conference_url}
+            isWaitingList={isWaitingListActive}
+            configuration={configuration}
+            introduction={
+              <div className="event-introduction">
+                <span className="date">
+                  <img src={dateIcon} alt="Date icon" />
+                  {formatDate(raw_start, true)} {formatDateCSL(start_in_zone)}{' '}
+                  {raw_end ? `- ${formatDateCSL(end_in_zone)}` : ''}
+                </span>
+                {location?.query && (
+                  <span className="date">
+                    <img src={locationIcon} alt="Location icon" />
+                    {cleanLocation(location.query)}
+                  </span>
+                )}
+              </div>
+            }
+            headerComponents={
+              <>
+                {listEvent && (
+                  <div className="pre-header">
+                    <div className="back-btn">
+                      <Link to={listEvent}>
+                        <img src={backBtnIcon} alt="Back button icon" />
+                        <span>Alle evenementen</span>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </>
+            }
+          />
+        </div>
 
         <FloatLayout reduceOverlap>
-          {listEvent && (
-            <div className="pre-header">
-              <div className="back-btn">
-                <Link to={listEvent}>
-                  <img src={backBtnIcon} alt="Back button icon" />
-                  <span>Alle evenementen</span>
-                </Link>
-              </div>
+          {mainImage?.url && (
+            <div className="image-event">
+              <img src={mainImage.url} alt={title} />
             </div>
           )}
 
-          {status === 'idle' && formattedTitle && <h1 className="main-heading">{formattedTitle}</h1>}
-
-          <div className={`form-wrapper`}>
-            {status === 'loading' ? (
-              <div className="spinner-wrapper">
-                <Spinner />
-              </div>
-            ) : (
-              <Form
-                event={slug}
-                inputs={inputs}
-                conferenceUrl={web_conference_url}
-                isWaitingList={isWaitingListActive}
-              />
-            )}
-          </div>
+          {rich_description && (
+            <div className="content csl-variant" style={{ whiteSpace: 'break-spaces' }}>
+              <p dangerouslySetInnerHTML={{ __html: rich_description }} />
+            </div>
+          )}
 
           <div className="brief-information">
             <div className="metadata">
-              {start_in_zone && (
+              {raw_start && (
                 <span>
                   <img src={dateIcon} alt="Date icon" />
-                  <span>{formatDate(start_in_zone)}</span>
+                  <span>{formatDate(raw_start, true)}</span>
                 </span>
               )}
 
@@ -149,10 +164,10 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
                 </span>
               )}
 
-              {!hiddenAddress && location?.venue && (
+              {!hiddenAddress && location?.query && (
                 <span>
                   <img src={locationIcon} alt="Location icon" />
-                  <span>{location.venue}</span>
+                  <span>{cleanLocation(location.query)}</span>
                 </span>
               )}
             </div>
@@ -164,18 +179,6 @@ const CSLEvent: React.FC<EventPageProps> = ({ pageContext, data: { page, listEve
               </a>
             )}
           </div>
-
-          {mainImage?.url && (
-            <div className="image-event">
-              <img src={mainImage.url} alt={title} />
-            </div>
-          )}
-
-          {rich_description && (
-            <div className="content csl-variant" style={{ whiteSpace: 'break-spaces' }}>
-              <p dangerouslySetInnerHTML={{ __html: rich_description }} />
-            </div>
-          )}
         </FloatLayout>
       </WrapperLayout>
     </Layout>
@@ -194,6 +197,12 @@ export const PageQuery = graphql`
     listEvent: datoCmsListEvent {
       id
       slug
+    }
+    configuration: datoCmsSiteConfiguration {
+      formFirstStepDisclaimer
+      formSecondStepTitle
+      formSecondStepDescription
+      formSecondStepDisclaimer
     }
     page: externalEvent(id: { eq: $id }) {
       __typename
@@ -232,6 +241,10 @@ export const PageQuery = graphql`
       web_conference_url
       max_attendees_count
       waiting_list_enabled
+      additional_image_sizes_url {
+        url
+        style
+      }
     }
   }
 `;

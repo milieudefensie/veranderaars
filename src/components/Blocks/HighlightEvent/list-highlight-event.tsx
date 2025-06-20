@@ -59,6 +59,11 @@ const ListHighlightEvent: React.FC<ListHighlightEventProps> = ({ block, context 
     });
   }
 
+  const finalItems =
+    Array.isArray(items) && items.length > 0
+      ? items
+      : context?.buildContext.latestEvent.sort((a, b) => new Date(a.date) - new Date(b.date));
+
   return (
     <section className={`highlight-event-section ${hasItems ? '' : 'empty'}`}>
       <div className="header">
@@ -70,7 +75,7 @@ const ListHighlightEvent: React.FC<ListHighlightEventProps> = ({ block, context 
       </div>
 
       <div className="content">
-        {items.map((item) => (
+        {finalItems.map((item) => (
           <EventCard event={item} key={item.id} />
         ))}
       </div>

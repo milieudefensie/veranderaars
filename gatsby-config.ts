@@ -1,11 +1,11 @@
 import type { GatsbyConfig } from 'gatsby';
-import { languages, defaultLanguage } from './languages';
 
 require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 });
 
 const config: GatsbyConfig = {
+  trailingSlash: 'never',
   siteMetadata: {
     title: `Milieudefensie`,
     siteUrl: `https://veranderaars.milieudefensie.nl`,

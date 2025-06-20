@@ -13,6 +13,7 @@ const HubspotForm = ({
   style = 'default',
   columns,
   extraLogic = null,
+  onFormSubmitted,
 }) => {
   const { t } = useTranslate();
 
@@ -35,6 +36,9 @@ const HubspotForm = ({
         },
       },
       onFormReady: handleFormReady,
+      onFormSubmitted: ($form, data) => {
+        onFormSubmitted && onFormSubmitted($form, data);
+      },
     });
   };
 
@@ -50,7 +54,7 @@ const HubspotForm = ({
     setupPostalCodeValidation(formWrapper, submitBtn);
     addRecaptchaText(formWrapper);
 
-    if (extraLogic) extraLogic();
+    if (extraLogic) extraLogic(ctx);
   };
 
   const setupInputObserver = (input, submitBtn) => {

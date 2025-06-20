@@ -43,7 +43,7 @@ const EmbedIframe: React.FC<EmbedIframeProps> = ({ content }) => {
       script.src = 'https://shop.eventix.io/build/integrate.js';
       script.async = true;
       script.onload = () => {
-        console.log('Script de Eventix cargado y ejecutado');
+        // console.log('Script de Eventix cargado y ejecutado');
       };
       document.body.appendChild(script);
     } else {

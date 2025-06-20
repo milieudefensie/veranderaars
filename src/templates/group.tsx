@@ -1,25 +1,24 @@
 import React, { useEffect } from 'react';
-import { graphql, PageProps } from 'gatsby';
-import Layout from '../components/Layout/layout';
-import SeoDatoCMS from '../components/Layout/seo-datocms';
-import HeroBasic from '../components/Global/HeroBasic/hero-basic';
-import FloatLayout from '../components/Global/FloatLayout/float-layout';
-import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
-import { ReactSVG } from 'react-svg';
-import Link from '../components/Global/Link/link';
-import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
-import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import TagList from '../components/Global/Tag/tag-list';
-import ListHighlightEvent from '../components/Blocks/HighlightEvent/list-highlight-event';
-import { mapCmsEvents, mapCslEvents } from '../utils';
-import useCSLEvents from '../hooks/useCSLEvents';
-import { GroupTemplate } from '../types';
-
-import backBtnIcon from '../components/Icons/back-btn.svg';
+import { graphql } from 'gatsby';
+import Layout from '../components/Layout/Layout';
+import SeoDatoCMS from '../components/Layout/SeoDatocms';
+import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
+import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/StructuredTextDefault';
 import emailIcon from '../components/Icons/email.svg';
 import messageIcon from '../components/Icons/message.svg';
 import organizerIcon from '../components/Icons/organizer.svg';
 import wpIcon from '../components/Icons/signal-dark.svg';
+import { ReactSVG } from 'react-svg';
+import Link from '../components/Global/Link/Link';
+import backBtnIcon from '../components/Icons/back-btn.svg';
+import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
+import TagList from '../components/Global/Tag/TagList';
+import ListHighlightEvent from '../components/Blocks/HighlightEvent/ListHighlightEvent';
+import { isArray, mapCmsEvents, mapCslEvents } from '../utils';
+import useCSLEvents from '../hooks/useCSLEvents';
+import FormSteps from '../components/Global/FormSteps/FormSteps';
+import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
+import HeroBasic from '../components/Global/HeroBasic/HeroBasic';
 
 import './basic.styles.scss';
 
@@ -49,7 +48,8 @@ const Group: React.FC<GroupProps> = ({
     relatedEvents = [],
     localGroupId,
     alternativeHero = false,
-  } = page!;
+    formSteps,
+  } = page;
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -82,31 +82,66 @@ const Group: React.FC<GroupProps> = ({
     }
   };
 
+  const withFormsSteps = isArray(formSteps);
+
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="white">
-        <HeroBasic image={image} overlay={alternativeHero} alternative={alternativeHero} />
-        <FloatLayout reduceOverlap alternative={alternativeHero}>
-          {listGroup && (
-            <div className="pre-header">
-              <div className="back-btn">
-                <Link to={listGroup.slug}>
-                  <img src={backBtnIcon} alt="Back button icon" />
-                  <span>Bekijk alle groepen</span>
-                </Link>
-              </div>
-              {Array.isArray(tags) && <TagList tags={tags} />}
-            </div>
-          )}
+      <WrapperLayout variant={`white ${withFormsSteps ? 'event-detail' : ''}`}>
+        {withFormsSteps ? (
+          <FormSteps
+            title={title}
+            description={introduction}
+            bgImageUrl={image?.url}
+            form={formSteps}
+            variant="green group"
+            headerComponents={
+              <>
+                {listGroup && (
+                  <div className="pre-header">
+                    <div className="back-btn">
+                      <Link to={listGroup}>
+                        <img src={backBtnIcon} alt="Back button icon" />
+                        <span>Bekijk alle groepen</span>
+                      </Link>
+                    </div>
 
-          {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
-          {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
-          {registrationForm && (
-            <div className="form-wrapper">
-              <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
-            </div>
+                    {Array.isArray(tags) && <TagList tags={tags} />}
+                  </div>
+                )}
+              </>
+            }
+            extraLogic={hubspotFormSetGroupId}
+          />
+        ) : (
+          <HeroBasic image={image} overlay={false} />
+        )}
+
+        <FloatLayout reduceOverlap alternative={alternativeHero}>
+          {!withFormsSteps && (
+            <>
+              {listGroup && (
+                <div className="pre-header">
+                  <div className="back-btn">
+                    <Link to={listGroup}>
+                      <img src={backBtnIcon} alt="Back button icon" />
+                      <span>Bekijk alle groepen</span>
+                    </Link>
+                  </div>
+
+                  {Array.isArray(tags) && <TagList tags={tags} />}
+                </div>
+              )}
+
+              {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
+              {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
+              {registrationForm && (
+                <div className="form-wrapper">
+                  <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
+                </div>
+              )}
+            </>
           )}
 
           {/* Brief information */}
@@ -281,6 +316,9 @@ export const PageQuery = graphql`
       organizer
       introduction
       alternativeHero
+      formSteps {
+        ...FormStepBlock
+      }
       registrationForm {
         ... on DatoCmsHubspot {
           formId

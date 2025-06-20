@@ -16,15 +16,15 @@
   }
 
   .form-field {
-    position: relative;
-
     label {
-      color: #49454F;
+      color: var(--dark);
+      font-family: var(--nb-secondary-font);
       font-size: 16px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 24px;
+      font-weight: 500;
+      line-height: 100%;
       letter-spacing: 0.5px;
+      margin-bottom: 8px;
     }
 
     .input {
@@ -55,34 +55,16 @@
           border-color: #3b3b3b !important;
         }
 
-        &:focus,
         &:active {
           border: 1px solid #21578A !important;
         }
+
+        &:focus {
+          border: 2px solid var(--dark) !important;
+          outline: none !important;
+        }
       }
     }
-  }
-
-  .form-field label {
-    position: absolute;
-    top: 15px;
-    left: 10px;
-    transition: 0.15s ease-out;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: 0.5px;
-  }
-
-  .focused {
-    top: -8px !important;
-    color: var(--dark);
-    background-color: #fff;
-    font-size: 14px !important;
-    font-style: normal !important;
-    font-weight: 400 !important;
-    line-height: 16px !important;
-    padding: 0 5px !important;
   }
 
   .hs-error-msgs.inputs-list {
@@ -205,6 +187,46 @@
       }
     }
   }
+
+  // new styles for multi steps form
+  &.first {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .form-field .input {
+      input {
+        padding: 16px;
+        border-radius: 4px;
+        border: 1px solid var(--nb-grey);
+        background: var(--white);
+
+        color: var(--dark);
+        font-family: var(--nb-secondary-font);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    .send-btn {
+      border: 1.5px solid var(--dark);
+      background: var(--dark);
+      color: var(--white);
+      transition: all .25s ease;
+
+      &:hover {
+        color: var(--dark);
+        background-color: transparent;
+      }
+    }
+
+    .hs-error-msgs.inputs-list li label {
+      color: var(--dark);
+    }
+  }
 }
 
 .error-wrapper {
@@ -220,6 +242,10 @@
       line-height: 24px;
       letter-spacing: 0.5px;
     }
+  }
+
+  &.white ul li {
+    color: var(--dark);
   }
 }
 

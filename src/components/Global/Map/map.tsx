@@ -273,21 +273,23 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
           <NavigationControl position="bottom-right" />
 
           {/* Mobile full screen toggler */}
-          <div className="mobile-view-map">
-            <CtaHandler
-              title={t('open_map')}
-              icon={
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                  <path
-                    d="M21.5 15.344L19.379 17.465L16.207 14.293L14.793 15.707L17.965 18.879L15.844 21H21.5V15.344ZM3.5 8.656L5.621 6.535L8.793 9.707L10.207 8.293L7.035 5.121L9.156 3H3.5V8.656ZM21.5 3H15.844L17.965 5.121L14.793 8.293L16.207 9.707L19.379 6.535L21.5 8.656V3ZM3.5 21H9.156L7.035 18.879L10.207 15.707L8.793 14.293L5.621 17.465L3.5 15.344V21Z"
-                    fill="black"
-                  />
-                </svg>
-              }
-              isPrimaryButton
-              handleOnClick={() => setMobileView(true)}
-            />
-          </div>
+          {setMobileView && (
+            <div className="mobile-view-map">
+              <CtaHandler
+                title={t('open_map')}
+                icon={
+                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
+                    <path
+                      d="M21.5 15.344L19.379 17.465L16.207 14.293L14.793 15.707L17.965 18.879L15.844 21H21.5V15.344ZM3.5 8.656L5.621 6.535L8.793 9.707L10.207 8.293L7.035 5.121L9.156 3H3.5V8.656ZM21.5 3H15.844L17.965 5.121L14.793 8.293L16.207 9.707L19.379 6.535L21.5 8.656V3ZM3.5 21H9.156L7.035 18.879L10.207 15.707L8.793 14.293L5.621 17.465L3.5 15.344V21Z"
+                      fill="black"
+                    />
+                  </svg>
+                }
+                isPrimaryButton
+                handleOnClick={() => setMobileView(true)}
+              />
+            </div>
+          )}
 
           {/* Floating button */}
           {floatButton && floatButton[0] && (
