@@ -1,5 +1,5 @@
 import React from 'react';
-import FormSteps from '../FormSteps/form-steps';
+import FormSteps from '../FormSteps/FormSteps';
 
 import './index.scss';
 

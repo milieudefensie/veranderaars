@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { graphql } from 'gatsby';
-import Layout from '../components/Layout/Layout';
-import SeoDatoCMS from '../components/Layout/SeoDatocms';
-import WrapperLayout from '../components/Layout/WrapperLayout/WrapperLayout';
-import FloatLayout from '../components/Global/FloatLayout/FloatLayout';
+import Layout from '../components/Layout/layout';
+import SeoDatoCMS from '../components/Layout/seo-datocms';
+import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
+import FloatLayout from '../components/Global/FloatLayout/float-layout';
 import backBtnIcon from '../components/Icons/back-btn.svg';
-import Link from '../components/Global/Link/Link';
+import Link from '../components/Global/Link/link';
 import { ReactSVG } from 'react-svg';
 import { cleanLocation, detectService, formatDate, formatDateCSL } from '../utils';
 import dateIcon from '../components/Icons/calendar-date.svg';

@@ -518,30 +518,31 @@ chromium.setHeadlessMode = true;
 chromium.setGraphicsMode = false;
 
 const scrapingFormInputs = async (event) => {
-  const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
-  console.log('Start web scraping. URL: ', url);
+  return [];
+  // const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
+  // console.log('Start web scraping. URL: ', url);
 
-  try {
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: chromium.path,
-      timeout: 50_000,
-    });
+  // try {
+  //   const browser = await puppeteer.launch({
+  //     args: chromium.args,
+  //     defaultViewport: chromium.defaultViewport,
+  //     executablePath: chromium.path,
+  //     timeout: 50_000,
+  //   });
 
-    const page = await browser.newPage();
-    await page.goto(url);
+  //   const page = await browser.newPage();
+  //   await page.goto(url);
 
-    const inputs = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll('.attend-event-form input')).map((input) => input.outerHTML);
-    });
-    await browser.close();
+  //   const inputs = await page.evaluate(() => {
+  //     return Array.from(document.querySelectorAll('.attend-event-form input')).map((input) => input.outerHTML);
+  //   });
+  //   await browser.close();
 
-    return inputs;
-  } catch (error) {
-    console.error('Error on scraping:', error);
-    throw error;
-  }
+  //   return inputs;
+  // } catch (error) {
+  //   console.error('Error on scraping:', error);
+  //   throw error;
+  // }
 };
 
 // CSL Utils
