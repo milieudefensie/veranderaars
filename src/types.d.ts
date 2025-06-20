@@ -1,6 +1,5 @@
 import { GatsbyImageProps } from 'gatsby-plugin-image';
 
-// @ts-ignore
 declare module '*.svg' {
   const content: string;
   export default content;
