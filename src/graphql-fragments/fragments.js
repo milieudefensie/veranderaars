@@ -631,6 +631,7 @@ export const DatoCMS = graphql`
       street
       query
       region
+      locality
     }
     calendar {
       name

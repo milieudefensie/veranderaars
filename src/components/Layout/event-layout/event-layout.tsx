@@ -14,9 +14,11 @@ import {
   getDayAfterTomorrowLabel,
   getEventsGroupedByFutureMonths,
   capitalizeFirstLetter,
+  dummyEvents,
 } from '../../../utils';
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';
+import { Link } from 'gatsby';
 
 import './styles.scss';
 
@@ -28,7 +30,7 @@ type Props = {
 
 const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection }) => {
   const { t } = useTranslate();
-  const allEvents: EventType[] = events;
+  const allEvents: EventType[] = [...events];
 
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
   const shownEventIds = new Set<string>();
@@ -124,7 +126,18 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
           <div className="alert-container">
             <HelpIcon />
             <span>
-              Bekijk ook wat <strong>lokale groepen</strong> bij jou in de buurt doen.
+              Bekijk ook wat{' '}
+              <Link
+                to="/groepen"
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  fontWeight: 'bold',
+                }}
+              >
+                lokale groepen
+              </Link>{' '}
+              bij jou in de buurt doen.
             </span>
           </div>
         </div>
@@ -237,10 +250,10 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
             <div key={monthKey}>
               <h3 className="heading">{capitalizeFirstLetter(monthLabel)}</h3>
               <div
-                className={`grid-events ${events.length === 1 ? 'one' : events.length === 2 ? 'two' : 'three'} ${events.length === 2 ? 'mobile-two' : ''}`}
+                className={`grid-events ${eventsToRender.length === 1 ? 'one' : eventsToRender.length === 2 ? 'two' : 'three'} ${eventsToRender.length === 2 ? 'mobile-two' : ''}`}
               >
                 {eventsToRender.map((e) => (
-                  <EventCardV2 key={e.id} event={e} lessInfo vertical />
+                  <EventCardV2 key={e.id} event={e} lessInfo vertical={eventsToRender.length > 1} />
                 ))}
               </div>
             </div>

@@ -23,6 +23,7 @@ export type EventType = {
   rawDate?: string;
   calendar?: EventCalendar;
   additional_image_sizes_url: any;
+  startInZone?: string;
 };
 
 export type EventCalendar = {
