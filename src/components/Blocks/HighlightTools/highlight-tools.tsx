@@ -26,7 +26,7 @@ const HighlightTools: React.FC<HighlightToolsProps> = ({ block }) => {
       <div className="content-tool">
         <div className="row gy-4">
           {items.map((item) => (
-            <div className={`col-lg-${12 / numColumns}`} key={item.id}>
+            <div className={`col-wrapper col-lg-${12 / numColumns}`} key={item.id}>
               <ToolCard tool={item} />
             </div>
           ))}

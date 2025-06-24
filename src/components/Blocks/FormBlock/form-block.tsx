@@ -39,7 +39,6 @@ const FormBlock: React.FC<FormBlockProps> = ({ block, isHomepage = false }) => {
             </div>
           )}
 
-          {/* Hubspot form */}
           <div className="col-lg">
             <HubspotForm
               id={hubspot.id}

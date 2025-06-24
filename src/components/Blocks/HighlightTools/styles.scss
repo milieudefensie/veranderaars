@@ -117,6 +117,12 @@
   }
 }
 
+@media screen and (max-width: 1200px) and (min-width: 992px) {
+  .highlight-tools-section2 .content-tool .row .col-wrapper {
+    width: 50%;
+  }
+}
+
 @media screen and (max-width: 992px) {
   .highlight-tools-section2 {
     padding-bottom: 30px;
@@ -129,10 +135,6 @@
         font-size: 23px;
         margin-bottom: 35px;
       }
-    }
-
-    .row>* {
-      // margin-top: 0;
     }
   }
 

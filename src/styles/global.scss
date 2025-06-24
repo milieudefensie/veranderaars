@@ -48,6 +48,10 @@ html {
     display: none !important;
   }
 
+  a.c-button {
+    background-color: var(--dark) !important;
+  }
+
   .c-cookies {
     padding: 0 !important;
     max-width: 1140px !important;
@@ -70,7 +74,8 @@ html {
       font-family: var(--nb-secondary-font) !important;
 
       a {
-        color: var(--secondary-color) !important;
+        color: var(--dark) !important;
+        text-decoration: underline !important;
       }
     }
 
