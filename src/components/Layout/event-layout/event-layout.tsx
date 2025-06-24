@@ -234,7 +234,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
           <>
             <h3 className="heading">{capitalizeFirstLetter(t('rest_of_month'))}</h3>
             <div
-              className={`grid-events ${events.length === 1 ? 'one' : categorizedEvents.restOfMonth.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.restOfMonth.length === 2 ? 'mobile-two' : ''}`}
+              className={`grid-events ${categorizedEvents.restOfMonth.length === 1 ? 'one' : categorizedEvents.restOfMonth.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.restOfMonth.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.restOfMonth.map((e) => (
                 <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.restOfMonth.length > 1} />
