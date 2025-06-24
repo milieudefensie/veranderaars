@@ -1,9 +1,8 @@
-import React from 'react';
-import { CtaType, EventType } from '../../../types';
+import React from 'react'; // @ts-expect-error
 import { truncateText, formatEventDate, formatDateCSL } from '../../../utils';
-import Link from '../../Global/Link/Link';
-import Cta from '../Cta/Cta';
-
+import Link from '../../Global/Link/link';
+import Cta from '../Cta/cta';
+import { CtaType, EventType } from '../../../types';
 import './styles.scss';
 
 type Props = {

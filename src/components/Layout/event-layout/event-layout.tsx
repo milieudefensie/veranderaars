@@ -2,7 +2,7 @@ import React from 'react';
 import { EventType, EventCollectionType, CategorizedEvents } from '../../../types';
 import EventCollectionCard from '../../Global/event-collection-card/event-collection-card';
 import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
-import Map from '../../Global/Map/Map';
+import Map from '../../Global/Map/map';
 import {
   getEventsToday,
   getEventsTomorrow,
@@ -14,7 +14,7 @@ import {
   getDayAfterTomorrowLabel,
   getEventsGroupedByFutureMonths,
   capitalizeFirstLetter,
-  dummyEvents,
+  dummyEvents, // @ts-expect-error
 } from '../../../utils';
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';
