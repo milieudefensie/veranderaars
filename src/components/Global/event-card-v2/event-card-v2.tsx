@@ -29,10 +29,6 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
     beknopteAddress,
     collection,
     startInZone,
-    hourEnd,
-    hourStart,
-    rawEndDate,
-    endInZone,
   } = event || {};
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
@@ -54,7 +50,7 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
           {collection && <div className="collection-wrapper">{collection.title}</div>}
           <h3>{title}</h3>
           <div className="type">
-            {isCslEvent ? location?.street || 'Online' : beknopteAddress ? beknopteAddress : address ? address : type}
+            {isCslEvent ? location?.locality || 'Online' : beknopteAddress ? beknopteAddress : address ? address : type}
           </div>
           <div className="date">
             {isCslEvent && event.rawDate ? (

@@ -14,9 +14,11 @@ import {
   getDayAfterTomorrowLabel,
   getEventsGroupedByFutureMonths,
   capitalizeFirstLetter,
+  dummyEvents,
 } from '../../../utils';
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';
+import { Link } from 'gatsby';
 
 import './styles.scss';
 
@@ -28,60 +30,72 @@ type Props = {
 
 const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection }) => {
   const { t } = useTranslate();
-  const allEvents: EventType[] = events;
+  const allEvents: EventType[] = [...events];
 
-  const categorizedEvents = setEventCategories();
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
+  const shownEventIds = new Set<string>();
 
-  function setEventCategories() {
-    const currentDay = new Date().getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+  const filterAndMark = (group: EventType[]) => {
+    return group.filter((event) => {
+      if (shownEventIds.has(event.id)) return false;
+      shownEventIds.add(event.id);
+      return true;
+    });
+  };
+
+  const setEventCategories = () => {
+    const currentDay = new Date().getDay();
 
     const categorized: CategorizedEvents = {
-      today: getEventsToday(allEvents),
-      tomorrow: getEventsTomorrow(allEvents),
-      dayAfterTomorrow: getEventsDayAfterTomorrow(allEvents),
+      today: filterAndMark(getEventsToday(allEvents)),
+      tomorrow: filterAndMark(getEventsTomorrow(allEvents)),
+      dayAfterTomorrow: filterAndMark(getEventsDayAfterTomorrow(allEvents)),
       weekdays: [],
       weekend: [],
       nextWeek: [],
-      restOfMonth: getEventsRestOfMonth(allEvents),
+      restOfMonth: [],
     };
 
     switch (currentDay) {
       case 1: // Monday
-        categorized.weekdays = getEventsWeekDays(allEvents, 2, 4); // Wed-Fri
-        categorized.weekend = getWeekendEvents(allEvents);
-        categorized.nextWeek = getEventsNextWeek(allEvents);
+        categorized.weekdays = filterAndMark(getEventsWeekDays(allEvents, 2, 4)); // Wed–Fri
+        categorized.weekend = filterAndMark(getWeekendEvents(allEvents));
+        categorized.nextWeek = filterAndMark(getEventsNextWeek(allEvents));
         break;
       case 2: // Tuesday
-        categorized.weekdays = getEventsWeekDays(allEvents, 2, 3); // Thu-Fri
-        categorized.weekend = getWeekendEvents(allEvents);
-        categorized.nextWeek = getEventsNextWeek(allEvents);
+        categorized.weekdays = filterAndMark(getEventsWeekDays(allEvents, 2, 3)); // Thu–Fri
+        categorized.weekend = filterAndMark(getWeekendEvents(allEvents));
+        categorized.nextWeek = filterAndMark(getEventsNextWeek(allEvents));
         break;
       case 3: // Wednesday
-        categorized.weekdays = getEventsWeekDays(allEvents, 3, 3); // Friday
-        categorized.weekend = getWeekendEvents(allEvents);
-        categorized.nextWeek = getEventsNextWeek(allEvents);
+        categorized.weekdays = filterAndMark(getEventsWeekDays(allEvents, 3, 3)); // Friday
+        categorized.weekend = filterAndMark(getWeekendEvents(allEvents));
+        categorized.nextWeek = filterAndMark(getEventsNextWeek(allEvents));
         break;
       case 4: // Thursday
-        categorized.weekend = getWeekendEvents(allEvents);
-        categorized.nextWeek = getEventsNextWeek(allEvents);
+        categorized.weekend = filterAndMark(getWeekendEvents(allEvents));
+        categorized.nextWeek = filterAndMark(getEventsNextWeek(allEvents));
         break;
       case 5: // Friday
-        categorized.weekend = getWeekendEvents(allEvents);
-        categorized.nextWeek = getEventsNextWeek(allEvents);
+        categorized.weekend = filterAndMark(getWeekendEvents(allEvents));
+        categorized.nextWeek = filterAndMark(getEventsNextWeek(allEvents));
         break;
       case 6: // Saturday
-        categorized.tomorrow = getEventsTomorrow(allEvents); // Sunday
-        categorized.nextWeek = getEventsNextWeek(allEvents);
+        categorized.tomorrow = filterAndMark(getEventsTomorrow(allEvents)); // Sunday
+        categorized.nextWeek = filterAndMark(getEventsNextWeek(allEvents));
         break;
       case 0: // Sunday
-        categorized.tomorrow = [];
-        categorized.nextWeek = getEventsNextWeek(allEvents);
+        categorized.tomorrow = []; // vacío explícitamente
+        categorized.nextWeek = filterAndMark(getEventsNextWeek(allEvents));
         break;
     }
 
+    categorized.restOfMonth = filterAndMark(getEventsRestOfMonth(allEvents));
+
     return categorized;
-  }
+  };
+
+  const categorizedEvents = setEventCategories();
 
   return (
     <div className="ui-event-layout">
@@ -112,7 +126,18 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
           <div className="alert-container">
             <HelpIcon />
             <span>
-              Bekijk ook wat <strong>lokale groepen</strong> bij jou in de buurt doen.
+              Bekijk ook wat{' '}
+              <Link
+                to="/groepen"
+                style={{
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  fontWeight: 'bold',
+                }}
+              >
+                lokale groepen
+              </Link>{' '}
+              bij jou in de buurt doen.
             </span>
           </div>
         </div>
@@ -209,7 +234,7 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
           <>
             <h3 className="heading">{capitalizeFirstLetter(t('rest_of_month'))}</h3>
             <div
-              className={`grid-events ${events.length === 1 ? 'one' : categorizedEvents.restOfMonth.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.restOfMonth.length === 2 ? 'mobile-two' : ''}`}
+              className={`grid-events ${categorizedEvents.restOfMonth.length === 1 ? 'one' : categorizedEvents.restOfMonth.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.restOfMonth.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.restOfMonth.map((e) => (
                 <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.restOfMonth.length > 1} />
@@ -217,21 +242,22 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
             </div>
           </>
         )}
-        {Object.entries(futureEvents as Record<string, EventType[]>).map(([monthKey, events]) => {
-          const monthLabel = DateTime.fromFormat(monthKey, 'yyyy-MM').setLocale('nl').toFormat('LLLL'); // e.g. "Mei", "Juni"
+        {Object.entries(futureEvents).map(([monthKey, rawEvents]) => {
+          const monthLabel = DateTime.fromFormat(monthKey, 'yyyy-MM').setLocale('nl').toFormat('LLLL');
+          const eventsToRender = filterAndMark(rawEvents as EventType[]);
 
-          return (
+          return eventsToRender.length > 0 ? (
             <div key={monthKey}>
               <h3 className="heading">{capitalizeFirstLetter(monthLabel)}</h3>
               <div
-                className={`grid-events ${events.length === 1 ? 'one' : events.length === 2 ? 'two' : 'three'} ${events.length === 2 ? 'mobile-two' : ''}`}
+                className={`grid-events ${eventsToRender.length === 1 ? 'one' : eventsToRender.length === 2 ? 'two' : 'three'} ${eventsToRender.length === 2 ? 'mobile-two' : ''}`}
               >
-                {events.map((e) => (
-                  <EventCardV2 key={e.id} event={e} lessInfo vertical={events.length > 1} />
+                {eventsToRender.map((e) => (
+                  <EventCardV2 key={e.id} event={e} lessInfo vertical={eventsToRender.length > 1} />
                 ))}
               </div>
             </div>
-          );
+          ) : null;
         })}
       </div>
     </div>
