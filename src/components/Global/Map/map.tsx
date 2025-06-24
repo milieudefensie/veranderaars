@@ -235,7 +235,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
                   // Animation to center marker/popup
                   if (!isMobileDevice) {
                     const px = mapRef.current?.project([longitude, latitude]);
-                    px.y += 120 / 2;
+                    px.y += 200 / 2;
                     mapRef.current?.panTo(mapRef.current?.unproject(px), {
                       animate: true,
                       duration: 500,
