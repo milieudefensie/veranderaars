@@ -1,14 +1,8 @@
-'use client';
-
 import React from 'react';
-import { graphql, navigate, useStaticQuery } from 'gatsby';
+import { graphql, navigate, useStaticQuery } from 'gatsby'; // @ts-expect-error
 import { BotProtectionProvider, BotProtectionStatus, ProtectedLink } from '../../Global/BotProtection/BotProtection';
 
 import './styles.scss';
-
-interface BlockGroupsSignalProps {
-  block: any;
-}
 
 interface SignalGroup {
   id: string;
@@ -22,7 +16,7 @@ interface QueryResult {
   };
 }
 
-const BlockGroupsSignal: React.FC<BlockGroupsSignalProps> = ({ block }) => {
+const BlockGroupsSignal: React.FC = () => {
   const data = useStaticQuery<QueryResult>(graphql`
     query SignalChat {
       allDatoCmsGroup(filter: { signalChat: { ne: "" } }, sort: { title: ASC }) {

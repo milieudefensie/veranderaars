@@ -5,19 +5,20 @@ import SeoDatoCMS from '../components/Layout/seo-datocms';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import FloatLayout from '../components/Global/FloatLayout/float-layout';
 import Link from '../components/Global/Link/link';
-import { ReactSVG } from 'react-svg';
+import { ReactSVG } from 'react-svg'; // @ts-expect-error
 import { cleanLocation, detectService, formatDate, formatDateCSL } from '../utils';
 import Form from '../components/Global/Form/form';
 import axios from 'axios';
-
-import backBtnIcon from '../components/Icons/back-btn.svg';
-import dateIcon from '../components/Icons/calendar-date.svg';
-import hourIcon from '../components/Icons/calendar-hour.svg';
-import locationIcon from '../components/Icons/calendar-location.svg';
+// @ts-expect-error
+import backBtnIcon from '../components/Icons/back-btn.svg'; // @ts-expect-error
+import dateIcon from '../components/Icons/calendar-date.svg'; // @ts-expect-error
+import hourIcon from '../components/Icons/calendar-hour.svg'; // @ts-expect-error
+import locationIcon from '../components/Icons/calendar-location.svg'; // @ts-expect-error
 import wpIcon from '../components/Icons/wp-icon.svg';
 
 import './basic.styles.scss';
 
+// @ts-expect-error
 const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon } }) => {
   const {
     title,

@@ -7,20 +7,21 @@ import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/st
 import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/link';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import TagList from '../components/Global/Tag/tag-list';
+import TagList from '../components/Global/Tag/tag-list'; // @ts-expect-error
 import { formatDate, isArray } from '../utils';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import HeroBasic from '../components/Global/HeroBasic/hero-basic';
-
-import dateIcon from '../components/Icons/calendar-date.svg';
-import hourIcon from '../components/Icons/calendar-hour.svg';
-import locationIcon from '../components/Icons/calendar-location.svg';
-import wpIcon from '../components/Icons/wp-icon.svg';
+// @ts-expect-error
+import dateIcon from '../components/Icons/calendar-date.svg'; // @ts-expect-error
+import hourIcon from '../components/Icons/calendar-hour.svg'; // @ts-expect-error
+import locationIcon from '../components/Icons/calendar-location.svg'; // @ts-expect-error
+import wpIcon from '../components/Icons/wp-icon.svg'; // @ts-expect-error
 import backBtnIcon from '../components/Icons/back-btn.svg';
 
 import './basic.styles.scss';
 
+// @ts-expect-error
 const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
   const {
     seo,

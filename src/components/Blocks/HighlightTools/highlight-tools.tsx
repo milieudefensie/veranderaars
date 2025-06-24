@@ -1,19 +1,12 @@
 import React from 'react';
-import ToolCard from './tool-card';
+import ToolCard, { Tool } from './tool-card';
 
 import './styles.scss';
-
-interface ToolItem {
-  id: string;
-  title: string;
-  description: string;
-  image: { gatsbyImageData: any; url: string } | null;
-}
 
 interface HighlightToolsProps {
   block: {
     sectionTitle?: string;
-    items: ToolItem[];
+    items: Tool[];
   };
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // @ts-expect-error
 import { truncateText, formatEventDate, formatDateCSL } from '../../../utils';
 import Link from '../../Global/Link/link';
 import Cta from '../Cta/cta';

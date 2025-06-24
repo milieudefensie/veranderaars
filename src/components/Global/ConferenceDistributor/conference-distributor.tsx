@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react'; // @ts-expect-error
 import { detectService } from '../../../utils';
 import { useTranslate } from '@tolgee/react';
 

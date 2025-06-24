@@ -1,9 +1,16 @@
 import React from 'react';
-import { Link as GatsbyLink } from 'gatsby';
+import { Link as GatsbyLink } from 'gatsby'; // @ts-expect-error
 import { getCtaUrl } from '../../../utils';
 
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  to: string | { slug?: string; content?: { slug?: string }; link?: { content?: string; externalUrl?: string }; externalUrl?: string };
+  to:
+    | string
+    | {
+        slug?: string;
+        content?: { slug?: string };
+        link?: { content?: string; externalUrl?: string };
+        externalUrl?: string;
+      };
   children: React.ReactNode;
 }
 

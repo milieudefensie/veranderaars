@@ -1,5 +1,5 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot } from 'react-dom/client'; // @ts-expect-error
 import mapboxgl, { Map } from '!mapbox-gl';
 import Marker from '../Marker/marker';
 import ReactDOMServer from 'react-dom/server';

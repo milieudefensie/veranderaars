@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Link from '../Link/link';
 import { useTranslate } from '@tolgee/react';
-
-import telegram from '../../Icons/wp-share.svg';
-import facebook from '../../Icons/facebook-share.svg';
+// @ts-expect-error
+import telegram from '../../Icons/wp-share.svg'; // @ts-expect-error
+import facebook from '../../Icons/facebook-share.svg'; // @ts-expect-error
 import twitter from '../../Icons/twitter-share.svg';
 
 import './index.scss';

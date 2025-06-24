@@ -10,7 +10,8 @@ interface Icon {
   url: string;
 }
 
-interface Tool {
+export interface Tool {
+  id?: string;
   title?: string;
   introduction?: string;
   image?: { gatsbyImageData: any; url: string } | null;

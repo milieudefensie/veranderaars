@@ -15,7 +15,8 @@ export const tolgee = Tolgee()
     apiUrl: process.env.GATSBY_APP_TOLGEE_API_URL,
     apiKey: process.env.GATSBY_APP_TOLGEE_API_KEY,
     staticData: {
-      en: () => import(`../../../locales/en.json`),
+      // @ts-expect-error
+      en: () => import(`../../../locales/en.json`), // @ts-expect-error
       nl: () => import('../../../locales/nl.json'),
     },
   });

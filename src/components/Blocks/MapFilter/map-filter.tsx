@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import MapWrapper from '../../Global/Map/map';
-import { graphql, useStaticQuery } from 'gatsby';
+import { graphql, useStaticQuery } from 'gatsby'; // @ts-expect-error
 import { mapCmsEvents, mapCslEvents } from '../../../utils';
 import ListPaginated from '../../Global/Pagination/list-paginated';
-import EventCard from '../HighlightEvent/event-card';
+import EventCard from '../HighlightEvent/event-card'; // @ts-expect-error
 import useCSLEvents from '../../../hooks/useCSLEvents';
 
 import './styles.scss';

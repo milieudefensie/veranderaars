@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import accordionOpen from '../../Icons/accordion_open.svg';
+import React, { useState } from 'react'; // @ts-expect-error
+import accordionOpen from '../../Icons/accordion_open.svg'; // @ts-expect-error
 import accordionClose from '../../Icons/accordion_close.svg';
 
 import './index.scss';
@@ -16,12 +16,7 @@ interface AccordionProps {
   defaultActive?: number;
 }
 
-const Accordion: React.FC<AccordionProps> = ({
-  variant,
-  items,
-  renderCustomTitle = null,
-  defaultActive = 0,
-}) => {
+const Accordion: React.FC<AccordionProps> = ({ variant, items, renderCustomTitle = null, defaultActive = 0 }) => {
   const [activeItem, setActiveItem] = useState<number | null>(defaultActive);
 
   const handleOnChangeAccordion = (newIndex: number) => {

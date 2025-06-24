@@ -1,10 +1,8 @@
 import React from 'react';
-import VideoPlayer from '../../Global/VideoPlayer/video-player';
+import VideoPlayer, { VideoPlayerProps } from '../../Global/VideoPlayer/video-player';
 
 interface VideoProps {
-  content: {
-    video: string;
-  };
+  content: VideoPlayerProps;
 }
 
 const Video: React.FC<VideoProps> = ({ content }) => {

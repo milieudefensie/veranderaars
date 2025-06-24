@@ -1,17 +1,12 @@
 import React from 'react';
 import CtaList from '../../Global/Cta/cta-list';
+import { CTARawType } from '../../Global/Cta/cta';
 
 import './styles.scss';
 
-interface CtaItem {
-  id: string;
-  label: string;
-  link: string;
-}
-
 interface BlockCtaListProps {
   block: {
-    ctaItems: CtaItem[];
+    ctaItems: CTARawType[];
   };
 }
 

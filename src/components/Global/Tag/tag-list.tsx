@@ -1,5 +1,5 @@
 import React from 'react';
-import Tag from './tag';
+import Tag from './tag'; // @ts-expect-error
 import { isArray } from '../../../utils';
 
 import './index.scss';

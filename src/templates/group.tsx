@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { graphql } from 'gatsby';
+import { graphql, PageProps } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import FloatLayout from '../components/Global/FloatLayout/float-layout';
@@ -8,18 +8,19 @@ import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/link';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import TagList from '../components/Global/Tag/tag-list';
-import ListHighlightEvent from '../components/Blocks/HighlightEvent/list-highlight-event';
-import { isArray, mapCmsEvents, mapCslEvents } from '../utils';
+import ListHighlightEvent from '../components/Blocks/HighlightEvent/list-highlight-event'; // @ts-expect-error
+import { isArray, mapCmsEvents, mapCslEvents } from '../utils'; // @ts-expect-error
 import useCSLEvents from '../hooks/useCSLEvents';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import HeroBasic from '../components/Global/HeroBasic/hero-basic';
-
-import emailIcon from '../components/Icons/email.svg';
-import messageIcon from '../components/Icons/message.svg';
-import organizerIcon from '../components/Icons/organizer.svg';
-import wpIcon from '../components/Icons/signal-dark.svg';
+// @ts-expect-error
+import emailIcon from '../components/Icons/email.svg'; // @ts-expect-error
+import messageIcon from '../components/Icons/message.svg'; // @ts-expect-error
+import organizerIcon from '../components/Icons/organizer.svg'; // @ts-expect-error
+import wpIcon from '../components/Icons/signal-dark.svg'; // @ts-expect-error
 import backBtnIcon from '../components/Icons/back-btn.svg';
+import { GroupTemplate } from '../types';
 
 import './basic.styles.scss';
 

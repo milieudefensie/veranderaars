@@ -1,5 +1,5 @@
 import React from 'react';
-import TagList from '../../Tag/tag-list';
+import TagList from '../../Tag/tag-list'; // @ts-expect-error
 import { formatDate, formatDateCSL } from '../../../../utils';
 import Cta from '../../Cta/cta';
 import Link from '../../Link/link';

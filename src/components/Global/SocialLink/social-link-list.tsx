@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // @ts-expect-error
 import { isArray } from '../../../utils';
 import SocialLink from './social-link';
 
@@ -6,7 +6,7 @@ import './index.scss';
 
 type SocialName = 'linkedin' | 'twitter' | 'facebook' | 'instagram';
 
-interface SocialLinkItem {
+export interface SocialLinkItem {
   socialNetwork: SocialName;
   url: string;
 }

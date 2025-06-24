@@ -2,13 +2,17 @@ import React from 'react';
 import Link from '../Link/link';
 import './index.scss';
 
-interface CtaProps {
-  cta?: {
-    style?: 'primary' | 'secondary';
-    title?: string;
-    buttonStyle?: string;
-    externalUrl?: string;
-  } | null;
+export interface CTARawType {
+  id?: string;
+  style?: 'primary' | 'secondary';
+  title?: string;
+  buttonStyle?: string;
+  externalUrl?: string;
+}
+
+export interface CtaProps {
+  id?: string;
+  cta?: CTARawType | null;
   url?: string;
   externalTitle?: string;
   isButton?: boolean;

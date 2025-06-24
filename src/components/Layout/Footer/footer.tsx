@@ -3,7 +3,7 @@ import { graphql, useStaticQuery } from 'gatsby';
 import Link from '../../Global/Link/link';
 import { ReactSVG } from 'react-svg';
 import Cta from '../../Global/Cta/cta';
-import { useTranslate } from '@tolgee/react';
+import { useTranslate } from '@tolgee/react'; // @ts-expect-error
 import wpIcon from '../../Icons/signal-dark.svg';
 
 import './index.scss';

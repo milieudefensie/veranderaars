@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from 'react'; // @ts-expect-error
 import { HelmetDatoCms } from 'gatsby-source-datocms';
 
 interface SeoDatoCMSProps {

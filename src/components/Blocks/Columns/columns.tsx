@@ -1,11 +1,11 @@
 import React from 'react';
-import Blocks from '../../blocks';
+import Blocks, { Block } from '../../blocks';
 
 import './styles.scss';
 
 interface ColumnBlock {
-  firstColumn: any[];
-  secondColumn: any[];
+  firstColumn: Block[];
+  secondColumn: Block[];
 }
 
 interface ColumnsProps {

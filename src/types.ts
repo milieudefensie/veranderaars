@@ -35,6 +35,16 @@ export type EventCalendar = {
 
 export type CtaType = {};
 
+export type CategorizedEvents = {
+  today: EventType[];
+  tomorrow: EventType[];
+  dayAfterTomorrow: EventType[];
+  weekdays: EventType[];
+  weekend: EventType[];
+  nextWeek: EventType[];
+  restOfMonth: EventType[];
+};
+
 // Templates
 export type CSLEventTemplate = {
   page: {
@@ -88,6 +98,12 @@ export type EventType = {
   calendar?: EventCalendar;
   additional_image_sizes_url: any;
   startInZone?: string;
+  rawEndDate: string;
+  endInZone: string;
+  hiddenAddress?: boolean;
+  waiting_list_enabled: boolean;
+  max_attendees_count: number;
+  rawStartDate?: string;
 };
 
 export type EventTemplate = {
@@ -522,4 +538,5 @@ type Group = {
 // Utils
 type LocationType = {
   venue?: string;
+  locality?: string;
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { EventCollectionType, EventType } from '../../../types';
 import EventCardV2 from '../event-card-v2/event-card-v2';
-import Link from '../../Global/Link/link';
+import Link from '../../Global/Link/link'; // @ts-expect-error
 import { formatDateCSL, formatEventDate, getClosestEvents } from '../../../utils';
 
 import './styles.scss';

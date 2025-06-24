@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // @ts-expect-error
 import { isArray } from '../../../utils';
 import CtaList from '../../Global/Cta/cta-list';
 import ImageWrapper from '../../Global/Image/image-wrapper';

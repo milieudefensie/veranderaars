@@ -12,7 +12,7 @@ type Video = {
   thumbnailUrl?: string;
 };
 
-type VideoPlayerProps = {
+export type VideoPlayerProps = {
   video: Video;
 };
 

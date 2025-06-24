@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from '../Link/link';
 import { ReactSVG } from 'react-svg';
 import Cta from '../Cta/cta';
-
-import hamburgerIcon from '../../Icons/Hamburguer Icon.svg';
-import headerUpdatedLogo from '../../Icons/md-new-logo.svg';
+// @ts-expect-error
+import hamburgerIcon from '../../Icons/Hamburguer Icon.svg'; // @ts-expect-error
+import headerUpdatedLogo from '../../Icons/md-new-logo.svg'; // @ts-expect-error
 import signalNavigationIcon from '../../Icons/signal.svg';
 
 import './index.scss';

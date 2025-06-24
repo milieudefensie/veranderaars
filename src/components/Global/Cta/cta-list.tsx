@@ -1,17 +1,9 @@
 import React from 'react';
-import Cta from './cta';
+import Cta, { CTARawType } from './cta';
 import './index.scss';
 
-interface CtaItem {
-  id?: string;
-  title: string;
-  style?: string;
-  externalUrl?: string;
-  buttonStyle?: string;
-}
-
 interface CtaListProps {
-  ctas?: CtaItem[];
+  ctas?: CTARawType[];
   customVariant?: string | undefined;
   off?: boolean;
 }

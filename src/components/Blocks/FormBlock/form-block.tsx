@@ -1,5 +1,5 @@
 import React from 'react';
-import HubspotForm from '../HubspotForm/HubspotForm';
+import HubspotForm from '../HubspotForm/HubspotForm'; // @ts-expect-error
 import formVector from '../../Icons/new-form-icon.svg';
 
 import './styles.scss';

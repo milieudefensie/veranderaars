@@ -1,7 +1,8 @@
 import React from 'react';
 import EventCard from './event-card';
-import CtaList from '../../Global/Cta/cta-list';
+import CtaList from '../../Global/Cta/cta-list'; // @ts-expect-error
 import { formatCslEvents } from '../../../utils';
+import { EventType } from '../../../types';
 
 import './styles.scss';
 
@@ -11,34 +12,11 @@ interface CtaItem {
   label: string;
 }
 
-interface Event {
-  id: string;
-  rawStartDate: string;
-  title: string;
-  introduction?: string;
-  image?: { gatsbyImageData: any; url: string };
-  image_url?: string;
-  date: string;
-  rawDate: string;
-  rawEndDate: string;
-  startInZone: string;
-  endInZone: string;
-  address: string;
-  hourStart: string;
-  hourEnd: string;
-  tags: string[];
-  url?: string;
-  externalLink?: string;
-  hiddenAddress?: boolean;
-  waiting_list_enabled: boolean;
-  max_attendees_count: number;
-}
-
 interface ListHighlightEventProps {
   block: {
     sectionTitle: string;
     cta?: CtaItem[];
-    items?: Event[];
+    items?: EventType[];
   };
   context?: {
     cslHighlightEvent?: Event;
@@ -55,11 +33,11 @@ const ListHighlightEvent: React.FC<ListHighlightEventProps> = ({ block, context 
     items.push(highlightedEvent);
 
     items.sort((a, b) => {
-      return new Date(a.rawStartDate).getTime() - new Date(b.rawStartDate).getTime();
+      return new Date(a.rawStartDate!).getTime() - new Date(b.rawStartDate!).getTime();
     });
   }
 
-  const finalItems =
+  const finalItems: EventType[] =
     Array.isArray(items) && items.length > 0
       ? items
       : context?.buildContext.latestEvent.sort((a, b) => new Date(a.date) - new Date(b.date));

@@ -1,16 +1,11 @@
 import React from 'react';
-import SocialLinkList from '../../Global/SocialLink/social-link-list';
+import SocialLinkList, { SocialLinkItem } from '../../Global/SocialLink/social-link-list';
 import SocialMediaWidget from '../SocialMediaWidget/social-media-widget';
 
 import './index.scss';
 
-interface SocialLink {
-  url: string;
-  platform: string;
-}
-
 interface Widget {
-  id: string;
+  widgetId: string;
   title: string;
 }
 
@@ -18,7 +13,7 @@ interface FollowUsProps {
   block: {
     title?: string;
     preTitle?: string;
-    socialLinks?: SocialLink[];
+    socialLinks?: SocialLinkItem[];
     widget?: Widget[];
   };
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import CTSlider from './image-slider';
-import GlobalImage from './global-image';
+import GlobalImage from './global-image'; // @ts-expect-error
 import pictureBtn from '../../Icons/picture.svg';
 
 import './index.scss';

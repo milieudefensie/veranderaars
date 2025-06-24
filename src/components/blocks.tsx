@@ -17,10 +17,10 @@ import CountDown from './Blocks/Countdown/countdown';
 import BlockCtaList from './Blocks/CtaList/cta-list';
 import BlockCtaIconsList from './Blocks/CtaIconsList/cta-icons-list';
 import ImageGallery from './Blocks/ImageGallery/image-gallery';
-import Columns from './Blocks/Columns/columns';
+import Columns from './Blocks/Columns/columns'; // @ts-expect-error
 import { ProtectedLink } from './Global/BotProtection/BotProtection';
 
-interface Block {
+export interface Block {
   id: string;
   __typename: string;
   [key: string]: any;

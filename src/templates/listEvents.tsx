@@ -1,12 +1,13 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/layout';
-import SeoDatoCMS from '../components/Layout/seo-datocms';
+import SeoDatoCMS from '../components/Layout/seo-datocms'; // @ts-expect-error
 import { getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
 import EventLayout from '../components/Layout/event-layout/event-layout';
 
 import './list-basic.styles.scss';
 
+// @ts-expect-error
 const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);

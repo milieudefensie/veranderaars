@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from '../Link/link';
-import separatorIcon from '../../Icons/breadcrumb-separator.svg';
+import Link from '../Link/link'; // @ts-expect-error
+import separatorIcon from '../../Icons/breadcrumb-separator.svg'; // @ts-expect-error
 import separatorWhiteIcon from '../../Icons/breadcrumb-white-separator.svg';
 
 import './index.scss';

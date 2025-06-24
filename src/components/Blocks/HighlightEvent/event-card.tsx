@@ -1,40 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import ImageWrapper from '../../Global/Image/image-wrapper';
-import { formatDate, formatDateCSL, truncateText } from '../../../utils';
+import ImageWrapper from '../../Global/Image/image-wrapper'; // @ts-expect-error
+import { formatDate, formatDateCSL, truncateText, cleanLocation } from '../../../utils';
 import TagList from '../../Global/Tag/tag-list';
 import Link from '../../Global/Link/link';
 import axios from 'axios';
 import { useTranslate } from '@tolgee/react';
 import Spinner from '../../Global/Spinner/spinner';
+import { EventType } from '../../../types';
 
 import './styles.scss';
 
-interface Event {
-  __typename: string;
-  type: string;
-  slug: string;
-  title: string;
-  introduction?: string;
-  image?: { gatsbyImageData: any; url: string };
-  image_url?: string;
-  date: string;
-  rawDate: string;
-  rawEndDate: string;
-  startInZone: string;
-  endInZone: string;
-  address: string;
-  hourStart: string;
-  hourEnd: string;
-  tags: string[];
-  url?: string;
-  externalLink?: string;
-  hiddenAddress?: boolean;
-  waiting_list_enabled: boolean;
-  max_attendees_count: number;
-}
-
 interface EventCardProps {
-  event: Event;
+  event: EventType;
   isHighlighted?: boolean;
 }
 
@@ -61,7 +38,6 @@ const EventCard: React.FC<EventCardProps> = ({ event, isHighlighted = false }) =
     url,
     externalLink,
     hiddenAddress = false,
-    waiting_list_enabled,
     max_attendees_count,
   } = event;
 

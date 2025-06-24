@@ -14,7 +14,7 @@ import {
   getDayAfterTomorrowLabel,
   getEventsGroupedByFutureMonths,
   capitalizeFirstLetter,
-  dummyEvents,
+  dummyEvents, // @ts-expect-error
 } from '../../../utils';
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';

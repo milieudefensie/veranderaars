@@ -9,7 +9,7 @@ import FloatLayout from '../components/Global/FloatLayout/float-layout';
 import {
   BotProtectionProvider,
   BotProtectionStatus,
-  ProtectedLink,
+  ProtectedLink, // @ts-expect-error
 } from '../components/Global/BotProtection/BotProtection';
 import type { PageWhatsappComTemplate } from '../types';
 

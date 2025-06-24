@@ -1,19 +1,11 @@
 import React from 'react';
-import SocialLinkList from '../../Global/SocialLink/social-link-list';
+import SocialLinkList, { SocialLinkItem } from '../../Global/SocialLink/social-link-list';
 import CtaList from '../../Global/Cta/cta-list';
 import { ReactSVG } from 'react-svg';
-import { useTranslate } from '@tolgee/react';
+import { useTranslate } from '@tolgee/react'; // @ts-expect-error
 import wpIcon from '../../Icons/wp-icon.svg';
 
 import './styles.scss';
-
-interface SocialLink {
-  id: string;
-  title: string;
-  url: string;
-  icon?: string;
-  [key: string]: any;
-}
 
 interface Cta {
   id: string;
@@ -25,7 +17,7 @@ interface Cta {
 interface ShareBlockProps {
   block: {
     title?: string;
-    socialLinks?: SocialLink[];
+    socialLinks?: SocialLinkItem[];
     ctas?: Cta[];
     whatsappGroup?: string;
   };
