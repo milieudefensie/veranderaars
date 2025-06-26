@@ -82,6 +82,20 @@
   &.full-green {
     background-color: oklch(76.04% .1741 129.85);
   }
+
+  &.outline {
+    font-size: 14px;
+    padding: 13px 18px;
+    color: oklch(14% .004 49.25);
+    background-color: #FFF;
+    border-color: oklch(76.04% .1741 129.85);
+    border-radius: 8px !important;
+    margin-top: 1rem;
+
+    &:hover {
+      background-color: oklch(76.04% .1741 129.85);
+    }
+  }
 }
 
 @media screen and (max-width: 992px) {
