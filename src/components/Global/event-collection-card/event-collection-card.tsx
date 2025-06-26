@@ -29,9 +29,10 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, ca
         }}
         vertical={vertical}
         cta={ctas?.length > 0 ? ctas![0] : null}
+        isHighlighted
       />
       {closestEvents.length > 0 && (
-        <div className="related-events">
+        <div className={`related-events length-${closestEvents.length}`}>
           <ul>
             {closestEvents.map((e: EventType) => (
               <Link to={e} className="transition-all">

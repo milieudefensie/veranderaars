@@ -93,6 +93,14 @@
         }
       }
     }
+
+    &.length-1 ul {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    &.length-2 ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   &.vertical-layout {

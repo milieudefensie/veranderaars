@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import React from 'react';
 
 export const pathToModel = (model = null, slug = '') => {
   if (model === 'basicPage') {
@@ -103,6 +104,57 @@ export const formatDateCSL = (rawDate) => {
 
   const time = rawDate.substring(11, 16);
   return time;
+};
+
+export const formatDateWithTimeCSL = (dateStr, hourStr) => {
+  const isTimeValid = /^\d{2}:\d{2}$/.test(hourStr);
+  const now = DateTime.local().setLocale('nl');
+
+  let dt;
+
+  if (isTimeValid) {
+    dt = DateTime.fromISO(`${dateStr}T${hourStr}`, { locale: 'nl' });
+  } else {
+    dt = DateTime.fromISO(dateStr, { locale: 'nl' });
+  }
+
+  const time = formatDateCSL(hourStr);
+
+  if (dt.hasSame(now, 'day')) {
+    return isTimeValid ? (
+      <>
+        <strong>Vandaag</strong> {dt.toFormat('HH:mm')}
+      </>
+    ) : (
+      'Vandaag'
+    );
+  }
+
+  if (dt.hasSame(now.plus({ days: 1 }), 'day')) {
+    return isTimeValid ? (
+      <>
+        <strong>Morgen</strong> {dt.toFormat('HH:mm')}
+      </>
+    ) : (
+      'Morgen'
+    );
+  }
+
+  const day = dt.toFormat('cccc');
+  const dayFormatted = day.charAt(0).toUpperCase() + day.slice(1);
+  const d = dt.toFormat('d');
+  const llll = dt.toFormat('LLLL');
+
+  return (
+    <>
+      <strong>
+        {dayFormatted} {time}
+      </strong>{' '}
+      - {d} {llll}
+    </>
+  );
+
+  // return dayFormatted.charAt(0).toUpperCase() + dayFormatted.slice(1);
 };
 
 export const compareIfIsFuture = (event) => {
@@ -539,7 +591,7 @@ export function getDayAfterTomorrowLabel() {
   return dayAfterTomorrow.setLocale('nl').toFormat('cccc'); // e.g. "woensdag"
 }
 
-export function formatEventDate(dateStr, hourStr) {
+export function formatEventDate(dateStr, hourStr, special) {
   const isTimeValid = /^\d{2}:\d{2}$/.test(hourStr);
   const now = DateTime.local().setLocale('nl');
 
@@ -552,11 +604,41 @@ export function formatEventDate(dateStr, hourStr) {
   }
 
   if (dt.hasSame(now, 'day')) {
-    return isTimeValid ? `Vandaag ${dt.toFormat('HH:mm')}` : 'Vandaag';
+    return isTimeValid ? (
+      <>
+        <strong>Vandaag</strong> {dt.toFormat('HH:mm')}
+      </>
+    ) : (
+      'Vandaag'
+    );
   }
 
   if (dt.hasSame(now.plus({ days: 1 }), 'day')) {
-    return isTimeValid ? `Morgen ${dt.toFormat('HH:mm')}` : 'Morgen';
+    return isTimeValid ? (
+      <>
+        <strong>Morgen</strong> {dt.toFormat('HH:mm')}{' '}
+      </>
+    ) : (
+      'Morgen'
+    );
+  }
+
+  if (special) {
+    const time = formatDateCSL(hourStr);
+
+    const day = dt.toFormat('cccc');
+    const dayFormatted = day.charAt(0).toUpperCase() + day.slice(1);
+    const d = dt.toFormat('d');
+    const llll = dt.toFormat('LLLL');
+
+    return (
+      <>
+        <strong>
+          {dayFormatted} {time}
+        </strong>{' '}
+        - {d} {llll}
+      </>
+    );
   }
 
   const dayFormatted = dt.toFormat(isTimeValid ? 'cccc, d LLLL HH:mm' : 'cccc, d LLLL');
@@ -567,85 +649,88 @@ export const dummyEvents = [
   // Hoy
   {
     id: '1',
-    type: 'concert',
+    type: 'CSL',
     title: '[TEST] Concert Vandaag',
     introduction: 'Een geweldig concert op dezelfde dag.',
-    date: DateTime.now().setZone(ZONE),
-    // hourStart: '20:00',
+    date: DateTime.now().setZone(ZONE).toISODate(),
+    hourStart: '04:00',
     image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+    __typename: 'ExternalEvent',
   },
   {
     id: '2',
-    type: 'expo',
+    type: 'CSL',
     title: '[TEST] Expo Vandaag zonder tijd',
     introduction: 'Geen vast tijdstip voor deze expo.',
     date: DateTime.now().setZone(ZONE),
-    hourStart: 'tijd en locatie verschilt per AVA',
+    hourStart: '20:00',
     image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+    __typename: 'ExternalEvent',
   },
 
   // Mañana
   {
     id: '3',
-    type: 'workshop',
-    title: '[TEST] Workshop Morgen',
+    type: 'CSL',
+    title: '[TEST] XD Workshop Morgen',
     introduction: 'Leer iets nieuws morgen.',
     date: DateTime.now().setZone(ZONE).plus({ days: 1 }).toISODate(),
     hourStart: '15:00',
     image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+    __typename: 'ExternalEvent',
   },
 
-  // Esta semana
-  {
-    id: '4',
-    type: 'talk',
-    title: '[TEST] Lezing deze week',
-    introduction: 'Een interessante lezing in deze week.',
-    date: DateTime.now().setZone(ZONE).plus({ days: 3 }).toISODate(),
-    hourStart: '18:30',
-    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
-  },
-  {
-    id: '4',
-    type: 'talk',
-    title: '[TEST] Event',
-    introduction: 'Een interessante lezing in deze week.',
-    date: DateTime.now().setZone(ZONE).plus({ days: 2 }).toISODate(),
-    hourStart: '22:30',
-    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
-  },
+  // // Esta semana
+  // {
+  //   id: '4',
+  //   type: 'talk',
+  //   title: '[TEST] Lezing deze week',
+  //   introduction: 'Een interessante lezing in deze week.',
+  //   date: DateTime.now().setZone(ZONE).plus({ days: 3 }).toISODate(),
+  //   hourStart: '18:30',
+  //   image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  // },
+  // {
+  //   id: '4',
+  //   type: 'talk',
+  //   title: '[TEST] Event',
+  //   introduction: 'Een interessante lezing in deze week.',
+  //   date: DateTime.now().setZone(ZONE).plus({ days: 2 }).toISODate(),
+  //   hourStart: '22:30',
+  //   image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  // },
 
-  // Próxima semana
-  {
-    id: '5',
-    type: 'performance',
-    title: '[TEST] Performance volgende week',
-    introduction: 'Een performance die volgende week plaatsvindt.',
-    date: DateTime.now().setZone(ZONE).plus({ weeks: 1 }).toISODate(),
-    hourStart: '21:00',
-    hourEnd: '22:30',
-    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
-  },
+  // // Próxima semana
+  // {
+  //   id: '5',
+  //   type: 'performance',
+  //   title: '[TEST] Performance volgende week',
+  //   introduction: 'Een performance die volgende week plaatsvindt.',
+  //   date: DateTime.now().setZone(ZONE).plus({ weeks: 1 }).toISODate(),
+  //   hourStart: '21:00',
+  //   hourEnd: '22:30',
+  //   image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  // },
 
-  // Próximos meses
-  {
-    id: '6',
-    type: 'festival',
-    title: '[TEST] Zomerfestival',
-    introduction: 'Een festival in de zomer.',
-    date: DateTime.now().setZone(ZONE).plus({ months: 2 }).toISODate(),
-    // hourStart: '16:00',
-    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
-  },
-  {
-    id: '7',
-    type: 'meeting',
-    title: '[TEST] Netwerkbijeenkomst herfst',
-    introduction: 'Een zakelijke netwerkbijeenkomst.',
-    date: DateTime.now().setZone(ZONE).plus({ months: 5 }).toISODate(),
-    // hourStart: 'tijd en locatie verschilt per AVA',
-    image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
-  },
+  // // Próximos meses
+  // {
+  //   id: '6',
+  //   type: 'festival',
+  //   title: '[TEST] Zomerfestival',
+  //   introduction: 'Een festival in de zomer.',
+  //   date: DateTime.now().setZone(ZONE).plus({ months: 2 }).toISODate(),
+  //   // hourStart: '16:00',
+  //   image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  // },
+  // {
+  //   id: '7',
+  //   type: 'meeting',
+  //   title: '[TEST] Netwerkbijeenkomst herfst',
+  //   introduction: 'Een zakelijke netwerkbijeenkomst.',
+  //   date: DateTime.now().setZone(ZONE).plus({ months: 5 }).toISODate(),
+  //   // hourStart: 'tijd en locatie verschilt per AVA',
+  //   image: { url: 'https://www.datocms-assets.com/115430/1744807405-fabriek.avif?auto=format' },
+  // },
 ].map((event) => {
   const isTimeValid = /^\d{2}:\d{2}$/.test(event.hourStart);
   const dateTime = isTimeValid

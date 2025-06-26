@@ -31,7 +31,6 @@
       font-size: 1.6rem;
       line-height: 1.2;
       font-family: var(--nb-primary-font);
-      font-weight: 600;
       margin-bottom: .4rem;
       color: var(--black);
     }
@@ -58,20 +57,28 @@
     }
 
     .collection-wrapper {
-      display: inline-block;
-      color: oklch(14% .004 49.25);
-      font-weight: 700;
-      font-size: .75rem;
-      padding: .5rem;
-      background-color: oklch(76.04% .1741 129.85);
-      border-radius: 5px;
       margin-bottom: 1rem;
+
+      span {
+        padding: .5rem;
+        color: oklch(14% .004 49.25);
+        background-color: oklch(76.04% .1741 129.85);
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        border-radius: 5px;
+        font-weight: 700;
+        font-size: .7rem;
+      }
     }
 
     .date {
+      margin-bottom: .25rem;
+
       span {
-        color: var(--black);
-        font-size: 17px;
+        color: oklch(76.04% .1741 129.85);
+        font-size: 16.5px;
+        font-weight: 500;
+        letter-spacing: -0.4px;
       }
     }
   }
@@ -84,12 +91,8 @@
       width: 100%;
     }
 
-    .image-container {
-      // height: 250px;
-    }
-
     .content-container {
-      padding: 1.5rem;
+      padding: 1.5rem 1rem;
 
       h3 {
         font-size: 1.4rem;
@@ -147,11 +150,6 @@
       .description {
         font-size: .75rem;
       }
-
-      .collection-wrapper {
-        width: fit-content;
-        font-size: .7rem;
-      }
     }
 
     &.vertical-layout {
@@ -164,5 +162,12 @@
   .ui-event-card-v2 {
     display: flex;
     flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .ui-event-card-v2 .content-container .collection-wrapper span {
+    width: 100%;
+    display: block;
   }
 }

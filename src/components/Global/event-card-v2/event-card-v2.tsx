@@ -1,8 +1,9 @@
 import React from 'react'; // @ts-expect-error
-import { truncateText, formatEventDate, formatDateCSL } from '../../../utils';
+import { truncateText, formatEventDate, formatDateWithTimeCSL } from '../../../utils';
 import Link from '../../Global/Link/link';
 import Cta from '../Cta/cta';
 import { CtaType, EventType } from '../../../types';
+
 import './styles.scss';
 
 type Props = {
@@ -28,6 +29,7 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
     address,
     beknopteAddress,
     collection,
+    rawDate,
     startInZone,
   } = event || {};
 
@@ -47,29 +49,32 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
       )}
       <div className="content-container">
         <div>
-          {collection && <div className="collection-wrapper">{collection.title}</div>}
+          <div className="date">
+            {isCslEvent && event.rawDate ? (
+              <span>{formatDateWithTimeCSL(rawDate, startInZone)}</span>
+            ) : event.date ? (
+              <>
+                <span>{formatEventDate(event.date, event.hourStart, true)}</span>
+              </>
+            ) : null}
+          </div>
+          {collection && (
+            <div className="collection-wrapper">
+              <span>{collection.title}</span>
+            </div>
+          )}
           <h3>{title}</h3>
           <div className="type">
             {isCslEvent ? location?.locality || 'Online' : beknopteAddress ? beknopteAddress : address ? address : type}
           </div>
-          <div className="date">
-            {isCslEvent && event.rawDate ? (
-              <span id={event.rawDate}>
-                {formatEventDate(event.rawDate)} {formatDateCSL(startInZone)}
-              </span>
-            ) : event.date ? (
-              <>
-                <span id={`${event.date}--${event.hourStart}`}>{formatEventDate(event.date, event.hourStart)}</span>
-              </>
-            ) : null}
-          </div>
+
           <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
         </div>
 
         {cta ? (
-          <Cta cta={cta} isButton customVariant="full-green" />
+          <Cta cta={cta} isButton customVariant={isHighlighted ? 'full-green' : 'outline'} />
         ) : (
-          <Cta externalTitle="Meld je aan" isButton customVariant="full-green" off />
+          <Cta externalTitle="Meld je aan" isButton customVariant={isHighlighted ? 'full-green' : 'outline'} off />
         )}
       </div>
     </>
