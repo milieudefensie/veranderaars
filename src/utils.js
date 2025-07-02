@@ -125,8 +125,12 @@ export const formatDateWithTimeCSL = (dateStr, hourStr) => {
       <>
         <strong>Vandaag</strong> {dt.toFormat('HH:mm')}
       </>
+    ) : time ? (
+      <>
+        <strong>Vandaag {time}</strong>
+      </>
     ) : (
-      'Vandaag'
+      <strong>Vandaag </strong>
     );
   }
 
@@ -135,8 +139,10 @@ export const formatDateWithTimeCSL = (dateStr, hourStr) => {
       <>
         <strong>Morgen</strong> {dt.toFormat('HH:mm')}
       </>
+    ) : time ? (
+      <strong>Morgen {time}</strong>
     ) : (
-      'Morgen'
+      <strong>Morgen</strong>
     );
   }
 
@@ -609,7 +615,7 @@ export function formatEventDate(dateStr, hourStr, special) {
         <strong>Vandaag</strong> {dt.toFormat('HH:mm')}
       </>
     ) : (
-      'Vandaag'
+      <strong>Vandaag</strong>
     );
   }
 
@@ -619,7 +625,7 @@ export function formatEventDate(dateStr, hourStr, special) {
         <strong>Morgen</strong> {dt.toFormat('HH:mm')}{' '}
       </>
     ) : (
-      'Morgen'
+      <strong>Morgen</strong>
     );
   }
 
