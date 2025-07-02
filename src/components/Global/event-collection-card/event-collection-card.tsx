@@ -42,9 +42,13 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, ca
                   </div>
                   <div className="metadata">
                     <div className="date">
-                      {e.__typename === 'ExternalEvent' || e.type === 'CSL'
-                        ? `${formatEventDate(e.rawDate)} ${formatDateCSL(e.startInZone)}`
-                        : formatEventDate(e.date, e.hourStart)}
+                      {e.__typename === 'ExternalEvent' || e.type === 'CSL' ? (
+                        <>
+                          {formatEventDate(e.rawDate)} {formatDateCSL(e.startInZone)}
+                        </>
+                      ) : (
+                        formatEventDate(e.date, e.hourStart)
+                      )}
                     </div>
                     <div className="type">
                       {e.__typename === 'ExternalEvent' || e.type === 'CSL'

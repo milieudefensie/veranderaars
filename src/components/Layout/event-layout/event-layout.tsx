@@ -97,8 +97,6 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
 
   const categorizedEvents = setEventCategories();
 
-  console.log({ allEvents });
-
   return (
     <div className="ui-event-layout">
       <header>
