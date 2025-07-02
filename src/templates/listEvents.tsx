@@ -8,7 +8,7 @@ import EventLayout from '../components/Layout/event-layout/event-layout';
 import './list-basic.styles.scss';
 
 // @ts-expect-error
-const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], favicon } }) => {
+const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], collections, favicon } }) => {
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
@@ -22,6 +22,7 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
         events={mergedEvents}
         featuredCollection={highlightedEventCollection}
         extraCollection={secondaryFeaturedCollection}
+        allCollections={collections.nodes}
       />
     </Layout>
   );
@@ -52,6 +53,11 @@ export const ListEventQuery = graphql`
     }
     cslHighlightEvent: externalEvent(slug: { eq: $cslHighlightedEvent }) {
       ...CSLEventCard
+    }
+    collections: allDatoCmsEventCollection {
+      nodes {
+        ...EventCollectionCard
+      }
     }
     page: datoCmsListEvent(id: { eq: $id }) {
       id

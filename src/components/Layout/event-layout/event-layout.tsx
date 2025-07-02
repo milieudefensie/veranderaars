@@ -26,9 +26,10 @@ type Props = {
   events: EventType[];
   featuredCollection?: EventCollectionType;
   extraCollection?: EventCollectionType[];
+  allCollections: EventCollectionType[];
 };
 
-const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection }) => {
+const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection, allCollections }) => {
   const { t } = useTranslate();
   const allEvents: EventType[] = [...events];
 
@@ -96,6 +97,16 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
   };
 
   const categorizedEvents = setEventCategories();
+
+  const findParentCollection = (event: EventType) => {
+    const parentCollection = allCollections.find((collection) => {
+      const hasRelatedEvent = collection.relatedEvents?.some((e) => e.slug === event.slug);
+      const matchesCalendarSlug = collection.cslCalendarSlug && event.calendar?.slug === collection.cslCalendarSlug;
+      return hasRelatedEvent || matchesCalendarSlug;
+    });
+
+    return parentCollection;
+  };
 
   return (
     <div className="ui-event-layout">
@@ -165,7 +176,13 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
               className={`grid-events ${categorizedEvents.today.length === 1 ? 'one' : categorizedEvents.today.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.today.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.today.map((e) => (
-                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.today.length > 1} />
+                <EventCardV2
+                  key={e.id}
+                  event={e}
+                  lessInfo
+                  vertical={categorizedEvents.today.length > 1}
+                  collection={findParentCollection(e)}
+                />
               ))}
             </div>
           </>
@@ -177,7 +194,13 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
               className={`grid-events ${categorizedEvents.tomorrow.length === 1 ? 'one' : categorizedEvents.tomorrow.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.tomorrow.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.tomorrow.map((e) => (
-                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.tomorrow.length > 1} />
+                <EventCardV2
+                  key={e.id}
+                  event={e}
+                  lessInfo
+                  vertical={categorizedEvents.tomorrow.length > 1}
+                  collection={findParentCollection(e)}
+                />
               ))}
             </div>
           </>
@@ -189,7 +212,13 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
               className={`grid-events ${categorizedEvents.dayAfterTomorrow.length === 1 ? 'one' : categorizedEvents.dayAfterTomorrow.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.dayAfterTomorrow.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.dayAfterTomorrow.map((e) => (
-                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.dayAfterTomorrow.length > 1} />
+                <EventCardV2
+                  key={e.id}
+                  event={e}
+                  lessInfo
+                  vertical={categorizedEvents.dayAfterTomorrow.length > 1}
+                  collection={findParentCollection(e)}
+                />
               ))}
             </div>
           </>
@@ -201,7 +230,13 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
               className={`grid-events ${categorizedEvents.weekdays.length === 1 ? 'one' : categorizedEvents.weekdays.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.weekdays.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.weekdays.map((e) => (
-                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.weekdays.length > 1} />
+                <EventCardV2
+                  key={e.id}
+                  event={e}
+                  lessInfo
+                  vertical={categorizedEvents.weekdays.length > 1}
+                  collection={findParentCollection(e)}
+                />
               ))}
             </div>
           </>
@@ -213,7 +248,13 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
               className={`grid-events ${categorizedEvents.weekend.length === 1 ? 'one' : categorizedEvents.weekend.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.weekend.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.weekend.map((e) => (
-                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.weekend.length > 1} />
+                <EventCardV2
+                  key={e.id}
+                  event={e}
+                  lessInfo
+                  vertical={categorizedEvents.weekend.length > 1}
+                  collection={findParentCollection(e)}
+                />
               ))}
             </div>
           </>
@@ -225,7 +266,13 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
               className={`grid-events ${categorizedEvents.nextWeek.length === 1 ? 'one' : categorizedEvents.nextWeek.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.nextWeek.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.nextWeek.map((e) => (
-                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.nextWeek.length > 1} />
+                <EventCardV2
+                  key={e.id}
+                  event={e}
+                  lessInfo
+                  vertical={categorizedEvents.nextWeek.length > 1}
+                  collection={findParentCollection(e)}
+                />
               ))}
             </div>
           </>
@@ -237,7 +284,13 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
               className={`grid-events ${categorizedEvents.restOfMonth.length === 1 ? 'one' : categorizedEvents.restOfMonth.length % 2 === 0 ? 'two' : 'three'} ${categorizedEvents.restOfMonth.length === 2 ? 'mobile-two' : ''}`}
             >
               {categorizedEvents.restOfMonth.map((e) => (
-                <EventCardV2 key={e.id} event={e} lessInfo vertical={categorizedEvents.restOfMonth.length > 1} />
+                <EventCardV2
+                  key={e.id}
+                  event={e}
+                  lessInfo
+                  vertical={categorizedEvents.restOfMonth.length > 1}
+                  collection={findParentCollection(e)}
+                />
               ))}
             </div>
           </>
@@ -253,7 +306,13 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
                 className={`grid-events ${eventsToRender.length === 1 ? 'one' : eventsToRender.length === 2 ? 'two' : 'three'} ${eventsToRender.length === 2 ? 'mobile-two' : ''}`}
               >
                 {eventsToRender.map((e) => (
-                  <EventCardV2 key={e.id} event={e} lessInfo vertical={eventsToRender.length > 1} />
+                  <EventCardV2
+                    key={e.id}
+                    event={e}
+                    lessInfo
+                    vertical={eventsToRender.length > 1}
+                    collection={findParentCollection(e)}
+                  />
                 ))}
               </div>
             </div>

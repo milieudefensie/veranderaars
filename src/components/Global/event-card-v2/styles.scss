@@ -57,17 +57,17 @@
     }
 
     .collection-wrapper {
-      margin-bottom: 1rem;
+      margin: 0.5rem 0 1rem 0;
 
       span {
-        padding: .5rem;
+        padding: 0.4rem .5rem;
         color: oklch(14% .004 49.25);
         background-color: oklch(76.04% .1741 129.85);
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
         border-radius: 5px;
         font-weight: 700;
-        font-size: .7rem;
+        font-size: .65rem;
       }
     }
 
@@ -165,7 +165,7 @@
   }
 }
 
-@media screen and (max-width: 460px) {
+@media screen and (max-width: 435px) {
   .ui-event-card-v2 .content-container .collection-wrapper span {
     width: 100%;
     display: block;

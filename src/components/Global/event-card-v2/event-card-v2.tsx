@@ -2,7 +2,7 @@ import React from 'react'; // @ts-expect-error
 import { truncateText, formatEventDate, formatDateWithTimeCSL } from '../../../utils';
 import Link from '../../Global/Link/link';
 import Cta from '../Cta/cta';
-import { CtaType, EventType } from '../../../types';
+import { CtaType, EventCollectionType, EventType } from '../../../types';
 
 import './styles.scss';
 
@@ -12,9 +12,17 @@ type Props = {
   isHighlighted?: boolean;
   lessInfo?: boolean;
   cta?: CtaType;
+  collection?: EventCollectionType;
 };
 
-const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted = false, lessInfo, cta }) => {
+const EventCardV2: React.FC<Props> = ({
+  event,
+  vertical = false,
+  isHighlighted = false,
+  lessInfo,
+  cta,
+  collection,
+}) => {
   const {
     title,
     introduction,
@@ -28,7 +36,6 @@ const EventCardV2: React.FC<Props> = ({ event, vertical = false, isHighlighted =
     location,
     address,
     beknopteAddress,
-    collection,
     rawDate,
     startInZone,
   } = event || {};
