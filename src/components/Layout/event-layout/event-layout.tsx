@@ -23,13 +23,24 @@ import { Link } from 'gatsby';
 import './styles.scss';
 
 type Props = {
+  title: string;
+  introduction: string;
   events: EventType[];
   featuredCollection?: EventCollectionType;
   extraCollection?: EventCollectionType[];
   allCollections: EventCollectionType[];
+  highlightedEvent?: EventType;
 };
 
-const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCollection, allCollections }) => {
+const EventLayout: React.FC<Props> = ({
+  title,
+  introduction,
+  events = [],
+  featuredCollection,
+  extraCollection,
+  allCollections,
+  highlightedEvent,
+}) => {
   const { t } = useTranslate();
   const allEvents: EventType[] = [...events];
 
@@ -112,8 +123,8 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
     <div className="ui-event-layout">
       <header>
         <div className="container">
-          <h1>Evenementen</h1>
-          <p>Aankomende trainingen, acties, meetups en gezellige bijeenkomsten</p>
+          <h1>{title}</h1>
+          <p>{introduction}</p>
         </div>
       </header>
 
@@ -130,6 +141,11 @@ const EventLayout: React.FC<Props> = ({ events = [], featuredCollection, extraCo
                   : []
               }
             />
+          </div>
+        )}
+        {highlightedEvent && (
+          <div className="highlight-event-container">
+            <EventCardV2 event={highlightedEvent} />
           </div>
         )}
         <div className="map-container">
