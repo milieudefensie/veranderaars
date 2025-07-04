@@ -4,6 +4,7 @@ import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms'; // @ts-expect-error
 import { getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
 import EventLayout from '../components/Layout/event-layout/event-layout';
+import { EventType } from '../types';
 
 import './list-basic.styles.scss';
 
@@ -12,17 +13,23 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
-  const { title, seo, highlightedEventCollection, secondaryFeaturedCollection } = page;
+  const { title, introduction, highlighEvent, seo, highlightedEventCollection, secondaryFeaturedCollection } = page;
   const mergedEvents = getCombinedEvents(cmsEvents, cslEvents, true, pageContext?.cslEventsHidden);
+  const highlightedEvent = pageContext?.cslHighlightedEvent
+    ? mergedEvents.find((e: EventType) => e.slug === pageContext.cslHighlightedEvent)
+    : highlighEvent;
 
   return (
     <Layout bgColor="secondary-bg" extraClassNames="list-pages">
       <SeoDatoCMS seo={seo} favicon={favicon} />
       <EventLayout
+        title={title}
+        introduction={introduction}
         events={mergedEvents}
         featuredCollection={highlightedEventCollection}
         extraCollection={secondaryFeaturedCollection}
         allCollections={collections.nodes}
+        highlightedEvent={highlightedEvent}
       />
     </Layout>
   );
@@ -62,6 +69,7 @@ export const ListEventQuery = graphql`
     page: datoCmsListEvent(id: { eq: $id }) {
       id
       title
+      introduction
       slug
       buttonOnMap {
         ...AppCta
