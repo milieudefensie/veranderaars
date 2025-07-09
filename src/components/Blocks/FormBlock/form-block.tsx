@@ -12,6 +12,9 @@ interface HubspotConfig {
   region: string;
   portalId: string;
   columns: number;
+  title: string;
+  disclaimerText: string;
+  introductionText: string;
 }
 
 interface FormBlockProps {
@@ -50,7 +53,7 @@ const FormBlock: React.FC<FormBlockProps> = ({ block, isHomepage = false }) => {
     <div className={`form-block-wrapper ${withFormSteps ? 'with-steps' : ''} ${isHomepage ? 'home-form' : ''}`}>
       <div className={`form-block`}>
         <div className={`row`}>
-          {title && (
+          {!withFormSteps && title && (
             <div className={`${withTopTitle ? 'col-lg-12' : 'col-lg-3'}`}>
               <h2>{title}</h2>
 
@@ -71,6 +74,7 @@ const FormBlock: React.FC<FormBlockProps> = ({ block, isHomepage = false }) => {
               />
             ) : (
               <FormSteps
+                title={formSteps[0].title}
                 form={[{ forms: formSteps }]}
                 wrapperClassname="parent"
                 variant="internal"

@@ -140,6 +140,11 @@
 
     .metadata {
       padding: 0;
+
+      h1,
+      p {
+        color: var(--dark);
+      }
     }
 
     .image-container {

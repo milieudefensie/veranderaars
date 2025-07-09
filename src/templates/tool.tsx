@@ -208,6 +208,9 @@ export const PageQuery = graphql`
                 portalId
                 columns
                 trackErrors
+                disclaimerText
+                introductionText
+                title
               }
             }
           }
