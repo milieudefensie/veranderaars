@@ -30,6 +30,9 @@ type Props = {
   extraCollection?: EventCollectionType[];
   allCollections: EventCollectionType[];
   highlightedEvent?: EventType;
+  configuration?: {
+    cslLocalGroupsSlugs: string;
+  };
 };
 
 const EventLayout: React.FC<Props> = ({
@@ -40,6 +43,7 @@ const EventLayout: React.FC<Props> = ({
   extraCollection,
   allCollections,
   highlightedEvent,
+  configuration,
 }) => {
   const { t } = useTranslate();
   const allEvents: EventType[] = [...events];
@@ -119,6 +123,10 @@ const EventLayout: React.FC<Props> = ({
     return parentCollection;
   };
 
+  const isLocalGroupOrganizer = (event: EventType) => {
+    return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug);
+  };
+
   return (
     <div className="ui-event-layout">
       <header>
@@ -145,7 +153,7 @@ const EventLayout: React.FC<Props> = ({
         )}
         {highlightedEvent && (
           <div className="highlight-event-container">
-            <EventCardV2 event={highlightedEvent} />
+            <EventCardV2 event={highlightedEvent} isLocalGroup={isLocalGroupOrganizer(highlightedEvent)} />
           </div>
         )}
         <div className="map-container">
@@ -198,6 +206,7 @@ const EventLayout: React.FC<Props> = ({
                   lessInfo
                   vertical={categorizedEvents.today.length > 1}
                   collection={findParentCollection(e)}
+                  isLocalGroup={isLocalGroupOrganizer(e)}
                 />
               ))}
             </div>
@@ -216,6 +225,7 @@ const EventLayout: React.FC<Props> = ({
                   lessInfo
                   vertical={categorizedEvents.tomorrow.length > 1}
                   collection={findParentCollection(e)}
+                  isLocalGroup={isLocalGroupOrganizer(e)}
                 />
               ))}
             </div>
@@ -234,6 +244,7 @@ const EventLayout: React.FC<Props> = ({
                   lessInfo
                   vertical={categorizedEvents.dayAfterTomorrow.length > 1}
                   collection={findParentCollection(e)}
+                  isLocalGroup={isLocalGroupOrganizer(e)}
                 />
               ))}
             </div>
@@ -252,6 +263,7 @@ const EventLayout: React.FC<Props> = ({
                   lessInfo
                   vertical={categorizedEvents.weekdays.length > 1}
                   collection={findParentCollection(e)}
+                  isLocalGroup={isLocalGroupOrganizer(e)}
                 />
               ))}
             </div>
@@ -270,6 +282,7 @@ const EventLayout: React.FC<Props> = ({
                   lessInfo
                   vertical={categorizedEvents.weekend.length > 1}
                   collection={findParentCollection(e)}
+                  isLocalGroup={isLocalGroupOrganizer(e)}
                 />
               ))}
             </div>
@@ -288,6 +301,7 @@ const EventLayout: React.FC<Props> = ({
                   lessInfo
                   vertical={categorizedEvents.nextWeek.length > 1}
                   collection={findParentCollection(e)}
+                  isLocalGroup={isLocalGroupOrganizer(e)}
                 />
               ))}
             </div>
@@ -306,6 +320,7 @@ const EventLayout: React.FC<Props> = ({
                   lessInfo
                   vertical={categorizedEvents.restOfMonth.length > 1}
                   collection={findParentCollection(e)}
+                  isLocalGroup={isLocalGroupOrganizer(e)}
                 />
               ))}
             </div>
@@ -328,6 +343,7 @@ const EventLayout: React.FC<Props> = ({
                     lessInfo
                     vertical={eventsToRender.length > 1}
                     collection={findParentCollection(e)}
+                    isLocalGroup={isLocalGroupOrganizer(e)}
                   />
                 ))}
               </div>
