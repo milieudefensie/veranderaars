@@ -200,6 +200,16 @@ export const PageQuery = graphql`
                 trackErrors
               }
             }
+            formSteps {
+              ... on DatoCmsHubspot {
+                id
+                formId
+                region
+                portalId
+                columns
+                trackErrors
+              }
+            }
           }
           ... on DatoCmsTable {
             id: originalId

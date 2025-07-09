@@ -300,6 +300,15 @@ export const DatoCMS = graphql`
         trackErrors
       }
     }
+    formSteps {
+      ... on DatoCmsHubspot {
+        formId
+        region
+        portalId
+        columns
+        trackErrors
+      }
+    }
   }
 
   fragment AppCta on DatoCmsCta {

@@ -23,6 +23,9 @@ interface FormStepsProps {
   bgImageUrl: string;
   form: { forms?: FormStep[] }[];
   variant?: string;
+  varianExtraSteps?: string;
+  wrapperClassname?: string;
+  formCustomVariant?: string;
   extraLogic?: (ctx: any) => void;
   headerComponents?: React.ReactNode;
   descriptionAsHtml?: boolean;
@@ -34,6 +37,9 @@ const FormSteps: React.FC<FormStepsProps> = ({
   bgImageUrl,
   form,
   variant,
+  varianExtraSteps,
+  wrapperClassname,
+  formCustomVariant,
   extraLogic,
   headerComponents,
   descriptionAsHtml = false,
@@ -90,15 +96,15 @@ const FormSteps: React.FC<FormStepsProps> = ({
   };
 
   return (
-    <div className="container container-steps">
+    <div className={`container container-steps ${wrapperClassname ? wrapperClassname : ''}`}>
       {headerComponents}
       <div
         className={`ui-form-steps2 ${
           variant && isFirstStep ? variant : ''
-        } ${isFirstStep ? 'first-step' : 'second-step'}`}
+        } ${!isFirstStep && varianExtraSteps ? varianExtraSteps : ''} ${isFirstStep ? 'first-step' : 'second-step'}`}
       >
         <div className="metadata">
-          <h1>{isFirstStep ? title : forms[currentStep]?.title}</h1>
+          {(title || forms[currentStep]?.title) && <h1>{isFirstStep ? title : forms[currentStep]?.title}</h1>}
           {isFirstStep && description ? (
             descriptionAsHtml ? (
               <div>{description}</div>
@@ -118,7 +124,7 @@ const FormSteps: React.FC<FormStepsProps> = ({
               key={forms[currentStep]?.id}
               {...forms[currentStep]}
               onFormSubmitted={handleStepSubmitted}
-              style={isFirstStep ? variant || 'purple' : 'gray'}
+              style={formCustomVariant ? formCustomVariant : isFirstStep ? variant || 'purple' : 'gray'}
               extraLogic={(ctx) => {
                 extraLogic?.(ctx);
                 initializeForm(ctx);
