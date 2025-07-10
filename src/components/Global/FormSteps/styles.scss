@@ -131,6 +131,43 @@
       }
     }
   }
+
+  &.internal {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    border-radius: unset;
+    background: transparent;
+
+    .metadata {
+      padding: 0;
+
+      h1,
+      p {
+        color: var(--dark);
+      }
+    }
+
+    .image-container {
+      display: none;
+    }
+
+    .hs-submit .actions .hs-button {
+      padding: 19px 20px 15px 20px !important;
+    }
+  }
+
+  &.remove.second-step {
+    padding: 0;
+    background: transparent;
+
+    .ui-form-hubspot form .hs_submit {
+      margin: 0;
+    }
+
+    .hs-submit .actions .hs-button {
+      padding: 19px 20px 15px 20px !important;
+    }
+  }
 }
 
 // Fix for firefox
