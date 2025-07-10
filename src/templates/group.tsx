@@ -323,11 +323,15 @@ export const PageQuery = graphql`
       }
       registrationForm {
         ... on DatoCmsHubspot {
+          id
           formId
           region
           portalId
           columns
           trackErrors
+          disclaimerText
+          introductionText
+          title
         }
       }
       image {
@@ -457,11 +461,15 @@ export const PageQuery = graphql`
             variant
             hubspot {
               ... on DatoCmsHubspot {
+                id
                 formId
                 region
                 portalId
                 columns
                 trackErrors
+                disclaimerText
+                introductionText
+                title
               }
             }
           }

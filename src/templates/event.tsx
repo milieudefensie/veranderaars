@@ -240,11 +240,15 @@ export const PageQuery = graphql`
       }
       registrationForm {
         ... on DatoCmsHubspot {
+          id
           formId
           region
           portalId
           columns
           trackErrors
+          disclaimerText
+          introductionText
+          title
         }
       }
       formBackgroundColor
@@ -360,11 +364,15 @@ export const PageQuery = graphql`
             variant
             hubspot {
               ... on DatoCmsHubspot {
+                id
                 formId
                 region
                 portalId
                 columns
                 trackErrors
+                disclaimerText
+                introductionText
+                title
               }
             }
           }

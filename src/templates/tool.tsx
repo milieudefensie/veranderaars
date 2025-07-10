@@ -193,11 +193,28 @@ export const PageQuery = graphql`
             variant
             hubspot {
               ... on DatoCmsHubspot {
+                id
                 formId
                 region
                 portalId
                 columns
                 trackErrors
+                disclaimerText
+                introductionText
+                title
+              }
+            }
+            formSteps {
+              ... on DatoCmsHubspot {
+                id
+                formId
+                region
+                portalId
+                columns
+                trackErrors
+                disclaimerText
+                introductionText
+                title
               }
             }
           }
