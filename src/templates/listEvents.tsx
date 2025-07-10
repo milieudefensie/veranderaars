@@ -8,8 +8,11 @@ import { EventType } from '../types';
 
 import './list-basic.styles.scss';
 
-// @ts-expect-error
-const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = [], collections, favicon } }) => {
+const ListEvents = ({
+  // @ts-expect-error
+  pageContext, // @ts-expect-error
+  data: { page, allEvents = [], allCSLEvents = [], collections, favicon, configuration },
+}) => {
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
 
@@ -30,6 +33,7 @@ const ListEvents = ({ pageContext, data: { page, allEvents = [], allCSLEvents = 
         extraCollection={secondaryFeaturedCollection}
         allCollections={collections.nodes}
         highlightedEvent={highlightedEvent}
+        configuration={configuration}
       />
     </Layout>
   );
@@ -109,6 +113,9 @@ export const ListEventQuery = graphql`
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags
       }
+    }
+    configuration: datoCmsSiteConfiguration {
+      cslLocalGroupsSlugs
     }
   }
 `;

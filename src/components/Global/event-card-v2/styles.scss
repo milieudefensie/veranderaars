@@ -36,12 +36,19 @@
     }
 
     .type {
-      opacity: .6;
-      text-transform: uppercase;
-      font-weight: 600;
-      font-size: .8rem;
       margin-bottom: .4rem;
-      color: var(--black);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+
+      .type-child {
+        opacity: .6;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: .8rem;
+
+        color: var(--black);
+      }
     }
 
     .description,
@@ -80,6 +87,23 @@
         font-weight: 500;
         letter-spacing: -0.4px;
       }
+    }
+
+    .local-group {
+      border-style: solid;
+      border-radius: 8px;
+      border-width: 2px;
+      border-color: oklch(0.92 0.003 48.717);
+      color: oklch(0.14 0.004 49.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      line-height: 18px;
+      opacity: .5;
+      padding: 8px;
+      background-color: white;
+      height: 25px;
     }
   }
 

@@ -13,6 +13,7 @@ type Props = {
   lessInfo?: boolean;
   cta?: CtaType;
   collection?: EventCollectionType;
+  isLocalGroup?: boolean;
 };
 
 const EventCardV2: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const EventCardV2: React.FC<Props> = ({
   lessInfo,
   cta,
   collection,
+  isLocalGroup = false,
 }) => {
   const {
     title,
@@ -72,7 +74,17 @@ const EventCardV2: React.FC<Props> = ({
           )}
           <h3>{title}</h3>
           <div className="type">
-            {isCslEvent ? location?.locality || 'Online' : beknopteAddress ? beknopteAddress : address ? address : type}
+            <span className="type-child">
+              {isCslEvent
+                ? location?.locality || 'Online'
+                : beknopteAddress
+                  ? beknopteAddress
+                  : address
+                    ? address
+                    : type}
+            </span>
+
+            {isLocalGroup && <span className="local-group">Door lokale groep</span>}
           </div>
 
           <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
