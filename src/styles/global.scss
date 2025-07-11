@@ -39,6 +39,11 @@ html {
   opacity: 0;
 }
 
+#cookiebanner.settings-open .c-settings p a {
+  color: var(--dark) !important;
+  font-weight: bold;
+}
+
 #cookiebanner {
   padding: 20px !important;
   overflow-y: auto !important;
@@ -46,11 +51,6 @@ html {
 
   #cookieBannerLink {
     display: none !important;
-  }
-
-  .c-settings p a {
-    color: var(--dark) !important;
-    font-weight: bold;
   }
 
   a.s-button {
