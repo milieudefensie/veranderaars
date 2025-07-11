@@ -48,6 +48,11 @@ html {
     display: none !important;
   }
 
+  .c-settings p a {
+    color: var(--dark) !important;
+    font-weight: bold;
+  }
+
   a.s-button {
     color: var(--dark) !important;
   }
