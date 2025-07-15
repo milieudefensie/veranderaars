@@ -136,7 +136,14 @@ const Footer: React.FC<FooterProps> = ({ isLanding = false, customLogo = null })
         <div className="first-row">
           <div>
             <Link to={'/'}>
-              <img className="logo" src={isLanding ? customLogo?.url : logo?.url} alt={logo?.alt || 'Logo'} />
+              <img
+                className="logo"
+                src={isLanding ? customLogo?.url : logo?.url}
+                alt={logo?.alt || 'Logo'}
+                width={208}
+                height={84}
+                loading="lazy"
+              />
             </Link>
           </div>
 

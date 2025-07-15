@@ -95,60 +95,24 @@ export const HomeQuery = graphql`
         columns
       }
       blocks {
-        ... on DatoCmsNarrativeBlock {
-          ...BlockNarrativeBlock
-        }
-        ... on DatoCmsHighlightEvent {
-          ...BlockHighlightEvent
-        }
-        ... on DatoCmsHighlightTool {
-          ...BlockHighlightTools
-        }
-        ... on DatoCmsTextHubspotForm {
-          ...BlockTextHubspot
-        }
-        ... on DatoCmsTable {
-          ...BlockTable
-        }
-        ... on DatoCmsShare {
-          ...BlockShare
-        }
-        ... on DatoCmsImage {
-          ...BlockImage
-        }
-        ... on DatoCmsEmbedIframe {
-          ...BlockEmbedIframe
-        }
-        ... on DatoCmsAcordion {
-          ...BlockAccordion
-        }
-        ... on DatoCmsVideoBlock {
-          ...BlockVideo
-        }
-        ... on DatoCmsSimpleText {
-          ...BlockText
-        }
-        ... on DatoCmsBlockCta {
-          ...BlockCustomCta
-        }
-        ... on DatoCmsMap {
-          ...BlockMap
-        }
-        ... on DatoCmsColumn {
-          ...BlockColumns
-        }
-        ... on DatoCmsCountdown {
-          ...BlockCountdown
-        }
-        ... on DatoCmsCtaList {
-          ...BlockCtaList
-        }
-        ... on DatoCmsCtaIconsList {
-          ...BlockCtaIconsList
-        }
-        ... on DatoCmsImageGallery {
-          ...BlockImageGallery
-        }
+        ...BlockNarrativeBlock
+        ...BlockHighlightEvent
+        ...BlockHighlightTools
+        ...BlockTextHubspot
+        ...BlockTable
+        ...BlockShare
+        ...BlockImage
+        ...BlockEmbedIframe
+        ...BlockAccordion
+        ...BlockVideo
+        ...BlockText
+        ...BlockCustomCta
+        ...BlockMap
+        ...BlockColumns
+        ...BlockCountdown
+        ...BlockCtaList
+        ...BlockCtaIconsList
+        ...BlockImageGallery
       }
     }
   }

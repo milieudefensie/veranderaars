@@ -104,7 +104,7 @@ const Group: React.FC<GroupProps> = ({
                   <div className="pre-header">
                     <div className="back-btn">
                       <Link to={listGroup}>
-                        <img src={backBtnIcon} alt="Back button icon" />
+                        <img src={backBtnIcon} alt="Back button icon" width={17} height={13} />
                         <span>Bekijk alle groepen</span>
                       </Link>
                     </div>
@@ -127,7 +127,7 @@ const Group: React.FC<GroupProps> = ({
                 <div className="pre-header">
                   <div className="back-btn">
                     <Link to={listGroup}>
-                      <img src={backBtnIcon} alt="Back button icon" />
+                      <img src={backBtnIcon} alt="Back button icon" width={17} height={13} />
                       <span>Bekijk alle groepen</span>
                     </Link>
                   </div>
@@ -152,7 +152,7 @@ const Group: React.FC<GroupProps> = ({
               <div className="metadata">
                 {email && (
                   <span>
-                    <img src={emailIcon} alt="Email icon" />
+                    <img src={emailIcon} alt="Email icon" width={24} height={24} />
                     <span>
                       <a href={`mailto:${email}`}>{email}</a>
                     </span>
@@ -161,7 +161,7 @@ const Group: React.FC<GroupProps> = ({
 
                 {signalChat && (
                   <span>
-                    <img src={messageIcon} alt="Signal Group icon" />
+                    <img src={messageIcon} alt="Signal Group icon" width={24} height={24} />
                     <span>
                       <a href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
                         Signal chat
@@ -172,7 +172,7 @@ const Group: React.FC<GroupProps> = ({
 
                 {organizer && (
                   <span>
-                    <img src={organizerIcon} alt="Organizer icon" />
+                    <img src={organizerIcon} alt="Organizer icon" width={24} height={24} />
                     <span>Lokale organizer: {organizer}</span>
                   </span>
                 )}
@@ -346,24 +346,12 @@ export const PageQuery = graphql`
         value
         blocks {
           __typename
-          ... on DatoCmsMap {
-            ...BlockMap
-          }
-          ... on DatoCmsColumn {
-            ...BlockColumns
-          }
-          ... on DatoCmsCountdown {
-            ...BlockCountdown
-          }
-          ... on DatoCmsCtaList {
-            ...BlockCtaList
-          }
-          ... on DatoCmsCtaIconsList {
-            ...BlockCtaIconsList
-          }
-          ... on DatoCmsImageGallery {
-            ...BlockImageGallery
-          }
+          ...BlockMap
+          ...BlockColumns
+          ...BlockCountdown
+          ...BlockCtaList
+          ...BlockCtaIconsList
+          ...BlockImageGallery
           ... on DatoCmsNarrativeBlock {
             id: originalId
             title

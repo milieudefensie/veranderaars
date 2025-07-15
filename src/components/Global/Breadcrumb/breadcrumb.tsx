@@ -22,7 +22,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ textWhite = false, breadcrumb =
 
     return (
       <span>
-        <img src={textWhite ? separatorWhiteIcon : separatorIcon} alt="Separator icon" />
+        <img src={textWhite ? separatorWhiteIcon : separatorIcon} alt="Separator icon" width={16} height={16} />
       </span>
     );
   };

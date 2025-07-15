@@ -133,63 +133,25 @@ export const PageQuery = graphql`
       title
       slug
       blocks {
-        ... on DatoCmsMap {
-          ...BlockMap
-        }
-        ... on DatoCmsColumn {
-          ...BlockColumns
-        }
-        ... on DatoCmsCountdown {
-          ...BlockCountdown
-        }
-        ... on DatoCmsCtaList {
-          ...BlockCtaList
-        }
-        ... on DatoCmsCtaIconsList {
-          ...BlockCtaIconsList
-        }
-        ... on DatoCmsImageGallery {
-          ...BlockImageGallery
-        }
-        ... on DatoCmsNarrativeBlock {
-          ...BlockNarrativeBlock
-        }
-        ... on DatoCmsHighlightEvent {
-          ...BlockHighlightEvent
-        }
-        ... on DatoCmsHighlightTool {
-          ...BlockHighlightTools
-        }
-        ... on DatoCmsTextHubspotForm {
-          ...BlockTextHubspot
-        }
-        ... on DatoCmsTable {
-          ...BlockTable
-        }
-        ... on DatoCmsShare {
-          ...BlockShare
-        }
-        ... on DatoCmsImage {
-          ...BlockImage
-        }
-        ... on DatoCmsEmbedIframe {
-          ...BlockEmbedIframe
-        }
-        ... on DatoCmsAcordion {
-          ...BlockAccordion
-        }
-        ... on DatoCmsVideoBlock {
-          ...BlockVideo
-        }
-        ... on DatoCmsSimpleText {
-          ...BlockText
-        }
-        ... on DatoCmsBlockCta {
-          ...BlockCustomCta
-        }
-        ... on DatoCmsMap {
-          ...BlockMap
-        }
+        ...BlockMap
+        ...BlockColumns
+        ...BlockCountdown
+        ...BlockCtaList
+        ...BlockCtaIconsList
+        ...BlockImageGallery
+        ...BlockNarrativeBlock
+        ...BlockHighlightEvent
+        ...BlockHighlightTools
+        ...BlockTextHubspot
+        ...BlockTable
+        ...BlockShare
+        ...BlockImage
+        ...BlockEmbedIframe
+        ...BlockAccordion
+        ...BlockVideo
+        ...BlockText
+        ...BlockCustomCta
+        ...BlockMap
       }
       seo: seoMetaTags {
         ...GatsbyDatoCmsSeoMetaTags

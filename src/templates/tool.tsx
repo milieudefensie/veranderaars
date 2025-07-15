@@ -28,7 +28,7 @@ const Tool: React.FC<ToolPageProps> = ({ data: { page, listTool, favicon } }) =>
           <div className="pre-header">
             <div className="back-btn">
               <Link to={listTool}>
-                <img src={backBtnIcon} alt="Back button icon" />
+                <img src={backBtnIcon} alt="Back button icon" width={17} height={13} />
                 <span>Toolkit</span>
               </Link>
             </div>
@@ -78,24 +78,12 @@ export const PageQuery = graphql`
         value
         blocks {
           __typename
-          ... on DatoCmsMap {
-            ...BlockMap
-          }
-          ... on DatoCmsColumn {
-            ...BlockColumns
-          }
-          ... on DatoCmsCountdown {
-            ...BlockCountdown
-          }
-          ... on DatoCmsCtaList {
-            ...BlockCtaList
-          }
-          ... on DatoCmsCtaIconsList {
-            ...BlockCtaIconsList
-          }
-          ... on DatoCmsImageGallery {
-            ...BlockImageGallery
-          }
+          ...BlockMap
+          ...BlockColumns
+          ...BlockCountdown
+          ...BlockCtaList
+          ...BlockCtaIconsList
+          ...BlockImageGallery
           ... on DatoCmsNarrativeBlock {
             id: originalId
             title

@@ -51,5 +51,20 @@ module.exports = {
         redirect: false,
       },
     },
+    {
+      resolve: 'gatsby-plugin-preconnect',
+      options: {
+        domains: [
+          'https://www.datocms-assets.com',
+          'https://p.typekit.net',
+          'https://use.typekit.net',
+          'https://www.google.com',
+          'https://i.ytimg.com',
+          'https://js.hsforms.net',
+          'https://app.tolgee.io',
+          'https://fonts.googleapis.com',
+        ],
+      },
+    },
   ],
 };
