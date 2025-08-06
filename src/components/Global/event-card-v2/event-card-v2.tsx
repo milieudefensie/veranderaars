@@ -16,6 +16,8 @@ type Props = {
   isLocalGroup?: boolean;
 };
 
+const PLACEHOLDER_IMAGE = 'https://www.datocms-assets.com/115430/1712234204-pattern-2500.png';
+
 const EventCardV2: React.FC<Props> = ({
   event,
   vertical = false,
@@ -47,13 +49,13 @@ const EventCardV2: React.FC<Props> = ({
     ? additional_image_sizes_url.find((i) => i.style === 'original')?.url
     : null;
 
-  const withImage = mainImage || image?.gatsbyImageData || image?.url || image_url;
+  const withImage = mainImage || image?.gatsbyImageData || image?.url || image_url || PLACEHOLDER_IMAGE;
 
   const cardContent = () => (
     <>
       {withImage && (
         <div className="image-container">
-          <img src={mainImage || image?.url} alt="Event" />
+          <img src={mainImage || image?.url || PLACEHOLDER_IMAGE} alt="Event" />
         </div>
       )}
       <div className="content-container">
