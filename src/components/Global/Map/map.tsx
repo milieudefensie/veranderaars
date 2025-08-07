@@ -179,10 +179,8 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
         <Map
           {...viewport}
           ref={mapRef}
-          mapStyle="mapbox://styles/martinalv/clptudeob00ub01p74jlnbdce"
-          mapboxAccessToken={
-            'pk.eyJ1IjoibWFydGluYWx2IiwiYSI6ImNscHR1YjdvZDBlY2sybHBnNTRwM2l4ZTEifQ.nn8C3qy8ULBkq6gdO3vlCg'
-          }
+          mapStyle={process.env.GATSBY_MAPBOX_STYLE_URL}
+          mapboxAccessToken={process.env.GATSBY_MAPBOX_TOKEN}
           onMove={(evt) => setViewport(evt.viewState)}
           onLoad={(evt) => evt.target.setZoom(viewport.zoom!)}
           dragRotate={false}
