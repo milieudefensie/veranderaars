@@ -34,7 +34,7 @@ const ImageWrapper: React.FC<ImageWrapperProps> = ({ image, imageMobile = null, 
 
       {image && (image as { title?: string }).title && (
         <div className="caption">
-          <img src={pictureBtn} alt="Caption icon" />
+          <img src={pictureBtn} alt="Caption icon" width={16} height={14} />
           <span className="image-caption">{(image as { title: string }).title}</span>
         </div>
       )}

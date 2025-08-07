@@ -58,7 +58,7 @@ const FormBlock: React.FC<FormBlockProps> = ({ block, isHomepage = false }) => {
               <h2>{title}</h2>
 
               {description && <div className="description" dangerouslySetInnerHTML={{ __html: description }} />}
-              {!description && <img className="left-img" src={formVector} alt="Form icon" />}
+              {!description && <img className="left-img" src={formVector} alt="Form icon" width={113} height={116} />}
             </div>
           )}
 

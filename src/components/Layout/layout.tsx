@@ -15,8 +15,7 @@ export const tolgee = Tolgee()
     apiUrl: process.env.GATSBY_APP_TOLGEE_API_URL,
     apiKey: process.env.GATSBY_APP_TOLGEE_API_KEY,
     staticData: {
-      // @ts-expect-error
-      en: () => import(`../../../locales/en.json`), // @ts-expect-error
+      en: () => import(`../../../locales/en.json`),
       nl: () => import('../../../locales/nl.json'),
     },
   });
@@ -56,13 +55,20 @@ const Layout: React.FC<LayoutProps> = ({
   return (
     <TolgeeProvider
       tolgee={tolgee}
+      ssr={{
+        language: 'nl',
+        staticData: {
+          en: () => import(`../../../locales/en.json`),
+          nl: () => import('../../../locales/nl.json'),
+        },
+      }}
       fallback={
         <div className="full-screen-loader">
           <Spinner />
         </div>
       }
     >
-      <Header alias="header" setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
+      <Header setNavOpen={setNavOpen} heroBgColor={heroBgColor} />
       <div className={`nav-open-overlay`} />
 
       <main id={`${bgColor ? bgColor : ''}`} className={`main-content ${extraClassNames ? extraClassNames : ''}`}>

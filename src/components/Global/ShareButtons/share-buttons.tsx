@@ -42,19 +42,19 @@ function ShareButtons() {
     <div className={`share-buttons-fixed ${isFixed}`}>
       <div className="telegram">
         <Link target="_blank" to={`https://t.me/share/url?url=${shareUrl}`}>
-          <img src={telegram} alt="Telegram icon" />
+          <img src={telegram} alt="Telegram icon" width={30} height={30} />
         </Link>
       </div>
 
       <div className="facebook">
         <Link target="_blank" to={`http://www.facebook.com/share.php?u=${shareUrl}`}>
-          <img src={facebook} alt="Facebook icon" />
+          <img src={facebook} alt="Facebook icon" width={31} height={31} />
         </Link>
       </div>
 
       <div className="twitter">
         <Link target="_blank" to={`http://twitter.com/share?url=${shareUrl}`}>
-          <img src={twitter} alt="Twitter icon" />
+          <img src={twitter} alt="Twitter icon" width={31} height={31} />
         </Link>
       </div>
 

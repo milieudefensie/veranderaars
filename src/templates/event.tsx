@@ -65,12 +65,12 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
             description={
               <div className="event-introduction">
                 <span className="date">
-                  <img src={dateIcon} alt="Date icon" />
+                  <img src={dateIcon} alt="Date icon" width={24} height={24} />
                   {formatDate(date, true)} {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
                 </span>
                 {address && (
                   <span className="date">
-                    <img src={locationIcon} alt="Location icon" />
+                    <img src={locationIcon} alt="Location icon" width={24} height={24} />
                     {address}
                   </span>
                 )}
@@ -85,7 +85,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
                   <div className="pre-header">
                     <div className="back-btn">
                       <Link to={listEvent}>
-                        <img src={backBtnIcon} alt="Back button icon" />
+                        <img src={backBtnIcon} alt="Back button icon" width={17} height={13} />
                         <span>Alle evenementen</span>
                       </Link>
                     </div>
@@ -107,7 +107,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
                 <div className="pre-header">
                   <div className="back-btn">
                     <Link to={listEvent}>
-                      <img src={backBtnIcon} alt="Back button icon" />
+                      <img src={backBtnIcon} alt="Back button icon" width={17} height={13} />
                       <span>Alle evenementen</span>
                     </Link>
                   </div>
@@ -122,14 +122,14 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
                 <div className="metadata">
                   {date && (
                     <span>
-                      <img src={dateIcon} alt="Date icon" />
+                      <img src={dateIcon} alt="Date icon" width={24} height={24} />
                       <span>{formatDate(date, true)}</span>
                     </span>
                   )}
 
                   {hourStart && (
                     <span>
-                      <img src={hourIcon} alt="Hour icon" />
+                      <img src={hourIcon} alt="Hour icon" width={24} height={24} />
                       <span>
                         {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
                       </span>
@@ -138,7 +138,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
                   {address && (
                     <span>
-                      <img src={locationIcon} alt="Location icon" />
+                      <img src={locationIcon} alt="Location icon" width={24} height={24} />
                       <span>{address}</span>
                     </span>
                   )}
@@ -175,14 +175,14 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
               <div className="metadata">
                 {date && (
                   <span>
-                    <img src={dateIcon} alt="Date icon" />
+                    <img src={dateIcon} alt="Date icon" width={24} height={24} />
                     <span>{formatDate(date, true)}</span>
                   </span>
                 )}
 
                 {hourStart && (
                   <span>
-                    <img src={hourIcon} alt="Hour icon" />
+                    <img src={hourIcon} alt="Hour icon" width={24} height={24} />
                     <span>
                       {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
                     </span>
@@ -191,7 +191,7 @@ const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
 
                 {address && (
                   <span>
-                    <img src={locationIcon} alt="Location icon" />
+                    <img src={locationIcon} alt="Location icon" width={24} height={24} />
                     <span>{address}</span>
                   </span>
                 )}

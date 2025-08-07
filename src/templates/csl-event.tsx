@@ -105,13 +105,13 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon
             introduction={
               <div className="event-introduction">
                 <span className="date">
-                  <img src={dateIcon} alt="Date icon" />
+                  <img src={dateIcon} alt="Date icon" width={24} height={24} />
                   {formatDate(raw_start, true)} {formatDateCSL(start_in_zone)}{' '}
                   {raw_end ? `- ${formatDateCSL(end_in_zone)}` : ''}
                 </span>
                 {location?.query && (
                   <span className="date">
-                    <img src={locationIcon} alt="Location icon" />
+                    <img src={locationIcon} alt="Location icon" width={24} height={24} />
                     {cleanLocation(location.query)}
                   </span>
                 )}
@@ -123,7 +123,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon
                   <div className="pre-header">
                     <div className="back-btn">
                       <Link to={listEvent}>
-                        <img src={backBtnIcon} alt="Back button icon" />
+                        <img src={backBtnIcon} alt="Back button icon" width={17} height={13} />
                         <span>Alle evenementen</span>
                       </Link>
                     </div>
@@ -158,7 +158,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon
 
               {start_in_zone && (
                 <span>
-                  <img src={hourIcon} alt="Hour icon" />
+                  <img src={hourIcon} alt="Hour icon" width={24} height={24} />
                   <span>
                     {formatDateCSL(start_in_zone)}
                     {end_in_zone ? ` - ${formatDateCSL(end_in_zone)}` : ''}
@@ -168,7 +168,7 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon
 
               {!hiddenAddress && location?.query && (
                 <span>
-                  <img src={locationIcon} alt="Location icon" />
+                  <img src={locationIcon} alt="Location icon" width={24} height={24} />
                   <span>{cleanLocation(location.query)}</span>
                 </span>
               )}

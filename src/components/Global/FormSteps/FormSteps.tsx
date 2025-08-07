@@ -133,7 +133,7 @@ const FormSteps: React.FC<FormStepsProps> = ({
           )}
         </div>
         <div className="image-container">
-          <img src={bgImageUrl} alt="" />
+          <img src={bgImageUrl} alt={`${title}`} />
         </div>
       </div>
       <div

@@ -32,8 +32,8 @@ module.exports = {
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     'gatsby-plugin-sass',
-    'gatsby-plugin-advanced-sitemap',
-    'gatsby-plugin-react-helmet',
+    // 'gatsby-plugin-advanced-sitemap',
+    // 'gatsby-plugin-react-helmet',
     `gatsby-plugin-netlify`,
     {
       resolve: `gatsby-source-filesystem`,
@@ -49,6 +49,21 @@ module.exports = {
         languages: [`nl`, `en`],
         defaultLanguage: `nl`,
         redirect: false,
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-preconnect',
+      options: {
+        domains: [
+          'https://www.datocms-assets.com',
+          'https://p.typekit.net',
+          'https://use.typekit.net',
+          'https://www.google.com',
+          'https://i.ytimg.com',
+          'https://js.hsforms.net',
+          'https://app.tolgee.io',
+          'https://fonts.googleapis.com',
+        ],
       },
     },
   ],
