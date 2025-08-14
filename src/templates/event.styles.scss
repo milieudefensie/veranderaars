@@ -23,6 +23,16 @@
       aspect-ratio: 1 / 1;
     }
   }
+
+  &.form-sent {
+    .image-container {
+      display: none;
+    }
+
+    .event-metadata {
+      width: 100%;
+    }
+  }
 }
 
 .event-metadata {

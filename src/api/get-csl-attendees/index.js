@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     } while (currentPage);
 
     const attendeesWithAttendingStatus = allAttendees.filter((attendee) => attendee.attending_status === 'attending');
-    if (attendeesWithAttendingStatus.length >= max_attendees_count) {
+    if (max_attendees_count && attendeesWithAttendingStatus.length >= max_attendees_count) {
       console.log(
         `Event ${slug} has waiting list enabled. Total attendees: ${attendeesWithAttendingStatus.length}. Max attendees: ${max_attendees_count}`
       );

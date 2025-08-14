@@ -3,7 +3,7 @@ import { graphql } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout'; // @ts-expect-error
-import { cleanLocation, detectService, formatDate, formatDateCSL, formatDateWithTimeCSL } from '../utils';
+import { cleanLocation, formatDate, formatDateCSL, formatDateWithTimeCSL } from '../utils';
 import Form from '../components/Global/Form/form';
 import EventCardV2 from '../components/Global/event-card-v2/event-card-v2';
 import { EventType } from '../types';
@@ -29,15 +29,14 @@ const CSLEvent = ({ pageContext, data: { page, relatedEvents, collections, confi
     inputs = [],
     hiddenAddress = false,
     web_conference_url,
-    waiting_list_enabled,
     max_attendees_count,
   } = page;
 
   const [shareWpText, setShareWpText] = useState('');
   const [shareSignalMessage, setShareSignalMessage] = useState('');
   const [showSignalPopup, setShowSignalPopup] = useState(false);
-  const [isWaitingListActive, setIsWaitingListActive] = useState(false);
   const { data, loading, error, fetchAttendees } = useCSLAttendees();
+  const [isFormSent, setIsFormSent] = useState(false);
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -69,8 +68,6 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
     fetchAttendees({ slug: slug, maxAttendeesCount: max_attendees_count });
   }, [slug, max_attendees_count]);
 
-  const conferenceType = detectService(web_conference_url);
-  const isConferenceWp = conferenceType === 'WhatsApp';
   const formattedTitle = data?.isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
   let mainImage = Array.isArray(additional_image_sizes_url)
     ? additional_image_sizes_url.find((i) => i.style === 'original')?.url
@@ -95,7 +92,7 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
       await navigator.clipboard.writeText(shareSignalMessage);
       setShowSignalPopup(true);
     } catch (err) {
-      console.error('No se pudo copiar el mensaje al portapapeles', err);
+      console.error('Err', err);
     }
   };
 
@@ -129,7 +126,7 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
 
       <WrapperLayout variant="white event-detail">
         <div className="container">
-          <header className="event-header">
+          <header className={`event-header ${isFormSent ? 'form-sent' : ''}`}>
             <div className="image-container">
               <picture>
                 <img
@@ -160,9 +157,10 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
                 event={slug}
                 inputs={inputs}
                 conferenceUrl={web_conference_url}
-                isWaitingList={isWaitingListActive}
+                isWaitingList={data?.isWaitingListActive}
                 configuration={configuration}
                 noStyle
+                onSuccess={() => setIsFormSent(true)}
               />
             </div>
           </header>

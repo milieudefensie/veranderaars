@@ -17,6 +17,7 @@ interface FormProps {
   headerComponents: any;
   configuration: any;
   noStyle: boolean;
+  onSuccess?: () => void;
 }
 
 interface FormData {
@@ -44,6 +45,7 @@ const Form: React.FC<FormProps> = ({
   isWaitingList = false,
   configuration,
   noStyle = false,
+  onSuccess,
 }) => {
   const location = useLocation();
   const { t } = useTranslate();
@@ -163,6 +165,8 @@ const Form: React.FC<FormProps> = ({
           } else {
             navigate('/bedankt-dat-je-komt/');
           }
+        } else {
+          onSuccess && onSuccess();
         }
       }
 
