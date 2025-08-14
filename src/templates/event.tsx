@@ -87,12 +87,15 @@ Lijkt het je leuk om hier samen met mij heen te gaan?
           <header className="event-header">
             <div className="image-container">
               <picture>
-                <img src={image.url} alt={`Image for ${title}`} />
+                <img
+                  src={image?.url || 'https://www.datocms-assets.com/115430/1712234204-pattern-2500.png'}
+                  alt={`Image for ${title}`}
+                />
               </picture>
             </div>
             <div className="event-metadata">
               <div className="date-container">
-                <span className="date">{formatDateWithTimeCSL(date, hourStart)}</span>
+                {date && <span className="date">{formatDateWithTimeCSL(date, hourStart)}</span>}
                 {collection && (
                   <div>
                     <span className="badge-tour">{collection.title}</span>
