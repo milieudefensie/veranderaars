@@ -66,29 +66,12 @@ ${eventLocation !== '' ? `Locatie: ${eventLocation}` : ''}
 Lijkt het je leuk om hier samen met mij heen te gaan?`;
 
     setShareSignalMessage(signalMessage);
-
-    // const checkIfEventHasReachedLimit = async () => {
-    //   const response = await axios.post('/api/get-csl-attendees', {
-    //     data: { slug, max_attendees_count },
-    //   });
-    //   const { isWaitingListActive, attendeesCount } = response.data;
-
-    //   setIsWaitingListActive(isWaitingListActive);
-    //   setStatus('idle');
-    // };
-
     fetchAttendees({ slug: slug, maxAttendeesCount: max_attendees_count });
-
-    // if (max_attendees_count) {
-    //   checkIfEventHasReachedLimit();
-    // } else {
-    //   setStatus('idle');
-    // }
   }, [slug, max_attendees_count]);
 
   const conferenceType = detectService(web_conference_url);
   const isConferenceWp = conferenceType === 'WhatsApp';
-  const formattedTitle = isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+  const formattedTitle = data?.isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
   let mainImage = Array.isArray(additional_image_sizes_url)
     ? additional_image_sizes_url.find((i) => i.style === 'original')?.url
     : null;

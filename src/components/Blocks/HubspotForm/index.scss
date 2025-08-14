@@ -844,18 +844,18 @@
     }
 
     form .hs-submit .actions .hs-button {
-      background-color: oklch(0.7604 0.1741 129.85);
-      border-color: oklch(0.7604 0.1741 129.85);
+      background-color: rgb(140, 198, 63);
+      border-color: rgb(140, 198, 63);
       border-radius: 8px;
-      color: oklch(0.14 0.004 49.25);
+      color: rgb(11, 9, 8);
       font-size: 22px;
       margin-bottom: 0;
       box-shadow: unset;
 
       &:hover {
-        color: oklch(0.14 0.004 49.25);
-        background-color: oklab(0.707172 -0.103751 0.124305);
-        border-color: oklab(0.707172 -0.103751 0.124305);
+        color: rgb(11, 9, 8);
+        background-color: rgb(127, 180, 56);
+        border-color: rgb(127, 180, 56);
       }
     }
 
@@ -868,16 +868,16 @@
     }
 
     form .hs-form-field .input input {
-      color: oklch(0.14 0.004 49.25);
+      color: rgb(11, 9, 8);
       font-size: 18px;
       line-height: 28px;
       padding-inline: 12px;
-      border: 2px solid oklab(0.14 0.00261104 0.00303026 / 0.2);
+      border: 2px solid rgba(11, 9, 8, 0.2);
       border-radius: 8px;
       position: relative;
 
       &::placeholder {
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
       }
     }
   }

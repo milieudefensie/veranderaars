@@ -182,18 +182,18 @@
   }
 
   .ui-form-hubspot form .hs-submit .actions .hs-button {
-    background-color: oklch(0.7604 0.1741 129.85);
-    border-color: oklch(0.7604 0.1741 129.85);
+    background-color: rgb(140, 198, 63);
+    border-color: rgb(140, 198, 63);
     border-radius: 8px;
-    color: oklch(0.14 0.004 49.25);
+    color: rgb(11, 9, 8);
     font-size: 22px;
     margin-bottom: 24px;
     box-shadow: unset;
 
     &:hover {
-      color: oklch(0.14 0.004 49.25);
-      background-color: oklab(0.707172 -0.103751 0.124305);
-      border-color: oklab(0.707172 -0.103751 0.124305);
+      color: rgb(11, 9, 8);
+      background-color: rgb(127, 180, 56);
+      border-color: rgb(127, 180, 56);
     }
   }
 
