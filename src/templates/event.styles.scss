@@ -329,11 +329,13 @@
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.25);
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1200px) and (min-width: 992px) {
   .event-detail .container {
     max-width: 100%;
   }
+}
 
+@media screen and (max-width: 1200px) {
   .event-header {
     gap: 1rem;
   }
@@ -401,6 +403,10 @@
 
     .badge-participation {
       font-size: 16px;
+    }
+
+    .btns-wrapper {
+      flex-wrap: wrap;
     }
 
     &.agenda {
