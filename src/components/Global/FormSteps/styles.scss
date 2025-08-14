@@ -170,6 +170,38 @@
   }
 }
 
+.no-style {
+  border-radius: unset;
+  background: unset;
+  display: block;
+  margin-bottom: 0;
+  min-height: unset;
+
+  .ui-form-hubspot form .hs-form-field label {
+    display: none;
+  }
+
+  .ui-form-hubspot form .hs-submit .actions .hs-button {
+    background-color: oklch(0.7604 0.1741 129.85);
+    border-color: oklch(0.7604 0.1741 129.85);
+    border-radius: 8px;
+    color: oklch(0.14 0.004 49.25);
+    font-size: 22px;
+    margin-bottom: 24px;
+    box-shadow: unset;
+
+    &:hover {
+      color: oklch(0.14 0.004 49.25);
+      background-color: oklab(0.707172 -0.103751 0.124305);
+      border-color: oklab(0.707172 -0.103751 0.124305);
+    }
+  }
+
+  .ui-form-steps2.second-step .ui-form-hubspot form .hs_submit {
+    margin-top: 0;
+  }
+}
+
 // Fix for firefox
 @-moz-document url-prefix() {
   .ui-form-steps2 {

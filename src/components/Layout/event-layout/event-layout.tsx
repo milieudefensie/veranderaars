@@ -124,7 +124,7 @@ const EventLayout: React.FC<Props> = ({
   };
 
   const isLocalGroupOrganizer = (event: EventType) => {
-    return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug);
+    return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug!);
   };
 
   return (

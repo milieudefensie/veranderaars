@@ -205,6 +205,16 @@ export const DatoCMS = graphql`
     }
   }
 
+  fragment BlockTestimonial on DatoCmsTestimonial {
+    id: originalId
+    authorName
+    content
+    authorImage {
+      url
+      alt
+    }
+  }
+
   fragment BlockImage on DatoCmsImage {
     __typename
     id: originalId
@@ -627,6 +637,70 @@ export const DatoCMS = graphql`
     cslCalendarSlug
   }
 
+  fragment EventPage on DatoCmsEvent {
+    id
+    title
+    slug
+    externalLink
+    date
+    hourStart
+    hourEnd
+    address
+    region
+    shareMessage
+    formSteps {
+      ...FormStepBlock
+    }
+    registrationForm {
+      ...HubspotBlock
+    }
+    formBackgroundColor
+    tags {
+      ... on DatoCmsTag {
+        id
+        title
+      }
+    }
+    introduction
+    image {
+      url
+    }
+    collection {
+      ... on DatoCmsEventCollection {
+        id
+        title
+      }
+    }
+    content {
+      value
+      blocks {
+        __typename
+        ...BlockEmbedIframe
+        ...BlockTestimonial
+        ...BlockNarrativeBlock
+        ...BlockHighlightEvent
+        ...BlockHighlightTools
+        ...BlockTextHubspot
+        ...BlockTable
+        ...BlockShare
+        ...BlockEmbedIframe
+        ...BlockVideo
+        ...BlockCustomCta
+        ...BlockImage
+        ...BlockAccordion
+        ...BlockMap
+        ...BlockColumns
+        ...BlockCountdown
+        ...BlockCtaList
+        ...BlockCtaIconsList
+        ...BlockImageGallery
+      }
+    }
+    seo: seoMetaTags {
+      ...GatsbyDatoCmsSeoMetaTags
+    }
+  }
+
   fragment CSLEventCard on ExternalEvent {
     __typename
     id: slug
@@ -657,6 +731,53 @@ export const DatoCMS = graphql`
     hiddenAddress
     waiting_list_enabled
     max_attendees_count
+    additional_image_sizes_url {
+      url
+      style
+    }
+  }
+
+  fragment CSLEventPage on ExternalEvent {
+    __typename
+    id
+    slug
+    title
+    url
+    description
+    rich_description
+    raw_start
+    raw_end
+    start_at
+    end_at
+    start_in_zone
+    end_in_zone
+    time_zone
+    virtual
+    launched_at
+    locale
+    image_url
+    hiddenAddress
+    location {
+      latitude
+      longitude
+      postal_code
+      country
+      region
+      locality
+      query
+      street
+      street_number
+      venue
+    }
+    calendar {
+      name
+      slug
+    }
+    labels
+    inputs
+    web_conference_url
+    max_attendees_count
+    waiting_list_enabled
     additional_image_sizes_url {
       url
       style

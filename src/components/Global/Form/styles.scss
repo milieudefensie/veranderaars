@@ -261,3 +261,117 @@
     }
   }
 }
+
+// no style
+.no-style {
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+
+  .ui-form-steps2 {
+    background: transparent;
+    display: block;
+    border-radius: unset;
+    margin-bottom: unset;
+    min-height: unset;
+    padding: unset;
+
+    .image-container {
+      display: none;
+    }
+
+    .metadata {
+      padding: 0;
+
+      h1,
+      p {
+        display: none;
+      }
+
+      .custom-form {
+        .send-btn {
+          background-color: oklch(0.7604 0.1741 129.85);
+          border-color: oklch(0.7604 0.1741 129.85);
+          border-radius: 8px;
+          color: oklch(0.14 0.004 49.25);
+          font-size: 22px;
+          margin-bottom: 24px;
+
+          &:hover {
+            color: oklch(0.14 0.004 49.25);
+            background-color: oklab(0.707172 -0.103751 0.124305);
+            border-color: oklab(0.707172 -0.103751 0.124305);
+          }
+        }
+
+        .custom-label {
+          display: none;
+        }
+
+        .form-field .input input {
+          color: oklch(0.14 0.004 49.25);
+          font-size: 18px;
+          line-height: 28px;
+          padding-inline: 12px;
+          border: 2px solid oklab(0.14 0.00261104 0.00303026 / 0.2);
+          border-radius: 8px;
+          position: relative;
+
+          &::placeholder {
+            color: oklch(0.14 0.004 49.25);
+          }
+
+          // &:focus {
+          //   outline: 2px solid oklch(14% .004 49.25) !important;
+          //   outline-offset: 2px;
+          //   z-index: 1;
+          // }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .no-style {
+    .ui-form-steps2 {
+
+      .metadata {
+        .custom-form {
+          .send-btn {
+            font-size: 18px;
+            line-height: 27px;
+          }
+
+          .form-field-checkbox fieldset legend {
+            font-size: 16px;
+            line-height: 24px;
+          }
+
+          .form-field-checkbox fieldset .opt label {
+            font-size: 14px;
+            line-height: 22px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .no-style {
+    .custom-form {
+      margin-top: 15px;
+
+      .form-field .input input {
+        font-size: 16px !important;
+        line-height: 24px !important;
+
+        &::placeholder {
+          font-size: 16px !important;
+          line-height: 24px !important;
+        }
+      }
+    }
+  }
+}

@@ -8,6 +8,12 @@
       display: none !important;
     }
   }
+
+  #filter-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
 }
 
 @media screen and (max-width: 992px) {

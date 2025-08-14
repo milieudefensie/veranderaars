@@ -2,210 +2,174 @@ import React, { useEffect, useState } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
-import FloatLayout from '../components/Global/FloatLayout/float-layout';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
-import { ReactSVG } from 'react-svg';
-import Link from '../components/Global/Link/link';
-import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import TagList from '../components/Global/Tag/tag-list'; // @ts-expect-error
-import { formatDate, isArray } from '../utils';
+import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout'; // @ts-expect-error
+import { formatDate, isArray, formatDateWithTimeCSL } from '../utils';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
-import HeroBasic from '../components/Global/HeroBasic/hero-basic';
-// @ts-expect-error
-import dateIcon from '../components/Icons/calendar-date.svg'; // @ts-expect-error
-import hourIcon from '../components/Icons/calendar-hour.svg'; // @ts-expect-error
-import locationIcon from '../components/Icons/calendar-location.svg'; // @ts-expect-error
-import wpIcon from '../components/Icons/wp-icon.svg'; // @ts-expect-error
-import backBtnIcon from '../components/Icons/back-btn.svg';
+import { EventType } from '../types';
+import EventCardV2 from '../components/Global/event-card-v2/event-card-v2';
+import { findParentCollection, isLocalGroupOrganizer } from '../utils/event.utils';
+import SignalModal from '../components/Global/SignalModal/signal-modal';
 
 import './basic.styles.scss';
+import './event.styles.scss';
 
 // @ts-expect-error
-const Event = ({ pageContext, data: { page, listEvent, favicon } }) => {
+const Event = ({ pageContext, data: { page, collections, configuration, relatedEvents, favicon } }) => {
   const {
     seo,
     title,
+    slug,
     introduction,
     hourStart,
     hourEnd,
     date,
     address,
-    shareMessage,
     image,
     content,
-    tags = [],
     formSteps,
     registrationForm,
-    formBackgroundColor,
+    collection,
   } = page;
 
   const [shareWpText, setShareWpText] = useState('');
+  const [shareSignalMessage, setShareSignalMessage] = useState('');
+  const [showSignalPopup, setShowSignalPopup] = useState(false);
 
   useEffect(() => {
     const htmlElement = document.documentElement;
     htmlElement.style.overflow = '';
 
-    // Share WP
-    const currentURL = encodeURIComponent(window.location.href);
-    setShareWpText(shareMessage ? `https://wa.me/?text=${shareMessage}` : `https://wa.me/?text=${currentURL}`);
+    const currentURL = `${window.location.origin}/agenda/${slug}?utm_medium=social&utm_source=whatsapp`;
+    const signalURL = `${window.location.origin}/agenda/${slug}?utm_medium=social&utm_source=signal`;
+
+    const eventDateTime = `${formatDate(date, true)} ${hourStart ? hourStart : ''} ${hourEnd ? ` - ${hourEnd}` : ''}`;
+    const eventLocation = address;
+
+    const message = `Ik ga naar dit evenement: ${currentURL},
+      Titel: ${title},
+      Datum: ${eventDateTime},
+      Locatie: ${eventLocation}.
+      Lijkt het je leuk om hier samen met mij heen te gaan?
+    `;
+    setShareWpText(`https://wa.me/?text=${encodeURIComponent(message)}`);
+
+    const signalMessage = `Ik ga naar dit evenement: ${signalURL}
+
+Titel: ${title}
+Datum: ${eventDateTime}
+Locatie: ${eventLocation}
+
+Lijkt het je leuk om hier samen met mij heen te gaan?
+    `;
+
+    setShareSignalMessage(signalMessage);
   }, []);
 
-  const withFormsSteps = isArray(formSteps);
+  const withFormsSteps = isArray(formSteps?.forms);
+
+  const handleSignalShare = async () => {
+    try {
+      await navigator.clipboard.writeText(shareSignalMessage);
+      setShowSignalPopup(true);
+    } catch (err) {
+      console.error('No se pudo copiar el mensaje al portapapeles', err);
+    }
+  };
 
   return (
     <Layout>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant={`white ${withFormsSteps ? 'event-detail' : ''}`}>
-        {withFormsSteps ? (
-          <FormSteps
-            title={title}
-            descriptionAsHtml
-            description={
-              <div className="event-introduction">
-                <span className="date">
-                  <img src={dateIcon} alt="Date icon" width={24} height={24} />
-                  {formatDate(date, true)} {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
-                </span>
-                {address && (
-                  <span className="date">
-                    <img src={locationIcon} alt="Location icon" width={24} height={24} />
-                    {address}
-                  </span>
-                )}
-              </div>
-            }
-            bgImageUrl={image?.url}
-            form={formSteps}
-            variant="green agenda"
-            headerComponents={
-              <>
-                {listEvent && (
-                  <div className="pre-header">
-                    <div className="back-btn">
-                      <Link to={listEvent}>
-                        <img src={backBtnIcon} alt="Back button icon" width={17} height={13} />
-                        <span>Alle evenementen</span>
-                      </Link>
-                    </div>
-
-                    {Array.isArray(tags) && <TagList tags={tags} />}
+      <WrapperLayout variant={`white event-detail`}>
+        <div className="container">
+          <header className="event-header">
+            <div className="image-container">
+              <picture>
+                <img src={image.url} alt={`Image for ${title}`} />
+              </picture>
+            </div>
+            <div className="event-metadata">
+              <div className="date-container">
+                <span className="date">{formatDateWithTimeCSL(date, hourStart)}</span>
+                {collection && (
+                  <div>
+                    <span className="badge-tour">{collection.title}</span>
                   </div>
                 )}
-              </>
-            }
-          />
-        ) : (
-          <HeroBasic image={image} overlay={false} />
-        )}
-
-        <FloatLayout reduceOverlap>
-          {!withFormsSteps && (
-            <>
-              {listEvent && (
-                <div className="pre-header">
-                  <div className="back-btn">
-                    <Link to={listEvent}>
-                      <img src={backBtnIcon} alt="Back button icon" width={17} height={13} />
-                      <span>Alle evenementen</span>
-                    </Link>
-                  </div>
-
-                  {Array.isArray(tags) && <TagList tags={tags} />}
+              </div>
+              <h1>{title}</h1>
+              {address && (
+                <div className="location-container">
+                  <h3>{address}</h3>
                 </div>
               )}
-              {title && <h1 className="main-heading">{title}</h1>}
-
-              {/* Brief information */}
-              <div className="brief-information">
-                <div className="metadata">
-                  {date && (
-                    <span>
-                      <img src={dateIcon} alt="Date icon" width={24} height={24} />
-                      <span>{formatDate(date, true)}</span>
-                    </span>
-                  )}
-
-                  {hourStart && (
-                    <span>
-                      <img src={hourIcon} alt="Hour icon" width={24} height={24} />
-                      <span>
-                        {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
-                      </span>
-                    </span>
-                  )}
-
-                  {address && (
-                    <span>
-                      <img src={locationIcon} alt="Location icon" width={24} height={24} />
-                      <span>{address}</span>
-                    </span>
-                  )}
-                </div>
-
-                {shareMessage && (
-                  <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
-                    <span>Deel op WhatsApp</span>
-                    <ReactSVG src={wpIcon} alt="Wp icon" />
-                  </a>
-                )}
+              <div className="desktop-form">
+                {withFormsSteps ? (
+                  <FormSteps form={formSteps} noStyle />
+                ) : registrationForm ? (
+                  <HubspotForm {...registrationForm} style="agenda-event" />
+                ) : null}
               </div>
-            </>
-          )}
-
-          {/* Form  */}
-          {registrationForm && !isArray(formSteps) && (
-            <div className={`form-wrapper ${formBackgroundColor}`}>
-              <HubspotForm {...registrationForm} style={`${formBackgroundColor === 'dark-green' ? '' : 'event'}`} />
             </div>
-          )}
-
-          {introduction && <div className="introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
-
-          {content?.value && (
-            <div className="content">
-              <StructuredTextDefault content={content} />
+          </header>
+          <div className="event-participation agenda">
+            <div className="btns-wrapper">
+              <button className="btn-signal" onClick={handleSignalShare}>
+                <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
+                  <path fill="currentColor" d="m21 12l-7-7v4C7 10 4 15 3 20c2.5-3.5 6-5.1 11-5.1V19z"></path>
+                </svg>
+                Deel op Signal
+              </button>
+              <a href={shareWpText} rel="noopener noreferrer" target="_blank" className="btn-signal">
+                <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
+                  <path
+                    fill="currentColor"
+                    d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.23 8.23 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.2 8.2 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24M8.53 7.33c-.16 0-.43.06-.66.31c-.22.25-.87.86-.87 2.07c0 1.22.89 2.39 1 2.56c.14.17 1.76 2.67 4.25 3.73c.59.27 1.05.42 1.41.53c.59.19 1.13.16 1.56.1c.48-.07 1.46-.6 1.67-1.18s.21-1.07.15-1.18c-.07-.1-.23-.16-.48-.27c-.25-.14-1.47-.74-1.69-.82c-.23-.08-.37-.12-.56.12c-.16.25-.64.81-.78.97c-.15.17-.29.19-.53.07c-.26-.13-1.06-.39-2-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.12-.24-.01-.39.11-.5c.11-.11.27-.29.37-.44c.13-.14.17-.25.25-.41c.08-.17.04-.31-.02-.43c-.06-.11-.56-1.35-.77-1.84c-.2-.48-.4-.42-.56-.43c-.14 0-.3-.01-.47-.01"
+                  ></path>
+                </svg>
+                Deel op WhatsApp
+              </a>
+              <a href="#travel-together" className="btn-signal fill">
+                <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
+                  <path
+                    fill="currentColor"
+                    d="M12 2c-4 0-8 .5-8 4v9.5A3.5 3.5 0 0 0 7.5 19L6 20.5v.5h2.23l2-2H14l2 2h2v-.5L16.5 19a3.5 3.5 0 0 0 3.5-3.5V6c0-3.5-3.58-4-8-4M7.5 17A1.5 1.5 0 0 1 6 15.5A1.5 1.5 0 0 1 7.5 14A1.5 1.5 0 0 1 9 15.5A1.5 1.5 0 0 1 7.5 17m3.5-7H6V6h5zm2 0V6h5v4zm3.5 7a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5"
+                  ></path>
+                </svg>
+                Reis samen vanuit Utrecht
+              </a>
             </div>
-          )}
-
-          {/* Brief information */}
-          {withFormsSteps && (
-            <div className="brief-information">
-              <div className="metadata">
-                {date && (
-                  <span>
-                    <img src={dateIcon} alt="Date icon" width={24} height={24} />
-                    <span>{formatDate(date, true)}</span>
-                  </span>
-                )}
-
-                {hourStart && (
-                  <span>
-                    <img src={hourIcon} alt="Hour icon" width={24} height={24} />
-                    <span>
-                      {hourStart ? hourStart : ''} {hourEnd ? ` - ${hourEnd}` : ''}
-                    </span>
-                  </span>
-                )}
-
-                {address && (
-                  <span>
-                    <img src={locationIcon} alt="Location icon" width={24} height={24} />
-                    <span>{address}</span>
-                  </span>
-                )}
+          </div>
+          <div className="event-content">
+            {introduction && <div className="introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
+            {content?.value && (
+              <div className="content">
+                <StructuredTextDefault content={content} />
               </div>
-
-              {shareMessage && (
-                <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
-                  <span>Deel op WhatsApp</span>
-                  <ReactSVG src={wpIcon} alt="Wp icon" />
-                </a>
-              )}
+            )}
+          </div>
+          {relatedEvents?.nodes.length > 0 && (
+            <div className="related-events-container">
+              {relatedEvents.nodes.map((event: EventType) => (
+                <EventCardV2
+                  key={event.id}
+                  event={event}
+                  vertical
+                  collection={findParentCollection(event, collections)}
+                  isLocalGroup={isLocalGroupOrganizer(event, configuration)}
+                />
+              ))}
             </div>
           )}
-        </FloatLayout>
+        </div>
+
+        <SignalModal
+          isOpen={showSignalPopup}
+          onClose={() => setShowSignalPopup(false)}
+          defaultMessage={shareSignalMessage}
+        />
       </WrapperLayout>
     </Layout>
   );
@@ -225,289 +189,7 @@ export const PageQuery = graphql`
       slug
     }
     page: datoCmsEvent(id: { eq: $id }) {
-      id
-      title
-      slug
-      externalLink
-      date
-      hourStart
-      hourEnd
-      address
-      region
-      shareMessage
-      formSteps {
-        ...FormStepBlock
-      }
-      registrationForm {
-        ... on DatoCmsHubspot {
-          id
-          formId
-          region
-          portalId
-          columns
-          trackErrors
-          disclaimerText
-          introductionText
-          title
-        }
-      }
-      formBackgroundColor
-      tags {
-        ... on DatoCmsTag {
-          id
-          title
-        }
-      }
-      introduction
-      image {
-        url
-      }
-      content {
-        value
-        blocks {
-          __typename
-          ...BlockEmbedIframe
-          ... on DatoCmsNarrativeBlock {
-            id: originalId
-            title
-            alignment
-            textContent
-            backgroundColor
-            image {
-              gatsbyImageData(width: 800)
-              alt
-              url
-            }
-            xlImage: image {
-              gatsbyImageData(width: 1200)
-              alt
-              url
-            }
-            imageMobile {
-              gatsbyImageData(width: 500)
-              alt
-              url
-            }
-            video {
-              id
-              source {
-                url
-                thumbnailUrl
-              }
-              preview {
-                gatsbyImageData
-                url
-              }
-            }
-            ctas {
-              ...AppCta
-            }
-          }
-          ... on DatoCmsHighlightEvent {
-            id: originalId
-            sectionTitle
-            cta {
-              ...AppCta
-            }
-            items {
-              ... on DatoCmsEvent {
-                id
-                title
-                slug
-                externalLink
-                introduction
-                date
-                hourStart
-                hourEnd
-                onlineEvent
-                tags {
-                  ... on DatoCmsTag {
-                    id
-                    title
-                  }
-                }
-                image {
-                  gatsbyImageData(width: 900, height: 505)
-                }
-                model {
-                  apiKey
-                }
-              }
-            }
-          }
-          ... on DatoCmsHighlightTool {
-            id: originalId
-            sectionTitle
-            items {
-              ... on DatoCmsToolItem {
-                id
-                title
-                introduction
-                image {
-                  gatsbyImageData(width: 900, height: 505)
-                }
-                icon {
-                  url
-                }
-                iconFontPicker
-                backgroundColor
-                cta {
-                  ...AppCta
-                }
-              }
-            }
-          }
-          ... on DatoCmsTextHubspotForm {
-            id: originalId
-            title
-            description
-            variant
-            hubspot {
-              ... on DatoCmsHubspot {
-                id
-                formId
-                region
-                portalId
-                columns
-                trackErrors
-                disclaimerText
-                introductionText
-                title
-              }
-            }
-          }
-          ... on DatoCmsTable {
-            id: originalId
-            table
-          }
-          ... on DatoCmsShare {
-            id: originalId
-            title
-            socialLinks {
-              ... on DatoCmsSocialLink {
-                id
-                url
-                socialNetwork
-              }
-            }
-          }
-          ... on DatoCmsEmbedIframe {
-            id: originalId
-            iframeCode
-          }
-          ... on DatoCmsVideoBlock {
-            id: originalId
-            video {
-              url
-              thumbnailUrl
-            }
-          }
-          ... on DatoCmsBlockCta {
-            id: originalId
-            title
-            style
-            alignment
-            link {
-              ... on DatoCmsGlobalLink {
-                id
-                label
-                externalUrl
-                content {
-                  __typename
-                  ... on DatoCmsListTool {
-                    id
-                    slug
-                    model {
-                      apiKey
-                    }
-                  }
-                  ... on DatoCmsBasicPage {
-                    id
-                    slug
-                    model {
-                      apiKey
-                    }
-                  }
-                  ... on DatoCmsEvent {
-                    id
-                    slug
-                    model {
-                      apiKey
-                    }
-                  }
-                  ... on DatoCmsListEvent {
-                    id
-                    slug
-                    model {
-                      apiKey
-                    }
-                  }
-                  ... on DatoCmsListGroup {
-                    id
-                    slug
-                    model {
-                      apiKey
-                    }
-                  }
-                  ... on DatoCmsTool {
-                    id
-                    slug
-                    model {
-                      apiKey
-                    }
-                  }
-                  ... on DatoCmsGroup {
-                    id
-                    slug
-                    model {
-                      apiKey
-                    }
-                  }
-                }
-              }
-            }
-          }
-          ... on DatoCmsImage {
-            id: originalId
-            image {
-              gatsbyImageData(width: 700)
-              title
-              url
-            }
-          }
-          ... on DatoCmsAcordion {
-            id: originalId
-            items {
-              ... on DatoCmsAcordionItem {
-                id
-                title
-                text
-              }
-            }
-          }
-          ... on DatoCmsMap {
-            ...BlockMap
-          }
-          ... on DatoCmsColumn {
-            ...BlockColumns
-          }
-          ... on DatoCmsCountdown {
-            ...BlockCountdown
-          }
-          ... on DatoCmsCtaList {
-            ...BlockCtaList
-          }
-          ... on DatoCmsCtaIconsList {
-            ...BlockCtaIconsList
-          }
-          ... on DatoCmsImageGallery {
-            ...BlockImageGallery
-          }
-        }
-      }
-      seo: seoMetaTags {
-        ...GatsbyDatoCmsSeoMetaTags
-      }
+      ...EventPage
     }
   }
 `;

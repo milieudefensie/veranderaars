@@ -14,6 +14,7 @@ type Props = {
   cta?: CtaType;
   collection?: EventCollectionType;
   isLocalGroup?: boolean;
+  extraClassName?: string;
 };
 
 const PLACEHOLDER_IMAGE = 'https://www.datocms-assets.com/115430/1712234204-pattern-2500.png';
@@ -26,6 +27,7 @@ const EventCardV2: React.FC<Props> = ({
   cta,
   collection,
   isLocalGroup = false,
+  extraClassName,
 }) => {
   const {
     title,
@@ -88,8 +90,9 @@ const EventCardV2: React.FC<Props> = ({
 
             {isLocalGroup && <span className="local-group">Door lokale groep</span>}
           </div>
-
-          <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
+          {introduction && (
+            <div className="description" dangerouslySetInnerHTML={{ __html: truncateText(introduction, 200) }} />
+          )}
         </div>
 
         {cta ? (
@@ -106,7 +109,7 @@ const EventCardV2: React.FC<Props> = ({
       <a
         href={externalLink || url}
         target={`${externalLink ? '' : '_blank'}`}
-        className={`ui-event-card-v2 ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'} ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} `}
+        className={`ui-event-card-v2 ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'} ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} ${extraClassName ? extraClassName : ''}`}
       >
         {cardContent()}
       </a>
@@ -116,7 +119,10 @@ const EventCardV2: React.FC<Props> = ({
   const link = event.__typename === 'EventCollection' ? cta : event;
 
   return (
-    <Link to={link} className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''}`}>
+    <Link
+      to={link}
+      className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} ${extraClassName ? extraClassName : ''}`}
+    >
       {cardContent()}
     </Link>
   );

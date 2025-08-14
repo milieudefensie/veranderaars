@@ -16,6 +16,7 @@ interface FormProps {
   image: any;
   headerComponents: any;
   configuration: any;
+  noStyle: boolean;
 }
 
 interface FormData {
@@ -42,6 +43,7 @@ const Form: React.FC<FormProps> = ({
   conferenceUrl = null,
   isWaitingList = false,
   configuration,
+  noStyle = false,
 }) => {
   const location = useLocation();
   const { t } = useTranslate();
@@ -194,7 +196,7 @@ const Form: React.FC<FormProps> = ({
   }
 
   return (
-    <div className="container container-steps">
+    <div className={`container container-steps ${noStyle ? 'no-style' : ''}`}>
       {headerComponents}
 
       <div className={`ui-form-steps2 ${isFirstStep ? 'green first-step agenda' : 'second-step'}`}>
@@ -224,6 +226,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.email ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
+                        placeholder={t('form_email')}
                         onChange={handleChange}
                         required
                       />
@@ -241,7 +244,7 @@ const Form: React.FC<FormProps> = ({
 
                 <input
                   type="submit"
-                  value={isLoading ? 'Versturen...' : 'Ik ben er bij!'}
+                  value={isLoading ? 'Versturen...' : '👉 Ik ben er bij!'}
                   className={`send-btn ${hasErrors ? 'disabled' : ''}`}
                   disabled={hasErrors || isLoading}
                 />
@@ -279,6 +282,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.email ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
+                        placeholder={t('form_email')}
                         onChange={handleChange}
                       />
                     </div>
@@ -308,6 +312,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.postcode ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
+                        placeholder={t('form_postcode')}
                         onChange={handleChange}
                       />
                     </div>
@@ -337,6 +342,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.firstName ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
+                        placeholder={t('form_first_name')}
                         onChange={handleChange}
                       />
                     </div>
@@ -366,6 +372,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.lastName ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
+                        placeholder={t('form_last_name')}
                         onChange={handleChange}
                       />
                     </div>
@@ -395,6 +402,7 @@ const Form: React.FC<FormProps> = ({
                         inputMode="tel"
                         autoComplete="off"
                         required={false}
+                        placeholder={t('form_phone')}
                         onChange={handleChange}
                       />
                     </div>
@@ -443,7 +451,9 @@ const Form: React.FC<FormProps> = ({
 
                 <input
                   type="submit"
-                  value={isLoading ? t('form_sending') : isWaitingList ? t('waiting_list_message') : t('form_submit')}
+                  value={
+                    isLoading ? t('form_sending') : isWaitingList ? t('waiting_list_message') : '👉 Ik ben er bij!'
+                  }
                   className={`send-btn ${hasErrors ? 'disabled' : ''}`}
                   disabled={hasErrors || isLoading}
                 />

@@ -20,6 +20,7 @@ import ImageGallery from '../ImageGallery/image-gallery';
 import Columns from '../Columns/columns';
 import MapFilter from '../MapFilter/map-filter';
 import BlockGroupsSignal from '../BlockGroupsSignal/BlockGroupsSignal';
+import BlockTestimonial from '../BlockTestimonial/block-testimonial';
 
 interface StructuredTextDefaultProps {
   content: any;
@@ -83,7 +84,8 @@ const StructuredTextDefault: React.FC<StructuredTextDefaultProps> = ({ content }
             return <MapFilter key={record.id} block={record} />;
           case 'DatoCmsGroupsSignalChat':
             return <BlockGroupsSignal key={record.id} block={record} />;
-
+          case 'DatoCmsTestimonial':
+            return <BlockTestimonial key={record.id} block={record} />;
           default:
             return null;
         }

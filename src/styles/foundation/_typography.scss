@@ -57,7 +57,7 @@
   src: url('/fonts/lato/Lato-Black.woff2') format('woff2');
 }
 
-/* Inter Bold */
+/* Lato Bold */
 @font-face {
   font-family: 'Lato';
   font-weight: 700;
@@ -66,7 +66,7 @@
   src: url('/fonts/lato/Lato-Bold.woff2') format('woff2');
 }
 
-/* Inter Regular */
+/* Lato Regular */
 @font-face {
   font-family: 'Lato';
   font-weight: 400;
@@ -75,7 +75,7 @@
   src: url('/fonts/lato/Lato-Regular.woff2') format('woff2');
 }
 
-/* Inter Light */
+/* Lato Light */
 @font-face {
   font-family: 'Lato';
   font-weight: 300;
@@ -84,7 +84,7 @@
   src: url('/fonts/lato/Lato-Light.woff2') format('woff2');
 }
 
-/* Inter Thin */
+/* Lato Thin */
 @font-face {
   font-family: 'Lato';
   font-weight: 100;
@@ -92,14 +92,6 @@
   font-style: normal;
   src: url('/fonts/lato/Lato-Thin.woff2') format('woff2');
 }
-
-/* Inter Thin */
-// @font-face {
-//   font-family: 'ringold-soft';
-//   src: url('/fonts/Ringold-Soft.woff2') format('woff2');
-//   font-display: swap;
-//   font-weight: 700;
-// }
 
 :root {
   --primary-font: 'TacaPro-Bold';

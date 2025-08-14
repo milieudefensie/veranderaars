@@ -18,9 +18,9 @@ interface FormStep {
 }
 
 interface FormStepsProps {
-  title: string;
-  description: string;
-  bgImageUrl: string;
+  title?: string;
+  description?: string;
+  bgImageUrl?: string;
   form: { forms?: FormStep[] }[];
   variant?: string;
   varianExtraSteps?: string;
@@ -29,6 +29,7 @@ interface FormStepsProps {
   extraLogic?: (ctx: any) => void;
   headerComponents?: React.ReactNode;
   descriptionAsHtml?: boolean;
+  noStyle?: boolean;
 }
 
 const FormSteps: React.FC<FormStepsProps> = ({
@@ -43,6 +44,7 @@ const FormSteps: React.FC<FormStepsProps> = ({
   extraLogic,
   headerComponents,
   descriptionAsHtml = false,
+  noStyle = false,
 }) => {
   const location = useLocation();
   const { forms = [] } = form[0] || {};
@@ -96,7 +98,9 @@ const FormSteps: React.FC<FormStepsProps> = ({
   };
 
   return (
-    <div className={`container container-steps ${wrapperClassname ? wrapperClassname : ''}`}>
+    <div
+      className={`container container-steps ${wrapperClassname ? wrapperClassname : ''} ${noStyle ? 'no-style' : ''}`}
+    >
       {headerComponents}
       <div
         className={`ui-form-steps2 ${

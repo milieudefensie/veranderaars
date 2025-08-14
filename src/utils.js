@@ -46,6 +46,10 @@ export const getCtaUrl = (cta) => {
   }
 
   if (cta.slug) {
+    if (cta.__typename === 'ExternalEvent') {
+      return `/lokaal/${cta.slug}`;
+    }
+
     return `/${cta.slug}`;
   }
 

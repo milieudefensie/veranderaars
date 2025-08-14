@@ -1,0 +1,85 @@
+.ui-block-testimonial {
+  -moz-column-gap: .75rem;
+  column-gap: .75rem;
+  display: grid;
+  padding-block: .25rem;
+  grid-template-columns: auto 1fr;
+  place-items: start;
+  margin-bottom: 24px;
+
+  .avatar {
+    grid-column-start: 1;
+    align-self: flex-end;
+    grid-row: span 2 / span 2;
+    display: inline-flex;
+    position: relative;
+    vertical-align: middle;
+  }
+
+  .avatar>div {
+    aspect-ratio: 1;
+    display: block;
+    overflow: hidden;
+    border-radius: 3.40282e+38px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .avatar img {
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .name {
+    font-size: 11px;
+    line-height: 16.5px;
+  }
+
+  .content {
+    font-size: 20px;
+    color: oklch(0.14 0.004 49.25);
+    line-height: 28px;
+    border-radius: 8px;
+    border-end-start-radius: 0;
+    grid-column-start: 2;
+
+    background-color: oklab(0.582 0.12637 -0.183252 / 0.1);
+
+    display: block;
+    grid-row-end: 3;
+    max-width: 90%;
+    min-height: 2rem;
+    min-width: 2.5rem;
+    padding-block: .5rem;
+    padding-inline: 1rem;
+    position: relative;
+    width: -moz-fit-content;
+    width: fit-content;
+
+    &::before {
+      --mask-chat: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13'%3E%3Cpath d='M0 11.5C0 13 2 13 2 13h11V0h-.5s-.523 2.096-.642 2.5c-.25.852-.943 1.724-2.858 3-3 2-9 4.5-9 6'/%3E%3C/svg%3E");
+      inset-inline-start: -13px;
+      transform: rotateY(0);
+      background-color: inherit;
+      bottom: -3px;
+      content: "";
+      height: .75rem;
+      mask-image: var(--mask-chat);
+      mask-position: 0 -1px;
+      mask-repeat: no-repeat;
+      mask-size: 13px;
+      position: absolute;
+      width: .75rem;
+    }
+  }
+}
+
+@media screen and (max-width: 715px) {
+  .ui-block-testimonial {
+    .content {
+      font-size: 16px;
+    }
+  }
+}

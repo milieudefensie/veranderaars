@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'; // @ts-expect-error
 import { HelmetDatoCms } from 'gatsby-source-datocms';
 
 interface SeoDatoCMSProps {
-  seo: {
+  seo?: {
     tags: Array<{ tagName: string; content: string; [key: string]: any }>;
   };
   favicon?: { faviconMetaTags: any } | null;
@@ -11,7 +11,7 @@ interface SeoDatoCMSProps {
 }
 
 const SeoDatoCMS: React.FC<SeoDatoCMSProps> = ({ seo, favicon = null, homepage = false, children }) => {
-  if (homepage && seo.tags.length > 0 && typeof seo.tags[0].content === 'string') {
+  if (seo && homepage && seo.tags.length > 0 && typeof seo.tags[0].content === 'string') {
     seo.tags[0].content = seo.tags[0].content.replace('- Milieudefensie', '');
   }
 

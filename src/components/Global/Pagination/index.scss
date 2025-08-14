@@ -1,9 +1,9 @@
 .pagination-container {
-  padding: 0;
+  padding: 0 !important;
   padding-top: 50px;
   display: flex;
   gap: 10px;
-  list-style: none;
+  list-style: none !important;
 
   li {
     color: var(--nb-grey);
