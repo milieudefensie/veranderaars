@@ -13,9 +13,11 @@
 
   .ui-event-card-v2 {
     border-radius: unset;
+    box-shadow: unset;
 
     &:hover {
       translate: unset;
+      box-shadow: unset;
     }
   }
 
