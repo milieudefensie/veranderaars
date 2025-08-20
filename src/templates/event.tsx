@@ -302,7 +302,10 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                       <br />
                       {address}
                       <br />
-                      <br /> {`${window.location.origin}/lokaal/${slug}#travel-together`}
+                      <br />{' '}
+                      {typeof window !== 'undefined'
+                        ? `${window.location.origin}/lokaal/${slug}#travel-together`
+                        : `/lokaal/${slug}#travel-together`}
                     </div>
                     <div className="share-buttons">
                       <button
@@ -339,7 +342,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
             </div>
           </div>
 
-          {othersSignalGroups && (
+          {othersSignalGroups && othersSignalGroups.length > 0 && (
             <div className="related-groups-container">
               <h3>Reis samen vanuit andere steden</h3>
 
