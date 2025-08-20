@@ -4,7 +4,7 @@ import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout'; // @ts-expect-error
-import { isArray, formatDateWithTimeCSL } from '../utils';
+import { isArray, formatSimpleDateWithTimeCSL } from '../utils';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import SignalModal from '../components/Global/SignalModal/signal-modal';
@@ -100,7 +100,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
             </div>
             <div className="event-metadata">
               <div className="date-container">
-                {date && <span className="date">{formatDateWithTimeCSL(date, hourStart, date, hourEnd)}</span>}
+                {date && <span className="date">{formatSimpleDateWithTimeCSL(date, hourStart, hourEnd)}</span>}
                 {collection && (
                   <div>
                     <span className="badge-tour">{collection.title}</span>
@@ -298,7 +298,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                       {currentCity}?
                       <br />
                       <br /> Wij klagen ING aan
-                      <br /> {formatDateWithTimeCSL(date, hourStart, date, hourEnd)}
+                      <br /> {formatSimpleDateWithTimeCSL(date, hourStart, hourEnd)}
                       <br />
                       {address}
                       <br />

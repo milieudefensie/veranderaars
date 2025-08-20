@@ -157,6 +157,36 @@ export const formatDateWithTimeCSL = (dateStr, hourStr, endDate, endHourStr) => 
   );
 };
 
+export const formatSimpleDateWithTimeCSL = (dateStr, hourStr, endHourStr) => {
+  const now = DateTime.local().setLocale('nl');
+  const dt = DateTime.fromISO(dateStr, { locale: 'nl' });
+
+  let dayLabel;
+  if (dt.hasSame(now, 'day')) {
+    dayLabel = 'Vandaag';
+  } else if (dt.hasSame(now.plus({ days: 1 }), 'day')) {
+    dayLabel = 'Morgen';
+  } else {
+    const day = dt.toFormat('cccc');
+    dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
+  }
+
+  let timePart = '';
+  if (hourStr && endHourStr) {
+    timePart = `${hourStr} - ${endHourStr} `;
+  } else if (hourStr) {
+    timePart = `${hourStr} `;
+  }
+
+  const datePart = dt.toFormat('d LLLL');
+
+  return (
+    <>
+      <strong>{dayLabel}</strong> {timePart}- {datePart}
+    </>
+  );
+};
+
 export const compareIfIsFuture = (event) => {
   let eventHourStart = event.hourStart; // Formato: 06:00 | 15:00 | 23:30
   if (eventHourStart.includes('(')) {
