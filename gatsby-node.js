@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const chromium = require('chromium');
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
@@ -518,16 +518,10 @@ const scrapingFormInputs = async (event) => {
   console.log('Start web scraping. URL: ', url);
 
   try {
-    // const browser = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: chromium.path,
-    //   timeout: 50_000,
-    // });
-
     const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: chromium.path,
       timeout: 50_000,
     });
 
