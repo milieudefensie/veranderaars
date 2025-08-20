@@ -671,6 +671,12 @@ export const DatoCMS = graphql`
         title
       }
     }
+    relatedSignalGroup {
+      ...SignalGroups
+    }
+    othersSignalGroups {
+      ...SignalGroups
+    }
     content {
       value
       blocks {
@@ -816,5 +822,11 @@ export const DatoCMS = graphql`
   fragment BlockGroupsSignal on DatoCmsGroupsSignalChat {
     id: originalId
     internalName
+  }
+
+  fragment SignalGroups on DatoCmsSignalGroup {
+    id
+    internalName
+    url
   }
 `;

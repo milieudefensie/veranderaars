@@ -5,7 +5,6 @@ import SeoDatoCMS from '../components/Layout/seo-datocms';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout'; // @ts-expect-error
 import { cleanLocation, formatDate, formatDateCSL, formatDateWithTimeCSL } from '../utils';
 import Form from '../components/Global/Form/form';
-import EventCardV2 from '../components/Global/event-card-v2/event-card-v2';
 import { EventType } from '../types';
 import { useCSLAttendees } from '../hooks/useCSLAttendees';
 import Spinner from '../components/Global/Spinner/spinner';
@@ -24,12 +23,15 @@ const CSLEvent = ({ pageContext, data: { page, relatedEvents, collections, confi
     description,
     rich_description,
     raw_start,
+    raw_end,
     start_in_zone,
+    end_in_zone,
     location,
     inputs = [],
     hiddenAddress = false,
     web_conference_url,
     max_attendees_count,
+    virtual,
   } = page;
 
   const [shareWpText, setShareWpText] = useState('');
@@ -45,26 +47,16 @@ const CSLEvent = ({ pageContext, data: { page, relatedEvents, collections, confi
     const currentURL = `${window.location.origin}/lokaal/${slug}?utm_medium=social&utm_source=whatsapp`;
     const signalURL = `${window.location.origin}/lokaal/${slug}?utm_medium=social&utm_source=signal`;
 
-    const eventDateTime = `${formatDate(raw_start, true)} ${formatDateCSL(start_in_zone)}`;
-    const eventLocation = location?.query ? cleanLocation(location.query) : '';
-
-    const message = `Ik ga naar dit evenement: ${currentURL},
-      Titel: ${formattedTitle},
-      Datum: ${eventDateTime},
-      ${eventLocation !== '' ? `Locatie: ${eventLocation}` : ''}
-      Lijkt het je leuk om hier samen met mij heen te gaan?
-    `;
+    const message = `Lijkt het je leuk om hier samen met mij heen te gaan? 
+    
+${currentURL}`;
     setShareWpText(`https://wa.me/?text=${encodeURIComponent(message)}`);
 
-    const signalMessage = `Ik ga naar dit evenement: ${signalURL}
-
-Titel: ${formattedTitle}
-Datum: ${eventDateTime}
-${eventLocation !== '' ? `Locatie: ${eventLocation}` : ''}
-
-Lijkt het je leuk om hier samen met mij heen te gaan?`;
-
+    const signalMessage = `Lijkt het je leuk om hier samen met mij heen te gaan? 
+    
+${signalURL}`;
     setShareSignalMessage(signalMessage);
+
     fetchAttendees({ slug: slug, maxAttendeesCount: max_attendees_count });
   }, [slug, max_attendees_count]);
 
@@ -126,7 +118,7 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
 
       <WrapperLayout variant="white event-detail">
         <div className="container">
-          <header className={`event-header ${isFormSent ? 'form-sent' : ''}`}>
+          <header id="event-information" className={`event-header ${isFormSent ? 'form-sent' : ''}`}>
             <div className="image-container">
               <picture>
                 <img
@@ -138,7 +130,7 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
             <div className="event-metadata">
               <div className="date-container">
                 <span className="date">
-                  <span>{formatDateWithTimeCSL(raw_start, start_in_zone)}</span>
+                  <span>{formatDateWithTimeCSL(raw_start, start_in_zone, raw_end, end_in_zone)}</span>
                 </span>
                 {collection && (
                   <div>
@@ -148,7 +140,11 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
               </div>
               <h1>{formattedTitle}</h1>
               <div className="location-container">
-                {!hiddenAddress && location && <h3>{cleanLocation(location.query)}</h3>}
+                {!hiddenAddress && location ? (
+                  <h3>{cleanLocation(location.query)}</h3>
+                ) : virtual === true ? (
+                  <h3>Online</h3>
+                ) : null}
                 {groupOrganizer && <div className="badge">Door lokale groep</div>}
               </div>
 
@@ -166,7 +162,9 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
           </header>
           <div className="event-participation">
             <div>
-              <span className="badge-participation">{data?.attendeesCount} aanmeldingen</span>
+              {data && data?.attendeesCount > 5 && (
+                <span className="badge-participation">{data?.attendeesCount} aanmeldingen</span>
+              )}
             </div>
             <div className="btns-wrapper">
               <button className="btn-signal" onClick={handleSignalShare}>
@@ -184,22 +182,13 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
                 </svg>
                 Deel op WhatsApp
               </a>
-              <a href="#travel-together" className="btn-signal fill">
-                <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
-                  <path
-                    fill="currentColor"
-                    d="M12 2c-4 0-8 .5-8 4v9.5A3.5 3.5 0 0 0 7.5 19L6 20.5v.5h2.23l2-2H14l2 2h2v-.5L16.5 19a3.5 3.5 0 0 0 3.5-3.5V6c0-3.5-3.58-4-8-4M7.5 17A1.5 1.5 0 0 1 6 15.5A1.5 1.5 0 0 1 7.5 14A1.5 1.5 0 0 1 9 15.5A1.5 1.5 0 0 1 7.5 17m3.5-7H6V6h5zm2 0V6h5v4zm3.5 7a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5"
-                  ></path>
-                </svg>
-                Reis samen vanuit Utrecht
-              </a>
             </div>
           </div>
           <div className="event-content">
             <div dangerouslySetInnerHTML={{ __html: rich_description }} />
           </div>
 
-          {relatedEvents.nodes.length > 0 && (
+          {/* {relatedEvents.nodes.length > 0 && (
             <div className="related-events-container">
               {relatedEvents.nodes.map((event: EventType) => (
                 <EventCardV2
@@ -212,7 +201,7 @@ Lijkt het je leuk om hier samen met mij heen te gaan?`;
                 />
               ))}
             </div>
-          )}
+          )} */}
         </div>
 
         <SignalModal

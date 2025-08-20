@@ -540,3 +540,9 @@ type LocationType = {
   venue?: string;
   locality?: string;
 };
+
+export type SignalGroupType = {
+  id: string;
+  url: string;
+  internalName: string;
+};

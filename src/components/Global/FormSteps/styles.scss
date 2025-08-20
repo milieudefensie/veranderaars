@@ -181,6 +181,57 @@
     display: none;
   }
 
+  .ui-form-hubspot form {
+    display: flex !important;
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+
+  .hs-fieldtype-booleancheckbox {
+    display: block;
+    flex-direction: row-reverse;
+
+    .inputs-list {
+      padding-bottom: 0 !important;
+      margin-bottom: 10px !important;
+    }
+
+    label {
+      margin-bottom: 0 !important;
+
+      span {
+        color: var(--dark);
+        font-family: var(--nb-secondary-font);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%;
+      }
+    }
+  }
+
+  .ui-form-hubspot .legal-consent-container .hs-richtext,
+  .ui-form-hubspot .legal-consent-container .hs-richtext p {
+    display: block !important;
+  }
+
+  legend {
+    color: var(--dark);
+    font-family: var(--nb-secondary-font);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+  }
+
+  form .legal-consent-container {
+    order: unset;
+  }
+
+  form .legal-consent-container .inputs-list .hs-form-booleancheckbox label span {
+    color: rgb(11, 9, 8);
+  }
+
   .ui-form-hubspot form .hs-submit .actions .hs-button {
     background-color: rgb(140, 198, 63);
     border-color: rgb(140, 198, 63);

@@ -186,13 +186,15 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
     return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug!);
   };
 
+  const mapEvents = filteredEvents;
+
   return (
     <div className={`map-filter-block ${mobileShowMap ? 'mobile-show' : ''}`}>
       {showMap && (
         <MapWrapper
           type="event"
           title={textOverlayingMap}
-          data={filteredEvents}
+          data={mapEvents}
           floatButton={buttonOnMap}
           mobileView={mobileShowMap}
           setMobileView={setMobileShowMap}
@@ -201,15 +203,19 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
       )}
 
       {showList && (
-        <div id="filter-events-list">
+        <div
+          id="filter-events-list"
+          className={`grid-events ${mapEvents.length === 1 ? 'one' : mapEvents.length % 2 === 0 ? 'two' : 'three'} ${mapEvents.length === 2 ? 'mobile-two' : ''}`}
+        >
           <ListPaginated
-            list={filteredEvents}
+            list={mapEvents}
             customPageSize={10}
             renderItem={(item: EventType) => (
               <EventCardV2
                 key={item.id}
                 event={item}
                 lessInfo
+                vertical={mapEvents.length > 1}
                 collection={findParentCollection(item)}
                 isLocalGroup={isLocalGroupOrganizer(item)}
               />

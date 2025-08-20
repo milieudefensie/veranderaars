@@ -71,7 +71,7 @@ const EventCollectionCard: React.FC<Props> = ({ collection, vertical = false, ca
   );
 };
 
-const CalendarIcon = () => (
+export const CalendarIcon = () => (
   <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
     <path
       fill="currentColor"

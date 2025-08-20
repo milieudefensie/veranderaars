@@ -30,6 +30,7 @@ interface FormStepsProps {
   headerComponents?: React.ReactNode;
   descriptionAsHtml?: boolean;
   noStyle?: boolean;
+  showPlaceholder?: boolean;
 }
 
 const FormSteps: React.FC<FormStepsProps> = ({
@@ -45,6 +46,7 @@ const FormSteps: React.FC<FormStepsProps> = ({
   headerComponents,
   descriptionAsHtml = false,
   noStyle = false,
+  showPlaceholder = false,
 }) => {
   const location = useLocation();
   const { forms = [] } = form[0] || {};
@@ -133,6 +135,7 @@ const FormSteps: React.FC<FormStepsProps> = ({
                 extraLogic?.(ctx);
                 initializeForm(ctx);
               }}
+              showPlaceholder={showPlaceholder}
             />
           )}
         </div>

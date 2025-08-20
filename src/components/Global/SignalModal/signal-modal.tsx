@@ -21,6 +21,10 @@ const SignalModal: React.FC<SignalModalProps> = ({ isOpen, onClose, defaultMessa
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    setShareSignalMessage(defaultMessage);
+  }, [defaultMessage]);
+
   if (!isOpen) return null;
 
   return (
