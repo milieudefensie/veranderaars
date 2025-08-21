@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import Map, { MapProps, Marker, Popup, NavigationControl } from 'react-map-gl/mapbox';
-import { Map, Marker, Popup, NavigationControl, MapProps } from 'react-map-gl';
+import Map, { MapProps, Marker, Popup, NavigationControl } from 'react-map-gl/mapbox';
 import GroupMarker from './Marker/group-marker';
 import CustomMarker from './Marker/marker';
 import MapPopup from './MapPopup/map-popup';
