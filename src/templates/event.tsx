@@ -9,7 +9,6 @@ import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import SignalModal from '../components/Global/SignalModal/signal-modal';
 import { SignalGroupType } from '../types';
-import { CalendarIcon } from '../components/Global/event-collection-card/event-collection-card';
 import axios from 'axios';
 
 import './basic.styles.scss';
