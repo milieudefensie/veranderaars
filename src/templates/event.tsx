@@ -65,7 +65,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
       .then((res) => res.json())
       .then((data) => {
         handleSearchSignalGroup(data.city);
-        setCity(data.city);
+        // setCity(data.city);
         setCurrentCity(data.city);
       })
       .catch((err) => {
