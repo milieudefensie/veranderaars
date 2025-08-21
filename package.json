@@ -11,6 +11,7 @@
     "gatsby"
   ],
   "scripts": {
+    "prebuild": "npx puppeteer browsers install chrome",
     "netlify-local": "rm -rf .netlify/cache && yarn build && netlify serve",
     "netlify-dev": "yarn clean && netlify dev",
     "develop": "gatsby clean && gatsby develop",
@@ -27,7 +28,6 @@
     "@tolgee/react": "^6.2.6",
     "@types/mapbox-gl": "^3.4.1",
     "axios": "^1.10.0",
-    "chromium": "^3.0.3",
     "datocms-search": "^0.1.10",
     "dotenv": "17.2.1",
     "fs": "0.0.2",
@@ -53,7 +53,7 @@
     "mapbox-gl": "^3.13.0",
     "node-fetch": "^3.3.2",
     "path": "^0.12.7",
-    "puppeteer-core": "20.1.1",
+    "puppeteer": "^24.17.0",
     "qrcode.react": "^4.2.0",
     "react": "18.3.1",
     "react-datocms": "^7.2.2",
