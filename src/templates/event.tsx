@@ -97,6 +97,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
         name: city,
         url: signalLink,
         email: email,
+        eventSlug: slug,
       });
       setActiveStepTravelTogether(3);
     } catch (error) {
@@ -108,7 +109,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
     try {
       setCity(newCity ? newCity : currentCity);
       const searchRelatedGroups = othersSignalGroups?.find(
-        (group) => group.internalName.toLowerCase() === (newCity || currentCity).toLowerCase()
+        (group: any) => group.internalName.toLowerCase() === (newCity || currentCity).toLowerCase()
       );
 
       setSignalGroupExists(searchRelatedGroups ? searchRelatedGroups : null);
@@ -126,7 +127,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
 
       <WrapperLayout variant={`white event-detail`}>
         <div className="container">
-          <header className="event-header">
+          <header id="event-information" className="event-header">
             <div className="image-container">
               <picture>
                 <img
