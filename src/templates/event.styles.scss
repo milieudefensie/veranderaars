@@ -504,13 +504,13 @@
     font-family: var(--nb-primary-font);
     font-size: 60px;
     line-height: 60px;
-    color: oklch(0.7604 0.1741 129.85);
+    color: rgb(140, 198, 63);
   }
 
   svg {
     width: 72px;
     height: 72px;
-    color: oklch(0.7604 0.1741 129.85);
+    color: rgb(140, 198, 63);
   }
 }
 
@@ -545,7 +545,7 @@
     input {
       font-size: 16px;
       line-height: 24px;
-      color: oklch(0.14 0.004 49.25);
+      color: rgb(11, 9, 8);
       display: block;
       height: 50px;
       background-color: #fff;
@@ -570,8 +570,8 @@
     font-size: 14px;
     font-weight: 700;
     line-height: 21px;
-    color: oklch(0.14 0.004 49.25);
-    background-color: oklch(0.7604 0.1741 129.85);
+    color: rgb(11, 9, 8);
+    background-color: rgb(140, 198, 63);
     border: unset;
     border-radius: 8px;
     transition-duration: .2s;
@@ -609,8 +609,8 @@
         font-size: 24px;
         font-weight: 700;
         line-height: 31.9px;
-        color: oklch(0.14 0.004 49.25);
-        background-color: oklch(0.7604 0.1741 129.85);
+        color: rgb(11, 9, 8);
+        background-color: rgb(140, 198, 63);
         border-radius: 3.35544e+07px;
       }
 
@@ -618,7 +618,7 @@
         font-size: 24px;
         font-weight: 700;
         line-height: 31.9px;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
       }
     }
 
@@ -631,11 +631,11 @@
         margin-bottom: 16px;
         font-size: 20px;
         line-height: 28px;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
 
         a {
           font-weight: 700;
-          color: oklch(0.7604 0.1741 129.85);
+          color: rgb(140, 198, 63);
         }
       }
 
@@ -648,8 +648,8 @@
         font-weight: 700;
         line-height: 27px;
         text-align: center;
-        color: oklch(0.14 0.004 49.25);
-        background-color: oklch(0.7604 0.1741 129.85);
+        color: rgb(11, 9, 8);
+        background-color: rgb(140, 198, 63);
         border: unset;
         align-items: center;
         border-radius: 8px;
@@ -693,7 +693,7 @@
           background-color: #fff;
           font-size: 18px;
           line-height: 18px;
-          color: oklch(0.14 0.004 49.25);
+          color: rgb(11, 9, 8);
           position: absolute;
           pointer-events: none;
           border-radius: 2px;
@@ -712,7 +712,7 @@
           padding: 0 12px;
           font-size: 16px;
           line-height: 24px;
-          color: oklch(0.14 0.004 49.25);
+          color: rgb(11, 9, 8);
           border: 2px solid oklab(0.14 0.00261104 0.00303026 / 0.2);
           background-color: #fff;
           border-radius: 8px;
@@ -733,7 +733,7 @@
         margin-bottom: 16px;
         font-size: 16px;
         line-height: 24px;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
       }
     }
 
@@ -748,7 +748,7 @@
         font-size: 16px;
         font-weight: 700;
         line-height: 24px;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
       }
 
       .share-description {
@@ -760,7 +760,7 @@
         font-size: 16px;
         line-height: 24px;
         font-style: italic;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
       }
 
       .share-buttons {
@@ -777,8 +777,8 @@
           font-size: 14px;
           font-weight: 700;
           line-height: 21px;
-          color: oklch(0.14 0.004 49.25);
-          border: 2px solid oklch(0.7892 0.1713 69.64);
+          color: rgb(11, 9, 8);
+          border: 2px solid rgb(255, 163, 0);
 
           transition-duration: 0.2s;
           transition-property: color, background-color, border-color, box-shadow;
@@ -806,7 +806,7 @@
         font-size: 18px;
         font-weight: 500;
         line-height: 28px;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
       }
 
       button,
@@ -818,9 +818,9 @@
         font-size: 14px;
         font-weight: 700;
         line-height: 21px;
-        color: oklch(0.14 0.004 49.25);
-        border: 2px solid oklch(0.7892 0.1713 69.64);
-        background-color: oklch(0.7892 0.1713 69.64);
+        color: rgb(11, 9, 8);
+        border: 2px solid rgb(255, 163, 0);
+        background-color: rgb(255, 163, 0);
 
         transition-duration: 0.2s;
         transition-property: color, background-color, border-color, box-shadow;
@@ -881,7 +881,7 @@
         font-size: 48px;
         font-weight: 600;
         line-height: 40px;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
       }
 
       .label {
@@ -889,7 +889,7 @@
         font-weight: 600;
         line-height: 21px;
         font-stretch: 75%;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
         opacity: .6;
         margin-bottom: 8px;
       }
@@ -897,7 +897,7 @@
       .info {
         font-size: 18px;
         line-height: 28px;
-        color: oklch(0.14 0.004 49.25);
+        color: rgb(11, 9, 8);
         margin-bottom: 1.5rem;
       }
 
@@ -909,8 +909,8 @@
         font-weight: 700;
         font-size: 18px;
         line-height: 27px;
-        color: oklch(0.14 0.004 49.25);
-        background-color: oklch(0.7604 0.1741 129.85);
+        color: rgb(11, 9, 8);
+        background-color: rgb(140, 198, 63);
         border: unset;
         border-radius: 8px;
         transition-duration: .2s;
@@ -950,7 +950,7 @@
     font-family: var(--nb-primary-font);
     font-size: 24px;
     line-height: 31.9px;
-    color: oklch(0.14 0.004 49.25);
+    color: rgb(11, 9, 8);
     padding: 24px;
   }
 
