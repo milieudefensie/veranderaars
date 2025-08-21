@@ -28,6 +28,7 @@
     "@tolgee/react": "^6.2.6",
     "@types/mapbox-gl": "^3.4.1",
     "axios": "^1.10.0",
+    "chromium": "^3.0.3",
     "datocms-search": "^0.1.10",
     "dotenv": "17.2.1",
     "fs": "0.0.2",
