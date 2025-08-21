@@ -671,9 +671,6 @@ export const DatoCMS = graphql`
         title
       }
     }
-    relatedSignalGroup {
-      ...SignalGroups
-    }
     othersSignalGroups {
       ...SignalGroups
     }
