@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       email: email,
       event_slug: eventSlug,
     });
-    console.log('Record created:', record);
+    // console.log('Record created:', record);
 
     res.json({ message: 'Record created successfully' });
     return;

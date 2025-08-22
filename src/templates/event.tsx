@@ -47,6 +47,10 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
     internalName: string;
     url: string;
   } | null>(null);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<{ email?: boolean; signalLink?: boolean }>({});
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -65,7 +69,6 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
       .then((res) => res.json())
       .then((data) => {
         handleSearchSignalGroup(data.city);
-        // setCity(data.city);
         setCurrentCity(data.city);
       })
       .catch((err) => {
@@ -92,21 +95,39 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
   };
 
   const submitNewSignalGroup = async () => {
+    // Resetear errores
+    setValidationErrors({});
+    setSubmitError(null);
+
+    const errors: { email?: boolean; signalLink?: boolean } = {};
+    if (!signalLink) errors.signalLink = true;
+    if (!email) errors.email = true;
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+
     try {
+      setLoadingSubmit(true);
       await axios.post('/api/create-signal-group', {
         name: city,
         url: signalLink,
-        email: email,
+        email,
         eventSlug: slug,
       });
       setActiveStepTravelTogether(3);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating signal group:', error);
+      setSubmitError('Er is een fout opgetreden bij het aanmaken van de groep. Probeer het opnieuw.');
+    } finally {
+      setLoadingSubmit(false);
     }
   };
 
   const handleSearchSignalGroup = async (newCity: string | undefined) => {
     try {
+      setLoadingSearch(true);
       setCity(newCity ? newCity : currentCity);
       const searchRelatedGroups = othersSignalGroups?.find(
         (group: any) => group.internalName.toLowerCase() === (newCity || currentCity).toLowerCase()
@@ -118,6 +139,8 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
     } catch (error) {
       console.error('Error searching signal group:', error);
       setSignalGroupExists(null);
+    } finally {
+      setLoadingSearch(false);
     }
   };
 
@@ -223,8 +246,8 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                   <span>Vul je woonplaats in</span>
                 </div>
               </label>
-              <button onClick={() => handleSearchSignalGroup(currentCity)}>
-                <span>Plan reis</span>
+              <button onClick={() => handleSearchSignalGroup(currentCity)} disabled={loadingSearch}>
+                {loadingSearch ? 'Zoeken...' : 'Plan reis'}
               </button>
             </div>
 
@@ -285,9 +308,11 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                                 placeholder="https://invite-link..."
                                 autoComplete="url"
                                 type="url"
-                                required
                                 value={signalLink}
                                 onChange={(e) => setSignalLink(e.target.value)}
+                                style={{
+                                  borderColor: validationErrors.signalLink ? 'red' : undefined,
+                                }}
                               />
                             </label>
                             <label className="floating-label">
@@ -296,14 +321,29 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                                 placeholder="E-mail"
                                 autoComplete="email"
                                 type="email"
-                                required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                style={{
+                                  borderColor: validationErrors.email ? 'red' : undefined,
+                                }}
                               />
                             </label>
-                            <button className="full" onClick={submitNewSignalGroup}>
-                              👉 Publiceer link
+                            <button className="full" onClick={submitNewSignalGroup} disabled={loadingSubmit}>
+                              {loadingSubmit ? 'Verwerken...' : '👉 Publiceer link'}
                             </button>
+                            {Object.keys(validationErrors).length > 0 && (
+                              <div
+                                className="validation-error"
+                                style={{ color: 'red', marginBottom: '0.5rem', fontSize: '14px' }}
+                              >
+                                Alle velden zijn verplicht
+                              </div>
+                            )}
+                            {submitError && (
+                              <div className="submit-error" style={{ color: 'red', marginTop: '0.5rem' }}>
+                                {submitError}
+                              </div>
+                            )}
                           </div>
                           <div className="help-text">
                             Kom je er niet uit? Stuur de uitnodiginslink naar doemee@milieudefensie.nl
