@@ -205,7 +205,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
       {showList && (
         <div
           id="filter-events-list"
-          className={`grid-events ${mapEvents.length === 1 ? 'one' : mapEvents.length % 2 === 0 ? 'two' : 'three'} ${mapEvents.length === 2 ? 'mobile-two' : ''}`}
+          className={`grid-events ${mapEvents.length === 1 ? 'one' : mapEvents.length === 2 ? 'two' : 'three'} ${mapEvents.length === 2 ? 'mobile-two' : ''}`}
         >
           <ListPaginated
             list={mapEvents}

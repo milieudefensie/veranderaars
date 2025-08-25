@@ -1,4 +1,5 @@
 import { buildClient } from '@datocms/cma-client-node';
+import axios from 'axios';
 
 export default async function handler(req, res) {
   try {
@@ -12,7 +13,12 @@ export default async function handler(req, res) {
       email: email,
       event_slug: eventSlug,
     });
-    // console.log('Record created:', record);
+
+    // Send notification to hubspot (webhook)
+    await axios.post('https://api-eu1.hubapi.com/automation/v4/webhook-triggers/139720471/lbVe397', {
+      email,
+      message: `Nieuwe groep signalen gecreëerd: ${name} (${email}) - ${url}`,
+    });
 
     res.json({ message: 'Record created successfully' });
     return;

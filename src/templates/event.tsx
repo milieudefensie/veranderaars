@@ -9,13 +9,13 @@ import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
 import SignalModal from '../components/Global/SignalModal/signal-modal';
 import { SignalGroupType } from '../types';
-import axios from 'axios';
+import TravelTogether from '../components/Layout/travel-together/travel-together';
 
 import './basic.styles.scss';
 import './event.styles.scss';
 
 // @ts-expect-error
-const Event = ({ pageContext, data: { page, collections, configuration, relatedEvents, favicon } }) => {
+const Event = ({ pageContext, data: { page, favicon } }) => {
   const {
     seo,
     title,
@@ -34,23 +34,10 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
   } = page;
 
   const [city, setCity] = useState('Utrecht');
-  const [currentCity, setCurrentCity] = useState('Utrecht');
-  const [signalLink, setSignalLink] = useState('');
-  const [email, setEmail] = useState('');
   const [shareWpText, setShareWpText] = useState('');
   const [shareSignalMessage, setShareSignalMessage] = useState('');
   const [showSignalPopup, setShowSignalPopup] = useState(false);
   const [travelShowSignalPopup, setTravelShowSignalPopup] = useState(false);
-  const [activeStepTravelTogether, setActiveStepTravelTogether] = useState(1);
-  const [searchMade, setSearchMade] = useState(false);
-  const [signalGroupExists, setSignalGroupExists] = useState<{
-    internalName: string;
-    url: string;
-  } | null>(null);
-  const [loadingSearch, setLoadingSearch] = useState(false);
-  const [loadingSubmit, setLoadingSubmit] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<{ email?: boolean; signalLink?: boolean }>({});
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -64,17 +51,6 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
 
     const signalMessage = `Lijkt het je leuk om hier samen met mij heen te gaan? ${signalURL}`;
     setShareSignalMessage(signalMessage);
-
-    fetch('https://ipapi.co/json/')
-      .then((res) => res.json())
-      .then((data) => {
-        handleSearchSignalGroup(data.city);
-        setCurrentCity(data.city);
-      })
-      .catch((err) => {
-        console.error(err);
-        handleSearchSignalGroup('Utrecht');
-      });
   }, []);
 
   const travelShareSignalMessageUpdated = `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}? ${
@@ -91,56 +67,6 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
       isTravel ? setTravelShowSignalPopup(true) : setShowSignalPopup(true);
     } catch (err) {
       console.error('Err', err);
-    }
-  };
-
-  const submitNewSignalGroup = async () => {
-    // Resetear errores
-    setValidationErrors({});
-    setSubmitError(null);
-
-    const errors: { email?: boolean; signalLink?: boolean } = {};
-    if (!signalLink) errors.signalLink = true;
-    if (!email) errors.email = true;
-
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
-      return;
-    }
-
-    try {
-      setLoadingSubmit(true);
-      await axios.post('/api/create-signal-group', {
-        name: city,
-        url: signalLink,
-        email,
-        eventSlug: slug,
-      });
-      setActiveStepTravelTogether(3);
-    } catch (error: any) {
-      console.error('Error creating signal group:', error);
-      setSubmitError('Er is een fout opgetreden bij het aanmaken van de groep. Probeer het opnieuw.');
-    } finally {
-      setLoadingSubmit(false);
-    }
-  };
-
-  const handleSearchSignalGroup = async (newCity: string | undefined) => {
-    try {
-      setLoadingSearch(true);
-      setCity(newCity ? newCity : currentCity);
-      const searchRelatedGroups = othersSignalGroups?.find(
-        (group: any) => group.internalName.toLowerCase() === (newCity || currentCity).toLowerCase()
-      );
-
-      setSignalGroupExists(searchRelatedGroups ? searchRelatedGroups : null);
-      setActiveStepTravelTogether(1);
-      setSearchMade(true);
-    } catch (error) {
-      console.error('Error searching signal group:', error);
-      setSignalGroupExists(null);
-    } finally {
-      setLoadingSearch(false);
     }
   };
 
@@ -220,7 +146,8 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
             )}
           </div>
 
-          <div id="travel-together" className="travel-together-container">
+          <TravelTogether slug={slug} othersSignalGroups={othersSignalGroups} shareWpText={shareWpText} />
+          {/* <div id="travel-together" className="travel-together-container">
             <div className="travel-header">
               <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
                 <path
@@ -230,32 +157,91 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
               </svg>
               <h3>Reis samen vanuit {city}</h3>
             </div>
-            <div className="travel-input">
-              <label>
-                <span>Ik reis vanuit</span>
+            <div>
+              <form
+                className="travel-input"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSearchSignalGroup(currentCity);
+                }}
+              >
+                <label>
+                  <span>Ik reis vanuit</span>
+                  <input
+                    placeholder="Ik reis vanuit..."
+                    name="city"
+                    required
+                    autoComplete="off"
+                    value={currentCity}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setCurrentCity(value);
 
-                <input
-                  placeholder="Ik reis vanuit..."
-                  name="city"
-                  required
-                  autoComplete="off"
-                  value={currentCity}
-                  onChange={(e) => setCurrentCity(e.target.value)}
-                />
-                <div className="validator-hint">
-                  <span>Vul je woonplaats in</span>
-                </div>
-              </label>
-              <button onClick={() => handleSearchSignalGroup(currentCity)} disabled={loadingSearch}>
-                {loadingSearch ? 'Zoeken...' : 'Plan reis'}
-              </button>
+                      // Solo mostrar sugerencias si hay texto (más de 1 caracter)
+                      if (value.length > 1 && othersSignalGroups) {
+                        const filtered = othersSignalGroups
+                          .map((g: any) => g.internalName)
+                          .filter((c: string) => c.toLowerCase().includes(value.toLowerCase()));
+                        setCitySuggestions(filtered);
+                        setShowSuggestions(true); // Mostrar sugerencias
+                      } else {
+                        setCitySuggestions([]);
+                        setShowSuggestions(false); // Ocultar sugerencias
+                      }
+                    }}
+                    onFocus={() => {
+                      // Si hay texto y sugerencias disponibles, mostrarlas al hacer focus
+                      if (currentCity.length > 1 && citySuggestions.length > 0) {
+                        setShowSuggestions(true);
+                      }
+                    }}
+                    onBlur={() => {
+                      // Ocultar sugerencias después de un pequeño delay para permitir clicks
+                      setTimeout(() => setShowSuggestions(false), 150);
+                    }}
+                  />
+                  {showSuggestions && citySuggestions.length > 0 && (
+                    <ul className="city-suggestions">
+                      {citySuggestions.map((suggestion, index) => (
+                        <li
+                          key={index}
+                          className="city-suggestion-item"
+                          onClick={() => {
+                            setCurrentCity(suggestion);
+                            setCitySuggestions([]);
+                            setShowSuggestions(false);
+                          }}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                          }}
+                        >
+                          {suggestion}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="validator-hint">
+                    <span>Vul je woonplaats in</span>
+                  </div>
+                </label>
+                <button onClick={() => handleSearchSignalGroup(currentCity)} disabled={loadingSearch} type="submit">
+                  {loadingSearch ? 'Zoeken...' : 'Plan reis'}
+                </button>
+              </form>
             </div>
 
             {searchMade && (
               <>
                 <div className="travel-steps no-exist-group" style={{ display: !signalGroupExists ? 'block' : 'none' }}>
                   <div className={`step ${activeStepTravelTogether === 1 ? 'active' : ''}`}>
-                    <div className="header">
+                    <div
+                      className="header"
+                      onClick={() => {
+                        setActiveStepTravelTogether(1);
+                        // triggerConfetti('subtle');
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <div>
                         <span className="step-number">1</span>
                       </div>
@@ -273,7 +259,12 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                           chat groep (Signal werkt net als WhatsApp). Voeg alvast een paar mensen toe die je wil
                           uitnodigen
                         </p>
-                        <button onClick={() => setActiveStepTravelTogether(2)}>
+                        <button
+                          onClick={() => {
+                            setActiveStepTravelTogether(2);
+                            triggerConfetti('subtle');
+                          }}
+                        >
                           ✅ Ik heb een groep chat aangemaakt
                         </button>
                         <p className="help-text">
@@ -284,7 +275,14 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                     </div>
                   </div>
                   <div className={`step ${activeStepTravelTogether === 2 ? 'active' : ''}`}>
-                    <div className="header">
+                    <div
+                      className="header"
+                      onClick={() => {
+                        setActiveStepTravelTogether(2);
+                        // triggerConfetti('subtle');
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <div>
                         <span className="step-number">2</span>
                       </div>
@@ -301,7 +299,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                             </strong>{' '}
                             Wij nodigen vervolgens veranderaars in Utrecht uit om met jou samen te reizen.
                           </p>
-                          <div>
+                          <form onSubmit={submitNewSignalGroup}>
                             <label className="floating-label">
                               <span>Uitnodigingslink groep chat</span>
                               <input
@@ -314,6 +312,11 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                                   borderColor: validationErrors.signalLink ? 'red' : undefined,
                                 }}
                               />
+                              {validationErrors.signalLink && (
+                                <div style={{ color: 'red', fontSize: '12px', marginTop: '.25rem' }}>
+                                  {validationErrors.signalLink}
+                                </div>
+                              )}
                             </label>
                             <label className="floating-label">
                               <span>E-mail</span>
@@ -327,24 +330,24 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                                   borderColor: validationErrors.email ? 'red' : undefined,
                                 }}
                               />
+                              {validationErrors.email && (
+                                <div style={{ color: 'red', fontSize: '12px', marginTop: '.25rem' }}>
+                                  {validationErrors.email}
+                                </div>
+                              )}
                             </label>
-                            <button className="full" onClick={submitNewSignalGroup} disabled={loadingSubmit}>
+                            <button className="full" disabled={loadingSubmit} type="submit">
                               {loadingSubmit ? 'Verwerken...' : '👉 Publiceer link'}
                             </button>
-                            {Object.keys(validationErrors).length > 0 && (
-                              <div
-                                className="validation-error"
-                                style={{ color: 'red', marginBottom: '0.5rem', fontSize: '14px' }}
-                              >
-                                Alle velden zijn verplicht
-                              </div>
-                            )}
                             {submitError && (
-                              <div className="submit-error" style={{ color: 'red', marginTop: '0.5rem' }}>
+                              <div
+                                className="submit-error"
+                                style={{ color: 'red', marginTop: '0.3rem', fontSize: '15px', marginBlock: '1rem' }}
+                              >
                                 {submitError}
                               </div>
                             )}
-                          </div>
+                          </form>
                           <div className="help-text">
                             Kom je er niet uit? Stuur de uitnodiginslink naar doemee@milieudefensie.nl
                           </div>
@@ -359,7 +362,14 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                     </div>
                   </div>
                   <div className={`step ${activeStepTravelTogether === 3 ? 'active' : ''}`}>
-                    <div className="header">
+                    <div
+                      className="header"
+                      onClick={() => {
+                        setActiveStepTravelTogether(3);
+                        // triggerConfetti('subtle');
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <div>
                         <span className="step-number">3</span>
                       </div>
@@ -381,11 +391,6 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                         <div className="share-description">
                           Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit{' '}
                           {city}?
-                          <br />
-                          <br /> Wij klagen ING aan
-                          <br /> {formatSimpleDateWithTimeCSL(date, hourStart, hourEnd)}
-                          <br />
-                          {address}
                           <br />
                           <br />{' '}
                           {typeof window !== 'undefined'
@@ -427,7 +432,10 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                   <div className={`step ${activeStepTravelTogether === 1 ? 'active' : ''}`}>
                     <div
                       className="header"
-                      onClick={() => setActiveStepTravelTogether(1)}
+                      onClick={() => {
+                        setActiveStepTravelTogether(1);
+                        triggerConfetti('subtle');
+                      }}
                       style={{ cursor: 'pointer' }}
                     >
                       <div>
@@ -440,7 +448,21 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                     <div className="content first">
                       <div className="wrapper-steps">
                         <div className="image-wrapper-steps">
-                          <picture></picture>
+                          <QRCodeSVG
+                            className="signal-qr"
+                            value={signalGroupExists?.url!}
+                            size={300}
+                            imageSettings={{
+                              src: '/signal-icon3.svg',
+                              x: undefined,
+                              y: undefined,
+                              height: 60,
+                              width: 60,
+                              opacity: 1,
+                              excavate: true,
+                            }}
+                            bgColor="#F5F5F5"
+                          />
                         </div>
                         <div className="info-wrapper-steps">
                           <div>
@@ -470,7 +492,10 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                   <div className={`step ${activeStepTravelTogether === 2 ? 'active' : ''}`}>
                     <div
                       className="header"
-                      onClick={() => setActiveStepTravelTogether(2)}
+                      onClick={() => {
+                        setActiveStepTravelTogether(2);
+                        triggerConfetti('subtle');
+                      }}
                       style={{ cursor: 'pointer' }}
                     >
                       <div>
@@ -494,11 +519,6 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                         <div className="share-description">
                           Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit{' '}
                           {city}?
-                          <br />
-                          <br /> Wij klagen ING aan
-                          <br /> {formatSimpleDateWithTimeCSL(date, hourStart, hourEnd)}
-                          <br />
-                          {address}
                           <br />
                           <br />
                           {typeof window !== 'undefined'
@@ -538,7 +558,7 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
                 </div>
               </>
             )}
-          </div>
+          </div> */}
 
           {othersSignalGroups && othersSignalGroups.length > 0 && (
             <div className="related-groups-container">
@@ -580,11 +600,6 @@ const Event = ({ pageContext, data: { page, collections, configuration, relatedE
           isOpen={showSignalPopup}
           onClose={() => setShowSignalPopup(false)}
           defaultMessage={shareSignalMessage}
-        />
-        <SignalModal
-          isOpen={travelShowSignalPopup}
-          onClose={() => setTravelShowSignalPopup(false)}
-          defaultMessage={travelShareSignalMessageUpdated}
         />
       </WrapperLayout>
     </Layout>
