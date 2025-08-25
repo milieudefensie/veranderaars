@@ -146,7 +146,12 @@ const Event = ({ pageContext, data: { page, favicon } }) => {
             )}
           </div>
 
-          <TravelTogether slug={slug} othersSignalGroups={othersSignalGroups} shareWpText={shareWpText} />
+          <TravelTogether
+            slug={slug}
+            othersSignalGroups={othersSignalGroups}
+            shareWpText={shareWpText}
+            isCSLEvent={false}
+          />
           {/* <div id="travel-together" className="travel-together-container">
             <div className="travel-header">
               <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">

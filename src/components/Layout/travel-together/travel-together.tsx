@@ -8,9 +8,10 @@ type Props = {
   slug: string;
   shareWpText: string;
   othersSignalGroups: any[];
+  isCSLEvent?: boolean;
 };
 
-export default function TravelTogether({ slug, othersSignalGroups, shareWpText }: Props) {
+export default function TravelTogether({ slug, othersSignalGroups, shareWpText, isCSLEvent = true }: Props) {
   const [city, setCity] = useState('Utrecht');
   const [currentCity, setCurrentCity] = useState('Utrecht');
   const [signalLink, setSignalLink] = useState('');
@@ -134,11 +135,9 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText }
 
   const travelShareSignalMessageUpdated = `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}? ${
     typeof window !== 'undefined'
-      ? `${window.location.origin}/lokaal/${slug}#travel-together`
-      : `/lokaal/${slug}#travel-together`
+      ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
+      : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
   }`;
-
-  console.log({ city });
 
   return (
     <div id="travel-together" className="travel-together-container">
@@ -381,8 +380,8 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText }
                     <br />
                     <br />{' '}
                     {typeof window !== 'undefined'
-                      ? `${window.location.origin}/lokaal/${slug}#travel-together`
-                      : `/lokaal/${slug}#travel-together`}
+                      ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
+                      : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`}
                   </div>
                   <div className="share-buttons">
                     <button onClick={handleSignalShare}>
@@ -505,8 +504,8 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText }
                     <br />
                     <br />
                     {typeof window !== 'undefined'
-                      ? `${window.location.origin}/lokaal/${slug}#travel-together`
-                      : `/lokaal/${slug}#travel-together`}
+                      ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
+                      : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`}
                   </div>
                   <div className="share-buttons">
                     <button onClick={handleSignalShare}>
