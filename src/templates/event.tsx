@@ -55,8 +55,8 @@ const Event = ({ pageContext, data: { page, favicon } }) => {
 
   const travelShareSignalMessageUpdated = `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}? ${
     typeof window !== 'undefined'
-      ? `${window.location.origin}/lokaal/${slug}#travel-together`
-      : `/lokaal/${slug}#travel-together`
+      ? `${window.location.origin}/agenda/${slug}#travel-together`
+      : `/agenda/${slug}#travel-together`
   }`;
 
   const withFormsSteps = isArray(formSteps?.forms || formSteps?.[0]?.forms);
