@@ -12,18 +12,14 @@ const SignalModal: React.FC<SignalModalProps> = ({ isOpen, onClose, defaultMessa
   useEffect(() => {
     if (isOpen) {
       document.documentElement.style.overflow = 'hidden';
+      setShareSignalMessage(defaultMessage);
     } else {
       document.documentElement.style.overflow = '';
     }
     return () => {
       document.documentElement.style.overflow = '';
-      setShareSignalMessage(defaultMessage);
     };
-  }, [isOpen]);
-
-  useEffect(() => {
-    setShareSignalMessage(defaultMessage);
-  }, [defaultMessage]);
+  }, [isOpen, defaultMessage]);
 
   if (!isOpen) return null;
 
