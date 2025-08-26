@@ -9,9 +9,16 @@ type Props = {
   shareWpText: string;
   othersSignalGroups: any[];
   isCSLEvent?: boolean;
+  customShareMessage?: boolean;
 };
 
-export default function TravelTogether({ slug, othersSignalGroups, shareWpText, isCSLEvent = true }: Props) {
+export default function TravelTogether({
+  slug,
+  othersSignalGroups,
+  shareWpText,
+  isCSLEvent = true,
+  customShareMessage = false,
+}: Props) {
   const [city, setCity] = useState('Utrecht');
   const [currentCity, setCurrentCity] = useState('Utrecht');
   const [signalLink, setSignalLink] = useState('');
@@ -36,13 +43,23 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
   });
   const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
   const [travelShowSignalPopup, setTravelShowSignalPopup] = useState(false);
+  const [stepsWithConfetti, setStepsWithConfetti] = useState(new Set([1]));
 
   useEffect(() => {
     fetch('https://ipapi.co/json/')
       .then((res) => res.json())
       .then((data) => {
-        handleSearchSignalGroup(data.city);
-        setCurrentCity(data.city);
+        let finalCity = '';
+        const ipCity = data.city;
+
+        if (ipCity === 'The Hague') {
+          finalCity = 'Den Haag';
+        } else {
+          finalCity = ipCity;
+        }
+
+        handleSearchSignalGroup(finalCity);
+        setCurrentCity(finalCity);
       })
       .catch((err) => {
         console.error(err);
@@ -83,8 +100,7 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
         email,
         eventSlug: slug,
       });
-      setActiveStepTravelTogether(3);
-      triggerConfetti('celebration');
+      changeStep(3, true);
     } catch (error: any) {
       console.error('Error creating signal group:', error);
       setSubmitError('Er is een fout opgetreden bij het aanmaken van de groep. Probeer het opnieuw.');
@@ -104,6 +120,7 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
       setSignalGroupExists(searchRelatedGroups ? searchRelatedGroups : null);
       setActiveStepTravelTogether(1);
       setSearchMade(true);
+      setStepsWithConfetti(new Set());
     } catch (error) {
       console.error('Error searching signal group:', error);
       setSignalGroupExists(null);
@@ -122,6 +139,21 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
     }, duration);
   };
 
+  const changeStep = (newStep: number, forceConfetti = false) => {
+    const currentStep = activeStepTravelTogether;
+
+    const isAdvancing = newStep > currentStep;
+    const hasNotShownConfetti = !stepsWithConfetti.has(newStep);
+    const shouldShowConfetti = (forceConfetti || isAdvancing) && hasNotShownConfetti;
+
+    setActiveStepTravelTogether(newStep);
+
+    if (shouldShowConfetti) {
+      setStepsWithConfetti((prev) => new Set([...prev, newStep]));
+      triggerConfetti(newStep === 3 ? 'celebration' : 'normal');
+    }
+  };
+
   const handleSignalShare = async () => {
     try {
       await navigator.clipboard.writeText(travelShareSignalMessageUpdated);
@@ -133,11 +165,16 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
 
   if (isLoading) return null;
 
-  const travelShareSignalMessageUpdated = `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}? ${
-    typeof window !== 'undefined'
-      ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
-      : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
-  }`;
+  const travelShareSignalMessageUpdated = customShareMessage
+    ? `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}?
+
+https://milieudefensie.nl/doe-mee/klimaatmars-2025
+http://veranderaars.milieudefensie.nl/samenreizen`
+    : `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}? ${
+        typeof window !== 'undefined'
+          ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
+          : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
+      }`;
 
   return (
     <div id="travel-together" className="travel-together-container">
@@ -200,6 +237,7 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
                       setCurrentCity(suggestion);
                       setCitySuggestions([]);
                       setShowSuggestions(false);
+                      handleSearchSignalGroup(suggestion);
                     }}
                     onMouseDown={(e) => {
                       e.preventDefault();
@@ -227,7 +265,8 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
               <div
                 className="header"
                 onClick={() => {
-                  setActiveStepTravelTogether(1);
+                  changeStep(1);
+                  // setActiveStepTravelTogether(1);
                   // triggerConfetti('subtle');
                 }}
                 style={{ cursor: 'pointer' }}
@@ -267,7 +306,8 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
               <div
                 className="header"
                 onClick={() => {
-                  setActiveStepTravelTogether(2);
+                  changeStep(2);
+                  // setActiveStepTravelTogether(2);
                   // triggerConfetti('subtle');
                 }}
                 style={{ cursor: 'pointer' }}
@@ -352,7 +392,8 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
               <div
                 className="header"
                 onClick={() => {
-                  setActiveStepTravelTogether(3);
+                  changeStep(3);
+                  // setActiveStepTravelTogether(3);
                   // triggerConfetti('subtle');
                 }}
                 style={{ cursor: 'pointer' }}
@@ -376,12 +417,27 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
                 <div className="share-content">
                   <div className="share-title">Nodig meer mensen uit:</div>
                   <div className="share-description">
-                    Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit {city}?
-                    <br />
-                    <br />{' '}
-                    {typeof window !== 'undefined'
-                      ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
-                      : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`}
+                    {customShareMessage ? (
+                      <>
+                        Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit{' '}
+                        {city}?
+                        <br />
+                        <br />
+                        https://milieudefensie.nl/doe-mee/klimaatmars-2025
+                        <br />
+                        http://veranderaars.milieudefensie.nl/samenreizen
+                      </>
+                    ) : (
+                      <>
+                        Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit{' '}
+                        {city}?
+                        <br />
+                        <br />{' '}
+                        {typeof window !== 'undefined'
+                          ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
+                          : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`}{' '}
+                      </>
+                    )}
                   </div>
                   <div className="share-buttons">
                     <button onClick={handleSignalShare}>
@@ -390,7 +446,18 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
                       </svg>
                       Deel op Signal
                     </button>
-                    <a href={shareWpText} rel="noopener noreferrer" target="_blank">
+                    <a
+                      href={
+                        customShareMessage
+                          ? `https://wa.me/?text=${encodeURIComponent(`Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}?
+
+https://milieudefensie.nl/doe-mee/klimaatmars-2025
+http://veranderaars.milieudefensie.nl/samenreizen`)}`
+                          : shareWpText
+                      }
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
                       <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
                         <path
                           fill="currentColor"
@@ -416,8 +483,9 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
               <div
                 className="header"
                 onClick={() => {
-                  setActiveStepTravelTogether(1);
-                  triggerConfetti('subtle');
+                  changeStep(1);
+                  // setActiveStepTravelTogether(1);
+                  // triggerConfetti('subtle');
                 }}
                 style={{ cursor: 'pointer' }}
               >
@@ -476,8 +544,9 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
               <div
                 className="header"
                 onClick={() => {
-                  setActiveStepTravelTogether(2);
-                  triggerConfetti('subtle');
+                  changeStep(2);
+                  // setActiveStepTravelTogether(2);
+                  // triggerConfetti('subtle');
                 }}
                 style={{ cursor: 'pointer' }}
               >
@@ -500,12 +569,27 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
                 <div className="share-content">
                   <div className="share-title">Nodig meer mensen uit:</div>
                   <div className="share-description">
-                    Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit {city}?
-                    <br />
-                    <br />
-                    {typeof window !== 'undefined'
-                      ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
-                      : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`}
+                    {customShareMessage ? (
+                      <>
+                        Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit{' '}
+                        {city}?
+                        <br />
+                        <br />
+                        https://milieudefensie.nl/doe-mee/klimaatmars-2025
+                        <br />
+                        http://veranderaars.milieudefensie.nl/samenreizen
+                      </>
+                    ) : (
+                      <>
+                        Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit{' '}
+                        {city}?
+                        <br />
+                        <br />
+                        {typeof window !== 'undefined'
+                          ? `${window.location.origin}/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`
+                          : `/${isCSLEvent ? 'lokaal' : 'agenda'}/${slug}#travel-together`}
+                      </>
+                    )}
                   </div>
                   <div className="share-buttons">
                     <button onClick={handleSignalShare}>
@@ -514,7 +598,18 @@ export default function TravelTogether({ slug, othersSignalGroups, shareWpText, 
                       </svg>
                       Deel op Signal
                     </button>
-                    <a href={shareWpText} rel="noopener noreferrer" target="_blank">
+                    <a
+                      href={
+                        customShareMessage
+                          ? `https://wa.me/?text=${encodeURIComponent(`Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}?
+
+https://milieudefensie.nl/doe-mee/klimaatmars-2025
+http://veranderaars.milieudefensie.nl/samenreizen`)}`
+                          : shareWpText
+                      }
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
                       <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
                         <path
                           fill="currentColor"

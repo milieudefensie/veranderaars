@@ -16,8 +16,12 @@ const TravelTogetherPage: React.FC<PageProps> = ({ data }) => {
         <div className="container">
           <TravelTogether
             slug={'samenreizen'}
-            othersSignalGroups={data.signalGroups.nodes.map((g) => g)}
-            shareWpText={`https://wa.me/?text=${encodeURIComponent(`Lijkt het je leuk om hier samen met mij heen te gaan? https://veranderaars.milieudefensie.nl/samenreizen?utm_medium=social&utm_source=whatsapp`)}`}
+            othersSignalGroups={data.signalGroups.nodes.map((g: any) => g)}
+            customShareMessage
+            shareWpText=""
+            //             shareWpText={`https://wa.me/?text=${encodeURIComponent(`Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit ${city}?
+            // https://milieudefensie.nl/doe-mee/klimaatmars-2025?utm_medium=social&utm_source=whatsapp
+            // http://veranderaars.milieudefensie.nl/samenreizen?utm_medium=social&utm_source=whatsapp`)`}
           />
         </div>
       </WrapperLayout>
