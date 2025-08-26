@@ -473,7 +473,13 @@ http://veranderaars.milieudefensie.nl/samenreizen`)}`
                     Vergeet niet om je aan te melden voor dit evenement <br /> zodat je op de hoogte blijft van
                     belangrijke updates:
                   </p>
-                  <a href="#event-information">👉 Meld je aan voor evenement</a>
+                  <a
+                    href={
+                      customShareMessage ? 'https://milieudefensie.nl/doe-mee/klimaatmars-2025' : '#event-information'
+                    }
+                  >
+                    👉 Meld je aan voor evenement
+                  </a>
                 </div>
               </div>
             </div>
@@ -625,7 +631,13 @@ http://veranderaars.milieudefensie.nl/samenreizen`)}`
                     Vergeet niet om je aan te melden voor dit evenement <br /> zodat je op de hoogte blijft van
                     belangrijke updates:
                   </p>
-                  <a href="#event-information">👉 Meld je aan voor evenement</a>
+                  <a
+                    href={
+                      customShareMessage ? 'https://milieudefensie.nl/doe-mee/klimaatmars-2025' : '#event-information'
+                    }
+                  >
+                    👉 Meld je aan voor evenement
+                  </a>
                 </div>
               </div>
             </div>
