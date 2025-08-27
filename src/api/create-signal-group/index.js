@@ -14,10 +14,10 @@ export default async function handler(req, res) {
       event_slug: eventSlug,
     });
 
-    // Send notification to hubspot (webhook)
-    await axios.post('https://api-eu1.hubapi.com/automation/v4/webhook-triggers/139720471/lbVe397', {
+    // Send email notification
+    await axios.post('https://hook.eu2.make.com/t10vrpfqy31h6fut8v8s717oythtqjdp', {
       email,
-      message: `Nieuwe groep signalen gecreëerd: ${name} (${email}) - ${url}`,
+      url,
     });
 
     res.json({ message: 'Record created successfully' });
