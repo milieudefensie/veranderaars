@@ -1,4 +1,10 @@
 [build]
+  command = "npm run clean && npm run build:netlify"
   functions = 'functions'
+
+[build.environment]
+  NODE_OPTIONS = "--max-old-space-size=4096"
+  GATSBY_CPU_COUNT = "2"
+
 [functions]
   node_bundler = "esbuild"
