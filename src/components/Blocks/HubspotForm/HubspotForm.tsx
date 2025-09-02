@@ -14,6 +14,7 @@ interface HubspotFormProps {
   columns?: number;
   extraLogic?: (ctx: any) => void;
   onFormSubmitted?: (form: HTMLFormElement, data: any) => void;
+  showPlaceholder?: boolean;
 }
 
 declare global {
@@ -32,6 +33,7 @@ const HubspotForm: React.FC<HubspotFormProps> = ({
   columns,
   extraLogic = null,
   onFormSubmitted,
+  showPlaceholder = false,
 }) => {
   const { t } = useTranslate();
 
@@ -71,6 +73,27 @@ const HubspotForm: React.FC<HubspotFormProps> = ({
     setupFocusHandlers(formWrapper);
     setupPostalCodeValidation(formWrapper, submitBtn);
     addRecaptchaText(formWrapper);
+
+    // Placeholders
+    if (showPlaceholder) {
+      const emailInput = formWrapper.querySelector('input[name="email"]') as HTMLInputElement;
+      if (emailInput) emailInput.placeholder = 'E-mail';
+
+      const nameInput = formWrapper.querySelector('input[name="firstname"]') as HTMLInputElement;
+      if (nameInput) nameInput.placeholder = 'Voornaam';
+
+      const tussenvoegselInput = formWrapper.querySelector('input[name="tussenvoegsel"]') as HTMLInputElement;
+      if (tussenvoegselInput) tussenvoegselInput.placeholder = 'Tussenvoegsel';
+
+      const achternaamInput = formWrapper.querySelector('input[name="achternaam"]') as HTMLInputElement;
+      if (achternaamInput) achternaamInput.placeholder = 'Achternaam';
+
+      const zipInput = formWrapper.querySelector('input[name="zip"]') as HTMLInputElement;
+      if (zipInput) zipInput.placeholder = 'Postcode';
+
+      const phoneInput = formWrapper.querySelector('input[name="phone"]') as HTMLInputElement;
+      if (phoneInput) phoneInput.placeholder = 'Telefoonnummer';
+    }
 
     if (extraLogic) extraLogic(ctx);
   };

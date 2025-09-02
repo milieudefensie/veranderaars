@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Map, Marker, Popup, NavigationControl, MapProps } from 'react-map-gl';
+import Map, { MapProps, Marker, Popup, NavigationControl } from 'react-map-gl/mapbox';
 import GroupMarker from './Marker/group-marker';
 import CustomMarker from './Marker/marker';
 import MapPopup from './MapPopup/map-popup';
@@ -179,12 +179,10 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
         <Map
           {...viewport}
           ref={mapRef}
-          mapStyle="mapbox://styles/martinalv/clptudeob00ub01p74jlnbdce"
-          mapboxAccessToken={
-            'pk.eyJ1IjoibWFydGluYWx2IiwiYSI6ImNscHR1YjdvZDBlY2sybHBnNTRwM2l4ZTEifQ.nn8C3qy8ULBkq6gdO3vlCg'
-          }
+          mapStyle={process.env.GATSBY_MAPBOX_STYLE_URL}
+          mapboxAccessToken={process.env.GATSBY_MAPBOX_TOKEN}
           onMove={(evt) => setViewport(evt.viewState)}
-          onLoad={(evt) => evt.target.setZoom(viewport.zoom)}
+          onLoad={(evt) => evt.target.setZoom(viewport.zoom!)}
           dragRotate={false}
           touchPitch
           touchZoomRotate
@@ -196,6 +194,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
         >
           {clusters.map((cluster) => {
             const [longitude, latitude] = cluster.geometry.coordinates;
+            // @ts-ignore
             const { cluster: isCluster, point_count: pointCount } = cluster.properties;
 
             if (isCluster) {
@@ -209,7 +208,6 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
                     }}
                     onClick={() => {
                       const expansionZoom = Math.min(supercluster.getClusterExpansionZoom(cluster.id), 20);
-
                       setViewport({
                         ...viewport,
                         latitude,

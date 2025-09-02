@@ -2,24 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
-import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import FloatLayout from '../components/Global/FloatLayout/float-layout';
-import Link from '../components/Global/Link/link';
-import { ReactSVG } from 'react-svg'; // @ts-expect-error
-import { cleanLocation, detectService, formatDate, formatDateCSL } from '../utils';
+import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout'; // @ts-expect-error
+import { cleanLocation, formatDate, formatDateCSL, formatDateWithTimeCSL } from '../utils';
 import Form from '../components/Global/Form/form';
-import axios from 'axios';
-// @ts-expect-error
-import backBtnIcon from '../components/Icons/back-btn.svg'; // @ts-expect-error
-import dateIcon from '../components/Icons/calendar-date.svg'; // @ts-expect-error
-import hourIcon from '../components/Icons/calendar-hour.svg'; // @ts-expect-error
-import locationIcon from '../components/Icons/calendar-location.svg'; // @ts-expect-error
-import wpIcon from '../components/Icons/wp-icon.svg';
+import { EventType } from '../types';
+import { useCSLAttendees } from '../hooks/useCSLAttendees';
+import Spinner from '../components/Global/Spinner/spinner';
+import SignalModal from '../components/Global/SignalModal/signal-modal';
 
 import './basic.styles.scss';
+import './event.styles.scss';
 
 // @ts-expect-error
-const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon } }) => {
+const CSLEvent = ({ pageContext, data: { page, relatedEvents, collections, configuration, favicon } }) => {
   const {
     title,
     slug,
@@ -35,45 +30,74 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon
     inputs = [],
     hiddenAddress = false,
     web_conference_url,
-    waiting_list_enabled,
     max_attendees_count,
+    virtual,
   } = page;
 
-  const heroImage = image_url || pageContext?.heroImage?.url;
   const [shareWpText, setShareWpText] = useState('');
-  const [isWaitingListActive, setIsWaitingListActive] = useState(false);
-  const [status, setStatus] = useState('loading');
+  const [shareSignalMessage, setShareSignalMessage] = useState('');
+  const [showSignalPopup, setShowSignalPopup] = useState(false);
+  const { data, loading, error, fetchAttendees } = useCSLAttendees();
+  const [isFormSent, setIsFormSent] = useState(false);
 
   useEffect(() => {
     const htmlElement = document.documentElement;
     htmlElement.style.overflow = '';
 
-    const currentURL = encodeURIComponent(window.location.href);
-    setShareWpText(`https://wa.me/?text=${currentURL}`);
+    const currentURL = `${window.location.origin}/lokaal/${slug}?utm_medium=social&utm_source=whatsapp`;
+    const signalURL = `${window.location.origin}/lokaal/${slug}?utm_medium=social&utm_source=signal`;
 
-    const checkIfEventHasReachedLimit = async () => {
-      const response = await axios.post('/api/get-csl-attendees', {
-        data: { slug, max_attendees_count },
-      });
-      const { isWaitingListActive, attendeesCount } = response.data;
+    const message = `Lijkt het je leuk om hier samen met mij heen te gaan? 
+    
+${currentURL}`;
+    setShareWpText(`https://wa.me/?text=${encodeURIComponent(message)}`);
 
-      setIsWaitingListActive(isWaitingListActive);
-      setStatus('idle');
-    };
+    const signalMessage = `Lijkt het je leuk om hier samen met mij heen te gaan? 
+    
+${signalURL}`;
+    setShareSignalMessage(signalMessage);
 
-    if (max_attendees_count) {
-      checkIfEventHasReachedLimit();
-    } else {
-      setStatus('idle');
-    }
+    fetchAttendees({ slug: slug, maxAttendeesCount: max_attendees_count });
   }, [slug, max_attendees_count]);
 
-  const conferenceType = detectService(web_conference_url);
-  const isConferenceWp = conferenceType === 'WhatsApp';
-  const formattedTitle = isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
+  const formattedTitle = data?.isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
   let mainImage = Array.isArray(additional_image_sizes_url)
     ? additional_image_sizes_url.find((i) => i.style === 'original')?.url
     : null;
+
+  const findParentCollection = (event: EventType) => {
+    const parentCollection = collections.nodes.find((collection: any) => {
+      const hasRelatedEvent = collection.relatedEvents?.some((e: any) => e.slug === event.slug);
+      const matchesCalendarSlug = collection.cslCalendarSlug && event.calendar?.slug === collection.cslCalendarSlug;
+      return hasRelatedEvent || matchesCalendarSlug;
+    });
+
+    return parentCollection;
+  };
+
+  const isLocalGroupOrganizer = (event: EventType) => {
+    return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug!);
+  };
+
+  const handleSignalShare = async () => {
+    try {
+      await navigator.clipboard.writeText(shareSignalMessage);
+      setShowSignalPopup(true);
+    } catch (err) {
+      console.error('Err', err);
+    }
+  };
+
+  const collection = findParentCollection(page);
+  const groupOrganizer = isLocalGroupOrganizer(page);
+
+  if (loading) {
+    return (
+      <div className="full-screen-loader">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <Layout>
@@ -93,95 +117,98 @@ const CSLEvent = ({ pageContext, data: { page, listEvent, configuration, favicon
       </SeoDatoCMS>
 
       <WrapperLayout variant="white event-detail">
-        <div className={`form-wrapper`}>
-          <Form
-            title={title}
-            event={slug}
-            inputs={inputs}
-            image={mainImage ?? heroImage}
-            conferenceUrl={web_conference_url}
-            isWaitingList={isWaitingListActive}
-            configuration={configuration}
-            introduction={
-              <div className="event-introduction">
+        <div className="container">
+          <header id="event-information" className={`event-header ${isFormSent ? 'form-sent' : ''}`}>
+            <div className="image-container">
+              <picture>
+                <img
+                  src={mainImage || 'https://www.datocms-assets.com/115430/1712234204-pattern-2500.png'}
+                  alt={`Image for ${formattedTitle}`}
+                />
+              </picture>
+            </div>
+            <div className="event-metadata">
+              <div className="date-container">
                 <span className="date">
-                  <img src={dateIcon} alt="Date icon" />
-                  {formatDate(raw_start, true)} {formatDateCSL(start_in_zone)}{' '}
-                  {raw_end ? `- ${formatDateCSL(end_in_zone)}` : ''}
+                  <span>{formatDateWithTimeCSL(raw_start, start_in_zone, raw_end, end_in_zone)}</span>
                 </span>
-                {location?.query && (
-                  <span className="date">
-                    <img src={locationIcon} alt="Location icon" />
-                    {cleanLocation(location.query)}
-                  </span>
-                )}
-              </div>
-            }
-            headerComponents={
-              <>
-                {listEvent && (
-                  <div className="pre-header">
-                    <div className="back-btn">
-                      <Link to={listEvent}>
-                        <img src={backBtnIcon} alt="Back button icon" />
-                        <span>Alle evenementen</span>
-                      </Link>
-                    </div>
+                {collection && (
+                  <div>
+                    <span className="badge-tour">{collection.title}</span>
                   </div>
                 )}
-              </>
-            }
-          />
+              </div>
+              <h1>{formattedTitle}</h1>
+              <div className="location-container">
+                {!hiddenAddress && location ? (
+                  <h3>{cleanLocation(location.query)}</h3>
+                ) : virtual === true ? (
+                  <h3>Online</h3>
+                ) : null}
+                {groupOrganizer && <div className="badge">Door lokale groep</div>}
+              </div>
+
+              {/* @ts-ignore */}
+              <Form
+                event={slug}
+                inputs={inputs}
+                conferenceUrl={web_conference_url}
+                isWaitingList={data?.isWaitingListActive}
+                configuration={configuration}
+                noStyle
+                onSuccess={() => setIsFormSent(true)}
+              />
+            </div>
+          </header>
+          <div className="event-participation">
+            <div>
+              {data && data?.attendeesCount > 5 && (
+                <span className="badge-participation">{data?.attendeesCount} aanmeldingen</span>
+              )}
+            </div>
+            <div className="btns-wrapper">
+              <button className="btn-signal" onClick={handleSignalShare}>
+                <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
+                  <path fill="currentColor" d="m21 12l-7-7v4C7 10 4 15 3 20c2.5-3.5 6-5.1 11-5.1V19z"></path>
+                </svg>
+                Deel op Signal
+              </button>
+              <a href={shareWpText} rel="noopener noreferrer" target="_blank" className="btn-signal">
+                <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
+                  <path
+                    fill="currentColor"
+                    d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.23 8.23 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.2 8.2 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24M8.53 7.33c-.16 0-.43.06-.66.31c-.22.25-.87.86-.87 2.07c0 1.22.89 2.39 1 2.56c.14.17 1.76 2.67 4.25 3.73c.59.27 1.05.42 1.41.53c.59.19 1.13.16 1.56.1c.48-.07 1.46-.6 1.67-1.18s.21-1.07.15-1.18c-.07-.1-.23-.16-.48-.27c-.25-.14-1.47-.74-1.69-.82c-.23-.08-.37-.12-.56.12c-.16.25-.64.81-.78.97c-.15.17-.29.19-.53.07c-.26-.13-1.06-.39-2-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.12-.24-.01-.39.11-.5c.11-.11.27-.29.37-.44c.13-.14.17-.25.25-.41c.08-.17.04-.31-.02-.43c-.06-.11-.56-1.35-.77-1.84c-.2-.48-.4-.42-.56-.43c-.14 0-.3-.01-.47-.01"
+                  ></path>
+                </svg>
+                Deel op WhatsApp
+              </a>
+            </div>
+          </div>
+          <div className="event-content">
+            <div dangerouslySetInnerHTML={{ __html: rich_description }} />
+          </div>
+
+          {/* {relatedEvents.nodes.length > 0 && (
+            <div className="related-events-container">
+              {relatedEvents.nodes.map((event: EventType) => (
+                <EventCardV2
+                  key={event.id}
+                  event={event}
+                  vertical
+                  collection={findParentCollection(event)}
+                  isLocalGroup={isLocalGroupOrganizer(event)}
+                  extraClassName="tablet-responsive"
+                />
+              ))}
+            </div>
+          )} */}
         </div>
 
-        <FloatLayout reduceOverlap>
-          {mainImage?.url && (
-            <div className="image-event">
-              <img src={mainImage.url} alt={title} />
-            </div>
-          )}
-
-          {rich_description && (
-            <div className="content csl-variant" style={{ whiteSpace: 'break-spaces' }}>
-              <p dangerouslySetInnerHTML={{ __html: rich_description }} />
-            </div>
-          )}
-
-          <div className="brief-information">
-            <div className="metadata">
-              {raw_start && (
-                <span>
-                  <img src={dateIcon} alt="Date icon" />
-                  <span>{formatDate(raw_start, true)}</span>
-                </span>
-              )}
-
-              {start_in_zone && (
-                <span>
-                  <img src={hourIcon} alt="Hour icon" />
-                  <span>
-                    {formatDateCSL(start_in_zone)}
-                    {end_in_zone ? ` - ${formatDateCSL(end_in_zone)}` : ''}
-                  </span>
-                </span>
-              )}
-
-              {!hiddenAddress && location?.query && (
-                <span>
-                  <img src={locationIcon} alt="Location icon" />
-                  <span>{cleanLocation(location.query)}</span>
-                </span>
-              )}
-            </div>
-
-            {!isConferenceWp && shareWpText && (
-              <a className="wp-button" href={shareWpText} target="_blank" rel="noopener noreferrer">
-                <span>Deel op WhatsApp</span>
-                <ReactSVG src={wpIcon} />
-              </a>
-            )}
-          </div>
-        </FloatLayout>
+        <SignalModal
+          isOpen={showSignalPopup}
+          onClose={() => setShowSignalPopup(false)}
+          defaultMessage={shareSignalMessage}
+        />
       </WrapperLayout>
     </Layout>
   );
@@ -207,46 +234,20 @@ export const PageQuery = graphql`
       formSecondStepDisclaimer
     }
     page: externalEvent(id: { eq: $id }) {
-      __typename
-      id
-      slug
-      title
-      url
-      description
-      rich_description
-      raw_start
-      raw_end
-      start_at
-      end_at
-      start_in_zone
-      end_in_zone
-      time_zone
-      virtual
-      launched_at
-      locale
-      image_url
-      hiddenAddress
-      location {
-        latitude
-        longitude
-        postal_code
-        country
-        region
-        locality
-        query
-        street
-        street_number
-        venue
+      ...CSLEventPage
+    }
+    relatedEvents: allExternalEvent(filter: { cancelled_at: { eq: null }, id: { ne: $id } }, limit: 3) {
+      nodes {
+        ...CSLEventCard
       }
-      labels
-      inputs
-      web_conference_url
-      max_attendees_count
-      waiting_list_enabled
-      additional_image_sizes_url {
-        url
-        style
+    }
+    collections: allDatoCmsEventCollection {
+      nodes {
+        ...EventCollectionCard
       }
+    }
+    configuration: datoCmsSiteConfiguration {
+      cslLocalGroupsSlugs
     }
   }
 `;

@@ -13,14 +13,16 @@
 
   .ui-event-card-v2 {
     border-radius: unset;
+    box-shadow: unset;
 
     &:hover {
       translate: unset;
+      box-shadow: unset;
     }
   }
 
   .related-events {
-    border-color: oklch(.922 0 0);
+    border-color: rgb(229, 229, 229);
     border-top-width: 2px;
     border-style: solid;
 
@@ -58,9 +60,9 @@
             width: calc(.25rem * 10);
 
             grid-row-start: 1;
-            color: oklch(76.04% .1741 129.85);
+            color: rgb(140, 198, 63);
             background-color:
-              color-mix(in oklab, oklch(76.04% .1741 129.85) 10%, transparent);
+              color-mix(in oklab, rgb(140, 198, 63) 10%, transparent);
             border-radius: 3.40282e+38px;
           }
 
@@ -94,7 +96,7 @@
         }
 
         &:hover {
-          background-color: color-mix(in oklab, oklch(76.04% .1741 129.85) 20%, transparent);
+          background-color: color-mix(in oklab, rgb(140, 198, 63) 20%, transparent);
         }
       }
     }

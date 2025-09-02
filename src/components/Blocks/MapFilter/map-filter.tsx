@@ -2,71 +2,12 @@ import React, { useEffect, useState } from 'react';
 import MapWrapper from '../../Global/Map/map';
 import { graphql, useStaticQuery } from 'gatsby'; // @ts-expect-error
 import { mapCmsEvents, mapCslEvents } from '../../../utils';
-import ListPaginated from '../../Global/Pagination/list-paginated';
-import EventCard from '../HighlightEvent/event-card'; // @ts-expect-error
+import ListPaginated from '../../Global/Pagination/list-paginated'; // @ts-expect-error
 import useCSLEvents from '../../../hooks/useCSLEvents';
+import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
+import { EventType } from '../../../types';
 
 import './styles.scss';
-
-interface Location {
-  latitude: number;
-  longitude: number;
-  venue?: string;
-  query?: string;
-  region?: string;
-}
-
-interface Calendar {
-  name: string;
-  slug: string;
-}
-
-interface CSLNode {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  start_at: string;
-  end_at: string;
-  raw_start: string;
-  raw_end: string;
-  image_url: string;
-  labels: string[];
-  start_in_zone: string;
-  end_in_zone: string;
-  location: Location;
-  calendar: Calendar;
-  hiddenAddress?: string;
-}
-
-interface DatoCmsTag {
-  id: string;
-  title: string;
-}
-
-interface DatoCmsEvent {
-  id: string;
-  title: string;
-  slug: string;
-  externalLink?: string;
-  introduction: string;
-  date: string;
-  rawDate: string;
-  hourStart: string;
-  hourEnd: string;
-  onlineEvent: boolean;
-  address: string;
-  region: string;
-  coordinates: Location;
-  tags: DatoCmsTag[];
-  image: {
-    url: string;
-    gatsbyImageData: any;
-  };
-  model: {
-    apiKey: string;
-  };
-}
 
 interface MapFilterProps {
   block: {
@@ -95,7 +36,12 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
     extraEvents,
   } = block;
 
-  const { allDatoCmsEvent: events, cslEvents } = useStaticQuery(graphql`
+  const {
+    allDatoCmsEvent: events,
+    cslEvents,
+    collections,
+    configuration,
+  } = useStaticQuery(graphql`
     query events {
       cslEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
         edges {
@@ -162,6 +108,14 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
           }
         }
       }
+      collections: allDatoCmsEventCollection {
+        nodes {
+          ...EventCollectionCard
+        }
+      }
+      configuration: datoCmsSiteConfiguration {
+        cslLocalGroupsSlugs
+      }
     }
   `);
 
@@ -169,7 +123,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
   const cslEventsMapped = mapCslEvents(cslEvents);
   const { mergedEvents } = useCSLEvents(cmsEvents, cslEventsMapped);
 
-  const filteredEvents = mergedEvents.filter((e) => {
+  const filteredEvents = mergedEvents.filter((e: any) => {
     if (!labelsInCsl && !filterBy?.id && !cslCalendarName) return true;
 
     const isCSLEvent = e.type === 'CSL';
@@ -184,7 +138,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
       return e.labels?.includes(labelsInCsl);
     }
 
-    return e.tags?.some((t) => t.id === filterBy?.id);
+    return e.tags?.some((t: any) => t.id === filterBy?.id);
   });
 
   useEffect(() => {
@@ -218,13 +172,29 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
     }
   };
 
+  const findParentCollection = (event: EventType) => {
+    const parentCollection = collections.nodes.find((collection: any) => {
+      const hasRelatedEvent = collection.relatedEvents?.some((e: any) => e.slug === event.slug);
+      const matchesCalendarSlug = collection.cslCalendarSlug && event.calendar?.slug === collection.cslCalendarSlug;
+      return hasRelatedEvent || matchesCalendarSlug;
+    });
+
+    return parentCollection;
+  };
+
+  const isLocalGroupOrganizer = (event: EventType) => {
+    return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug!);
+  };
+
+  const mapEvents = filteredEvents;
+
   return (
     <div className={`map-filter-block ${mobileShowMap ? 'mobile-show' : ''}`}>
       {showMap && (
         <MapWrapper
           type="event"
           title={textOverlayingMap}
-          data={filteredEvents}
+          data={mapEvents}
           floatButton={buttonOnMap}
           mobileView={mobileShowMap}
           setMobileView={setMobileShowMap}
@@ -233,11 +203,23 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
       )}
 
       {showList && (
-        <div id="filter-events-list">
+        <div
+          id="filter-events-list"
+          className={`grid-events ${mapEvents.length === 1 ? 'one' : mapEvents.length === 2 ? 'two' : 'three'} ${mapEvents.length === 2 ? 'mobile-two' : ''}`}
+        >
           <ListPaginated
-            list={filteredEvents}
+            list={mapEvents}
             customPageSize={10}
-            renderItem={(item) => <EventCard event={item} key={item.id} />}
+            renderItem={(item: EventType) => (
+              <EventCardV2
+                key={item.id}
+                event={item}
+                lessInfo
+                vertical={mapEvents.length > 1}
+                collection={findParentCollection(item)}
+                isLocalGroup={isLocalGroupOrganizer(item)}
+              />
+            )}
             extraLogic={() => {
               const targetElement = document.getElementById('filter-events-list');
 

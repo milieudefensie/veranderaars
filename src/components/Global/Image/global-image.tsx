@@ -30,7 +30,7 @@ const GlobalImage: React.FC<GlobalImageProps> = ({ image, imageMobile, ...props 
   if (image?.gatsbyImageData) {
     return <GatsbyImage alt={altImage} image={images} {...props} />;
   } else if (image?.url) {
-    return <img src={image.url} alt={altImage} loading="lazy" />;
+    return <img src={image.url} alt={altImage} loading="lazy" width={445} height={333.75} />;
   } else {
     return null;
   }

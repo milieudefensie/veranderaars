@@ -35,6 +35,12 @@
   .mobile-ctas {
     display: none;
   }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
 }
 
 .event-card {
@@ -206,6 +212,7 @@
     }
 
     .mobile-ctas {
+      margin-top: 1.5rem;
       display: block;
     }
   }

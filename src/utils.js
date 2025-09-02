@@ -1,3 +1,4 @@
+import { on } from 'events';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -46,6 +47,10 @@ export const getCtaUrl = (cta) => {
   }
 
   if (cta.slug) {
+    if (cta.__typename === 'ExternalEvent') {
+      return `/lokaal/${cta.slug}`;
+    }
+
     return `/${cta.slug}`;
   }
 
@@ -106,43 +111,34 @@ export const formatDateCSL = (rawDate) => {
   return time;
 };
 
-export const formatDateWithTimeCSL = (dateStr, hourStr) => {
-  const isTimeValid = /^\d{2}:\d{2}$/.test(hourStr);
+export const formatDateWithTimeCSL = (dateStr, hourStr, endDate, endHourStr) => {
   const now = DateTime.local().setLocale('nl');
+  let dt = DateTime.fromISO(hourStr || dateStr, { locale: 'nl' });
 
-  let dt;
+  let dtEnd = endHourStr
+    ? DateTime.fromISO(endHourStr, { locale: 'nl' })
+    : endDate
+      ? DateTime.fromISO(endDate, { locale: 'nl' })
+      : null;
 
-  if (isTimeValid) {
-    dt = DateTime.fromISO(`${dateStr}T${hourStr}`, { locale: 'nl' });
-  } else {
-    dt = DateTime.fromISO(dateStr, { locale: 'nl' });
-  }
+  const time = hourStr ? formatDateCSL(hourStr) : '';
+  const endTime = endHourStr ? formatDateCSL(endHourStr) : null;
 
-  const time = formatDateCSL(hourStr);
+  const timeRange = dtEnd && endTime ? `${time} - ${endTime}` : time;
 
   if (dt.hasSame(now, 'day')) {
-    return isTimeValid ? (
+    return (
       <>
-        <strong>Vandaag</strong> {dt.toFormat('HH:mm')}
+        <strong>Vandaag</strong> {timeRange}
       </>
-    ) : time ? (
-      <>
-        <strong>Vandaag {time}</strong>
-      </>
-    ) : (
-      <strong>Vandaag </strong>
     );
   }
 
   if (dt.hasSame(now.plus({ days: 1 }), 'day')) {
-    return isTimeValid ? (
+    return (
       <>
-        <strong>Morgen</strong> {dt.toFormat('HH:mm')}
+        <strong>Morgen</strong> {timeRange}
       </>
-    ) : time ? (
-      <strong>Morgen {time}</strong>
-    ) : (
-      <strong>Morgen</strong>
     );
   }
 
@@ -154,13 +150,41 @@ export const formatDateWithTimeCSL = (dateStr, hourStr) => {
   return (
     <>
       <strong>
-        {dayFormatted} {time}
+        {dayFormatted} {timeRange}
       </strong>{' '}
       - {d} {llll}
     </>
   );
+};
 
-  // return dayFormatted.charAt(0).toUpperCase() + dayFormatted.slice(1);
+export const formatSimpleDateWithTimeCSL = (dateStr, hourStr, endHourStr) => {
+  const now = DateTime.local().setLocale('nl');
+  const dt = DateTime.fromISO(dateStr, { locale: 'nl' });
+
+  let dayLabel;
+  if (dt.hasSame(now, 'day')) {
+    dayLabel = 'Vandaag';
+  } else if (dt.hasSame(now.plus({ days: 1 }), 'day')) {
+    dayLabel = 'Morgen';
+  } else {
+    const day = dt.toFormat('cccc');
+    dayLabel = day.charAt(0).toUpperCase() + day.slice(1);
+  }
+
+  let timePart = '';
+  if (hourStr && endHourStr) {
+    timePart = `${hourStr} - ${endHourStr} `;
+  } else if (hourStr) {
+    timePart = `${hourStr} `;
+  }
+
+  const datePart = dt.toFormat('d LLLL');
+
+  return (
+    <>
+      <strong>{dayLabel}</strong> {timePart}- {datePart}
+    </>
+  );
 };
 
 export const compareIfIsFuture = (event) => {

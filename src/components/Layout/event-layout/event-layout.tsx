@@ -124,7 +124,7 @@ const EventLayout: React.FC<Props> = ({
   };
 
   const isLocalGroupOrganizer = (event: EventType) => {
-    return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug);
+    return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug!);
   };
 
   return (
@@ -361,7 +361,7 @@ const HelpIcon = () => (
     fill="none"
     viewBox="0 0 24 24"
     style={{
-      stroke: 'oklch(58.2% .2226 304.59)',
+      stroke: 'rgb(154, 73, 226)',
       height: '1.2rem',
       width: '1.2rem',
     }}

@@ -170,6 +170,108 @@
   }
 }
 
+.no-style {
+  border-radius: unset;
+  background: unset;
+  display: block;
+  margin-bottom: 0;
+  min-height: unset;
+
+  .ui-form-hubspot form .legal-consent-container .inputs-list .hs-form-booleancheckbox label span * {
+    display: block;
+  }
+
+  .ui-form-hubspot form .hs-form-field label {
+    display: none;
+  }
+
+  .ui-form-hubspot form {
+    display: flex !important;
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+
+  .hs-fieldtype-booleancheckbox {
+    display: block;
+    flex-direction: row-reverse;
+
+    .inputs-list {
+      padding-bottom: 0 !important;
+      margin-bottom: 10px !important;
+    }
+
+    label {
+      margin-bottom: 0 !important;
+
+      span {
+        color: var(--dark);
+        font-family: var(--nb-secondary-font);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 150%;
+      }
+    }
+  }
+
+  .ui-form-hubspot .legal-consent-container .hs-richtext,
+  .ui-form-hubspot .legal-consent-container .hs-richtext p {
+    display: block !important;
+  }
+
+  legend {
+    color: var(--dark);
+    font-family: var(--nb-secondary-font);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+  }
+
+  form .legal-consent-container {
+    order: unset;
+  }
+
+  form .legal-consent-container .inputs-list .hs-form-booleancheckbox label span {
+    color: rgb(11, 9, 8);
+  }
+
+  .ui-form-hubspot form .hs-submit .actions .hs-button {
+    background-color: rgb(140, 198, 63);
+    border-color: rgb(140, 198, 63);
+    border-radius: 8px;
+    color: rgb(11, 9, 8);
+    font-size: 22px;
+    margin-bottom: 24px;
+    box-shadow: unset;
+
+    &:hover {
+      color: rgb(11, 9, 8);
+      background-color: rgb(127, 180, 56);
+      border-color: rgb(127, 180, 56);
+    }
+  }
+
+  .ui-form-steps2.second-step .ui-form-hubspot form .hs_submit {
+    margin-top: 0;
+  }
+
+  .ui-form-hubspot .legal-consent-container .hs-fieldtype-booleancheckbox .input .inputs-list .hs-form-booleancheckbox label span p {
+    color: var(--dark);
+    font-family: var(--nb-secondary-font);
+    font-size: 14px !important;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
+  }
+
+  .ui-form-steps2.second-step .metadata .ui-form-hubspot .legal-consent-container .hs-fieldtype-booleancheckbox .input .inputs-list .hs-form-booleancheckbox label input {
+    height: 32px !important;
+    width: 32px !important;
+    margin-right: 12px;
+  }
+}
+
 // Fix for firefox
 @-moz-document url-prefix() {
   .ui-form-steps2 {

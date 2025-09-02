@@ -837,6 +837,50 @@
       }
     }
   }
+
+  &.agenda-event {
+    form .hs-form-field label {
+      display: none;
+    }
+
+    form .hs-submit .actions .hs-button {
+      background-color: rgb(140, 198, 63);
+      border-color: rgb(140, 198, 63);
+      border-radius: 8px;
+      color: rgb(11, 9, 8);
+      font-size: 22px;
+      margin-bottom: 0;
+      box-shadow: unset;
+
+      &:hover {
+        color: rgb(11, 9, 8);
+        background-color: rgb(127, 180, 56);
+        border-color: rgb(127, 180, 56);
+      }
+    }
+
+    form .hs_submit {
+      margin-top: 0;
+    }
+
+    form .hs-form-field .hs-error-msgs.inputs-list label.hs-error-msg {
+      display: block;
+    }
+
+    form .hs-form-field .input input {
+      color: rgb(11, 9, 8);
+      font-size: 18px;
+      line-height: 28px;
+      padding-inline: 12px;
+      border: 2px solid rgba(11, 9, 8, 0.2);
+      border-radius: 8px;
+      position: relative;
+
+      &::placeholder {
+        color: rgb(11, 9, 8);
+      }
+    }
+  }
 }
 
 .recaptcha-text {

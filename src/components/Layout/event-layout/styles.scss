@@ -6,7 +6,7 @@
     padding-bottom: 18vh;
     padding-inline: calc(.25rem * 4);
     text-align: center;
-    background-color: oklch(58.2% .2226 304.59);
+    background-color: rgb(154, 73, 226);
 
     h1 {
       font-size: 5rem;
@@ -44,7 +44,7 @@
     font-size: 1.8em;
     line-height: 1.11111;
     font-weight: 700;
-    color: oklch(14% .004 49.25);
+    color: rgb(11, 9, 8);
   }
 
   .grid-events {
@@ -68,7 +68,7 @@
       &:hover {
         .content-container .btn {
           opacity: 1;
-          background-color: oklch(76.04% .1741 129.85);
+          background-color: rgb(140, 198, 63);
         }
       }
     }
@@ -90,16 +90,16 @@
       gap: .5rem;
       margin-bottom: 1.5rem;
 
-      background-color: oklch(92% .003 48.717);
-      border: 2px solid oklch(92% .003 48.717);
+      background-color: rgb(230, 228, 227);
+      border: 2px solid rgb(230, 228, 227);
       border-radius: .5rem;
-      color: oklch(14% .004 49.25);
+      color: rgb(11, 9, 8);
 
       padding-block: .75rem;
       padding-inline: 1rem;
 
       span {
-        color: oklch(14% .004 49.25);
+        color: rgb(11, 9, 8);
         font-size: .7rem;
         line-height: 1.25rem;
       }

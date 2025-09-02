@@ -23,8 +23,8 @@ export const createMapReference = (
 ): Map => {
   const map = new mapboxgl.Map({
     container: ref.current!,
-    accessToken: 'pk.eyJ1IjoibWFydGluYWx2IiwiYSI6ImNscHR1YjdvZDBlY2sybHBnNTRwM2l4ZTEifQ.nn8C3qy8ULBkq6gdO3vlCg',
-    style: 'mapbox://styles/martinalv/clptudeob00ub01p74jlnbdce',
+    accessToken: process.env.GATSBY_MAPBOX_TOKEN,
+    style: process.env.GATSBY_MAPBOX_STYLE_URL,
     center: coordinates,
     interactive,
     maxZoom,

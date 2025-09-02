@@ -128,8 +128,8 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }: NavPro
       <nav className={`navbar2 ${heroBgColor}`}>
         <div className="container">
           <div className="top-section">
-            <Link className="navbar-brand" to={'/'}>
-              <ReactSVG src={headerUpdatedLogo} alt="Milieudefensie logo" />
+            <Link className="navbar-brand" to={'/'} aria-label="Milieudefensie">
+              <ReactSVG src={headerUpdatedLogo} />
             </Link>
 
             <div className="actions">
@@ -144,11 +144,17 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }: NavPro
               </button>
 
               {config.whatsappPage ? (
-                <Link className="wp-button" to={config.whatsappPage}>
+                <Link className="wp-button" to={config.whatsappPage} aria-label="Open signal page">
                   <ReactSVG src={signalNavigationIcon} />
                 </Link>
               ) : config?.whatsappGroup ? (
-                <a className="wp-button" href={`${config.whatsappGroup}`} target="_blank" rel="noopener noreferrer">
+                <a
+                  className="wp-button"
+                  href={`${config.whatsappGroup}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open signal page"
+                >
                   <ReactSVG src={signalNavigationIcon} />
                 </a>
               ) : null}
@@ -198,8 +204,8 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }: NavPro
           </div>
 
           <div className="offcanvas-body">
-            <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-              <div className="links-container">
+            <div className="navbar-nav justify-content-end flex-grow-1 pe-3">
+              <ul className="links-container">
                 {groupedLinks.links.map((link) =>
                   link.treeChildren.length === 0 ? (
                     <LinkItem key={link.id} link={link} label={link.title} isButton={link.isButton} />
@@ -207,10 +213,10 @@ export default function Nav({ navData, config, setNavOpen, heroBgColor }: NavPro
                     <DropdownItem key={link.id} link={link} label={link.title} children={link.treeChildren} />
                   )
                 )}
-              </div>
+              </ul>
 
               <Cta url="https://milieudefensie.nl/" externalTitle="milieudefensie.nl" isButton />
-            </ul>
+            </div>
           </div>
         </div>
       </div>

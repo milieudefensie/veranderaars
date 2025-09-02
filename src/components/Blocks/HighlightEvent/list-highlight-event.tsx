@@ -1,8 +1,8 @@
 import React from 'react';
-import EventCard from './event-card';
 import CtaList from '../../Global/Cta/cta-list'; // @ts-expect-error
 import { formatCslEvents } from '../../../utils';
 import { EventType } from '../../../types';
+import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
 
 import './styles.scss';
 
@@ -54,7 +54,7 @@ const ListHighlightEvent: React.FC<ListHighlightEventProps> = ({ block, context 
 
       <div className="content">
         {finalItems.map((item) => (
-          <EventCard event={item} key={item.id} />
+          <EventCardV2 event={item} key={item.id} />
         ))}
       </div>
 
