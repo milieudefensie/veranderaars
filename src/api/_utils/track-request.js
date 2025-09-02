@@ -1,41 +1,61 @@
-require('dotenv').config();
 import { google } from 'googleapis';
 
 export default async function trackRequest({ date, endpoint, body, success }) {
-  const sheets = google.sheets('v4');
+  try {
+    const auth = new google.auth.GoogleAuth({
+      credentials: {
+        private_key: `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDGiWNZeomg/J2S
++SgdEixQaDEQSqRu0peZ5WVn51bTzivcp+pY0jFiZ0O/3JnOTrCeDbi9s7sCsFLK
+fuQYDgDPtFsjDcB14NjmX1XoXCCEDTrufB97p+RVCaFf0FNBW+owVyPtI8lmQncV
+hLCk1Dxb7saDX1mTq83a8iJX2bdi+fyOp5WFABQ6ONKDc/W2CtjViN6/u9hZCncq
+yRoJgF3QyDbep45ddKyy9I3Nk2odjvHpV3e+V7ATBPr6aeRQ4oN3HxAjGzSTWLNv
+P3LLFJ0dWjHZJRuQBZSAVD5UtOxhVQ+iZGv8HJOAtddsEV30zMfrmfniz4O9Kc1D
+TrSVEmAtAgMBAAECggEAAzMP44ZCudImEsohaBMZVAHS/ATxEJQj8if2FomSlH7z
+E28cKvzXCFOmjf8f9kR08Z34/gtZTSyBZsST3wI5noz98m1iKei4thyPfJIgpbuR
+a7NRzf58y/BRE97sA/syyj82ZgDvfmDQHQvyhDxaNmB9a1hHmSHFOjYwcOyP/d3i
+fJaO24hpDwrwZ4+ExnvwFx5mSc8VbeNudcn9QgT7JV0U9XKzYmkcTzAgC2bMY1r5
+6p4MjQAqcDLB8lEsMBCFMcjSrNNejiefZpeE827C06hz0n+3RqprFjPcwbUNLvJH
+2rYp6UF+e7CgrXDZtJjXgXhzYJN+LYk/gf6Ouy/aAQKBgQDiKEUoPann2/RFntca
+uh/JvLknA5InIotNSixTG3XLvLUz2B2v0wRT4ppACFCvIcvd8Wdu2kzuUsaNXZqL
+AEgUSEECRCns9JBg2zYhg8pZMG2gX0szvvEG9f7LcSV4mSG6P56EvY/I3JV7qr0L
+J2rn4eW2jvDBVNXUk8NR5hNBrQKBgQDgvBOKp75T1mP8ypdw/TMeJWahAOlvdllE
+GymGn+7uuheBJf5TujVgDEGyVtZl1QeTAsjLuhK395DFg2Yzpu5GCooBjzg1R3p7
+8Mmt6xP53CGjs6b9Ftv2aiSHvCqTHst/8dlRGjJof0ppLIvUi9+MKfzGYrjeEVhB
+K9dAU3BogQKBgEfP1bXjbrIK69O3jkIUW8epP3md7qiylV0jclOpYowhDcC6nSKZ
+dMRWLfirK0ORDbUZ1GgktUzvx9BXqpz8p+aY0tuvXUi6l6XJtbSKrpQHhqfn2m9B
+8DLvpcpf0TAsH8OOM/2eW6vCL00neAO0roOW/WQsm1IoaAWqLdkxn2e5AoGAdDrx
+hGnDNwsPxYNmFcrucC35yVV2Ze54to+xx23aHl/ininvQpBw4I8WP01IL3yhITh0
+b2F6IumIV47hAd/ZJiJ3Q901veCNCaL8O9X0C+r8/vSAbi8vbl9xKz53aoWnzDFi
+Kt74qTEEZCbk3vXElXJ1yIjwgfHIilRJTHybC4ECgYAuTtTlPVtiD8JskI1hvRz8
+04anUv3kQ4u8l1u+GYJb7vs+I97EYe0s1AG4WSzPJbYamkevHpQgqk+7u/cg0iMl
+8F5WJ6sqiG48bfB393bmtCeYIXsTsgXjioPOgNxy+/GTDy7sHPthtUsIbYlazVti
+P3djHJj8ZxkA7ATLz9Q7Jg==
+-----END PRIVATE KEY-----`,
+        client_email: 'error-trackings@eternal-entity-469014-q5.iam.gserviceaccount.com',
+      },
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
 
-  // todo fix issue with env variables + netlify format
-  const key = `-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC3NHUX0IeeVYmm\nYWEopad0ZNiI/JLX3EIRGNfeDmxwPVBzx+0qdpzYxgeajJsyckT1fz1WOTOlVpC+\nyyQtLMjJWWAp/S/QdghCfkAipVYOZHH1uBZWG4crXM/uhaNgnhXy4CzUBxKDyA3h\nhWjM3Wy4QrfKt4ZFFKmQU9KyblgyPajcxz/XVqzKwR/2ZLEe9vP6XCx4i7mbTKUa\nrYTx+hGV9+OjOgoTlE/E47InmlYmt5kACADS6m7xCYnQrVKWC3PMzb2NYhRmCtAF\nF3t7KTotUsV58hZB1CB491Bo7HrwzUgXUjO18wt3TZOIO5mw4MbS2WIv1CLI1NhS\npj3MuLirAgMBAAECggEAC7m5RtFrZKhf23y/Da1whsQPkdDsixFHTzXSVx2ANjzO\nYeKpXL7jsgIWqX8XTca/gCDpKZQWqJ3ePL/erF+B6FUmkPlp7oMnay4OZ8lCNUCb\nhJkIIPG5GH7jtgXqm3vytq0/YUCkoDeVH9p8hyQi2bY3ciuF1fUJFzouMYpbbbel\n0GdUKNTT7rdRKEc8W0zegIJr6/d+Inyh72mehF+SsAn88w1eqxmOJQz+eyEeLP5V\nlx7i9EySVj8LZ5Aj2uTDnqDjsQsTlQkHeEXXNhjnFvdlZ5/p/zl184ooWh8wlxNJ\n/Wi88xbneCTOSo/K2pls10zhCtOZ6LLSrMSPboABWQKBgQDiBWKCUHWe5OCtwrWW\n+FDXb1VjS2EDlv1WGjemkzBSOGZbMSi0v/h7d87BFkciqyaVt1kRT+FZ6/wPgdWb\nGSLVqf177FLttkgMS1bHmwe3qmU//aBvf6WG+4Hz/tLxNE7vc62MUlMZUDkU9fIk\n7Gx614W54WmcV+mV8qGIxz7ueQKBgQDPgTzaFIkuo5xnHmPm8VLIsS0mGtzEPRWE\nCT7p0HSK7pINbrjSsFVp4oLMQfYzI+SXaX1XnyOnQ6YE0HEoLpjRMjFuR0OpaTNe\nbI72V+4rlDNpSZTmzbBvYLSgqXqwQxO/1S//zhL1K7tzxtx1I+RLcv9pdgRvK2OX\nmeSnKdMHQwKBgQCLikGILL6BS9L+1AAiZcobR4wTEn2hpr1fRC5pc+PYTyO6Vz5H\nYWG6cHxAL03ZtIrM0fZ2PrflOVFUDZdf+wPLn/h0YrHMOsZ+eKDp+Oep19RMznwX\neloqXOqdRgzbh6zYHrXdtRHCxgmHzFQjwaczrA3OdcErGgeHYNWjyUcsGQKBgQDA\nbJJnkX+dVm+lWJNACC3CmjrKCUMMX7DiHkjPPlW0uIOMHU8bYhXy+PBeRhTvW6uR\nlWt8o8DGTX9ZG4qzvnJMHIWmREPEiB/wwi7Y1rWwh+AdFPUWC0xAHKekDUYOykU4\nMZQvXYRLAuDz/kdWAZClPuEHhT+bb9sNLNLTCX/+TQKBgD8lPrUxMuS2d5Bn3OCD\n4wyJ230mStVgAhG0xfkyuoL37zHLhgQ6zXp1hG5seJ4FnkzlhRfRSl+dj/9w0dMp\nwYFNKYbjezCrcmPed1cNqFZuoOtjgb6GzdBAkxQwCXkqHSBJbVJatRxuJ5x9Gr3T\n/PfUvOnOsaVnwegQ6HmLjSK0\n-----END PRIVATE KEY-----`;
-
-  const jwtClient = new google.auth.JWT(process.env.GOOGLE_SHEETS_CLIENT_EMAIL, null, key, [
-    'https://www.googleapis.com/auth/spreadsheets',
-  ]);
-
-  jwtClient.authorize(async function (err, tokens) {
-    if (err) {
-      throw new Error('Failed to authorize Google Sheets API');
-    }
+    const authClient = await auth.getClient();
+    const sheets = google.sheets({ version: 'v4', auth: authClient });
 
     const request = {
       spreadsheetId: process.env.SPREADSHEET_ID,
-      range: 'CSL API Errors!A1',
+      range: 'IP Errors!A1',
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       resource: {
-        values: [[date, endpoint, JSON.stringify(body), success]],
+        values: [[date, JSON.stringify(body)]],
       },
     };
 
-    try {
-      const response = await sheets.spreadsheets.values.append({
-        ...request,
-        auth: jwtClient,
-      });
+    const response = await sheets.spreadsheets.values.append(request);
 
-      console.log('Data appended:', response.data);
-    } catch (err) {
-      console.error('Error appending data:', err);
-      throw new Error('Failed to append data to Google Sheets');
-    }
-  });
+    console.log('Data appended successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in trackRequest:', error);
+    throw new Error(`Failed to append data to Google Sheets: ${error.message}`);
+  }
 }

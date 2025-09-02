@@ -61,8 +61,12 @@ export default function TravelTogether({
         handleSearchSignalGroup(finalCity);
         setCurrentCity(finalCity);
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(async (err) => {
+        console.error({ err });
+        await axios.post('/api/track-errors', {
+          date: new Date().toISOString(),
+          body: JSON.stringify(err.message || err),
+        });
         handleSearchSignalGroup('Utrecht');
       })
       .finally(() => {
