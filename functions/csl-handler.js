@@ -1,5 +1,4 @@
 import axios from 'axios';
-import trackRequest from '../src/api/_utils/track-request';
 
 const WEBHOOK_ENDPOINTS = {
   USER: 'https://api-eu1.hubapi.com/automation/v4/webhook-triggers/139720471/YfoJAHB',
@@ -42,12 +41,12 @@ exports.handler = async (event, context) => {
 
     await axios.post(webhookEndpoint, cslUpdatedInfo);
 
-    await trackRequest({
-      date: new Date().toISOString(),
-      endpoint: webhookEndpoint,
-      body: cslUpdatedInfo,
-      success: true,
-    });
+    // await trackRequest({
+    //   date: new Date().toISOString(),
+    //   endpoint: webhookEndpoint,
+    //   body: cslUpdatedInfo,
+    //   success: true,
+    // });
 
     return {
       statusCode: 200,
