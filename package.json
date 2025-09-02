@@ -20,7 +20,8 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "preview": "ENABLE_GATSBY_REFRESH_ENDPOINT=true GATSBY_TELEMETRY_DISABLED=1 NODE_ENV=development gatsby develop -H 0.0.0.0"
+    "preview": "ENABLE_GATSBY_REFRESH_ENDPOINT=true GATSBY_TELEMETRY_DISABLED=1 NODE_ENV=development gatsby develop -H 0.0.0.0",
+    "build:netlify": "node --max-old-space-size=4096 ./node_modules/.bin/gatsby build"
   },
   "dependencies": {
     "@datocms/cma-client-node": "^4.0.2",
