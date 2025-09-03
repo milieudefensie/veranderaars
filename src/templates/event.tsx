@@ -73,15 +73,17 @@ const Event = ({ pageContext, data: { page, favicon } }) => {
   const [finalTitle, setFinalTitle] = useState('');
 
   useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const stepParam = parseInt(query.get('form_step') || '', 10);
+    if (typeof window !== 'undefined' && location) {
+      const query = new URLSearchParams(location.search);
+      const stepParam = parseInt(query.get('form_step') || '', 10);
 
-    if (isNaN(stepParam)) {
-      setFinalTitle(formSteps[0].forms[0]?.title || title);
-    } else {
-      setFinalTitle(formSteps[0].forms[stepParam - 1]?.title || title);
+      if (isNaN(stepParam)) {
+        setFinalTitle(formSteps[0]?.forms[0]?.title || title);
+      } else {
+        setFinalTitle(formSteps[0]?.forms[stepParam - 1]?.title || title);
+      }
     }
-  }, [location.search, withFormsSteps.length]);
+  }, [typeof window !== 'undefined' ? window.location.search : '', withFormsSteps.length]);
 
   return (
     <Layout>
