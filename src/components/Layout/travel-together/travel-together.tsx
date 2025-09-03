@@ -285,11 +285,11 @@ http://veranderaars.milieudefensie.nl/samenreizen`
               <div className="content">
                 <div>
                   <p>
-                    Maak een{' '}
+                    Start een{' '}
                     <a href="https://signal.me/#eu" rel="noopener noreferrer" target="_blank">
-                      Signal
+                      Signal-groep
                     </a>{' '}
-                    chat groep (Signal werkt net als WhatsApp). Voeg alvast een paar mensen toe die je wil uitnodigen
+                    (werkt hetzelfde als WhatsApp). Voeg een paar mensen toe die je wilt uitnodigen.
                   </p>
                   <button
                     onClick={() => {
@@ -300,7 +300,12 @@ http://veranderaars.milieudefensie.nl/samenreizen`
                     ✅ Ik heb een groep chat aangemaakt
                   </button>
                   <p className="help-text">
-                    <span>Kom je er niet uit? Stuur een e-mail naar doemee@milieudefensie.nl </span>
+                    <span>
+                      Kom je er niet uit? Stuur een e-mail naar{' '}
+                      <a href="mailto:doemee@milieudefensie.nl" className="email-link">
+                        doemee@milieudefensie.nl
+                      </a>
+                    </span>
                   </p>
                 </div>
                 <img src="https://www.datocms-assets.com/115430/1755526086-signal-explainer-travel-together-1.webp" />
@@ -327,14 +332,14 @@ http://veranderaars.milieudefensie.nl/samenreizen`
                 <div>
                   <div>
                     <p>
-                      <strong>Kopieer de uitnodigingslink van jou groep chat in Signal. Plak deze hieronder.</strong>{' '}
-                      Wij nodigen vervolgens veranderaars in Utrecht uit om met jou samen te reizen.
+                      <strong>Kopieer de uitnodigingslink van je Signal-groep.</strong> Plak deze hieronder. Wij nodigen
+                      andere veranderaars uit {city} en omgeving uit om samen te reizen.
                     </p>
                     <form onSubmit={submitNewSignalGroup}>
                       <label className="floating-label">
                         <span>Uitnodigingslink groep chat</span>
                         <input
-                          placeholder="https://invite-link..."
+                          placeholder="https://signal.group/..."
                           autoComplete="url"
                           type="url"
                           value={signalLink}
@@ -380,7 +385,10 @@ http://veranderaars.milieudefensie.nl/samenreizen`
                       )}
                     </form>
                     <div className="help-text">
-                      Kom je er niet uit? Stuur de uitnodiginslink naar doemee@milieudefensie.nl
+                      Lukt het niet? Stuur een e-mail naar{' '}
+                      <a href="mailto:doemee@milieudefensie.nl" className="email-link">
+                        doemee@milieudefensie.nl
+                      </a>
                     </div>
                     <p className="extra-text">
                       Wij controleren de link en delen deze openbaar op deze website, zodat iedereen zich makkelijk kan
@@ -411,12 +419,12 @@ http://veranderaars.milieudefensie.nl/samenreizen`
               </div>
               <div className="extra-content">
                 <p>
-                  Stem met elkaar af hoe je samen reist. Voeg aan de beschrijving van de groep bijvoorbeeld toe welke
-                  trein je neemt, of deel een auto. 🚂
+                  Bespreek met elkaar hoe jullie reizen: met de trein, of een (deel)auto. <br />
+                  Voeg in de groepsbeschrijving bijvoorbeeld toe: "We nemen trein om [tijd] vanaf [station]." 🚂
                 </p>
                 <p>
-                  Je kent elkaar misschien nog niet. Stel jezelf voor en verwelkom nieuwe mensen. Je kan ook van tevoren
-                  bij iemand thuis samen wat eten en protestborden verven om elkaar te leren kennen. 🍕🪧
+                  Leer elkaar kennen: stel jezelf voor, verwelkom nieuwe mensen, of spreek van tevoren bij iemand thuis
+                  af om samen te eten en vast wat protestborden te verven om in de sfeer te komen. 🍕🪧
                 </p>
                 <div className="share-content">
                   <div className="share-title">Nodig meer mensen uit:</div>
@@ -547,7 +555,12 @@ http://veranderaars.milieudefensie.nl/samenreizen`)}`
                     </div>
                   </div>
                 </div>
-                <p className="help-text">Kom je er niet uit? Stuur een e-mail naar doemee@milieudefensie.nl </p>
+                <p className="help-text">
+                  Kom je er niet uit? Stuur een e-mail naar{' '}
+                  <a href="mailto:doemee@milieudefensie.nl" className="email-link">
+                    doemee@milieudefensie.nl
+                  </a>
+                </p>
               </div>
             </div>
             <div className={`step ${activeStepTravelTogether === 2 ? 'active' : ''}`}>
