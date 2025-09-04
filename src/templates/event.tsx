@@ -70,6 +70,21 @@ const Event = ({ pageContext, data: { page, favicon } }) => {
     }
   };
 
+  const [finalTitle, setFinalTitle] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && location) {
+      const query = new URLSearchParams(location.search);
+      const stepParam = parseInt(query.get('form_step') || '', 10);
+
+      if (isNaN(stepParam)) {
+        setFinalTitle(formSteps[0]?.forms[0]?.title || title);
+      } else {
+        setFinalTitle(formSteps[0]?.forms[stepParam - 1]?.title || title);
+      }
+    }
+  }, [typeof window !== 'undefined' ? window.location.search : '', withFormsSteps.length]);
+
   return (
     <Layout>
       <SeoDatoCMS seo={seo} favicon={favicon} />
@@ -94,7 +109,7 @@ const Event = ({ pageContext, data: { page, favicon } }) => {
                   </div>
                 )}
               </div>
-              <h1>{title}</h1>
+              <h1>{finalTitle}</h1>
               {address && (
                 <div className="location-container">
                   <h3>{address}</h3>

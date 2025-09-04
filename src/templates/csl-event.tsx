@@ -3,7 +3,7 @@ import { graphql } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout'; // @ts-expect-error
-import { cleanLocation, formatDate, formatDateCSL, formatDateWithTimeCSL } from '../utils';
+import { cleanLocation, formatDateWithTimeCSL } from '../utils';
 import Form from '../components/Global/Form/form';
 import { EventType } from '../types';
 import { useCSLAttendees } from '../hooks/useCSLAttendees';
@@ -60,7 +60,6 @@ ${signalURL}`;
     fetchAttendees({ slug: slug, maxAttendeesCount: max_attendees_count });
   }, [slug, max_attendees_count]);
 
-  const formattedTitle = data?.isWaitingListActive && !title.includes('[VOL]') ? `[VOL] ${title}` : title;
   let mainImage = Array.isArray(additional_image_sizes_url)
     ? additional_image_sizes_url.find((i) => i.style === 'original')?.url
     : null;
@@ -88,6 +87,22 @@ ${signalURL}`;
     }
   };
 
+  const [finalTitle, setFinalTitle] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const query = new URLSearchParams(window.location.search);
+      const stepParam = parseInt(query.get('form_step') || '', 10);
+
+      if (isNaN(stepParam)) {
+        setFinalTitle(title);
+      } else {
+        const isFirstStep = stepParam == 1;
+        setFinalTitle(isFirstStep ? title : configuration.formSecondStepTitle);
+      }
+    }
+  }, [title, configuration?.formSecondStepTitle]);
+
   const collection = findParentCollection(page);
   const groupOrganizer = isLocalGroupOrganizer(page);
 
@@ -99,18 +114,21 @@ ${signalURL}`;
     );
   }
 
+  const formattedTitle =
+    data?.isWaitingListActive && !finalTitle.includes('[VOL]') ? `[VOL] ${finalTitle}` : finalTitle;
+
   return (
     <Layout>
       <SeoDatoCMS favicon={favicon}>
-        <title>{formattedTitle}</title>
+        <title>{title}</title>
         <meta name="description" content={description} />
 
-        <meta property="og:title" content={formattedTitle} />
+        <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={image_url || ''} />
         <meta property="og:site_name" content="Milieudefensie" />
 
-        <meta name="twitter:title" content={formattedTitle} />
+        <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image_url || ''} />
         <meta name="twitter:card" content="summary_large_image" />
