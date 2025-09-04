@@ -66,13 +66,107 @@ const Form: React.FC<FormProps> = ({
   const [currentStep, setCurrentStep] = useState(location.search.includes('form_step=2') ? 1 : 0);
   const isFirstStep = currentStep === 0;
 
+  // Helper function to parse query parameters
+  const getQueryParams = (search: string) => {
+    const params = new URLSearchParams(search);
+    const queryParams: { [key: string]: string } = {};
+    params.forEach((value, key) => {
+      queryParams[key] = value;
+    });
+    return queryParams;
+  };
+
+  // Map URL parameter names to form field names
+  const mapUrlParamsToFormFields = (params: { [key: string]: string }): Partial<FormData> => {
+    const mappedData: Partial<FormData> = {};
+
+    // Map various possible parameter names to form fields
+    const paramMapping: { [key: string]: keyof FormData } = {
+      // Email variations
+      email: 'email',
+      'e-mail': 'email',
+      mail: 'email',
+
+      // First name variations
+      firstname: 'firstName',
+      firstName: 'firstName',
+      voornaam: 'firstName',
+      first_name: 'firstName',
+
+      // Last name variations
+      lastname: 'lastName',
+      lastName: 'lastName',
+      achternaam: 'lastName',
+      last_name: 'lastName',
+      surname: 'lastName',
+
+      // Postcode variations
+      postcode: 'postcode',
+      zip: 'postcode',
+      zipcode: 'postcode',
+      postal_code: 'postcode',
+      postalcode: 'postcode',
+
+      // Phone variations
+      phone: 'phone',
+      telephone: 'phone',
+      telefoon: 'phone',
+      phone_number: 'phone',
+      tel: 'phone',
+
+      // Consent variations
+      consent_email: 'consent_email',
+      consent: 'consent_email',
+      newsletter: 'consent_email',
+    };
+
+    Object.keys(params).forEach((key) => {
+      const lowerKey = key.toLowerCase();
+      if (paramMapping[lowerKey]) {
+        const formField = paramMapping[lowerKey];
+        mappedData[formField] = params[key];
+      }
+    });
+
+    return mappedData;
+  };
+
+  // Initialize form data from URL parameters
   useEffect(() => {
-    if (location.search.includes('form_step=2')) {
+    const queryParams = getQueryParams(location.search);
+
+    // Check for form_step parameter
+    if (queryParams.form_step === '2') {
       setCurrentStep(1);
     } else {
       setCurrentStep(0);
     }
-  }, [location]);
+
+    // Map and set form data from URL parameters
+    const mappedData = mapUrlParamsToFormFields(queryParams);
+
+    if (Object.keys(mappedData).length > 0) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...mappedData,
+      }));
+
+      // Trigger focus effect for pre-filled fields
+      setTimeout(() => {
+        Object.keys(mappedData).forEach((fieldName) => {
+          if (mappedData[fieldName as keyof FormData]) {
+            const input = document.getElementById(fieldName);
+            if (input) {
+              const label = input.parentElement?.parentElement?.querySelector('.custom-label');
+              if (label) {
+                label.classList.add('focused');
+              }
+            }
+          }
+        });
+      }, 100);
+    }
+  }, [location.search, event]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -183,7 +277,11 @@ const Form: React.FC<FormProps> = ({
 
   const handleOnFirstStepSubmitted = (e: any) => {
     e.preventDefault();
-    navigate('?form_step=2', { replace: false });
+
+    // Preserve existing query parameters when navigating to step 2
+    const currentParams = new URLSearchParams(location.search);
+    currentParams.set('form_step', '2');
+    navigate(`?${currentParams.toString()}`, { replace: false });
 
     setTimeout(() => {
       const nameInput = document.querySelector('#postcode');
@@ -231,6 +329,7 @@ const Form: React.FC<FormProps> = ({
                         inputMode="text"
                         autoComplete="off"
                         placeholder={t('form_email')}
+                        value={formData.email}
                         onChange={handleChange}
                         required
                       />
@@ -261,8 +360,8 @@ const Form: React.FC<FormProps> = ({
                     {errorMsg
                       .split(';')
                       .filter((str) => str.trim().length) // Avoid empty fields
-                      .map((e) => (
-                        <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
+                      .map((e, index) => (
+                        <li key={index}>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
                       ))}
                   </ul>
                 </div>
@@ -287,6 +386,7 @@ const Form: React.FC<FormProps> = ({
                         inputMode="text"
                         autoComplete="off"
                         placeholder={t('form_email')}
+                        value={formData.email}
                         onChange={handleChange}
                       />
                     </div>
@@ -317,6 +417,7 @@ const Form: React.FC<FormProps> = ({
                         inputMode="text"
                         autoComplete="off"
                         placeholder={t('form_postcode')}
+                        value={formData.postcode}
                         onChange={handleChange}
                       />
                     </div>
@@ -347,6 +448,7 @@ const Form: React.FC<FormProps> = ({
                         inputMode="text"
                         autoComplete="off"
                         placeholder={t('form_first_name')}
+                        value={formData.firstName}
                         onChange={handleChange}
                       />
                     </div>
@@ -377,6 +479,7 @@ const Form: React.FC<FormProps> = ({
                         inputMode="text"
                         autoComplete="off"
                         placeholder={t('form_last_name')}
+                        value={formData.lastName}
                         onChange={handleChange}
                       />
                     </div>
@@ -407,6 +510,7 @@ const Form: React.FC<FormProps> = ({
                         autoComplete="off"
                         required={false}
                         placeholder={t('form_phone')}
+                        value={formData.phone}
                         onChange={handleChange}
                       />
                     </div>
@@ -432,6 +536,7 @@ const Form: React.FC<FormProps> = ({
                           id="consent_email_yes"
                           name="consent_email"
                           value="yes"
+                          checked={formData.consent_email === 'yes'}
                           onChange={handleChange}
                           required
                         />
@@ -444,6 +549,7 @@ const Form: React.FC<FormProps> = ({
                           id="consent_email_no"
                           name="consent_email"
                           value="no"
+                          checked={formData.consent_email === 'no'}
                           onChange={handleChange}
                           required
                         />
@@ -470,8 +576,8 @@ const Form: React.FC<FormProps> = ({
                     {errorMsg
                       .split(';')
                       .filter((str) => str.trim().length) // Avoid empty fields
-                      .map((e) => (
-                        <li>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
+                      .map((e, index) => (
+                        <li key={index}>{e.charAt(0).toUpperCase() + e.slice(1)}</li>
                       ))}
                   </ul>
                 </div>
