@@ -120,15 +120,15 @@ ${signalURL}`;
   return (
     <Layout>
       <SeoDatoCMS favicon={favicon}>
-        <title>{formattedTitle}</title>
+        <title>{title}</title>
         <meta name="description" content={description} />
 
-        <meta property="og:title" content={formattedTitle} />
+        <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={image_url || ''} />
         <meta property="og:site_name" content="Milieudefensie" />
 
-        <meta name="twitter:title" content={formattedTitle} />
+        <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image_url || ''} />
         <meta name="twitter:card" content="summary_large_image" />
