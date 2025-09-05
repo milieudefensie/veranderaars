@@ -69,6 +69,10 @@ export const HomeQuery = graphql`
         slug
       }
       hiddenAddress
+      additional_image_sizes_url {
+        url
+        style
+      }
     }
     page: datoCmsHome {
       seo: seoMetaTags {
