@@ -113,15 +113,21 @@ export default function TravelTogether({
     }
   };
 
+  const normalize = (str: string) => str.trim().toLowerCase();
+
   const handleSearchSignalGroup = async (newCity: string | undefined) => {
     try {
       setLoadingSearch(true);
-      setCity(newCity ? newCity : currentCity);
+      const cityToSearch = normalize(newCity || currentCity);
+
+      setCity(cityToSearch);
+
       const searchRelatedGroups = othersSignalGroups?.find(
-        (group: any) => group.internalName.toLowerCase() === (newCity || currentCity).toLowerCase()
+        (group: any) =>
+          normalize(group.internalName) === cityToSearch || normalize(group.internalName).includes(cityToSearch)
       );
 
-      setSignalGroupExists(searchRelatedGroups ? searchRelatedGroups : null);
+      setSignalGroupExists(searchRelatedGroups || null);
       setActiveStepTravelTogether(1);
       setSearchMade(true);
       setStepsWithConfetti(new Set());
