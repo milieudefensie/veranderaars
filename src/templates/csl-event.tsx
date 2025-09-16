@@ -101,7 +101,7 @@ ${signalURL}`;
         setFinalTitle(isFirstStep ? title : configuration.formSecondStepTitle);
       }
     }
-  }, [title, configuration?.formSecondStepTitle]);
+  }, [title, configuration?.formSecondStepTitle, typeof window !== 'undefined' ? window.location.search : '']);
 
   const collection = findParentCollection(page);
   const groupOrganizer = isLocalGroupOrganizer(page);
@@ -116,6 +116,8 @@ ${signalURL}`;
 
   const formattedTitle =
     data?.isWaitingListActive && !finalTitle.includes('[VOL]') ? `[VOL] ${finalTitle}` : finalTitle;
+
+  console.log({ finalTitle, configuration });
 
   return (
     <Layout>
