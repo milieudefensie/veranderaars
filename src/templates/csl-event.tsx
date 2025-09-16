@@ -101,7 +101,7 @@ ${signalURL}`;
         setFinalTitle(isFirstStep ? title : configuration.formSecondStepTitle);
       }
     }
-  }, [title, configuration?.formSecondStepTitle]);
+  }, [title, configuration?.formSecondStepTitle, typeof window !== 'undefined' ? window.location.search : '']);
 
   const collection = findParentCollection(page);
   const groupOrganizer = isLocalGroupOrganizer(page);
