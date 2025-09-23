@@ -674,6 +674,7 @@ export const DatoCMS = graphql`
     othersSignalGroups {
       ...SignalGroups
     }
+    withTravelTogetherTool
     content {
       value
       blocks {
