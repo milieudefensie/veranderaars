@@ -241,27 +241,7 @@ export const PageQuery = graphql`
     ) {
       edges {
         node {
-          __typename
-          id: slug
-          slug
-          title
-          description
-          start_at
-          raw_start
-          raw_end
-          end_at
-          image_url
-          start_in_zone
-          end_in_zone
-          labels
-          location {
-            latitude
-            longitude
-            venue
-            query
-            region
-          }
-          hiddenAddress
+          ...CSLEventCard
         }
       }
     }

@@ -46,30 +46,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
       cslEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
         edges {
           node {
-            id
-            slug
-            title
-            description
-            start_at
-            end_at
-            raw_start
-            raw_end
-            image_url
-            labels
-            start_in_zone
-            end_in_zone
-            location {
-              latitude
-              longitude
-              venue
-              query
-              region
-            }
-            calendar {
-              name
-              slug
-            }
-            hiddenAddress
+            ...CSLEventCard
           }
         }
       }
