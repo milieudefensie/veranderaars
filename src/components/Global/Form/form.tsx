@@ -277,11 +277,28 @@ const Form: React.FC<FormProps> = ({
 
   const handleOnFirstStepSubmitted = (e: any) => {
     e.preventDefault();
+    setStatus('loading');
+
+    const newErrors: Errors = {};
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      newErrors.email = t('form_invalid_email');
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setStatus('idle');
+      return;
+    }
 
     // Preserve existing query parameters when navigating to step 2
     const currentParams = new URLSearchParams(location.search);
     currentParams.set('form_step', '2');
     navigate(`?${currentParams.toString()}`, { replace: false });
+
+    setStatus('success');
+    setErrors({});
 
     setTimeout(() => {
       const nameInput = document.querySelector('#postcode');
@@ -291,6 +308,7 @@ const Form: React.FC<FormProps> = ({
   };
 
   const hasErrors = Object.values(errors).some((e) => e);
+  const hasEmailError = Boolean(errors.email);
   const isLoading = status === 'loading';
 
   if (conferenceUrl && status === 'success') {
@@ -328,10 +346,9 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.email ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
-                        placeholder={t('form_email')}
+                        placeholder={t('form_email') + '*'}
                         value={formData.email}
                         onChange={handleChange}
-                        required
                       />
                     </div>
 
@@ -348,8 +365,8 @@ const Form: React.FC<FormProps> = ({
                 <input
                   type="submit"
                   value={isLoading ? 'Versturen...' : '👉 Ik ben er bij!'}
-                  className={`send-btn ${hasErrors ? 'disabled' : ''}`}
-                  disabled={hasErrors || isLoading}
+                  className={`send-btn ${hasEmailError ? 'disabled' : ''}`}
+                  disabled={hasEmailError || isLoading}
                 />
               </form>
 
@@ -385,7 +402,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.email ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
-                        placeholder={t('form_email')}
+                        placeholder={t('form_email') + '*'}
                         value={formData.email}
                         onChange={handleChange}
                       />
@@ -416,7 +433,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.postcode ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
-                        placeholder={t('form_postcode')}
+                        placeholder={t('form_postcode') + '*'}
                         value={formData.postcode}
                         onChange={handleChange}
                       />
@@ -447,7 +464,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.firstName ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
-                        placeholder={t('form_first_name')}
+                        placeholder={t('form_first_name') + '*'}
                         value={formData.firstName}
                         onChange={handleChange}
                       />
@@ -478,7 +495,7 @@ const Form: React.FC<FormProps> = ({
                         className={`input ${errors.lastName ? 'error' : ''} `}
                         inputMode="text"
                         autoComplete="off"
-                        placeholder={t('form_last_name')}
+                        placeholder={t('form_last_name') + '*'}
                         value={formData.lastName}
                         onChange={handleChange}
                       />
