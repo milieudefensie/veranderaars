@@ -76,23 +76,29 @@ const HubspotForm: React.FC<HubspotFormProps> = ({
 
     // Placeholders
     if (showPlaceholder) {
+      const setPlaceholder = (input: HTMLInputElement | null, text: string) => {
+        if (input) {
+          input.placeholder = text + (input.required ? '*' : '');
+        }
+      };
+
       const emailInput = formWrapper.querySelector('input[name="email"]') as HTMLInputElement;
-      if (emailInput) emailInput.placeholder = 'E-mail';
+      setPlaceholder(emailInput, 'E-mail');
 
       const nameInput = formWrapper.querySelector('input[name="firstname"]') as HTMLInputElement;
-      if (nameInput) nameInput.placeholder = 'Voornaam';
+      setPlaceholder(nameInput, 'Voornaam');
 
       const tussenvoegselInput = formWrapper.querySelector('input[name="tussenvoegsel"]') as HTMLInputElement;
-      if (tussenvoegselInput) tussenvoegselInput.placeholder = 'Tussenvoegsel';
+      setPlaceholder(tussenvoegselInput, 'Tussenvoegsel');
 
       const achternaamInput = formWrapper.querySelector('input[name="achternaam"]') as HTMLInputElement;
-      if (achternaamInput) achternaamInput.placeholder = 'Achternaam';
+      setPlaceholder(achternaamInput, 'Achternaam');
 
       const zipInput = formWrapper.querySelector('input[name="zip"]') as HTMLInputElement;
-      if (zipInput) zipInput.placeholder = 'Postcode';
+      setPlaceholder(zipInput, 'Postcode');
 
       const phoneInput = formWrapper.querySelector('input[name="phone"]') as HTMLInputElement;
-      if (phoneInput) phoneInput.placeholder = 'Telefoonnummer';
+      setPlaceholder(phoneInput, 'Telefoonnummer');
     }
 
     if (extraLogic) extraLogic(ctx);
