@@ -16,11 +16,11 @@ module.exports = {
       resolve: 'gatsby-source-datocms',
       options: {
         apiToken: process.env.DATO_API_TOKEN,
-        previewMode: process.env.NODE_ENV !== 'production' || process.env.ENABLE_GATSBY_REFRESH_ENDPOINT,
+        previewMode: false, // process.env.NODE_ENV !== 'production' || process.env.ENABLE_GATSBY_REFRESH_ENDPOINT,
         // environment: process.env.DATO_ENVIRONMENT ? process.env.DATO_ENVIRONMENT : '',
-        disableLiveReload: process.env.ENABLE_GATSBY_REFRESH_ENDPOINT
-          ? process.env.ENABLE_GATSBY_REFRESH_ENDPOINT
-          : false,
+        disableLiveReload: false, // process.env.ENABLE_GATSBY_REFRESH_ENDPOINT
+        // ? process.env.ENABLE_GATSBY_REFRESH_ENDPOINT
+        // : false,
       },
     },
     {
