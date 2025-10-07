@@ -13,8 +13,7 @@ import {
   getEventsWeekDays,
   getDayAfterTomorrowLabel,
   getEventsGroupedByFutureMonths,
-  capitalizeFirstLetter,
-  dummyEvents, // @ts-expect-error
+  capitalizeFirstLetter, // @ts-expect-error
 } from '../../../utils';
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';
@@ -127,6 +126,24 @@ const EventLayout: React.FC<Props> = ({
     return configuration?.cslLocalGroupsSlugs.includes(event.calendar?.slug!);
   };
 
+  function getCalendarEventsForCollection(
+    collection: EventCollectionType | null | undefined,
+    allEvents: EventType[] = []
+  ): EventType[] {
+    if (!collection?.cslCalendarSlug) return [];
+
+    const slugs = collection.cslCalendarSlug
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (slugs.length === 0) return [];
+
+    const events = allEvents.filter((event) => slugs.includes(event.calendar?.slug!));
+
+    return events;
+  }
+
   return (
     <div className="ui-event-layout">
       <header>
@@ -141,13 +158,7 @@ const EventLayout: React.FC<Props> = ({
           <div className="featured-collection">
             <EventCollectionCard
               collection={featuredCollection}
-              calendarEvents={
-                featuredCollection?.cslCalendarSlug
-                  ? allEvents.filter((event) => {
-                      return event.calendar?.slug === featuredCollection?.cslCalendarSlug;
-                    })
-                  : []
-              }
+              calendarEvents={getCalendarEventsForCollection(featuredCollection, allEvents)}
             />
           </div>
         )}
@@ -157,6 +168,7 @@ const EventLayout: React.FC<Props> = ({
           </div>
         )}
         <div className="map-container">
+          {/* @ts-ignore */}
           <Map data={events} />
           <div className="alert-container">
             <HelpIcon />
@@ -185,9 +197,7 @@ const EventLayout: React.FC<Props> = ({
                 <EventCollectionCard
                   collection={c}
                   vertical={extraCollection.length > 1}
-                  calendarEvents={
-                    c.cslCalendarSlug ? allEvents.filter((event) => event.calendar?.slug === c.cslCalendarSlug) : []
-                  }
+                  calendarEvents={getCalendarEventsForCollection(c, allEvents)}
                 />
               ))}
             </div>
