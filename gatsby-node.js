@@ -83,6 +83,12 @@ exports.createSchemaCustomization = ({ actions }) => {
 };
 
 exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
+  // Skip event creation in preview mode
+  if (process.env.GATSBY_PREVIEW_MODE === 'true') {
+    console.log('[CSL Source] Preview mode enabled - skipping event creation');
+    return;
+  }
+
   const clientId = process.env.CSL_CLIENT_ID;
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;

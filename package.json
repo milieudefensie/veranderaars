@@ -15,6 +15,7 @@
     "netlify-local": "rm -rf .netlify/cache && yarn build && netlify serve",
     "netlify-dev": "yarn clean && netlify dev",
     "develop": "mkdir -p .cache && gatsby develop",
+    "preview-netlify": "gatsby develop",
     "start": "mkdir -p .cache && gatsby develop",
     "build": "gatsby clean && gatsby build",
     "serve": "gatsby serve",
