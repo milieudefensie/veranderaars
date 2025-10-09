@@ -12,7 +12,7 @@ type Props = {
   isHighlighted?: boolean;
   lessInfo?: boolean;
   cta?: CtaType;
-  collection?: EventCollectionType;
+  collection?: EventCollectionType[];
   isLocalGroup?: boolean;
   extraClassName?: string;
 };
@@ -73,7 +73,9 @@ const EventCardV2: React.FC<Props> = ({
           </div>
           {collection && (
             <div className="collection-wrapper">
-              <span>{collection.title}</span>
+              {collection.map((c) => (
+                <span key={c.id}>{c.title}</span>
+              ))}
             </div>
           )}
           <h3>{title}</h3>
@@ -120,6 +122,7 @@ const EventCardV2: React.FC<Props> = ({
 
   return (
     <Link
+      // @ts-ignore
       to={link}
       className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} ${extraClassName ? extraClassName : ''}`}
     >

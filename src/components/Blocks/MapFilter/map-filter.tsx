@@ -150,13 +150,19 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
   };
 
   const findParentCollection = (event: EventType) => {
-    const parentCollection = collections.nodes.find((collection: any) => {
+    const parentCollections = collections.nodes.filter((collection: any) => {
       const hasRelatedEvent = collection.relatedEvents?.some((e: any) => e.slug === event.slug);
-      const matchesCalendarSlug = collection.cslCalendarSlug && event.calendar?.slug === collection.cslCalendarSlug;
+
+      const matchesCalendarSlug = (() => {
+        if (!collection.cslCalendarSlug || !event.calendar?.slug) return false;
+        const slugs = collection.cslCalendarSlug.split(',').map((s: string) => s.trim());
+        return slugs.includes(event.calendar.slug);
+      })();
+
       return hasRelatedEvent || matchesCalendarSlug;
     });
 
-    return parentCollection;
+    return parentCollections;
   };
 
   const isLocalGroupOrganizer = (event: EventType) => {

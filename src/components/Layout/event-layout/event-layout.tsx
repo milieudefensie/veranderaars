@@ -113,13 +113,19 @@ const EventLayout: React.FC<Props> = ({
   const categorizedEvents = setEventCategories();
 
   const findParentCollection = (event: EventType) => {
-    const parentCollection = allCollections.find((collection) => {
+    const parentCollections = allCollections.filter((collection) => {
       const hasRelatedEvent = collection.relatedEvents?.some((e) => e.slug === event.slug);
-      const matchesCalendarSlug = collection.cslCalendarSlug && event.calendar?.slug === collection.cslCalendarSlug;
+
+      const matchesCalendarSlug = (() => {
+        if (!collection.cslCalendarSlug || !event.calendar?.slug) return false;
+        const slugs = collection.cslCalendarSlug.split(',').map((s) => s.trim());
+        return slugs.includes(event.calendar.slug);
+      })();
+
       return hasRelatedEvent || matchesCalendarSlug;
     });
 
-    return parentCollection;
+    return parentCollections;
   };
 
   const isLocalGroupOrganizer = (event: EventType) => {

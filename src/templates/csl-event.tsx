@@ -5,7 +5,7 @@ import SeoDatoCMS from '../components/Layout/seo-datocms';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout'; // @ts-expect-error
 import { cleanLocation, formatDateWithTimeCSL } from '../utils';
 import Form from '../components/Global/Form/form';
-import { EventType } from '../types';
+import { EventCollectionType, EventType } from '../types';
 import { useCSLAttendees } from '../hooks/useCSLAttendees';
 import Spinner from '../components/Global/Spinner/spinner';
 import SignalModal from '../components/Global/SignalModal/signal-modal';
@@ -65,13 +65,19 @@ ${signalURL}`;
     : null;
 
   const findParentCollection = (event: EventType) => {
-    const parentCollection = collections.nodes.find((collection: any) => {
+    const parentCollections = collections.nodes.filter((collection: any) => {
       const hasRelatedEvent = collection.relatedEvents?.some((e: any) => e.slug === event.slug);
-      const matchesCalendarSlug = collection.cslCalendarSlug && event.calendar?.slug === collection.cslCalendarSlug;
+
+      const matchesCalendarSlug = (() => {
+        if (!collection.cslCalendarSlug || !event.calendar?.slug) return false;
+        const slugs = collection.cslCalendarSlug.split(',').map((s: string) => s.trim());
+        return slugs.includes(event.calendar.slug);
+      })();
+
       return hasRelatedEvent || matchesCalendarSlug;
     });
 
-    return parentCollection;
+    return parentCollections;
   };
 
   const isLocalGroupOrganizer = (event: EventType) => {
@@ -151,8 +157,12 @@ ${signalURL}`;
                   <span>{formatDateWithTimeCSL(raw_start, start_in_zone, raw_end, end_in_zone)}</span>
                 </span>
                 {collection && (
-                  <div>
-                    <span className="badge-tour">{collection.title}</span>
+                  <div className="event-collection-wrapper">
+                    {collection.map((c: EventCollectionType) => (
+                      <span key={c.id} className="badge-tour">
+                        {c.title}
+                      </span>
+                    ))}
                   </div>
                 )}
               </div>
