@@ -6,6 +6,12 @@
   border-bottom: 2px solid;
   border-color: color-mix(in oklab, #0b0908 10%, transparent);
 
+  .event-collection-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
   .image-container {
     width: 33.3333%;
     display: flex;
