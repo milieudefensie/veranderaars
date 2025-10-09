@@ -17,6 +17,7 @@
     "develop": "mkdir -p .cache && gatsby develop",
     "start": "mkdir -p .cache && gatsby develop",
     "build": "gatsby clean && gatsby build",
+    "preview-netlify": "gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
