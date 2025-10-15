@@ -65,6 +65,9 @@
     }
 
     .collection-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
       margin: 0.5rem 0 1rem 0;
 
       span {
