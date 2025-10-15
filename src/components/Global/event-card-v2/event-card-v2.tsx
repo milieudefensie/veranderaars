@@ -71,7 +71,7 @@ const EventCardV2: React.FC<Props> = ({
               </>
             ) : null}
           </div>
-          {collection && (
+          {collection && collection.length > 0 && (
             <div className="collection-wrapper">
               {collection.map((c) => (
                 <span key={c.id}>{c.title}</span>
