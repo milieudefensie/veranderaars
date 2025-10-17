@@ -1,225 +1,222 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Link from '../Link/link';
-import { ReactSVG } from 'react-svg';
-import Cta from '../Cta/cta';
-// @ts-expect-error
-import hamburgerIcon from '../../Icons/Hamburguer Icon.svg'; // @ts-expect-error
-import headerUpdatedLogo from '../../Icons/md-new-logo.svg'; // @ts-expect-error
-import signalNavigationIcon from '../../Icons/signal.svg';
+import React, { useState } from 'react';
+import { Link } from 'gatsby';
 
 import './index.scss';
 
-interface LinkItemProps {
-  link: string;
-  label: string;
-  isButton: boolean;
-}
+const MobileNavbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-const LinkItem = ({ link, label, isButton }: LinkItemProps) => {
-  return (
-    <li className="nav-item">
-      <Link to={link} className={isButton ? 'btn btn-primary' : ''}>
-        {label}
-      </Link>
-    </li>
-  );
-};
-
-interface DropdownItemProps {
-  link: string;
-  label: string;
-  children: Array<{ id: string; title: string; link: string }>;
-}
-
-const DropdownItem = ({ link, label, children }: DropdownItemProps) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleLinkClick = () => setDropdownOpen((prev) => !prev);
-
-  return (
-    <li className={`dropdown nav-item ${dropdownOpen ? 'open' : ''}`}>
-      <Link to={link} onClick={handleLinkClick} style={{ cursor: 'pointer' }}>
-        {label}
-      </Link>
-
-      <ul className={`dropdown-menu ${dropdownOpen ? 'open' : null}`}>
-        {children
-          ?.sort((a, b) => a.position - b.position)
-          .map((link) => (
-            <li className="dropdown-item" key={link.id}>
-              <Link className="dropdown-link" to={link.link}>
-                {link?.title}
-              </Link>
-            </li>
-          ))}
-      </ul>
-    </li>
-  );
-};
-
-interface NavProps {
-  navData: { nodes: Array<{ id: string; title: string; treeChildren: any[]; isButton: boolean; link: string }> };
-  config: {
-    whatsappPage?: string;
-    whatsappGroup?: string;
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-  setNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  heroBgColor: string;
-}
-
-export default function Nav({ navData, config, setNavOpen, heroBgColor }: NavProps) {
-  const navRef = useRef(null);
-  const openNavBtnRef = useRef(null);
-
-  const navLinks = navData.nodes;
-  const [expanded, setExpanded] = useState(false);
-
-  const handleNavClick = () => setExpanded((prev) => !prev);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (openNavBtnRef.current && openNavBtnRef.current.contains(event.target)) {
-        setExpanded((prev) => !prev);
-        return;
-      }
-
-      if (navRef.current && !navRef.current.contains(event.target)) {
-        setExpanded(false);
-      }
-    };
-
-    const handleBtnClick = () => {
-      setExpanded((prev) => !prev);
-    };
-
-    document.addEventListener('click', handleClickOutside);
-
-    if (openNavBtnRef.current) {
-      openNavBtnRef.current.addEventListener('click', handleBtnClick);
-    }
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-
-      if (openNavBtnRef.current) {
-        openNavBtnRef.current.removeEventListener('click', handleBtnClick);
-      }
-    };
-  }, [openNavBtnRef]);
-
-  useEffect(() => {
-    setNavOpen(expanded);
-  }, [expanded]);
-
-  const groupedLinks = navLinks.reduce(
-    (result, item) => {
-      if (item.isButton) {
-        result.ctas.push(item);
-      } else {
-        result.links.push(item);
-      }
-      return result;
-    },
-    { ctas: [], links: [] }
-  );
 
   return (
     <>
-      <nav className={`navbar2 ${heroBgColor}`}>
-        <div className="container">
-          <div className="top-section">
-            <Link className="navbar-brand" to={'/'} aria-label="Milieudefensie">
-              <ReactSVG src={headerUpdatedLogo} />
+      {/* Navigation desktop */}
+      <div className="container" id="header-mobile-wrapper">
+        <header id="header-mobile" className={`header-mobile-${isMobileMenuOpen ? 'open' : 'closed'}`}>
+          {/* Mobile Header - Closed State */}
+          <div className={`MobileHeader MobileHeader-closed ${isMobileMenuOpen ? 'hidden' : ''}`}>
+            <Link className="Header-logo-link Header-logo-link-mobile" to="/">
+              <img
+                src="https://staging-nl.milieudefensie.nl/homepage/@@images/logo_mobile"
+                alt="Logo Milieudefensie"
+                className="Header-logo"
+              />
             </Link>
-
-            <div className="actions">
-              <button
-                type="button"
-                aria-label="Toggle navigation"
-                className="navbar-toggler2"
-                onClick={() => handleNavClick()}
-                ref={openNavBtnRef}
+            <div className="MobileHeader-menuContainer">
+              <Link to="/doe-mee" className="button small purple">
+                Doe mee
+              </Link>
+              <Link to="/actie/lidworden" className="button small">
+                Word lid
+              </Link>
+              <a
+                href="#"
+                className="button small black"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleMobileMenu();
+                }}
               >
-                <ReactSVG src={hamburgerIcon} />
-              </button>
-
-              {config.whatsappPage ? (
-                <Link className="wp-button" to={config.whatsappPage} aria-label="Open signal page">
-                  <ReactSVG src={signalNavigationIcon} />
-                </Link>
-              ) : config?.whatsappGroup ? (
-                <a
-                  className="wp-button"
-                  href={`${config.whatsappGroup}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Open signal page"
-                >
-                  <ReactSVG src={signalNavigationIcon} />
-                </a>
-              ) : null}
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 18L20 18" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+                    <path d="M4 12L20 12" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+                    <path d="M4 6L20 6" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                </span>
+                <span className="hideOnSmallDevices">Menu</span>
+              </a>
             </div>
           </div>
-        </div>
-      </nav>
+        </header>
+      </div>
 
-      <div id="nav-content">
-        <div ref={navRef} className={`offcanvas offcanvas-end ${expanded ? 'show' : ''}`}>
-          <div className="offcanvas-header">
-            <div className="actions">
-              <button
-                className="close"
-                type="button"
-                aria-label="Toggle navigation"
-                onClick={() => setExpanded((prev) => !prev)}
+      {/* Navigation Mobile */}
+      <div className="NavigationMobile" style={{ display: isMobileMenuOpen ? 'block' : 'none' }}>
+        <div className={`MobileHeader MobileHeader-open ${!isMobileMenuOpen ? 'hidden' : ''}`}>
+          <Link className="Header-logo-link Header-logo-link-desktop" to="/">
+            <img
+              src="https://staging-nl.milieudefensie.nl/@@site-logo/Basis_logo_Milieudefensie+Pay-Off.png"
+              alt="Logo Milieudefensie"
+              className="Header-logo"
+            />
+          </Link>
+
+          <a href="#" className="MobileHeader-menu" onClick={() => setIsMobileMenuOpen(false)}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px" viewBox="0 0 24 24" fill="none">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z"
+                fill="#0F1729"
+              />
+            </svg>
+          </a>
+        </div>
+
+        <div className="NavigationMobile-nav">
+          <ul className="NavigationMobile-main">
+            <li className="NavigationMobile-mainItem">
+              <a href="/campagnes" className="NavigationMobile-mainItemLink">
+                Campagnes
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#000000"
+                  height="16px"
+                  width="16px"
+                  version="1.1"
+                  id="Layer_1"
+                  viewBox="0 0 511.949 511.949"
+                >
+                  <g>
+                    <g>
+                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
+                    </g>
+                  </g>
+                </svg>
+              </a>
+            </li>
+            <li className="NavigationMobile-mainItem">
+              <a
+                href="https://veranderaars.milieudefensie.nl/groepen"
+                className="NavigationMobile-mainItemLink"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="29" height="28" viewBox="0 0 29 28" fill="none">
+                De beweging
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#000000"
+                  height="16px"
+                  width="16px"
+                  version="1.1"
+                  id="Layer_1"
+                  viewBox="0 0 511.949 511.949"
+                >
+                  <g>
+                    <g>
+                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
+                    </g>
+                  </g>
+                </svg>
+              </a>
+            </li>
+            <li className="NavigationMobile-mainItem">
+              <a
+                href="https://veranderaars.milieudefensie.nl/agenda"
+                className="NavigationMobile-mainItemLink"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Evenementen
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#000000"
+                  height="16px"
+                  width="16px"
+                  version="1.1"
+                  id="Layer_1"
+                  viewBox="0 0 511.949 511.949"
+                >
+                  <g>
+                    <g>
+                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
+                    </g>
+                  </g>
+                </svg>
+              </a>
+            </li>
+            <li className="NavigationMobile-mainItem">
+              <a href="/doe-mee/donatie" className="NavigationMobile-mainItemLink">
+                Doneer
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#000000"
+                  height="16px"
+                  width="16px"
+                  version="1.1"
+                  id="Layer_1"
+                  viewBox="0 0 511.949 511.949"
+                >
+                  <g>
+                    <g>
+                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
+                    </g>
+                  </g>
+                </svg>
+              </a>
+            </li>
+            <li className="NavigationMobile-mainItem">
+              <a href="/over-ons" className="NavigationMobile-mainItemLink">
+                Over ons
+                <svg fill="#000000" height="16px" width="16px" viewBox="0 0 511.949 511.949">
+                  <g>
+                    <g>
+                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
+                    </g>
+                  </g>
+                </svg>
+              </a>
+            </li>
+          </ul>
+
+          <div className="NavigationMobile-buttons">
+            <div className="ButtonsContainer">
+              <a href="/doe-mee" className="button purple with-width">
+                Doe mee
+              </a>
+              <a href="/actie/lidworden" className="button orange with-width">
+                Word lid
+              </a>
+            </div>
+          </div>
+
+          <div className="NavigationMobile-links">
+            <div className="LinksContainer">
+              <a href="/actueel">Nieuws</a>
+              <a href="/contact">Contact</a>
+              <a href="/@@search" className="">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                   <path
-                    d="M2.83276 2.5L26.1673 25.8345"
-                    stroke="black"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M2.83276 25.5L26.1673 2.16548"
-                    stroke="black"
-                    strokeWidth="4"
+                    d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
+                    stroke="#000000"
+                    strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                 </svg>
-              </button>
-
-              {config.whatsappPage ? (
-                <Link className="wp-button" to={config.whatsappPage}>
-                  <ReactSVG src={signalNavigationIcon} />
-                </Link>
-              ) : config?.whatsappGroup ? (
-                <a className="wp-button" href={`${config.whatsappGroup}`} target="_blank" rel="noopener noreferrer">
-                  <ReactSVG src={signalNavigationIcon} />
-                </a>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="offcanvas-body">
-            <div className="navbar-nav justify-content-end flex-grow-1 pe-3">
-              <ul className="links-container">
-                {groupedLinks.links.map((link) =>
-                  link.treeChildren.length === 0 ? (
-                    <LinkItem key={link.id} link={link} label={link.title} isButton={link.isButton} />
-                  ) : (
-                    <DropdownItem key={link.id} link={link} label={link.title} children={link.treeChildren} />
-                  )
-                )}
-              </ul>
-
-              <Cta url="https://milieudefensie.nl/" externalTitle="milieudefensie.nl" isButton />
+                Zoeken
+              </a>
             </div>
           </div>
         </div>
       </div>
+
+      <div className={`nav-open-overlay ${isMobileMenuOpen ? 'active' : ''}`}></div>
     </>
   );
-}
+};
+
+export default MobileNavbar;
