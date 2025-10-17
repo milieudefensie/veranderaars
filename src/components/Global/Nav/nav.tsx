@@ -1,28 +1,54 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'gatsby';
+// @ts-expect-error
+import headerUpdatedLogo from '../../Icons/md-new-logo.svg';
 
 import './index.scss';
 
 const MobileNavbar = () => {
+  const menuRef = useRef(null);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      // @ts-ignore
+      if (isMobileMenuOpen && menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
+
   return (
     <>
       {/* Navigation desktop */}
-      <div className="container" id="header-mobile-wrapper">
-        <header id="header-mobile" className={`header-mobile-${isMobileMenuOpen ? 'open' : 'closed'}`}>
+      <div id="header-mobile-wrapper" className={isScrolled ? 'scrolled' : ''}>
+        <header id="header-mobile" className={`container header-mobile-${isMobileMenuOpen ? 'open' : 'closed'}`}>
           {/* Mobile Header - Closed State */}
           <div className={`MobileHeader MobileHeader-closed ${isMobileMenuOpen ? 'hidden' : ''}`}>
             <Link className="Header-logo-link Header-logo-link-mobile" to="/">
-              <img
-                src="https://staging-nl.milieudefensie.nl/homepage/@@images/logo_mobile"
-                alt="Logo Milieudefensie"
-                className="Header-logo"
-              />
+              <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" />
             </Link>
             <div className="MobileHeader-menuContainer">
               <Link to="/doe-mee" className="button small purple">
@@ -54,14 +80,10 @@ const MobileNavbar = () => {
       </div>
 
       {/* Navigation Mobile */}
-      <div className="NavigationMobile" style={{ display: isMobileMenuOpen ? 'block' : 'none' }}>
+      <div ref={menuRef} className="NavigationMobile" style={{ display: isMobileMenuOpen ? 'block' : 'none' }}>
         <div className={`MobileHeader MobileHeader-open ${!isMobileMenuOpen ? 'hidden' : ''}`}>
           <Link className="Header-logo-link Header-logo-link-desktop" to="/">
-            <img
-              src="https://staging-nl.milieudefensie.nl/@@site-logo/Basis_logo_Milieudefensie+Pay-Off.png"
-              alt="Logo Milieudefensie"
-              className="Header-logo"
-            />
+            <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" />
           </Link>
 
           <a href="#" className="MobileHeader-menu" onClick={() => setIsMobileMenuOpen(false)}>
@@ -79,7 +101,7 @@ const MobileNavbar = () => {
         <div className="NavigationMobile-nav">
           <ul className="NavigationMobile-main">
             <li className="NavigationMobile-mainItem">
-              <a href="/campagnes" className="NavigationMobile-mainItemLink">
+              <Link to="/campagnes" className="NavigationMobile-mainItemLink">
                 Campagnes
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -96,11 +118,11 @@ const MobileNavbar = () => {
                     </g>
                   </g>
                 </svg>
-              </a>
+              </Link>
             </li>
             <li className="NavigationMobile-mainItem">
-              <a
-                href="https://veranderaars.milieudefensie.nl/groepen"
+              <Link
+                to="https://veranderaars.milieudefensie.nl/groepen"
                 className="NavigationMobile-mainItemLink"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -121,11 +143,11 @@ const MobileNavbar = () => {
                     </g>
                   </g>
                 </svg>
-              </a>
+              </Link>
             </li>
             <li className="NavigationMobile-mainItem">
-              <a
-                href="https://veranderaars.milieudefensie.nl/agenda"
+              <Link
+                to="https://veranderaars.milieudefensie.nl/agenda"
                 className="NavigationMobile-mainItemLink"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -146,10 +168,10 @@ const MobileNavbar = () => {
                     </g>
                   </g>
                 </svg>
-              </a>
+              </Link>
             </li>
             <li className="NavigationMobile-mainItem">
-              <a href="/doe-mee/donatie" className="NavigationMobile-mainItemLink">
+              <Link to="/doe-mee/donatie" className="NavigationMobile-mainItemLink">
                 Doneer
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -166,10 +188,10 @@ const MobileNavbar = () => {
                     </g>
                   </g>
                 </svg>
-              </a>
+              </Link>
             </li>
             <li className="NavigationMobile-mainItem">
-              <a href="/over-ons" className="NavigationMobile-mainItemLink">
+              <Link to="/over-ons" className="NavigationMobile-mainItemLink">
                 Over ons
                 <svg fill="#000000" height="16px" width="16px" viewBox="0 0 511.949 511.949">
                   <g>
@@ -178,7 +200,7 @@ const MobileNavbar = () => {
                     </g>
                   </g>
                 </svg>
-              </a>
+              </Link>
             </li>
           </ul>
 
@@ -195,9 +217,9 @@ const MobileNavbar = () => {
 
           <div className="NavigationMobile-links">
             <div className="LinksContainer">
-              <a href="/actueel">Nieuws</a>
-              <a href="/contact">Contact</a>
-              <a href="/@@search" className="">
+              <Link to="/actueel">Nieuws</Link>
+              <Link to="/contact">Contact</Link>
+              <Link to="/search" className="">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
@@ -208,7 +230,7 @@ const MobileNavbar = () => {
                   />
                 </svg>
                 Zoeken
-              </a>
+              </Link>
             </div>
           </div>
         </div>
