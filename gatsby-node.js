@@ -1,5 +1,4 @@
-const puppeteer = require('puppeteer');
-const chromium = require('chromium');
+
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
@@ -83,12 +82,6 @@ exports.createSchemaCustomization = ({ actions }) => {
 };
 
 exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
-
-  // Skip event creation in preview mode
-  if (process.env.GATSBY_PREVIEW_MODE === 'true') {
-    console.log('[CSL Source] Preview mode enabled - skipping event creation');
-    return;
-  }
   const clientId = process.env.CSL_CLIENT_ID;
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
@@ -179,16 +172,16 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     });
   };
 
-  for (const event of allEvents) {
-    const fullEvent = await fetchEventDetails(event.slug);
-    await createEventNode(fullEvent, event.slug);
-  }
+  // for (const event of allEvents) {
+  //   const fullEvent = await fetchEventDetails(event.slug);
+  //   await createEventNode(fullEvent, event.slug);
+  // }
 
-  const extraSlugs = ['test-event-whatsapp-link', 'test-event-zoom'];
-  for (const slug of extraSlugs) {
-    const fullEvent = await fetchEventDetails(slug);
-    await createEventNode(fullEvent, slug);
-  }
+  // const extraSlugs = ['test-event-whatsapp-link', 'test-event-zoom'];
+  // for (const slug of extraSlugs) {
+  //   const fullEvent = await fetchEventDetails(slug);
+  //   await createEventNode(fullEvent, slug);
+  // }
 };
 
 exports.createPages = ({ graphql, actions }) => {
@@ -516,8 +509,8 @@ exports.onCreateWebpackConfig = ({ stage, actions, getConfig }) => {
 // Utils
 const shouldCreateEvent = (event) => Array.isArray(event.labels) && !event.labels.includes('hidden');
 
-chromium.setHeadlessMode = true;
-chromium.setGraphicsMode = false;
+// chromium.setHeadlessMode = true;
+// chromium.setGraphicsMode = false;
 
 const scrapingFormInputs = async (event) => {
   const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;

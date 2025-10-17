@@ -1,5 +1,4 @@
 [build]
-  command = "npx puppeteer browsers install chrome && npm run clean && npm run build:netlify"
   functions = 'functions'
 
 [build.environment]
