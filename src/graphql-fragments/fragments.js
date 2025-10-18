@@ -7,6 +7,8 @@ export const DatoCMS = graphql`
     position
     externalUrl
     isButton
+    variant
+    icon
     content {
       ... on DatoCmsListTool {
         id

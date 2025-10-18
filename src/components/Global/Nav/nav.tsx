@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'gatsby';
-// @ts-expect-error
+import Link from '../Link/link'; // @ts-expect-error
 import headerUpdatedLogo from '../../Icons/md-new-logo.svg';
 
 import './index.scss';
 
-const MobileNavbar = () => {
+const MobileNavbar = ({
+  items,
+}: {
+  items: { mainLinks: any[]; sidebarLinks: any[]; sidebarButtons: any[]; sidebarExtraLinks: any[] };
+}) => {
   const menuRef = useRef(null);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -51,12 +54,11 @@ const MobileNavbar = () => {
               <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" />
             </Link>
             <div className="MobileHeader-menuContainer">
-              <Link to="/doe-mee" className="button small purple">
-                Doe mee
-              </Link>
-              <Link to="/actie/lidworden" className="button small">
-                Word lid
-              </Link>
+              {items.mainLinks.map((link) => (
+                <Link key={link.id} to={link} className={`button small ${link.variant}`}>
+                  {link.title}
+                </Link>
+              ))}
               <a
                 href="#"
                 className="button small black"
@@ -86,7 +88,14 @@ const MobileNavbar = () => {
             <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" />
           </Link>
 
-          <a href="#" className="MobileHeader-menu" onClick={() => setIsMobileMenuOpen(false)}>
+          <a
+            href="#"
+            className="MobileHeader-menu"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+            }}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px" viewBox="0 0 24 24" fill="none">
               <path
                 fillRule="evenodd"
@@ -100,137 +109,58 @@ const MobileNavbar = () => {
 
         <div className="NavigationMobile-nav">
           <ul className="NavigationMobile-main">
-            <li className="NavigationMobile-mainItem">
-              <Link to="/campagnes" className="NavigationMobile-mainItemLink">
-                Campagnes
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#000000"
-                  height="16px"
-                  width="16px"
-                  version="1.1"
-                  id="Layer_1"
-                  viewBox="0 0 511.949 511.949"
-                >
-                  <g>
+            {items.sidebarLinks.map((link) => (
+              <li key={link.id} className="NavigationMobile-mainItem">
+                <Link to={link} className="NavigationMobile-mainItemLink">
+                  {link.title}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="#000000"
+                    height="16px"
+                    width="16px"
+                    version="1.1"
+                    id="Layer_1"
+                    viewBox="0 0 511.949 511.949"
+                  >
                     <g>
-                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
+                      <g>
+                        <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
+                      </g>
                     </g>
-                  </g>
-                </svg>
-              </Link>
-            </li>
-            <li className="NavigationMobile-mainItem">
-              <Link
-                to="https://veranderaars.milieudefensie.nl/groepen"
-                className="NavigationMobile-mainItemLink"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                De beweging
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#000000"
-                  height="16px"
-                  width="16px"
-                  version="1.1"
-                  id="Layer_1"
-                  viewBox="0 0 511.949 511.949"
-                >
-                  <g>
-                    <g>
-                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
-                    </g>
-                  </g>
-                </svg>
-              </Link>
-            </li>
-            <li className="NavigationMobile-mainItem">
-              <Link
-                to="https://veranderaars.milieudefensie.nl/agenda"
-                className="NavigationMobile-mainItemLink"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Evenementen
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#000000"
-                  height="16px"
-                  width="16px"
-                  version="1.1"
-                  id="Layer_1"
-                  viewBox="0 0 511.949 511.949"
-                >
-                  <g>
-                    <g>
-                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
-                    </g>
-                  </g>
-                </svg>
-              </Link>
-            </li>
-            <li className="NavigationMobile-mainItem">
-              <Link to="/doe-mee/donatie" className="NavigationMobile-mainItemLink">
-                Doneer
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#000000"
-                  height="16px"
-                  width="16px"
-                  version="1.1"
-                  id="Layer_1"
-                  viewBox="0 0 511.949 511.949"
-                >
-                  <g>
-                    <g>
-                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
-                    </g>
-                  </g>
-                </svg>
-              </Link>
-            </li>
-            <li className="NavigationMobile-mainItem">
-              <Link to="/over-ons" className="NavigationMobile-mainItemLink">
-                Over ons
-                <svg fill="#000000" height="16px" width="16px" viewBox="0 0 511.949 511.949">
-                  <g>
-                    <g>
-                      <path d="M386.235,248.308L140.902,2.975c-4.267-4.053-10.987-3.947-15.04,0.213c-3.947,4.16-3.947,10.667,0,14.827l237.76,237.76    l-237.76,237.867c-4.267,4.053-4.373,10.88-0.213,15.04c4.053,4.267,10.88,4.373,15.04,0.213c0.107-0.107,0.213-0.213,0.213-0.213    l245.333-245.333C390.395,259.188,390.395,252.468,386.235,248.308z" />
-                    </g>
-                  </g>
-                </svg>
-              </Link>
-            </li>
+                  </svg>
+                </Link>
+              </li>
+            ))}
           </ul>
 
           <div className="NavigationMobile-buttons">
             <div className="ButtonsContainer">
-              <a href="/doe-mee" className="button purple with-width">
-                Doe mee
-              </a>
-              <a href="/actie/lidworden" className="button orange with-width">
-                Word lid
-              </a>
+              {items.sidebarButtons.map((link) => (
+                <Link key={link.id} to={link} className={`button with-width ${link.variant}`}>
+                  {link.title}
+                </Link>
+              ))}
             </div>
           </div>
 
           <div className="NavigationMobile-links">
             <div className="LinksContainer">
-              <Link to="/actueel">Nieuws</Link>
-              <Link to="/contact">Contact</Link>
-              <Link to="/search" className="">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
-                    stroke="#000000"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Zoeken
-              </Link>
+              {items.sidebarExtraLinks.map((link) => (
+                <Link key={link.id} to={link}>
+                  {link.icon === 'search' && (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
+                        stroke="#000000"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                  {link.title}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
