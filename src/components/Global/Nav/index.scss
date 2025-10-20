@@ -267,8 +267,8 @@
 }
 
 .nav-open-overlay.active {
-  opacity: 1;
-  z-index: 201;
+  opacity: 1 !important;
+  z-index: 201 !important;
   pointer-events: auto;
 }
 
