@@ -4,11 +4,35 @@ import headerUpdatedLogo from '../../Icons/md-new-logo.svg';
 
 import './index.scss';
 
-const MobileNavbar = ({
-  items,
-}: {
-  items: { mainLinks: any[]; sidebarLinks: any[]; sidebarButtons: any[]; sidebarExtraLinks: any[] };
-}) => {
+const MobileNavbar = (
+  {
+    // items,
+  }: {
+    items: { mainLinks: any[]; sidebarLinks: any[]; sidebarButtons: any[]; sidebarExtraLinks: any[] };
+  }
+) => {
+  const items = {
+    mainLinks: [
+      { id: 1, title: 'Doe mee', variant: 'purple', to: '/steun-ons' },
+      { id: 2, title: 'Word lid', variant: 'blue', to: '/word-lid' },
+    ],
+    sidebarLinks: [
+      { id: 1, title: 'Campagnes', to: '/acties' },
+      { id: 2, title: 'De beweging', to: '/campagnes' },
+      { id: 3, title: 'Evenementen', to: '/nieuws' },
+      { id: 4, title: 'Doneer', to: '/over-ons' },
+      { id: 5, title: 'Over ons', to: '/dossiers' },
+    ],
+    sidebarButtons: [
+      { id: 1, title: 'Doe mee', variant: 'purple', to: '/steun-ons' },
+      { id: 2, title: 'Word lid', variant: 'orange', to: '/word-lid' },
+    ],
+    sidebarExtraLinks: [
+      { id: 2, title: 'Nieuws ', to: '/contact' },
+      { id: 3, title: 'Contact ', to: '/faq' },
+      { id: 1, title: 'Zoeken', icon: 'search', to: '/zoek' },
+    ],
+  };
   const menuRef = useRef(null);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

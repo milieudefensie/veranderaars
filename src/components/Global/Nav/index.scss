@@ -277,6 +277,10 @@
   #header-mobile-wrapper {
     max-width: 100%;
   }
+
+  .button.with-width {
+    width: auto;
+  }
 }
 
 @media screen and (max-width: 767px) {
@@ -299,10 +303,11 @@
 
       .button.black {
         display: flex;
-        width: 30px;
+        width: 40px;
         background-color: #fff !important;
         color: #000 !important;
         border: 2px solid #000 !important;
+        padding: 3px;
 
         svg {
           margin: 0;
