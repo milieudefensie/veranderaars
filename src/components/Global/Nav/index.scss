@@ -5,7 +5,6 @@
   right: 0;
   z-index: 200;
   background-color: transparent;
-  // transition: background-color .3s ease-in-out, box-shadow .3s ease-in-out;
 
   .Header-logo {
     width: 230px;
@@ -33,7 +32,7 @@
   .MobileHeader .MobileHeader-menuContainer {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 10px;
   }
 
   &.scrolled {
@@ -191,6 +190,7 @@
           font-weight: 400;
           line-height: 33.6px;
           color: #000;
+          cursor: pointer;
 
           display: flex;
           align-items: center;
@@ -238,9 +238,11 @@
           color: #000;
           font-weight: 400;
           text-decoration: none;
+          cursor: pointer;
 
           svg {
-            margin-right: 5px;
+            margin-right: 8px;
+            margin-bottom: 10px;
           }
 
           &:hover {
