@@ -127,11 +127,9 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
       if (mobileShowMap && window.innerWidth < 992) {
         htmlElement.style.overflow = 'hidden';
         navbar.style.backgroundColor = 'var(--nb-bg-light)';
-        navbar.style.height = '85px';
       } else {
         htmlElement.style.overflow = '';
         navbar.style.backgroundColor = 'transparent';
-        navbar.style.height = 'auto';
       }
     };
 
