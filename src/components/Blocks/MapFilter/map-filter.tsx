@@ -121,7 +121,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
   useEffect(() => {
     const handleWindowResize = () => {
       const htmlElement = document.documentElement;
-      const navbar = document.querySelector('.navbar2') as HTMLElement;
+      const navbar = document.querySelector('#header-mobile-wrapper') as HTMLElement;
       setMobileDevice(window.innerWidth < 992);
 
       if (mobileShowMap && window.innerWidth < 992) {
