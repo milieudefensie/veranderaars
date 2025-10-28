@@ -55,7 +55,7 @@ const MobileNavbar = ({
             </Link>
             <div className="MobileHeader-menuContainer">
               {items.mainLinks.map((link) => (
-                <Link key={link.id} to={link} className={`button small ${link.variant}`}>
+                <Link key={link.id} to={link} className={`button small ${link.variant}`} target="_self">
                   {link.title}
                 </Link>
               ))}
@@ -111,7 +111,7 @@ const MobileNavbar = ({
           <ul className="NavigationMobile-main">
             {items.sidebarLinks.map((link) => (
               <li key={link.id} className="NavigationMobile-mainItem">
-                <Link to={link} className="NavigationMobile-mainItemLink">
+                <Link to={link} className="NavigationMobile-mainItemLink" target="_self">
                   {link.title}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +136,7 @@ const MobileNavbar = ({
           <div className="NavigationMobile-buttons">
             <div className="ButtonsContainer">
               {items.sidebarButtons.map((link) => (
-                <Link key={link.id} to={link} className={`button with-width ${link.variant}`}>
+                <Link key={link.id} to={link} className={`button with-width ${link.variant}`} target="_self">
                   {link.title}
                 </Link>
               ))}
@@ -146,7 +146,7 @@ const MobileNavbar = ({
           <div className="NavigationMobile-links">
             <div className="LinksContainer">
               {items.sidebarExtraLinks.map((link) => (
-                <Link key={link.id} to={link}>
+                <Link key={link.id} to={link} target="_self">
                   {link.icon === 'search' && (
                     <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                       <path
