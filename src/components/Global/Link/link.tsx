@@ -38,7 +38,7 @@ const Link: React.FC<LinkProps> = ({ to, children, ...rest }) => {
       );
     } else {
       return (
-        <a href={to?.externalUrl || to.link?.externalUrl} {...rest} target="_blank" rel="noopener noreferrer">
+        <a href={to?.externalUrl || to.link?.externalUrl} target="_blank" rel="noopener noreferrer" {...rest}>
           {children}
         </a>
       );
