@@ -123,6 +123,16 @@
     line-height: 27px !important;
     text-transform: initial !important;
   }
+
+  &.orange {
+    background-color: oklch(78.92% .1713 69.64);
+    border-color: oklch(78.92% .1713 69.64);
+
+    &:hover {
+      background-color: oklab(0.733956 0.0554264 0.149356);
+      border-color: oklab(0.733956 0.0554264 0.149356);
+    }
+  }
 }
 
 @media screen and (max-width: 992px) {

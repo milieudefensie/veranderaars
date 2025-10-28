@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Map, { MapProps, Marker, Popup, NavigationControl } from 'react-map-gl/mapbox';
 import GroupMarker from './Marker/group-marker';
 import CustomMarker from './Marker/marker';
+import SignalMarker from './Marker/signal-marker';
 import MapPopup from './MapPopup/map-popup';
 import useSupercluster from 'use-supercluster';
 import CtaHandler from '../Cta/cta-handler';
@@ -246,7 +247,15 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
                 }}
                 anchor="bottom"
               >
-                {type === 'wp-group' ? <WPGroupMarker /> : type === 'group' ? <GroupMarker /> : <CustomMarker />}
+                {type === 'wp-group' ? (
+                  <WPGroupMarker />
+                ) : type === 'group' ? (
+                  <GroupMarker />
+                ) : type === 'signal' ? (
+                  <SignalMarker />
+                ) : (
+                  <CustomMarker />
+                )}
               </Marker>
             );
           })}

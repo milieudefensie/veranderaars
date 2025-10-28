@@ -140,7 +140,7 @@
         margin-bottom: 8px;
       }
 
-      span {
+      .subtitle {
         display: block;
         font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         font-size: 14px;
@@ -149,6 +149,8 @@
         text-transform: uppercase;
         color: oklch(0.14 0.004 49.25);
         margin-bottom: 8px;
+        opacity: .6;
+        font-stretch: 75%;
       }
 
       .introduction {
@@ -161,6 +163,16 @@
           color: oklch(0.14 0.004 49.25);
         }
       }
+    }
+
+    .ui-event-card-v2 .image-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .signal-qr {
+      padding: 1rem;
     }
 
     &:hover {
@@ -191,6 +203,26 @@
               height: 20px;
             }
           }
+        }
+      }
+    }
+
+    &.generic-variant {
+
+      .ui-event-card-v2 .content-container {
+        h3 {
+          font-size: 32px;
+          line-height: 36px;
+        }
+
+        span {
+          font-size: 12px;
+          line-height: 18px;
+        }
+
+        .introduction {
+          font-size: 16px;
+          line-height: 24px;
         }
       }
     }

@@ -80,21 +80,27 @@ export const CalendarIcon = () => (
   </svg>
 );
 
-export const GenericCollectionCard: React.FC<Props> = ({ collection, ctaTitle, closestEvents }) => {
+export const GenericCollectionCard: React.FC<any> = ({
+  collection,
+  ctaTitle,
+  ctaVariant,
+  closestEvents,
+  customImage,
+}) => {
   const { title, subtitle, description, image } = collection || {};
   return (
     <div className={`ui-event-collection-card generic-variant transition-transform`}>
       <Link to={collection} className="ui-event-card-v2">
-        <div className="image-container">
-          <img src={image?.url} alt="Event" />
-        </div>
+        <div className="image-container">{customImage ? customImage : <img src={image?.url} alt="Event" />}</div>
         <div className="content-container">
           <div>
             <h3>{title}</h3>
-            <span>{subtitle}</span>
+            <span className="subtitle">{subtitle}</span>
             <div className="introduction" dangerouslySetInnerHTML={{ __html: description }} />
           </div>
-          <span className="custom-btn custom-btn-primary group-v2 big">{ctaTitle || 'Meld je aan'}</span>
+          <span className={`custom-btn custom-btn-primary group-v2 big ${ctaVariant}`}>
+            {ctaTitle || 'Meld je aan'}
+          </span>
         </div>
       </Link>
       {Array.isArray(closestEvents) && closestEvents.length > 0 && (

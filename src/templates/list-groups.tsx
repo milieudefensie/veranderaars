@@ -127,7 +127,7 @@ const ListGroups: React.FC<any> = ({
           <form className="search-engine" onSubmit={handleSearch}>
             <div className="search-engine-header">
               <span className="help">Woonplaats</span>
-              <span className="ip">Locatie op basis van je apparaat</span>
+              <span className="ip">Locatie op basis van je IP</span>
             </div>
             <div className="search-engine-row">
               <input
@@ -318,6 +318,7 @@ export const PageQuery = graphql`
           ...BlockCtaIconsList
           ...BlockImageGallery
           ...BlockCustomCta
+          # ...BlockTestimonial
         }
       }
       seo: seoMetaTags {
