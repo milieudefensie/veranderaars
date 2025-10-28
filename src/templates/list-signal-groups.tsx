@@ -61,7 +61,6 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
       return;
     }
 
-    // try exact match on group title (case-insensitive)
     const match = localGroups.find((g) => (g.title || '').toLowerCase() === query.toLowerCase());
     if (match) {
       setSearchResultGroup(match);
@@ -69,7 +68,6 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
       return;
     }
 
-    // If no exact match, show not-found block with city name
     setSearchResultGroup(null);
     setNotFoundCity(query);
   };
@@ -119,6 +117,7 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
                   image: activeGroup.image,
                   ...activeGroup,
                 }}
+                customLink={activeGroup.signalChat}
                 ctaTitle="💬 Open de Signal groep"
                 ctaVariant="orange"
                 customImage={

@@ -82,6 +82,7 @@ export const CalendarIcon = () => (
 
 export const GenericCollectionCard: React.FC<any> = ({
   collection,
+  customLink,
   ctaTitle,
   ctaVariant,
   closestEvents,
@@ -90,7 +91,7 @@ export const GenericCollectionCard: React.FC<any> = ({
   const { title, subtitle, description, image } = collection || {};
   return (
     <div className={`ui-event-collection-card generic-variant transition-transform`}>
-      <Link to={collection} className="ui-event-card-v2">
+      <Link to={customLink || collection} className="ui-event-card-v2">
         <div className="image-container">{customImage ? customImage : <img src={image?.url} alt="Event" />}</div>
         <div className="content-container">
           <div>

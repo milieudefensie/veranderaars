@@ -43,7 +43,6 @@ const ListGroups: React.FC<any> = ({
     });
   }, []);
 
-  // Compute nearest group when we have userCoords or groups
   useEffect(() => {
     if (userCoords && localGroups.length) {
       let best = null;
@@ -69,7 +68,6 @@ const ListGroups: React.FC<any> = ({
       return;
     }
 
-    // try exact match on group title (case-insensitive)
     const match = localGroups.find((g) => (g.title || '').toLowerCase() === query.toLowerCase());
     if (match) {
       setSearchResultGroup(match);
@@ -77,7 +75,6 @@ const ListGroups: React.FC<any> = ({
       return;
     }
 
-    // If no exact match, show not-found block with city name
     setSearchResultGroup(null);
     setNotFoundCity(query);
   };
