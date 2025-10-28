@@ -1,106 +1,211 @@
-import React, { useEffect, useState } from 'react';
-import { graphql, PageProps } from 'gatsby';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { graphql } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
-import HeroBasic from '../components/Global/HeroBasic/hero-basic';
 import Map from '../components/Global/Map/map';
-import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import ListGroupBlock from '../components/Blocks/HighlightGroup/list-groups';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
-import FloatCta from '../components/Global/FloatCta/float-cta';
-import type { ListGroupTemplate } from '../types';
+import { GenericCollectionCard } from '../components/Global/event-collection-card/event-collection-card';
+import BlockTestimonial from '../components/Blocks/BlockTestimonial/block-testimonial';
+import GroupCard from '../components/Blocks/HighlightGroup/group-card';
+import { distanceKm, getCurrentUserCity } from '../utils/location.utils'; // @ts-ignore
+import { getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
 
 import './list-basic.styles.scss';
 
-type ListGroupsProps = PageProps<ListGroupTemplate>;
-
-const ListGroups: React.FC<ListGroupsProps> = ({ data: { page, allGroups = { edges: [] }, favicon } }) => {
+const ListGroups: React.FC<any> = ({
+  pageContext,
+  data: { page, allGroups = { edges: [] }, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, favicon },
+}) => {
   const { seo, title, content } = page;
-  const mappedGroups = Array.isArray(allGroups.edges) ? allGroups.edges.map((raw) => raw.node) : [];
 
-  const [mobileShowMap, setMobileShowMap] = useState(false);
+  const cmsEvents = mapCmsEvents(allEvents);
+  const cslEvents = mapCslEvents(allCSLEvents);
+  const allEventsList = getCombinedEvents(cmsEvents, cslEvents, true, pageContext?.cslEventsHidden);
+  const localGroups = Array.isArray(allGroups.edges) ? allGroups.edges.map((raw: any) => raw.node) : [];
+
+  const [searchValue, setSearchValue] = useState('');
+  const [userCoords, setUserCoords] = useState<{ lat: number; lng: number; city: string } | null>(null);
+  const [nearestGroup, setNearestGroup] = useState<any | null>(null);
+  const [searchResultGroup, setSearchResultGroup] = useState<any | null>(null);
+  const [notFoundCity, setNotFoundCity] = useState<string | null>(null);
+
+  const allGroupsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const ctaView = document.querySelector('#cta-view-list');
-
-    const handleScroll = () => {
-      if (!ctaView) return;
-
-      // Hide float container on footer
-      const testElement = document.getElementById('groups-list');
-      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
-      const testElementPosition = testElement?.offsetTop;
-
-      if (!testElement || !scrollPosition || !testElementPosition) return;
-
-      if (scrollPosition + 700 < testElementPosition) {
-        ctaView.classList.remove('hide');
-      } else {
-        ctaView.classList.add('hide');
+    getCurrentUserCity().then((cityData) => {
+      if (cityData) {
+        setUserCoords({
+          lat: cityData.latitude,
+          lng: cityData.longitude,
+          city: cityData.city,
+        });
       }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    });
   }, []);
 
+  // Compute nearest group when we have userCoords or groups
   useEffect(() => {
-    const handleWindowResize = () => {
-      const htmlElement = document.documentElement;
-
-      if (mobileShowMap && window.innerWidth < 992) {
-        htmlElement.style.overflow = 'hidden';
-      } else {
-        htmlElement.style.overflow = '';
+    if (userCoords && localGroups.length) {
+      let best = null;
+      let bestDist = Infinity;
+      for (const g of localGroups) {
+        if (!g.coordinates || !g.coordinates.latitude || !g.coordinates.longitude) continue;
+        const d = distanceKm(userCoords.lat, userCoords.lng, g.coordinates.latitude, g.coordinates.longitude);
+        if (d < bestDist) {
+          bestDist = d;
+          best = { group: g, distance: d };
+        }
       }
-    };
+      if (best) setNearestGroup(best.group);
+    }
+  }, [userCoords, localGroups]);
 
-    handleWindowResize();
-    window.addEventListener('resize', handleWindowResize);
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = searchValue.trim();
+    if (!query) {
+      setSearchResultGroup(null);
+      setNotFoundCity(null);
+      return;
+    }
 
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, [mobileShowMap]);
+    // try exact match on group title (case-insensitive)
+    const match = localGroups.find((g) => (g.title || '').toLowerCase() === query.toLowerCase());
+    if (match) {
+      setSearchResultGroup(match);
+      setNotFoundCity(null);
+      return;
+    }
+
+    // If no exact match, show not-found block with city name
+    setSearchResultGroup(null);
+    setNotFoundCity(query);
+  };
+
+  const activeGroup = searchResultGroup || nearestGroup;
+
+  // helper to get up to 3 upcoming events for a group by distance and date
+  const upcomingEventsForGroup = (group: any) => {
+    if (!group) return [];
+    const eventsWithDistance = allEventsList
+      .filter((ev) => ev.coordinates)
+      .map((ev) => {
+        const evLat = ev.coordinates.latitude;
+        const evLng = ev.coordinates.longitude;
+        const gLat = group.coordinates?.latitude;
+        const gLng = group.coordinates?.longitude;
+        const d = gLat && gLng && evLat && evLng ? distanceKm(gLat, gLng, evLat, evLng) : Infinity;
+
+        return { ev, distance: d };
+      })
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, 3)
+      .map((x) => x.ev);
+
+    return eventsWithDistance;
+  };
+
+  const upcomingForActive = useMemo(() => upcomingEventsForGroup(activeGroup), [activeGroup]);
+
+  const scrollToAllGroups = () => {
+    if (allGroupsRef.current) allGroupsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
 
   return (
-    <Layout extraClassNames="list-pages">
+    <Layout>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <WrapperLayout variant="white">
-        <HeroBasic backgroundColor="light" responsiveVariant="event" />
-
-        <div className="list-event-wrapper">
+      <div className="ui-event-layout list-groups">
+        <header>
           <div className="container">
-            <h1>{title}</h1>
+            <h1>Onze beweging</h1>
+            <p>Sluit je aan bij een lokale groep bij jou in de buurt. Samen staan we sterker!</p>
+          </div>
+        </header>
 
-            <Map
-              type="group"
-              title={title}
-              data={mappedGroups}
-              mobileView={mobileShowMap}
-              setMobileView={setMobileShowMap}
-              extraLogic={() => {
-                if (!mobileShowMap) setMobileShowMap((prev) => !prev);
-              }}
-            />
+        <div className="container negative-margin">
+          <form className="search-engine" onSubmit={handleSearch}>
+            <div className="search-engine-header">
+              <span className="help">Woonplaats</span>
+              <span className="ip">Locatie op basis van je apparaat</span>
+            </div>
+            <div className="search-engine-row">
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder={userCoords ? userCoords.city : 'Woonplaats'}
+                className="search-engine-input"
+              />
+            </div>
+          </form>
 
-            {Array.isArray(mappedGroups) && <ListGroupBlock items={mappedGroups} />}
+          {/* Local Group Block (shown initially based on coords or after search if exact match) */}
+          {activeGroup && !notFoundCity ? (
+            <div className="local-group-block">
+              <GenericCollectionCard
+                collection={{
+                  title: activeGroup.title,
+                  subtitle: `Lokale organizer: ${activeGroup.organizer}`,
+                  description: activeGroup.introduction,
+                  image: activeGroup.image,
+                  ...activeGroup,
+                }}
+                closestEvents={upcomingForActive}
+                ctaTitle="Bekijk de groep"
+              />
+            </div>
+          ) : null}
 
-            <FloatCta title="Bekijk lijst" id="groups-list" />
+          {/* Not found block */}
+          {notFoundCity ? (
+            <div className="not-found-group">
+              <div>
+                <h2>Er is nog geen groep in {notFoundCity}</h2>
+                <p>Bekijk alle groepen in de buurt</p>
+                <button className="custom-btn group-v2 big" onClick={scrollToAllGroups}>
+                  Bekijk alle groepen
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          <div className="map-container">
+            {/* @ts-ignore */}
+            <Map data={localGroups} type="group" highlight={activeGroup?.id} />
           </div>
 
-          {content && (
-            <div className="container mt-5 pb-5">
-              <StructuredTextDefault content={content} />
+          <div className="custom-blocks">
+            {/* {content && <StructuredTextDefault content={content} />} */}
+
+            {/* Testimonial Block - as requested show two general testimonials */}
+            <BlockTestimonial
+              block={{
+                authorName: 'Jan de Boer',
+                content:
+                  'Ik ben lid geworden van de lokale groep in mijn buurt. We organiseren samen acties en evenementen om het klimaat te beschermen.',
+              }}
+            />
+            <BlockTestimonial
+              block={{
+                authorName: 'Marie Jansen',
+                content:
+                  'De lokale groep is een geweldige manier om nieuwe mensen te ontmoeten en samen te werken aan een betere toekomst voor onze planeet.',
+              }}
+            />
+          </div>
+
+          {/* All Local Groups */}
+          <div className="list-groups-block" ref={allGroupsRef}>
+            <h3>Alle lokale groepen</h3>
+            <div className="groups-items">
+              {localGroups.map((group) => (
+                <GroupCard key={group.id} group={group} />
+              ))}
             </div>
-          )}
+          </div>
         </div>
-      </WrapperLayout>
+      </div>
     </Layout>
   );
 };
@@ -108,7 +213,7 @@ const ListGroups: React.FC<ListGroupsProps> = ({ data: { page, allGroups = { edg
 export default ListGroups;
 
 export const PageQuery = graphql`
-  query ListGroupById($id: String) {
+  query ListGroupById($id: String, $currentDate: Date!) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -120,6 +225,8 @@ export const PageQuery = graphql`
           id
           title
           slug
+          introduction
+          organizer
           coordinates {
             latitude
             longitude
@@ -136,6 +243,52 @@ export const PageQuery = graphql`
               id
               title
             }
+          }
+        }
+      }
+    }
+    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true }, date: { gte: $currentDate } }) {
+      edges {
+        node {
+          ...EventCard
+        }
+      }
+    }
+    allCSLEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
+      edges {
+        node {
+          __typename
+          id: slug
+          slug
+          title
+          description
+          start_at
+          end_at
+          raw_start
+          raw_end
+          image_url
+          labels
+          start_in_zone
+          end_in_zone
+          location {
+            latitude
+            longitude
+            venue
+            street
+            query
+            region
+            locality
+          }
+          calendar {
+            name
+            slug
+          }
+          hiddenAddress
+          waiting_list_enabled
+          max_attendees_count
+          additional_image_sizes_url {
+            url
+            style
           }
         }
       }

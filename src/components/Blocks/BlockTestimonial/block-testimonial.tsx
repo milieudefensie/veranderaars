@@ -14,11 +14,13 @@ const BlockTestimonial: React.FC<{
 }> = ({ block }) => {
   return (
     <div className="ui-block-testimonial">
-      <div className="avatar">
-        <div>
-          <img alt={block.authorImage.alt} src={block.authorImage.url} />
+      {block.authorImage && (
+        <div className="avatar">
+          <div>
+            <img alt={block.authorImage.alt} src={block.authorImage.url} />
+          </div>
         </div>
-      </div>
+      )}
       <div className="name">{block.authorName}</div>
       <div className="content">{block.content}</div>
     </div>

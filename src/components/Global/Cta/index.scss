@@ -96,6 +96,33 @@
       background-color: rgb(140, 198, 63);
     }
   }
+
+  &.group-v2 {
+    padding-left: 16px;
+    padding-right: 16px;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 21px;
+    color: oklch(0.14 0.004 49.25);
+    background-color: oklch(0.7604 0.1741 129.85);
+    border-color: oklch(0.7604 0.1741 129.85);
+
+    &:hover {
+      background-color: oklab(0.707172 -0.103751 0.124305);
+      border-color: oklab(0.707172 -0.103751 0.124305);
+    }
+  }
+
+  &.big {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    font-size: 18px !important;
+    line-height: 27px !important;
+    text-transform: initial !important;
+  }
 }
 
 @media screen and (max-width: 992px) {
