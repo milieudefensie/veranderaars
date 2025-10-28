@@ -65,6 +65,10 @@
       border-radius: 8px;
       font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
+      &::placeholder {
+        color: oklch(0.14 0.004 49.25);
+      }
+
       &:focus {
         outline: 2px solid oklch(14% .004 49.25);
         outline-offset: 2px;
@@ -203,12 +207,6 @@
 
   .ui-event-layout.list-groups,
   .ui-event-layout.list-groups.signal-groups {
-    header {
-      h1 {
-        font-size: 48px;
-      }
-    }
-
     .negative-margin {
       margin-top: -15vh;
     }
@@ -240,6 +238,25 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
+
+    .custom-blocks {
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-size: 24px;
+        line-height: 32px;
+        margin-bottom: 24px;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 28px;
+      }
+    }
   }
 }
 
@@ -247,6 +264,12 @@
 
   .ui-event-layout.list-groups,
   .ui-event-layout.list-groups.signal-groups {
+    header {
+      h1 {
+        font-size: 48px;
+      }
+    }
+
     .list-groups-block {
       .groups-items {
         grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -21,6 +21,8 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
   const [nearestGroup, setNearestGroup] = useState<any | null>(null);
   const [searchResultGroup, setSearchResultGroup] = useState<any | null>(null);
   const [notFoundCity, setNotFoundCity] = useState<string | null>(null);
+  const [mobileShowMap, setMobileShowMap] = useState(false);
+  const [mobileDevice, setMobileDevice] = useState(false);
 
   const allGroupsRef = useRef<HTMLDivElement | null>(null);
 
@@ -35,6 +37,35 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
       }
     });
   }, []);
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      const htmlElement = document.documentElement;
+      const navbar = document.querySelector('#header-mobile-wrapper') as HTMLElement;
+      setMobileDevice(window.innerWidth < 992);
+
+      if (!navbar) return;
+
+      if (mobileShowMap && window.innerWidth < 992) {
+        htmlElement.style.overflow = 'hidden';
+        navbar.style.backgroundColor = 'var(--nb-bg-light)';
+      } else {
+        htmlElement.style.overflow = '';
+        navbar.style.backgroundColor = 'transparent';
+      }
+    };
+
+    handleWindowResize();
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      // Reset html overflow
+      const htmlElement = document.documentElement;
+      htmlElement.style.overflow = '';
+
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, [mobileShowMap]);
 
   useEffect(() => {
     if (userCoords && localGroups.length) {
@@ -70,6 +101,12 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
 
     setSearchResultGroup(null);
     setNotFoundCity(query);
+  };
+
+  const handleOnMobile = () => {
+    if (mobileDevice) {
+      setMobileShowMap(true);
+    }
   };
 
   const activeGroup = searchResultGroup || nearestGroup;
@@ -141,8 +178,13 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
           ) : null}
 
           <div className="map-container">
-            {/* @ts-ignore */}
-            <Map data={localGroups} type="signal" />
+            <Map
+              data={localGroups}
+              type="signal"
+              mobileView={mobileShowMap}
+              setMobileView={setMobileShowMap}
+              extraLogic={handleOnMobile}
+            />
           </div>
 
           <div className="custom-blocks">
@@ -172,7 +214,7 @@ export const ListSignalGroupsQuery = graphql`
         ...GatsbyDatoCmsFaviconMetaTags
       }
     }
-    allGroups: allDatoCmsGroup(sort: { title: ASC }, filter: { signalChat: { ne: null } }) {
+    allGroups: allDatoCmsGroup(sort: { title: ASC }, filter: { signalChat: { ne: null, nin: [""] } }) {
       edges {
         node {
           id

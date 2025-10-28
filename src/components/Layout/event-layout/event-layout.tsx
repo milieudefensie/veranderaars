@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { EventType, EventCollectionType, CategorizedEvents } from '../../../types';
 import EventCollectionCard from '../../Global/event-collection-card/event-collection-card';
 import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
@@ -47,8 +47,40 @@ const EventLayout: React.FC<Props> = ({
   const { t } = useTranslate();
   const allEvents: EventType[] = [...events];
 
+  const [mobileShowMap, setMobileShowMap] = useState(false);
+  const [mobileDevice, setMobileDevice] = useState(false);
+
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
   const shownEventIds = new Set<string>();
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      const htmlElement = document.documentElement;
+      const navbar = document.querySelector('#header-mobile-wrapper') as HTMLElement;
+      setMobileDevice(window.innerWidth < 992);
+
+      if (!navbar) return;
+
+      if (mobileShowMap && window.innerWidth < 992) {
+        htmlElement.style.overflow = 'hidden';
+        navbar.style.backgroundColor = 'var(--nb-bg-light)';
+      } else {
+        htmlElement.style.overflow = '';
+        navbar.style.backgroundColor = 'transparent';
+      }
+    };
+
+    handleWindowResize();
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      // Reset html overflow
+      const htmlElement = document.documentElement;
+      htmlElement.style.overflow = '';
+
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, [mobileShowMap]);
 
   const filterAndMark = (group: EventType[]) => {
     return group.filter((event) => {
@@ -150,6 +182,12 @@ const EventLayout: React.FC<Props> = ({
     return events;
   }
 
+  const handleOnMobile = () => {
+    if (mobileDevice) {
+      setMobileShowMap(true);
+    }
+  };
+
   return (
     <div className="ui-event-layout">
       <header>
@@ -175,7 +213,7 @@ const EventLayout: React.FC<Props> = ({
         )}
         <div className="map-container">
           {/* @ts-ignore */}
-          <Map data={events} />
+          <Map data={events} mobileView={mobileShowMap} setMobileView={setMobileShowMap} extraLogic={handleOnMobile} />
           <div className="alert-container">
             <HelpIcon />
             <span>

@@ -36,7 +36,7 @@ const Accordion: React.FC<AccordionProps> = ({ variant, items, renderCustomTitle
           <div className="ac-title" onClick={() => handleOnChangeAccordion(index)}>
             <h3>{renderCustomTitle ? renderCustomTitle(item) : item?.title}</h3>
             <img
-              src={activeItem === index ? accordionClose : accordionOpen}
+              src={activeItem !== index ? accordionClose : accordionOpen}
               alt="Accordion close/open icon"
               width={30}
               height={31}

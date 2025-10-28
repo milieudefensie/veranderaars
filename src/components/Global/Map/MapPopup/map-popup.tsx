@@ -15,6 +15,7 @@ interface MapPopupProps {
     hourStart: string;
     hourEnd: string | null;
     address: string | null;
+    signalChat: string | null;
     image: {
       url: string;
     };
@@ -44,6 +45,7 @@ const MapPopup: React.FC<MapPopupProps> = ({ card, linkTitle = 'Meld je aan', ca
     tags,
     type,
     whatsappGroup,
+    signalChat,
     url,
     externalLink,
     startInZone,
@@ -91,6 +93,12 @@ const MapPopup: React.FC<MapPopupProps> = ({ card, linkTitle = 'Meld je aan', ca
         <a href={whatsappGroup} target={`_blank`} className="custom-btn custom-btn-primary">
           {t('whatsapp_community')}
         </a>
+      ) : cardType === 'signal' ? (
+        <Cta
+          cta={{ ...card, title: 'Open Signal', isButton: true, style: 'primary' }}
+          customVariant={'orange'}
+          predefinedUrl={signalChat}
+        />
       ) : isCslEvent ? (
         <Link to={`/lokaal/${slug}`} className="custom-btn custom-btn-primary">
           {t('sign_up')}
@@ -104,7 +112,10 @@ const MapPopup: React.FC<MapPopupProps> = ({ card, linkTitle = 'Meld je aan', ca
           {t('sign_up')}
         </a>
       ) : (
-        <Cta cta={{ ...card, title: linkTitle, isButton: true, style: 'primary' }} />
+        <Cta
+          cta={{ ...card, title: cardType === 'group' ? 'Bekijk groep' : linkTitle, isButton: true, style: 'primary' }}
+          customVariant={cardType === 'group' ? 'group-v2' : ''}
+        />
       )}
     </article>
   );

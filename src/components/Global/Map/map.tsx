@@ -31,6 +31,7 @@ interface Pin {
   externalLink: string;
   model: string;
   whatsappGroup: string;
+  signalChat: string;
   coordinates: {
     latitude: number;
     longitude: number;
@@ -102,6 +103,8 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
     window.addEventListener('scroll', handleOnScroll);
 
     return () => {
+      console.log({ mobileView });
+
       window.removeEventListener('resize', resizeMapOnMobile);
       window.removeEventListener('scroll', handleOnScroll);
       mapRef.current?.remove();
@@ -140,6 +143,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
         externalLink: e.externalLink,
         model: e.model,
         whatsappGroup: e.whatsappGroup,
+        signalChat: e.signalChat,
       },
       geometry: {
         type: 'Point',
@@ -202,7 +206,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
               return (
                 <Marker key={cluster.id} longitude={longitude} latitude={latitude}>
                   <div
-                    className="cluster-marker"
+                    className={`cluster-marker ${type}`}
                     style={{
                       width: `${10 + (pointCount / pins.length) * 20}px`,
                       height: `${10 + (pointCount / pins.length) * 20}px`,
