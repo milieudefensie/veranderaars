@@ -282,6 +282,11 @@
 
   .ui-event-layout.list-groups,
   .ui-event-layout.list-groups.signal-groups {
+    header {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
     .list-groups-block {
       .groups-items {
         grid-template-columns: repeat(1, minmax(0, 1fr));
