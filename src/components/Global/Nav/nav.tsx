@@ -50,7 +50,7 @@ const MobileNavbar = ({
         <header id="header-mobile" className={`container header-mobile-${isMobileMenuOpen ? 'open' : 'closed'}`}>
           {/* Mobile Header - Closed State */}
           <div className={`MobileHeader MobileHeader-closed ${isMobileMenuOpen ? 'hidden' : ''}`}>
-            <Link className="Header-logo-link Header-logo-link-mobile" to="/">
+            <Link className="Header-logo-link Header-logo-link-mobile" to="https://milieudefensie.nl/">
               <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" />
             </Link>
             <div className="MobileHeader-menuContainer">
@@ -84,7 +84,7 @@ const MobileNavbar = ({
       {/* Navigation Mobile */}
       <div ref={menuRef} className="NavigationMobile" style={{ display: isMobileMenuOpen ? 'block' : 'none' }}>
         <div className={`MobileHeader MobileHeader-open ${!isMobileMenuOpen ? 'hidden' : ''}`}>
-          <Link className="Header-logo-link Header-logo-link-desktop" to="/">
+          <Link className="Header-logo-link Header-logo-link-desktop" to="https://milieudefensie.nl/">
             <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" />
           </Link>
 
