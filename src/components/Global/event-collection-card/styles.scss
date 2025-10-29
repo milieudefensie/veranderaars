@@ -142,7 +142,7 @@
 
       .subtitle {
         display: block;
-        font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-family: var(--nb-secondary-font);
         font-size: 14px;
         font-weight: 600;
         line-height: 21px;
@@ -154,7 +154,7 @@
       }
 
       .introduction {
-        font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-family: var(--nb-secondary-font);
         font-size: 18px;
         line-height: 28px;
         color: oklch(0.14 0.004 49.25);

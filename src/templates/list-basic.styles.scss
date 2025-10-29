@@ -18,7 +18,7 @@
       font-size: 20px;
       line-height: 28px;
       font-weight: 500;
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
     }
   }
 
@@ -35,15 +35,14 @@
         font-weight: 700;
         line-height: 24px;
         color: rgb(255, 255, 255);
-        font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-family: var(--nb-secondary-font);
       }
 
       .ip {
         font-size: 12px;
         line-height: 16px;
         color: rgb(255, 255, 255);
-        font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-
+        font-family: var(--nb-secondary-font);
       }
     }
 
@@ -63,7 +62,7 @@
       border-color: rgb(255, 255, 255);
       box-shadow: oklab(0 0 0 / 0) 0px 1px 0px 0px inset;
       border-radius: 8px;
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
 
       &::placeholder {
         color: oklch(0.14 0.004 49.25);
@@ -98,7 +97,7 @@
     }
 
     p {
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
       font-size: 18px;
       font-weight: 500;
       color: oklch(0.14 0.004 49.25);
@@ -119,7 +118,7 @@
       background-color: oklch(0.7604 0.1741 129.85);
       transition-duration: .15s;
       border-radius: 8px;
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
       cursor: pointer;
 
 
@@ -153,7 +152,7 @@
     h4,
     h5,
     h6 {
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
       font-size: 36px;
       line-height: 40px;
       font-weight: 700;
@@ -162,14 +161,14 @@
     }
 
     p {
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
       font-size: 20px;
       line-height: 36px;
       color: oklab(0.14 0.00261104 0.00303026 / 0.8);
     }
 
     a {
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
       color: oklch(0.14 0.004 49.25);
       text-decoration: underline;
       font-weight: 600;
@@ -181,7 +180,7 @@
 
     h3 {
       font-size: 36px;
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
       line-height: 40px;
       font-weight: 700;
       color: oklch(0.14 0.004 49.25);
