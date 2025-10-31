@@ -24,8 +24,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
 
   const getYoutubeVideoSrc = () => {
     const url = video?.url ?? video.source?.url;
-    const videoId = url?.match(/[?&]v=([^&]+)/)?.[1];
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    if (!url) return '';
+
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([^?&]+)/);
+    const videoId = match?.[1];
+
+    const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : '';
+
+    console.log('🎥 Video original URL:', url);
+    console.log('🎬 Video ID detectado:', videoId);
+    console.log('🧩 Embed URL generada:', embedUrl);
+
+    return embedUrl;
   };
 
   const getVideoThumbnail = () => {
