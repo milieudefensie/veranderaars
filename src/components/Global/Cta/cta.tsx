@@ -60,6 +60,7 @@ const Cta: React.FC<CtaProps> = ({
       ${cta?.buttonStyle ? cta.buttonStyle : ''}
       ${customVariant ? customVariant : ''}`}
         to={predefinedUrl}
+        target="_blank"
       >
         {externalTitle || cta?.title}
       </Link>
