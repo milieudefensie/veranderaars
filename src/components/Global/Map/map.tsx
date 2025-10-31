@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Map, { MapProps, Marker, Popup, NavigationControl } from 'react-map-gl/mapbox';
 import GroupMarker from './Marker/group-marker';
 import CustomMarker from './Marker/marker';
+import SignalMarker from './Marker/signal-marker';
 import MapPopup from './MapPopup/map-popup';
 import useSupercluster from 'use-supercluster';
 import CtaHandler from '../Cta/cta-handler';
@@ -30,6 +31,7 @@ interface Pin {
   externalLink: string;
   model: string;
   whatsappGroup: string;
+  signalChat: string;
   coordinates: {
     latitude: number;
     longitude: number;
@@ -101,6 +103,8 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
     window.addEventListener('scroll', handleOnScroll);
 
     return () => {
+      console.log({ mobileView });
+
       window.removeEventListener('resize', resizeMapOnMobile);
       window.removeEventListener('scroll', handleOnScroll);
       mapRef.current?.remove();
@@ -139,6 +143,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
         externalLink: e.externalLink,
         model: e.model,
         whatsappGroup: e.whatsappGroup,
+        signalChat: e.signalChat,
       },
       geometry: {
         type: 'Point',
@@ -201,7 +206,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
               return (
                 <Marker key={cluster.id} longitude={longitude} latitude={latitude}>
                   <div
-                    className="cluster-marker"
+                    className={`cluster-marker ${type}`}
                     style={{
                       width: `${10 + (pointCount / pins.length) * 20}px`,
                       height: `${10 + (pointCount / pins.length) * 20}px`,
@@ -246,7 +251,15 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
                 }}
                 anchor="bottom"
               >
-                {type === 'wp-group' ? <WPGroupMarker /> : type === 'group' ? <GroupMarker /> : <CustomMarker />}
+                {type === 'wp-group' ? (
+                  <WPGroupMarker />
+                ) : type === 'group' ? (
+                  <GroupMarker />
+                ) : type === 'signal' ? (
+                  <SignalMarker />
+                ) : (
+                  <CustomMarker />
+                )}
               </Marker>
             );
           })}

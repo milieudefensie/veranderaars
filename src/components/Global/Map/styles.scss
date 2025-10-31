@@ -102,6 +102,10 @@
       align-items: center;
       cursor: pointer;
 
+      &.signal:hover {
+        background: #4b84f5;
+      }
+
       &:hover {
         background: var(--nb-primary-color-light);
       }

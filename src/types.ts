@@ -33,7 +33,11 @@ export type EventCalendar = {
   url: string;
 };
 
-export type CtaType = {};
+export type CtaType = {
+  id: string;
+  link: string;
+  label: string;
+};
 
 export type CategorizedEvents = {
   today: EventType[];

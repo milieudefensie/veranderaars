@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from '../../Global/Link/link';
 import Cta from '../../Global/Cta/cta';
 import { CtaType } from '../../../types';
 
@@ -10,6 +9,7 @@ interface Group {
   image: { gatsbyImageData: any; url: string } | null;
   whatsappGroup?: string;
   cta?: CtaType[];
+  signalChat?: string;
 }
 
 interface GroupCardProps {
@@ -17,8 +17,8 @@ interface GroupCardProps {
   redirectToWhatsappGroup?: boolean;
 }
 
-const GroupCard: React.FC<GroupCardProps> = ({ group, redirectToWhatsappGroup = false }) => {
-  const { title, image, whatsappGroup } = group;
+const GroupSignalCard: React.FC<GroupCardProps> = ({ group }) => {
+  const { title, image, signalChat } = group;
   const withImage = image?.gatsbyImageData || image?.url;
 
   const renderContent = () => (
@@ -31,25 +31,17 @@ const GroupCard: React.FC<GroupCardProps> = ({ group, redirectToWhatsappGroup = 
       <div className="content-container">
         <h4>{title}</h4>
 
-        <Cta externalTitle="Bekijk groep" isButton customVariant="group-v2" off />
+        <Cta externalTitle="Open Signal" isButton customVariant="group-v2 orange" off />
       </div>
     </>
   );
 
-  if (redirectToWhatsappGroup && whatsappGroup) {
-    return (
-      <a className="group-card-v2" href={whatsappGroup} target="_blank" rel="noopener noreferrer">
-        {renderContent()}
-      </a>
-    );
-  }
-
   return (
     // @ts-ignore
-    <Link to={group} className="group-card-v2">
+    <a className="group-card-v2" href={signalChat} target="_blank" rel="noopener noreferrer">
       {renderContent()}
-    </Link>
+    </a>
   );
 };
 
-export default GroupCard;
+export default GroupSignalCard;

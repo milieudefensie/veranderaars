@@ -507,7 +507,7 @@ export function getCombinedEvents(cmsEvents, cslEvents, hideInAgendaPage = false
     .filter((event) => {
       const { startDateToCompare, endDateToCompare } = event;
       if (!startDateToCompare?.isValid || !endDateToCompare?.isValid) {
-        console.log('hide');
+        // console.log('hide: invalid date for event', event);
         return false;
       }
       return (

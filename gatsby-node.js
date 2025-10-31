@@ -204,6 +204,7 @@ exports.createPages = ({ graphql, actions }) => {
       cslEvent: path.resolve('./src/templates/csl-event.tsx'),
       listWhatsAppGroups: path.resolve('./src/templates/list-whatsapp-groups.tsx'),
       pageWhatsAppGroups: path.resolve('./src/templates/page-whatsapp-com.tsx'),
+      listSignalGroups: path.resolve('./src/templates/list-signal-groups.tsx'),
     };
 
     resolve(
@@ -310,6 +311,11 @@ exports.createPages = ({ graphql, actions }) => {
             slug
             title
           }
+          listSignalGroups: datoCmsListSignalGroup {
+            id
+            slug
+            title
+          }
 
           redirects: allDatoCmsRedirect(filter: { active: { eq: true } }) {
             edges {
@@ -405,6 +411,8 @@ exports.createPages = ({ graphql, actions }) => {
             component: templates.listGroups,
             context: {
               slug: listGroups.slug,
+              currentDate: new Date().toISOString().split('T')[0],
+              cslEventsHidden: cslSlugsOfEventsHidden,
             },
           });
         }
@@ -475,6 +483,18 @@ exports.createPages = ({ graphql, actions }) => {
             component: templates.listWhatsAppGroups,
             context: {
               slug: listWhatsAppGroups.slug,
+            },
+          });
+        }
+
+        // list Signal Groups
+        const listSignalGroups = result.data?.listSignalGroups || [];
+        if (listSignalGroups) {
+          createPage({
+            path: listSignalGroups.slug,
+            component: templates.listSignalGroups,
+            context: {
+              slug: listSignalGroups.slug,
             },
           });
         }

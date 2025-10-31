@@ -1,26 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import Map from '../components/Global/Map/map';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
 import { GenericCollectionCard } from '../components/Global/event-collection-card/event-collection-card';
-import BlockTestimonial from '../components/Blocks/BlockTestimonial/block-testimonial';
-import GroupCard from '../components/Blocks/HighlightGroup/group-card';
-import { distanceKm, getCurrentUserCity } from '../utils/location.utils'; // @ts-ignore
-import { getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
+import { distanceKm, getCurrentUserCity } from '../utils/location.utils';
+import { QRCodeSVG } from 'qrcode.react';
+import GroupSignalCard from '../components/Blocks/HighlightGroup/group-signal-card';
 
 import './list-basic.styles.scss';
 
-const ListGroups: React.FC<any> = ({
-  pageContext,
-  data: { page, allGroups = { edges: [] }, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, favicon },
-}) => {
-  const { seo, title, content } = page;
+const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } }) => {
+  const { seo, title, introduction, content } = page;
 
-  const cmsEvents = mapCmsEvents(allEvents);
-  const cslEvents = mapCslEvents(allCSLEvents);
-  const allEventsList = getCombinedEvents(cmsEvents, cslEvents, true, pageContext?.cslEventsHidden);
   const localGroups = Array.isArray(allGroups.edges) ? allGroups.edges.map((raw: any) => raw.node) : [];
 
   const [searchValue, setSearchValue] = useState('');
@@ -118,42 +111,19 @@ const ListGroups: React.FC<any> = ({
 
   const activeGroup = searchResultGroup || nearestGroup;
 
-  // helper to get up to 3 upcoming events for a group by distance and date
-  const upcomingEventsForGroup = (group: any) => {
-    if (!group) return [];
-    const eventsWithDistance = allEventsList
-      .filter((ev) => ev.coordinates)
-      .map((ev) => {
-        const evLat = ev.coordinates.latitude;
-        const evLng = ev.coordinates.longitude;
-        const gLat = group.coordinates?.latitude;
-        const gLng = group.coordinates?.longitude;
-        const d = gLat && gLng && evLat && evLng ? distanceKm(gLat, gLng, evLat, evLng) : Infinity;
-
-        return { ev, distance: d };
-      })
-      .sort((a, b) => a.distance - b.distance)
-      .slice(0, 3)
-      .map((x) => x.ev);
-
-    return eventsWithDistance;
-  };
-
-  const upcomingForActive = useMemo(() => upcomingEventsForGroup(activeGroup), [activeGroup]);
-
   const scrollToAllGroups = () => {
-    if (allGroupsRef.current) allGroupsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (allGroupsRef.current) allGroupsRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <Layout>
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
-      <div className="ui-event-layout list-groups">
+      <div className="ui-event-layout list-groups signal-groups">
         <header>
           <div className="container">
-            <h1>Onze beweging</h1>
-            <p>Sluit je aan bij een lokale groep bij jou in de buurt. Samen staan we sterker!</p>
+            <h1>{title}</h1>
+            <p>{introduction}</p>
           </div>
         </header>
 
@@ -174,31 +144,34 @@ const ListGroups: React.FC<any> = ({
             </div>
           </form>
 
-          {/* Local Group Block (shown initially based on coords or after search if exact match) */}
           {activeGroup && !notFoundCity ? (
             <div className="local-group-block">
               <GenericCollectionCard
                 collection={{
                   title: activeGroup.title,
-                  subtitle: `Lokale organizer: ${activeGroup.organizer}`,
+                  subtitle: `Signal`,
                   description: activeGroup.introduction,
                   image: activeGroup.image,
                   ...activeGroup,
                 }}
-                closestEvents={upcomingForActive}
-                ctaTitle="Bekijk de groep"
+                customLink={activeGroup.signalChat}
+                ctaTitle="💬 Open de Signal groep"
+                ctaVariant="orange"
+                customImage={
+                  <QRCodeSVG className="signal-qr" value={activeGroup.signalChat} size={300} bgColor="#Fff" />
+                }
               />
             </div>
           ) : null}
 
           {/* Not found block */}
           {notFoundCity ? (
-            <div className="not-found-group">
+            <div className="not-found-group signal">
               <div>
-                <h2>Er is nog geen groep in {notFoundCity}</h2>
-                <p>Bekijk alle groepen in de buurt</p>
-                <button className="custom-btn group-v2 big" onClick={scrollToAllGroups}>
-                  Bekijk alle groepen
+                <h2>Er is nog geen signal groep in {notFoundCity}</h2>
+                <p>Bekijk andere Signal groepen in de buurt</p>
+                <button className="custom-btn group-v2 big orange" onClick={scrollToAllGroups}>
+                  Bekijk andere Signal groepen
                 </button>
               </div>
             </div>
@@ -207,7 +180,7 @@ const ListGroups: React.FC<any> = ({
           <div className="map-container">
             <Map
               data={localGroups}
-              type="group"
+              type="signal"
               mobileView={mobileShowMap}
               setMobileView={setMobileShowMap}
               extraLogic={handleOnMobile}
@@ -215,31 +188,14 @@ const ListGroups: React.FC<any> = ({
           </div>
 
           <div className="custom-blocks">
-            {/* {content && <StructuredTextDefault content={content} />} */}
-
-            {/* Testimonial Block - as requested show two general testimonials */}
-            <BlockTestimonial
-              block={{
-                authorName: 'Jan de Boer',
-                content:
-                  'Ik ben lid geworden van de lokale groep in mijn buurt. We organiseren samen acties en evenementen om het klimaat te beschermen.',
-              }}
-            />
-            <BlockTestimonial
-              block={{
-                authorName: 'Marie Jansen',
-                content:
-                  'De lokale groep is een geweldige manier om nieuwe mensen te ontmoeten en samen te werken aan een betere toekomst voor onze planeet.',
-              }}
-            />
+            <StructuredTextDefault content={content} />{' '}
           </div>
 
-          {/* All Local Groups */}
           <div className="list-groups-block" ref={allGroupsRef}>
-            <h3>Alle lokale groepen</h3>
+            <h3>Alle Signal groepen</h3>
             <div className="groups-items">
               {localGroups.map((group) => (
-                <GroupCard key={group.id} group={group} />
+                <GroupSignalCard key={group.id} group={group} />
               ))}
             </div>
           </div>
@@ -249,93 +205,40 @@ const ListGroups: React.FC<any> = ({
   );
 };
 
-export default ListGroups;
+export default ListSignalGroups;
 
-export const PageQuery = graphql`
-  query ListGroupById($id: String, $currentDate: Date!) {
+export const ListSignalGroupsQuery = graphql`
+  query ListSignalGroupsById($id: String) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
       }
     }
-    allGroups: allDatoCmsGroup(sort: { title: ASC }) {
+    allGroups: allDatoCmsGroup(sort: { title: ASC }, filter: { signalChat: { ne: null, nin: [""] } }) {
       edges {
         node {
           id
-          title
           slug
+          title
           introduction
-          organizer
+          signalChat
           coordinates {
             latitude
             longitude
           }
+          image {
+            url
+          }
           model {
             apiKey
           }
-          image {
-            url
-            gatsbyImageData(width: 900, height: 505)
-          }
-          tags {
-            ... on DatoCmsTag {
-              id
-              title
-            }
-          }
         }
       }
     }
-    allEvents: allDatoCmsEvent(filter: { closeEvent: { ne: true }, date: { gte: $currentDate } }) {
-      edges {
-        node {
-          ...EventCard
-        }
-      }
-    }
-    allCSLEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
-      edges {
-        node {
-          __typename
-          id: slug
-          slug
-          title
-          description
-          start_at
-          end_at
-          raw_start
-          raw_end
-          image_url
-          labels
-          start_in_zone
-          end_in_zone
-          location {
-            latitude
-            longitude
-            venue
-            street
-            query
-            region
-            locality
-          }
-          calendar {
-            name
-            slug
-          }
-          hiddenAddress
-          waiting_list_enabled
-          max_attendees_count
-          additional_image_sizes_url {
-            url
-            style
-          }
-        }
-      }
-    }
-    page: datoCmsListGroup(id: { eq: $id }) {
+    page: datoCmsListSignalGroup(id: { eq: $id }) {
       id
       title
-      slug
+      introduction
       content {
         value
         blocks {
@@ -357,7 +260,7 @@ export const PageQuery = graphql`
           ...BlockCtaIconsList
           ...BlockImageGallery
           ...BlockCustomCta
-          # ...BlockTestimonial
+          ...BlockTestimonial
         }
       }
       seo: seoMetaTags {
