@@ -28,6 +28,7 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 
   const allGroupsRef = useRef<HTMLDivElement | null>(null);
+  const suggestionsRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     getCurrentUserCity().then((cityData) => {
@@ -85,6 +86,16 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
       if (best) setNearestGroup(best.group);
     }
   }, [userCoords, localGroups]);
+
+  useEffect(() => {
+    if (highlightedIndex >= 0 && suggestionsRef.current) {
+      const list = suggestionsRef.current;
+      const item = list.children[highlightedIndex] as HTMLElement;
+      if (item) {
+        item.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [highlightedIndex]);
 
   const handleSearch = (query?: string) => {
     const searchQuery = query ?? searchValue.trim();
@@ -199,7 +210,7 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
               />
 
               {showSuggestions && citySuggestions.length > 0 && (
-                <ul className="city-suggestions">
+                <ul className="city-suggestions" ref={suggestionsRef}>
                   {citySuggestions.map((suggestion, index) => (
                     <li
                       key={index}
