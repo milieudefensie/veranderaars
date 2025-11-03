@@ -236,10 +236,11 @@ const ListGroups: React.FC<any> = ({
                       className={`city-suggestion-item ${index === highlightedIndex ? 'highlighted' : ''}`}
                       onMouseDown={(e) => {
                         e.preventDefault();
-                        setSearchValue(suggestion);
+                        const selected = suggestion;
+                        setSearchValue(selected);
                         setCitySuggestions([]);
                         setShowSuggestions(false);
-                        handleSearch();
+                        handleSearch(selected);
                       }}
                     >
                       {suggestion}

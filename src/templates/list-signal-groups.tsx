@@ -206,10 +206,11 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
                       className={`city-suggestion-item ${index === highlightedIndex ? 'highlighted' : ''}`}
                       onMouseDown={(e) => {
                         e.preventDefault();
-                        setSearchValue(suggestion);
+                        const selected = suggestion;
+                        setSearchValue(selected);
                         setCitySuggestions([]);
                         setShowSuggestions(false);
-                        handleSearch();
+                        handleSearch(selected);
                       }}
                     >
                       {suggestion}
