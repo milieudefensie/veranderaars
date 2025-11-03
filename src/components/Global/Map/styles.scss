@@ -101,6 +101,8 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
 
       &.signal:hover {
         background: #4b84f5;

@@ -125,12 +125,12 @@
   }
 
   &.orange {
-    background-color: oklch(78.92% .1713 69.64);
-    border-color: oklch(78.92% .1713 69.64);
+    background-color: #29abe2;
+    border-color: #29abe2;
 
     &:hover {
-      background-color: oklab(0.733956 0.0554264 0.149356);
-      border-color: oklab(0.733956 0.0554264 0.149356);
+      background-color: #269acb;
+      border-color: #269acb;
     }
   }
 }

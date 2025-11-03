@@ -30,6 +30,9 @@ const ListGroups: React.FC<any> = ({
   const [notFoundCity, setNotFoundCity] = useState<string | null>(null);
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [mobileDevice, setMobileDevice] = useState(false);
+  const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 
   const allGroupsRef = useRef<HTMLDivElement | null>(null);
 
@@ -90,16 +93,15 @@ const ListGroups: React.FC<any> = ({
     }
   }, [userCoords, localGroups]);
 
-  const handleSearch = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    const query = searchValue.trim();
-    if (!query) {
+  const handleSearch = (query?: string) => {
+    const searchQuery = query ?? searchValue.trim();
+    if (!searchQuery) {
       setSearchResultGroup(null);
       setNotFoundCity(null);
       return;
     }
 
-    const match = localGroups.find((g) => (g.title || '').toLowerCase() === query.toLowerCase());
+    const match = localGroups.find((g) => (g.title || '').toLowerCase() === searchQuery.toLowerCase());
     if (match) {
       setSearchResultGroup(match);
       setNotFoundCity(null);
@@ -107,7 +109,7 @@ const ListGroups: React.FC<any> = ({
     }
 
     setSearchResultGroup(null);
-    setNotFoundCity(query);
+    setNotFoundCity(searchQuery);
   };
 
   const handleOnMobile = () => {
@@ -158,19 +160,93 @@ const ListGroups: React.FC<any> = ({
         </header>
 
         <div className="container negative-margin">
-          <form className="search-engine" onSubmit={handleSearch}>
+          <form
+            className="search-engine"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSearch();
+            }}
+          >
             <div className="search-engine-header">
               <span className="help">Woonplaats</span>
               <span className="ip">Locatie op basis van je IP</span>
             </div>
-            <div className="search-engine-row">
+
+            <div className="search-engine-row" style={{ position: 'relative' }}>
               <input
                 type="text"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
+                name="city"
+                autoComplete="off"
                 placeholder={userCoords ? userCoords.city : 'Woonplaats'}
+                value={searchValue}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSearchValue(value);
+                  setHighlightedIndex(-1);
+
+                  if (value.length > 1 && localGroups.length > 0) {
+                    const filtered = localGroups
+                      .map((g) => g.title)
+                      .filter((title) => title.toLowerCase().includes(value.toLowerCase()));
+                    setCitySuggestions(filtered);
+                    setShowSuggestions(true);
+                  } else {
+                    setCitySuggestions([]);
+                    setShowSuggestions(false);
+                  }
+                }}
+                onFocus={() => {
+                  if (searchValue.length > 1 && citySuggestions.length > 0) {
+                    setShowSuggestions(true);
+                  }
+                }}
+                onBlur={() => {
+                  setTimeout(() => setShowSuggestions(false), 150);
+                }}
+                onKeyDown={(e) => {
+                  if (!showSuggestions || citySuggestions.length === 0) return;
+
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setHighlightedIndex((prev) => (prev < citySuggestions.length - 1 ? prev + 1 : 0));
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : citySuggestions.length - 1));
+                  } else if (e.key === 'Enter') {
+                    if (highlightedIndex >= 0 && citySuggestions[highlightedIndex]) {
+                      e.preventDefault();
+                      const selected = citySuggestions[highlightedIndex];
+                      setSearchValue(selected);
+                      setShowSuggestions(false);
+                      setCitySuggestions([]);
+                      handleSearch(selected);
+                    }
+                  } else if (e.key === 'Escape') {
+                    setShowSuggestions(false);
+                  }
+                }}
                 className="search-engine-input"
               />
+
+              {showSuggestions && citySuggestions.length > 0 && (
+                <ul className="city-suggestions">
+                  {citySuggestions.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className={`city-suggestion-item ${index === highlightedIndex ? 'highlighted' : ''}`}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setSearchValue(suggestion);
+                        setCitySuggestions([]);
+                        setShowSuggestions(false);
+                        handleSearch();
+                      }}
+                    >
+                      {suggestion}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </form>
 
@@ -223,6 +299,10 @@ const ListGroups: React.FC<any> = ({
                 authorName: 'Jan de Boer',
                 content:
                   'Ik ben lid geworden van de lokale groep in mijn buurt. We organiseren samen acties en evenementen om het klimaat te beschermen.',
+                authorImage: {
+                  url: 'https://www.datocms-assets.com/115430/1750248728-kennismakingsavond.jpg?auto=format',
+                  alt: 'Photo van Jan de Boer',
+                },
               }}
             />
             <BlockTestimonial
@@ -230,6 +310,10 @@ const ListGroups: React.FC<any> = ({
                 authorName: 'Marie Jansen',
                 content:
                   'De lokale groep is een geweldige manier om nieuwe mensen te ontmoeten en samen te werken aan een betere toekomst voor onze planeet.',
+                authorImage: {
+                  url: 'https://www.datocms-assets.com/115430/1750248728-kennismakingsavond.jpg?auto=format',
+                  alt: 'Photo van Marie Jansen',
+                },
               }}
             />
           </div>
