@@ -135,16 +135,17 @@ const ListGroups: React.FC<any> = ({
   const upcomingEventsForGroup = (group: any) => {
     if (!group?.coordinates) return [];
 
-    const RADIUS_KM = 10;
+    const RADIUS_KM = 13;
     const gLat = group.coordinates.latitude;
     const gLng = group.coordinates.longitude;
 
     const nearbyEvents = allEventsList
-      .filter((ev) => ev.coordinates)
+      .filter((ev) => ev.coordinates && ev.coordinates.latitude && ev.coordinates.longitude)
       .map((ev) => {
         const evLat = ev.coordinates.latitude;
         const evLng = ev.coordinates.longitude;
         const d = distanceKm(gLat, gLng, evLat, evLng);
+
         return { ev, distance: d };
       })
       .filter(({ distance }) => distance <= RADIUS_KM)
