@@ -131,25 +131,34 @@ const ListGroups: React.FC<any> = ({
 
   const activeGroup = searchResultGroup || nearestGroup;
 
-  // helper to get up to 3 upcoming events for a group by distance and date
+  // helper to get up to 3 upcoming events for a group within 10km radius
   const upcomingEventsForGroup = (group: any) => {
-    if (!group) return [];
-    const eventsWithDistance = allEventsList
+    if (!group?.coordinates) return [];
+
+    const RADIUS_KM = 10;
+    const gLat = group.coordinates.latitude;
+    const gLng = group.coordinates.longitude;
+
+    const nearbyEvents = allEventsList
       .filter((ev) => ev.coordinates)
       .map((ev) => {
         const evLat = ev.coordinates.latitude;
         const evLng = ev.coordinates.longitude;
-        const gLat = group.coordinates?.latitude;
-        const gLng = group.coordinates?.longitude;
-        const d = gLat && gLng && evLat && evLng ? distanceKm(gLat, gLng, evLat, evLng) : Infinity;
-
+        const d = distanceKm(gLat, gLng, evLat, evLng);
         return { ev, distance: d };
       })
+      .filter(({ distance }) => distance <= RADIUS_KM)
       .sort((a, b) => a.distance - b.distance)
       .slice(0, 3)
-      .map((x) => x.ev);
+      .sort((a, b) => {
+        const dateA = a.ev.startDateToCompare?.isValid ? a.ev.startDateToCompare.toMillis() : 0;
+        const dateB = b.ev.startDateToCompare?.isValid ? b.ev.startDateToCompare.toMillis() : 0;
 
-    return eventsWithDistance;
+        return dateA - dateB;
+      })
+      .map(({ ev }) => ev);
+
+    return nearbyEvents;
   };
 
   const upcomingForActive = useMemo(() => upcomingEventsForGroup(activeGroup), [activeGroup]);
