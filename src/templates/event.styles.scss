@@ -54,7 +54,7 @@
   }
 
   .date {
-    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: var(--nb-secondary-font);
     font-size: 26px;
     line-height: 36px;
     color: #8cc63f;
@@ -105,7 +105,7 @@
     }
 
     .badge {
-      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-family: var(--nb-secondary-font);
       opacity: .5;
       font-stretch: 62.5%;
       padding-block: calc(.25rem * 0);

@@ -80,4 +80,68 @@ export const CalendarIcon = () => (
   </svg>
 );
 
+export const GenericCollectionCard: React.FC<any> = ({
+  collection,
+  customLink,
+  ctaTitle,
+  ctaVariant,
+  closestEvents,
+  customImage,
+}) => {
+  const { title, subtitle, description, image } = collection || {};
+  return (
+    <div className={`ui-event-collection-card generic-variant transition-transform`}>
+      <Link to={customLink || collection} target={customLink ? '_blank' : '_self'} className="ui-event-card-v2">
+        <div className="image-container">{customImage ? customImage : <img src={image?.url} alt="Event" />}</div>
+        <div className="content-container">
+          <div>
+            <h3>{title}</h3>
+            <span className="subtitle">{subtitle}</span>
+            <div className="introduction" dangerouslySetInnerHTML={{ __html: description }} />
+          </div>
+          <span className={`custom-btn custom-btn-primary group-v2 big ${ctaVariant}`}>
+            {ctaTitle || 'Meld je aan'}
+          </span>
+        </div>
+      </Link>
+      {Array.isArray(closestEvents) && closestEvents.length > 0 && (
+        <div className={`related-events length-${closestEvents.length}`}>
+          <ul>
+            {closestEvents.map((e: EventType) => (
+              <Link to={e} className="transition-all">
+                <li>
+                  <div className="icon">
+                    <CalendarIcon />
+                  </div>
+                  <div className="metadata">
+                    <div className="date">
+                      {e.__typename === 'ExternalEvent' || e.type === 'CSL' ? (
+                        <>
+                          {formatEventDate(e.rawDate)} {formatDateCSL(e.startInZone)}
+                        </>
+                      ) : (
+                        formatEventDate(e.date, e.hourStart)
+                      )}
+                    </div>
+                    <div className="type">
+                      {e.__typename === 'ExternalEvent' || e.type === 'CSL'
+                        ? e.location?.street || 'Online'
+                        : e.beknopteAddress
+                          ? e.beknopteAddress
+                          : e.address
+                            ? e.address
+                            : e.type}
+                    </div>
+                    <div className="intro">{e.title}</div>
+                  </div>
+                </li>
+              </Link>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default EventCollectionCard;

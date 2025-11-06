@@ -14,6 +14,7 @@ export interface CtaProps {
   id?: string;
   cta?: CTARawType | null;
   url?: string;
+  predefinedUrl?: string;
   externalTitle?: string;
   isButton?: boolean;
   customVariant?: string;
@@ -27,6 +28,7 @@ const Cta: React.FC<CtaProps> = ({
   isButton = false,
   customVariant = '',
   off = false,
+  predefinedUrl = '',
 }) => {
   const isPrimaryStyle = cta?.style === 'primary' || isButton;
   const isGreenStyle = cta?.style === 'secondary';
@@ -47,6 +49,22 @@ const Cta: React.FC<CtaProps> = ({
 
   if (cta?.externalUrl) {
     return <a href={'/' + cta.externalUrl}>{externalTitle || cta.title}</a>;
+  }
+
+  if (predefinedUrl) {
+    return (
+      <Link
+        className={`custom-btn         
+      ${isPrimaryStyle ? 'custom-btn-primary' : ''} 
+      ${isGreenStyle ? 'green' : ''} 
+      ${cta?.buttonStyle ? cta.buttonStyle : ''}
+      ${customVariant ? customVariant : ''}`}
+        to={predefinedUrl}
+        target="_blank"
+      >
+        {externalTitle || cta?.title}
+      </Link>
+    );
   }
 
   return (

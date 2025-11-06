@@ -42,7 +42,6 @@ const Group: React.FC<GroupProps> = ({
     image,
     content,
     email,
-    whatsappGroup,
     signalChat,
     organizer,
     coordinates,
@@ -60,11 +59,11 @@ const Group: React.FC<GroupProps> = ({
     }
   }, []);
 
-  const cmsEvents = mapCmsEvents(allEvents.edges.map((edge) => edge.node));
-  const cslEvents = mapCslEvents(allCSLEvents.edges.map((edge) => edge.node));
+  const cmsEvents = mapCmsEvents(allEvents);
+  const cslEvents = mapCslEvents(allCSLEvents);
   const { mergedEvents } = useCSLEvents(cmsEvents, cslEvents);
 
-  const groupHasCoordinates = coordinates?.latitude && coordinates?.longitude;
+  const groupHasCoordinates = Boolean(coordinates?.latitude && coordinates?.longitude);
   const nearbyEvents = groupHasCoordinates ? mergedEvents : [];
 
   const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
