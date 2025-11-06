@@ -340,6 +340,13 @@ export const DatoCMS = graphql`
         id
         externalUrl
         content {
+          ... on DatoCmsListSignalGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
           ... on DatoCmsListTool {
             id
             slug
@@ -529,6 +536,13 @@ export const DatoCMS = graphql`
         externalUrl
         content {
           __typename
+          ... on DatoCmsListSignalGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
           ... on DatoCmsListTool {
             id
             slug

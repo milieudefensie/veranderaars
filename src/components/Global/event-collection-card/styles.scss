@@ -227,6 +227,16 @@
           line-height: 24px;
         }
       }
+
+      &.hide-image-mobile {
+        .ui-event-card-v2 {
+          grid-template-columns: 1fr;
+        }
+
+        .image-container {
+          display: none;
+        }
+      }
     }
   }
 }

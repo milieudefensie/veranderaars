@@ -248,6 +248,7 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
                 customImage={
                   <QRCodeSVG className="signal-qr" value={activeGroup.signalChat} size={300} bgColor="#Fff" />
                 }
+                hideImageOnMobile
               />
             </div>
           ) : null}

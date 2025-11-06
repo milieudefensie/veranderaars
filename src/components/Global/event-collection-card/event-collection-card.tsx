@@ -87,10 +87,13 @@ export const GenericCollectionCard: React.FC<any> = ({
   ctaVariant,
   closestEvents,
   customImage,
+  hideImageOnMobile = false,
 }) => {
   const { title, subtitle, description, image } = collection || {};
   return (
-    <div className={`ui-event-collection-card generic-variant transition-transform`}>
+    <div
+      className={`ui-event-collection-card generic-variant transition-transform ${hideImageOnMobile ? 'hide-image-mobile' : ''}`}
+    >
       <Link to={customLink || collection} target={customLink ? '_blank' : '_self'} className="ui-event-card-v2">
         <div className="image-container">{customImage ? customImage : <img src={image?.url} alt="Event" />}</div>
         <div className="content-container">
