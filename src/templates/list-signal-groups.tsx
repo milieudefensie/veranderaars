@@ -136,7 +136,7 @@ const ListSignalGroups: React.FC<any> = ({ data: { page, allGroups, favicon } })
         <header>
           <div className="container">
             <h1>{title}</h1>
-            <p>{introduction}</p>
+            <div dangerouslySetInnerHTML={{ __html: introduction }} />
           </div>
         </header>
 

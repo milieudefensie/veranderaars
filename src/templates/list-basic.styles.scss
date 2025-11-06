@@ -11,7 +11,7 @@
 
     h1 {
       font-size: 96px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     p {
@@ -19,6 +19,11 @@
       line-height: 28px;
       font-weight: 500;
       font-family: var(--nb-secondary-font);
+      margin-bottom: .5rem;
+
+      &:last-child {
+        margin-bottom: 1rem;
+      }
     }
   }
 
