@@ -16,7 +16,7 @@ const ListGroups: React.FC<any> = ({
   pageContext,
   data: { page, allGroups = { edges: [] }, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, favicon },
 }) => {
-  const { seo, title, content } = page;
+  const { seo, title, introduction, content } = page;
 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
@@ -175,8 +175,8 @@ const ListGroups: React.FC<any> = ({
       <div className="ui-event-layout list-groups">
         <header>
           <div className="container">
-            <h1>Onze beweging</h1>
-            <p>Sluit je aan bij een lokale groep bij jou in de buurt. Samen staan we sterker!</p>
+            <h1>{title}</h1>
+            <p>{introduction}</p>
           </div>
         </header>
 
@@ -419,6 +419,7 @@ export const PageQuery = graphql`
     page: datoCmsListGroup(id: { eq: $id }) {
       id
       title
+      introduction
       slug
       content {
         value
