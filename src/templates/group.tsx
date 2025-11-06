@@ -478,6 +478,13 @@ export const PageQuery = graphql`
                 externalUrl
                 content {
                   __typename
+                  ... on DatoCmsListSignalGroup {
+                    id
+                    slug
+                    model {
+                      apiKey
+                    }
+                  }
                   ... on DatoCmsListTool {
                     id
                     slug

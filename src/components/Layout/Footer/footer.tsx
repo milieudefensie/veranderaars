@@ -78,6 +78,13 @@ const Footer: React.FC<FooterProps> = ({ isLanding = false, customLogo = null })
             label
             externalUrl
             content {
+              ... on DatoCmsListSignalGroup {
+                id
+                slug
+                model {
+                  apiKey
+                }
+              }
               ... on DatoCmsListTool {
                 id
                 slug
