@@ -1,7 +1,17 @@
 export async function getCurrentUserCity() {
   try {
-    const response = await fetch('https://ipapi.co/json/');
+    const response = await fetch('https://ipwho.is/'); // https://ipapi.co/json/
     const data = await response.json();
+
+    console.log({ data });
+
+    // Set in storage
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.setItem('userCity', data.city);
+      localStorage.setItem('userLatitude', data.latitude);
+      localStorage.setItem('userLongitude', data.longitude);
+    }
+
     return {
       city: data.city,
       latitude: data.latitude,
@@ -9,6 +19,22 @@ export async function getCurrentUserCity() {
     };
   } catch (error) {
     console.error('Error fetching user city:', error);
+
+    // Get from storage
+    if (
+      typeof window !== 'undefined' &&
+      typeof localStorage !== 'undefined' &&
+      localStorage.getItem('userCity') &&
+      localStorage.getItem('userLatitude') &&
+      localStorage.getItem('userLongitude')
+    ) {
+      return {
+        city: localStorage.getItem('userCity'),
+        latitude: localStorage.getItem('userLatitude'),
+        longitude: localStorage.getItem('userLongitude'),
+      };
+    }
+
     return null;
   }
 }
