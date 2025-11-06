@@ -1,7 +1,7 @@
 export async function getCurrentUserCity() {
   try {
-    const response = await fetch('https://ipwho.is/'); // https://ipapi.co/json/
-    const data = await response.json();
+    const response = await fetch('https://api.ipwho.org/me'); // https://ipapi.co/json/
+    const { data } = await response.json();
 
     console.log({ data });
 
