@@ -41,6 +41,13 @@ const Footer: React.FC<FooterProps> = ({ isLanding = false, customLogo = null })
               apiKey
             }
           }
+          ... on DatoCmsListSignalGroup {
+            id
+            slug
+            model {
+              apiKey
+            }
+          }
         }
       }
       datoCmsFooter {

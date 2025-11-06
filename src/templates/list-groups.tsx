@@ -312,33 +312,11 @@ const ListGroups: React.FC<any> = ({
             />
           </div>
 
-          <div className="custom-blocks">
-            {/* {content && <StructuredTextDefault content={content} />} */}
-
-            {/* Testimonial Block - as requested show two general testimonials */}
-            <BlockTestimonial
-              block={{
-                authorName: 'Jan de Boer',
-                content:
-                  'Ik ben lid geworden van de lokale groep in mijn buurt. We organiseren samen acties en evenementen om het klimaat te beschermen.',
-                authorImage: {
-                  url: 'https://www.datocms-assets.com/115430/1750248728-kennismakingsavond.jpg?auto=format',
-                  alt: 'Photo van Jan de Boer',
-                },
-              }}
-            />
-            <BlockTestimonial
-              block={{
-                authorName: 'Marie Jansen',
-                content:
-                  'De lokale groep is een geweldige manier om nieuwe mensen te ontmoeten en samen te werken aan een betere toekomst voor onze planeet.',
-                authorImage: {
-                  url: 'https://www.datocms-assets.com/115430/1750248728-kennismakingsavond.jpg?auto=format',
-                  alt: 'Photo van Marie Jansen',
-                },
-              }}
-            />
-          </div>
+          {content && (
+            <div className="custom-blocks">
+              <StructuredTextDefault content={content} />
+            </div>
+          )}
 
           {/* All Local Groups */}
           <div className="list-groups-block" ref={allGroupsRef}>
@@ -463,7 +441,15 @@ export const PageQuery = graphql`
           ...BlockCtaIconsList
           ...BlockImageGallery
           ...BlockCustomCta
-          # ...BlockTestimonial
+          ... on DatoCmsTestimonial {
+            id: originalId
+            authorName
+            content
+            authorImage {
+              url
+              alt
+            }
+          }
         }
       }
       seo: seoMetaTags {
