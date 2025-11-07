@@ -1,9 +1,67 @@
 export async function getCurrentUserCity() {
   try {
+    if ('geolocation' in navigator) {
+      const position = await new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+        })
+      );
+
+      const { latitude, longitude } = position.coords;
+
+      const geoRes = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      );
+      const geoData = await geoRes.json();
+
+      const city =
+        geoData.address.city || geoData.address.town || geoData.address.village || geoData.address.county || null;
+
+      console.log({ position, city });
+
+      if (city) {
+        localStorage.setItem('userCity', city);
+        localStorage.setItem('userLatitude', latitude);
+        localStorage.setItem('userLongitude', longitude);
+
+        return { city, latitude, longitude };
+      }
+    }
+
+    // 3️⃣ Fallback: usar IP si el usuario no dio permiso o no hay geolocalización
+    const ipRes = await fetch('https://ipwho.is/');
+    const ipData = await ipRes.json();
+
+    if (ipData && ipData.city) {
+      localStorage.setItem('userCity', ipData.city);
+      localStorage.setItem('userLatitude', ipData.latitude);
+      localStorage.setItem('userLongitude', ipData.longitude);
+
+      return {
+        city: ipData.city,
+        latitude: ipData.latitude,
+        longitude: ipData.longitude,
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching user city:', error);
+  }
+
+  return null;
+}
+
+export async function getCurrentUserCity_OLD() {
+  try {
+    const mockData = {
+      city: 'Bovenkarspel',
+      longitude: 51.3768553,
+      latitude: 3.6460621,
+    };
+
+    return mockData;
+
     const response = await fetch('https://api.ipwho.org/me'); // https://ipapi.co/json/
     const { data } = await response.json();
-
-    console.log({ data });
 
     // Set in storage
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
