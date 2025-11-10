@@ -1,4 +1,4 @@
-# Veranderaars
+# Veranderaars.
 
 This is the official action center platform of Milieudefensie. All rights reserved.
 
