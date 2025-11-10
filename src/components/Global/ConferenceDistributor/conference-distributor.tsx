@@ -141,7 +141,7 @@ const ZoomMessage: React.FC<{ url: string }> = ({ url }) => {
       <div>
         <p className="heading">{t('conference_zoom_chat')}</p>
         <p className="link">
-          {t('conference_zoom_link')}{' '}
+          {'Hierbij alvast de video call link, we hebben de link ook naar je gemaild:'}{' '}
           <a href={url} target="_blank">
             {url}
           </a>
