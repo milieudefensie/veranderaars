@@ -50,7 +50,7 @@ const Form: React.FC<FormProps> = ({
   const location = useLocation();
   const { t } = useTranslate();
 
-  const [status, setStatus] = useState<'idle' | 'loading' | 'fail' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'fail' | 'success' | 'success_end' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -264,7 +264,7 @@ const Form: React.FC<FormProps> = ({
         }
       }
 
-      setStatus('success');
+      setStatus('success_end');
     } catch (error) {
       setStatus('error');
       console.error(error);
@@ -311,7 +311,7 @@ const Form: React.FC<FormProps> = ({
   const hasEmailError = Boolean(errors.email);
   const isLoading = status === 'loading';
 
-  if (conferenceUrl && status === 'success') {
+  if (conferenceUrl && status === 'success_end') {
     return <ConferenceDistributor conferenceUrl={conferenceUrl} />;
   }
 
