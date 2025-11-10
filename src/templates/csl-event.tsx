@@ -77,7 +77,11 @@ ${signalURL}`;
       return hasRelatedEvent || matchesCalendarSlug;
     });
 
-    return parentCollections;
+    const uniqueCollections = parentCollections.filter(
+      (col, index, self) => index === self.findIndex((c) => c.title === col.title)
+    );
+
+    return uniqueCollections;
   };
 
   const isLocalGroupOrganizer = (event: EventType) => {
@@ -166,7 +170,7 @@ ${signalURL}`;
                   </div>
                 )}
               </div>
-              <h1>{formattedTitle}</h1>
+              <h1>{isFormSent && web_conference_url ? title : formattedTitle}</h1>
               <div className="location-container">
                 {!hiddenAddress && location ? (
                   <h3>{cleanLocation(location.query)}</h3>
@@ -184,7 +188,10 @@ ${signalURL}`;
                 isWaitingList={data?.isWaitingListActive}
                 configuration={configuration}
                 noStyle
-                onSuccess={() => setIsFormSent(true)}
+                onSuccess={() => {
+                  console.log('Success!');
+                  setIsFormSent(true);
+                }}
               />
             </div>
           </header>
