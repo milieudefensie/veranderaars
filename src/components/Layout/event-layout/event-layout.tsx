@@ -157,7 +157,11 @@ const EventLayout: React.FC<Props> = ({
       return hasRelatedEvent || matchesCalendarSlug;
     });
 
-    return parentCollections;
+    const uniqueCollections = parentCollections.filter(
+      (col, index, self) => index === self.findIndex((c) => c.title === col.title)
+    );
+
+    return uniqueCollections;
   };
 
   const isLocalGroupOrganizer = (event: EventType) => {

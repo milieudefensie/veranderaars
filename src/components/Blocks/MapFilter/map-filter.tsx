@@ -160,7 +160,11 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
       return hasRelatedEvent || matchesCalendarSlug;
     });
 
-    return parentCollections;
+    const uniqueCollections = parentCollections.filter(
+      (col, index, self) => index === self.findIndex((c) => c.title === col.title)
+    );
+
+    return uniqueCollections;
   };
 
   const isLocalGroupOrganizer = (event: EventType) => {

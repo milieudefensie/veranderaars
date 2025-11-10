@@ -12,7 +12,11 @@ export const findParentCollection = (
     return hasRelatedEvent || matchesCalendarSlug;
   });
 
-  return parentCollection;
+  const uniqueCollections = parentCollection.filter(
+    (col, index, self) => index === self.findIndex((c) => c.title === col.title)
+  );
+
+  return uniqueCollections;
 };
 
 export const isLocalGroupOrganizer = (event: EventType, configuration: any) => {
