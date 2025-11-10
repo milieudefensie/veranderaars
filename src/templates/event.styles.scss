@@ -226,6 +226,8 @@
   a {
     color: inherit;
     font-weight: bold;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 }
 
