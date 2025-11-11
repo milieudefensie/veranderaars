@@ -389,6 +389,28 @@ export const mapCslEvents = (events) => {
     : [];
 };
 
+export const mapCslEventsWithDates = (events) => {
+  const arr = events.edges.map((e) => formatCslEvents(e.node));
+  // console.log({ events, arr });
+
+  return Array.isArray(arr)
+    ? arr.map((raw) => ({
+        ...raw,
+        coordinates: {
+          latitude: parseFloat(parseFloat(raw.location?.latitude).toFixed(6)),
+          longitude: parseFloat(parseFloat(raw.location?.longitude).toFixed(6)),
+        },
+        model: { apiKey: 'ExternalEvent' },
+        type: 'CSL',
+        image: { url: raw.image_url },
+        startDateToCompare: raw.start_in_zone
+          ? DateTime.fromFormat(raw.start_in_zone, "yyyy-MM-dd'T'HH:mm:ssZZ")
+          : null,
+        endDateToCompare: raw.end_in_zone ? DateTime.fromFormat(raw.end_in_zone, "yyyy-MM-dd'T'HH:mm:ssZZ") : null,
+      }))
+    : [];
+};
+
 export const formatCslEvents = (e) => {
   if (!e) {
     console.log('NO EVENT');

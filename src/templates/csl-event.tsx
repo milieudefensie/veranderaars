@@ -32,6 +32,7 @@ const CSLEvent = ({ pageContext, data: { page, relatedEvents, collections, confi
     web_conference_url,
     max_attendees_count,
     virtual,
+    cms_status,
   } = page;
 
   const [shareWpText, setShareWpText] = useState('');
@@ -39,6 +40,8 @@ const CSLEvent = ({ pageContext, data: { page, relatedEvents, collections, confi
   const [showSignalPopup, setShowSignalPopup] = useState(false);
   const { data, loading, error, fetchAttendees } = useCSLAttendees();
   const [isFormSent, setIsFormSent] = useState(false);
+
+  const isDisabled = cms_status === 'disable';
 
   useEffect(() => {
     const htmlElement = document.documentElement;
@@ -180,19 +183,21 @@ ${signalURL}`;
                 {groupOrganizer && <div className="badge">Door lokale groep</div>}
               </div>
 
-              {/* @ts-ignore */}
-              <Form
-                event={slug}
-                inputs={inputs}
-                conferenceUrl={web_conference_url}
-                isWaitingList={data?.isWaitingListActive}
-                configuration={configuration}
-                noStyle
-                onSuccess={() => {
-                  console.log('Success!');
-                  setIsFormSent(true);
-                }}
-              />
+              {!isDisabled && (
+                // @ts-ignore
+                <Form
+                  event={slug}
+                  inputs={inputs}
+                  conferenceUrl={web_conference_url}
+                  isWaitingList={data?.isWaitingListActive}
+                  configuration={configuration}
+                  noStyle
+                  onSuccess={() => {
+                    console.log('Success!');
+                    setIsFormSent(true);
+                  }}
+                />
+              )}
             </div>
           </header>
           <div className="event-participation">

@@ -40,6 +40,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       web_conference_url: String 
       waiting_list_enabled: Boolean
       additional_image_sizes_url: [ImageCSLType]
+      cms_status: String
     }
     type ImageCSLType {
       url: String
@@ -87,8 +88,6 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
 
-  const allEvents = await getAllGoodEvents();
-
   const encodedCredentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
   const tokenResponse = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
     method: 'POST',
@@ -101,16 +100,10 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   const { access_token: accessToken } = await tokenResponse.json();
   const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json' };
 
-  // console.log('New token: ', accessToken);
+  // console.log('New token:', accessToken);
 
-  const fetchEventDetails = async (slug) => {
-    const res = await fetch(`${cslPath}/api/v1/events/${slug}?access_token=${accessToken}`, {
-      method: 'GET',
-      headers: jsonHeaders,
-    });
-    const { event } = await res.json();
-    return event;
-  };
+  const allEvents = await getAllEvents(accessToken);
+  const now = new Date();
 
   const fetchAllAttendees = async (eventSlug) => {
     let attendees = [];
@@ -131,28 +124,36 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     return attendees.filter((a) => a.attending_status === 'attending');
   };
 
-  const createEventNode = async (event, originalSlug) => {
+  const createEventNode = async (event) => {
+    const eventEnd = event.end_at ? new Date(event.end_at) : null;
+    const isActive = eventEnd && eventEnd >= now;
+    const cmsStatus = isActive ? 'active' : 'disable';
+
     const shouldCreate = shouldCreateEvent(event);
-    if (!shouldCreate) return console.log(`Event ${originalSlug} not created.`);
+    if (!shouldCreate) return console.log(`Event ${event.slug} not created.`);
 
-    console.log('[CSL Source] Creating:', event.title);
-    const cslInputs = await scrapingFormInputs(event);
+    console.log(`[CSL Source] Creating: ${event.title} (${cmsStatus})`);
 
+    let cslInputs = [];
     let isWaitingListEnabled = false;
-    if (event.max_attendees_count) {
-      const attending = await fetchAllAttendees(originalSlug);
-      if (attending.length >= event.max_attendees_count) {
-        console.log(`Event ${originalSlug} has waiting list enabled.`);
-        isWaitingListEnabled = true;
+
+    if (isActive) {
+      cslInputs = await scrapingFormInputs(event);
+
+      if (event.max_attendees_count) {
+        const attending = await fetchAllAttendees(event.slug);
+        if (attending.length >= event.max_attendees_count) {
+          console.log(`Event ${event.slug} has waiting list enabled.`);
+          isWaitingListEnabled = true;
+        }
       }
     }
 
     createNode({
       ...event,
-      id: String(event.id || originalSlug),
-      slug: originalSlug,
+      id: String(event.id || event.slug),
+      slug: event.slug,
       title: event.title,
-      calendar: event.calendar,
       labels: event.labels || [],
       start_at: event.start_at ? new Date(event.start_at).toISOString().split('T')[0] : null,
       raw_start: event.start_at,
@@ -166,6 +167,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       max_attendees_count: event.max_attendees_count,
       waiting_list_enabled: isWaitingListEnabled,
       rich_description: event.rich_description,
+      cms_status: cmsStatus,
       internal: {
         type: 'ExternalEvent',
         contentDigest: createContentDigest(event),
@@ -174,15 +176,35 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   };
 
   for (const event of allEvents) {
-    const fullEvent = await fetchEventDetails(event.slug);
-    await createEventNode(fullEvent, event.slug);
+    await createEventNode(event);
   }
 
-  const extraSlugs = ['test-event-whatsapp-link', 'test-event-zoom'];
-  for (const slug of extraSlugs) {
-    const fullEvent = await fetchEventDetails(slug);
-    await createEventNode(fullEvent, slug);
-  }
+  console.log(`[CSL Source] Finished creating ${allEvents.length} events.`);
+};
+
+const getAllEvents = async (accessToken) => {
+  const baseUrl = `https://klimaatmars.milieudefensie.nl/api/v1/events/?access_token=${accessToken}`;
+  const events = [];
+  let currentPage = 1;
+  let totalPages = 1;
+
+  do {
+    console.log(`Fetching page ${currentPage} of events...`);
+    const response = await fetch(`${baseUrl}&page=${currentPage}`);
+    const data = await response.json();
+
+    if (!data || !data.meta) {
+      throw new Error('Invalid response structure');
+    }
+
+    events.push(...data.events);
+
+    totalPages = data.meta.total_pages || 1;
+    currentPage = data.meta.next_page;
+  } while (currentPage);
+
+  console.log(`[CSL Source] Total events fetched: ${events.length}`);
+  return events;
 };
 
 exports.createPages = ({ graphql, actions }) => {

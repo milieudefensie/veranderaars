@@ -1,0 +1,105 @@
+.tabs {
+  width: 100%;
+  font-family: inherit;
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  &__button {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #666;
+    font-family: var(--nb-primary-font);
+    cursor: pointer;
+    transition: color 0.25s ease, background-color 0.25s ease;
+
+    &:hover {
+      color: #111;
+    }
+
+    &.is-active {
+      color: var(--black);
+    }
+  }
+
+  &.underlined {
+    .tabs__button {
+      padding-bottom: 0.8rem;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 3px;
+        width: 0;
+        background-color: #9a49e2;
+        transition: width 0.25s ease;
+      }
+
+      &.is-active::after {
+        width: 100%;
+      }
+    }
+  }
+
+  &.pill {
+    .tabs__list {
+      border: none;
+      gap: 0.4rem;
+    }
+
+    .tabs__button {
+      border-radius: 999px;
+      background-color: transparent;
+      color: #444;
+      transition: background-color 0.25s ease, color 0.25s ease;
+
+      &.is-active {
+        background-color: #0052cc;
+        color: #fff;
+      }
+
+      &:hover:not(.is-active) {
+        background-color: #f0f0f0;
+      }
+    }
+  }
+
+  &.default {
+    .tabs__list {
+      border-bottom: none;
+    }
+
+    .tabs__button.is-active {
+      color: #0052cc;
+    }
+  }
+
+  &__content {
+    margin-top: 1rem;
+    position: relative;
+  }
+
+  &__panel {
+    display: none;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    &.is-active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

@@ -802,6 +802,7 @@ export const DatoCMS = graphql`
       url
       style
     }
+    cms_status
   }
 
   fragment HubspotBlock on DatoCmsHubspot {

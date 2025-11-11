@@ -7,9 +7,8 @@ import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/st
 import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/link';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import TagList from '../components/Global/Tag/tag-list';
-import ListHighlightEvent from '../components/Blocks/HighlightEvent/list-highlight-event'; // @ts-expect-error
-import { isArray, mapCmsEvents, mapCslEvents } from '../utils'; // @ts-expect-error
+import TagList from '../components/Global/Tag/tag-list'; // @ts-expect-error
+import { isArray, mapCmsEvents, mapCslEvents, mapCslEventsWithDates } from '../utils'; // @ts-expect-error
 import useCSLEvents from '../hooks/useCSLEvents';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
@@ -21,6 +20,8 @@ import organizerIcon from '../components/Icons/organizer.svg'; // @ts-expect-err
 import wpIcon from '../components/Icons/signal-dark.svg'; // @ts-expect-error
 import backBtnIcon from '../components/Icons/back-btn.svg';
 import { GroupTemplate } from '../types';
+import Tabs from '../components/Global/Tabs/Tabs';
+import EventCardV2 from '../components/Global/event-card-v2/event-card-v2';
 
 import './basic.styles.scss';
 
@@ -31,8 +32,14 @@ type GroupProps = PageProps<GroupTemplate> & {
 };
 
 const Group: React.FC<GroupProps> = ({
-  pageContext,
-  data: { page, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, listGroup, listEvent, favicon },
+  data: {
+    page,
+    allEvents = { edges: [] },
+    allCSLEvents = { edges: [] },
+    allPastCSLEvents = { edges: [] },
+    listGroup,
+    favicon,
+  },
 }) => {
   const {
     seo,
@@ -61,6 +68,7 @@ const Group: React.FC<GroupProps> = ({
 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
+  const pastCslEvents = mapCslEventsWithDates(allPastCSLEvents);
   const { mergedEvents } = useCSLEvents(cmsEvents, cslEvents);
 
   const groupHasCoordinates = Boolean(coordinates?.latitude && coordinates?.longitude);
@@ -68,6 +76,7 @@ const Group: React.FC<GroupProps> = ({
 
   const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
   const hasRelatedEvents = related || nearbyEvents.length > 0;
+  const currentRelatedEvents = hasRelatedEvents ? [...(related ? relatedEvents : nearbyEvents)] : [];
 
   const hubspotFormSetGroupId = () => {
     if (!localGroupId || typeof document === 'undefined') {
@@ -195,15 +204,37 @@ const Group: React.FC<GroupProps> = ({
           )}
         </FloatLayout>
 
-        {hasRelatedEvents && (
+        {(hasRelatedEvents || pastCslEvents) && (
           <div className="related-section">
             <div className="container">
-              <ListHighlightEvent
-                block={{
-                  sectionTitle: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
-                  cta: [{ ...listEvent, title: 'Bekijk alle evenementen' }],
-                  items: related ? relatedEvents : nearbyEvents,
-                }}
+              <Tabs
+                variant="underlined"
+                tabs={[
+                  {
+                    label: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
+                    content: (
+                      <div
+                        className={`grid-events ${currentRelatedEvents.length === 1 ? 'one' : currentRelatedEvents.length % 2 === 0 ? 'two' : 'three'}`}
+                      >
+                        {currentRelatedEvents.map((e, i, arr) => (
+                          <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
+                        ))}
+                      </div>
+                    ),
+                  },
+                  {
+                    label: 'Afgelopen evenementen',
+                    content: (
+                      <div
+                        className={`grid-events ${pastCslEvents.length === 1 ? 'one' : pastCslEvents.length % 2 === 0 ? 'two' : 'three'}`}
+                      >
+                        {pastCslEvents.map((e, i, arr) => (
+                          <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
+                        ))}
+                      </div>
+                    ),
+                  },
+                ]}
               />
             </div>
           </div>
@@ -230,13 +261,29 @@ export const PageQuery = graphql`
       id
       slug
     }
+    allPastCSLEvents: allExternalEvent(
+      filter: {
+        cancelled_at: { eq: null }
+        cms_status: { eq: "disable" }
+        location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
+      }
+      sort: { fields: start_at, order: DESC }
+      limit: 5
+    ) {
+      edges {
+        node {
+          ...CSLEventCard
+        }
+      }
+    }
     allCSLEvents: allExternalEvent(
       filter: {
         cancelled_at: { eq: null }
+        cms_status: { eq: "active" }
         start_at: { gte: $currentDate }
         location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
       }
-      limit: 10
+      limit: 5
     ) {
       edges {
         node {

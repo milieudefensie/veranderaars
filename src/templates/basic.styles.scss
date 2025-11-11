@@ -274,6 +274,7 @@
   .related-section {
     margin-top: 100px;
     padding-top: 50px;
+    padding-bottom: 50px;
     background-color: #f9f9f9;
   }
 
@@ -327,6 +328,25 @@
       display: flex;
       align-items: center;
       gap: 5px;
+    }
+  }
+
+  .grid-events {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    &.one {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    &.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 }
@@ -442,6 +462,10 @@
       .pre-header {
         display: none;
       }
+    }
+
+    .grid-events {
+      grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
     }
   }
 }
