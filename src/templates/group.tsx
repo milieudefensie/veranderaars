@@ -212,29 +212,39 @@ const Group: React.FC<GroupProps> = ({
                 tabs={[
                   {
                     label: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
-                    content: (
-                      <div
-                        className={`grid-events ${currentRelatedEvents.length === 1 ? 'one' : currentRelatedEvents.length % 2 === 0 ? 'two' : 'three'}`}
-                      >
-                        {currentRelatedEvents.map((e, i, arr) => (
-                          <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
-                        ))}
-                      </div>
-                    ),
+                    content:
+                      currentRelatedEvents.length > 0 ? (
+                        <div
+                          className={`grid-events ${
+                            currentRelatedEvents.length === 1
+                              ? 'one'
+                              : currentRelatedEvents.length % 2 === 0
+                                ? 'two'
+                                : 'three'
+                          }`}
+                        >
+                          {currentRelatedEvents.map((e, i, arr) => (
+                            <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
+                          ))}
+                        </div>
+                      ) : null,
                   },
                   {
                     label: 'Afgelopen evenementen',
-                    content: (
-                      <div
-                        className={`grid-events ${pastCslEvents.length === 1 ? 'one' : pastCslEvents.length % 2 === 0 ? 'two' : 'three'}`}
-                      >
-                        {pastCslEvents.map((e, i, arr) => (
-                          <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
-                        ))}
-                      </div>
-                    ),
+                    content:
+                      pastCslEvents.length > 0 ? (
+                        <div
+                          className={`grid-events ${
+                            pastCslEvents.length === 1 ? 'one' : pastCslEvents.length % 2 === 0 ? 'two' : 'three'
+                          }`}
+                        >
+                          {pastCslEvents.map((e, i, arr) => (
+                            <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
+                          ))}
+                        </div>
+                      ) : null,
                   },
-                ]}
+                ].filter((tab) => tab.content)}
               />
             </div>
           </div>
