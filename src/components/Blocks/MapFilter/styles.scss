@@ -13,7 +13,7 @@
     &.grid-events {
       display: grid;
       gap: calc(.25rem * 4);
-      margin-bottom: 1rem;
+      margin-bottom: 2.5rem;
 
       &.one {
         grid-template-columns: repeat(1, minmax(0, 1fr));

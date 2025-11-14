@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MapWrapper from '../../Global/Map/map';
 import { graphql, useStaticQuery } from 'gatsby'; // @ts-expect-error
-import { mapCmsEvents, mapCslEvents } from '../../../utils';
-import ListPaginated from '../../Global/Pagination/list-paginated'; // @ts-expect-error
+import { mapCmsEvents, mapCslEvents } from '../../../utils'; // @ts-expect-error
 import useCSLEvents from '../../../hooks/useCSLEvents';
 import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
 import { EventType } from '../../../types';
@@ -192,27 +191,16 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
           id="filter-events-list"
           className={`grid-events ${mapEvents.length === 1 ? 'one' : mapEvents.length === 2 ? 'two' : 'three'} ${mapEvents.length === 2 ? 'mobile-two' : ''}`}
         >
-          <ListPaginated
-            list={mapEvents}
-            customPageSize={10}
-            renderItem={(item: EventType) => (
-              <EventCardV2
-                key={item.id}
-                event={item}
-                lessInfo
-                vertical={mapEvents.length > 1}
-                collection={findParentCollection(item)}
-                isLocalGroup={isLocalGroupOrganizer(item)}
-              />
-            )}
-            extraLogic={() => {
-              const targetElement = document.getElementById('filter-events-list');
-
-              if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-          />
+          {mapEvents.map((item: EventType) => (
+            <EventCardV2
+              key={item.id}
+              event={item}
+              lessInfo
+              vertical={mapEvents.length > 1}
+              collection={findParentCollection(item)}
+              isLocalGroup={isLocalGroupOrganizer(item)}
+            />
+          ))}
         </div>
       )}
     </div>
