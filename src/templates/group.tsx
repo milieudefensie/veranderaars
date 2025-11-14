@@ -215,7 +215,7 @@ const Group: React.FC<GroupProps> = ({
                     content:
                       currentRelatedEvents.length > 0 ? (
                         <div
-                          className={`grid-events ${
+                          className={`grid-events inner ${
                             currentRelatedEvents.length === 1
                               ? 'one'
                               : currentRelatedEvents.length % 2 === 0
@@ -234,7 +234,7 @@ const Group: React.FC<GroupProps> = ({
                     content:
                       pastCslEvents.length > 0 ? (
                         <div
-                          className={`grid-events ${
+                          className={`grid-events inner ${
                             pastCslEvents.length === 1 ? 'one' : pastCslEvents.length % 2 === 0 ? 'two' : 'three'
                           }`}
                         >
