@@ -108,6 +108,7 @@ export type EventType = {
   waiting_list_enabled: boolean;
   max_attendees_count: number;
   rawStartDate?: string;
+  cms_status?: string;
 };
 
 export type EventTemplate = {
@@ -253,6 +254,33 @@ export type GroupTemplate = {
     }[];
   };
   allCSLEvents: {
+    edges: {
+      node: {
+        __typename: string;
+        id: string;
+        slug: string;
+        title: string;
+        description?: string;
+        start_at: string;
+        raw_start: string;
+        raw_end: string;
+        end_at: string;
+        image_url?: string;
+        start_in_zone?: string;
+        end_in_zone?: string;
+        labels?: string[];
+        location?: {
+          latitude: number;
+          longitude: number;
+          venue?: string;
+          query?: string;
+          region?: string;
+        };
+        hiddenAddress?: boolean;
+      };
+    }[];
+  };
+  allPastCSLEvents: {
     edges: {
       node: {
         __typename: string;

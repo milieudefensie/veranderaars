@@ -1,5 +1,5 @@
 import React from 'react'; // @ts-expect-error
-import { truncateText, formatEventDate, formatDateWithTimeCSL } from '../../../utils';
+import { truncateText, formatEventDate, formatDateWithTimeCSL, getYearFromDate } from '../../../utils';
 import Link from '../../Global/Link/link';
 import Cta from '../Cta/cta';
 import { CtaType, EventCollectionType, EventType } from '../../../types';
@@ -44,6 +44,7 @@ const EventCardV2: React.FC<Props> = ({
     beknopteAddress,
     rawDate,
     startInZone,
+    cms_status,
   } = event || {};
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
@@ -52,6 +53,7 @@ const EventCardV2: React.FC<Props> = ({
     : null;
 
   const withImage = mainImage || image?.gatsbyImageData || image?.url || image_url || PLACEHOLDER_IMAGE;
+  const isDisabled = cms_status === 'disable';
 
   const cardContent = () => (
     <>
@@ -64,7 +66,10 @@ const EventCardV2: React.FC<Props> = ({
         <div>
           <div className="date">
             {isCslEvent && event.rawDate ? (
-              <span>{formatDateWithTimeCSL(rawDate, startInZone)}</span>
+              <span>
+                {formatDateWithTimeCSL(rawDate, startInZone)}
+                {isDisabled ? ` ${getYearFromDate(rawDate)}` : ''}
+              </span>
             ) : event.date ? (
               <>
                 <span>{formatEventDate(event.date, event.hourStart, true)}</span>
