@@ -108,6 +108,7 @@ export type EventType = {
   waiting_list_enabled: boolean;
   max_attendees_count: number;
   rawStartDate?: string;
+  cms_status?: string;
 };
 
 export type EventTemplate = {

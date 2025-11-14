@@ -755,6 +755,7 @@ export const DatoCMS = graphql`
       url
       style
     }
+    cms_status
   }
 
   fragment CSLEventPage on ExternalEvent {

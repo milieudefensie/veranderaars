@@ -467,5 +467,10 @@
     .grid-events {
       grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
     }
+
+    .related-section {
+      margin-top: 60px;
+      padding-top: 30px;
+    }
   }
 }

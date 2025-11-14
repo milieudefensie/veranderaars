@@ -27,7 +27,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultIndex = 0, variant = 'underlin
               onClick={() => setActiveIndex(index)}
               className={`tabs__button ${isActive ? 'is-active' : ''}`}
             >
-              {tab.label}
+              <div dangerouslySetInnerHTML={{ __html: tab.label }} />
             </button>
           );
         })}

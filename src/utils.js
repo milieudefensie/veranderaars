@@ -157,6 +157,12 @@ export const formatDateWithTimeCSL = (dateStr, hourStr, endDate, endHourStr) => 
   );
 };
 
+export const getYearFromDate = (dateStr) => {
+  if (!dateStr) return null;
+  const dt = DateTime.fromISO(dateStr);
+  return dt.isValid ? dt.toFormat('yyyy') : null;
+};
+
 export const formatSimpleDateWithTimeCSL = (dateStr, hourStr, endHourStr) => {
   const now = DateTime.local().setLocale('nl');
   const dt = DateTime.fromISO(dateStr, { locale: 'nl' });
@@ -444,6 +450,7 @@ export const formatCslEvents = (e) => {
     model: { apiKey: 'ExternalEvent' },
     type: 'CSL',
     additional_image_sizes_url: e.additional_image_sizes_url,
+    cms_status: e.cms_status,
   };
 };
 

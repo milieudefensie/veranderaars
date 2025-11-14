@@ -211,7 +211,7 @@ const Group: React.FC<GroupProps> = ({
                 variant="underlined"
                 tabs={[
                   {
-                    label: related ? 'Evenementen van deze groep' : 'Evenementen in de buurt',
+                    label: 'Aankomende <span>evenementen</span>',
                     content:
                       currentRelatedEvents.length > 0 ? (
                         <div
@@ -230,7 +230,7 @@ const Group: React.FC<GroupProps> = ({
                       ) : null,
                   },
                   {
-                    label: 'Afgelopen evenementen',
+                    label: 'Afgelopen <span>evenementen</span>',
                     content:
                       pastCslEvents.length > 0 ? (
                         <div

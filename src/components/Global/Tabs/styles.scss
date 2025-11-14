@@ -103,3 +103,20 @@
     }
   }
 }
+
+@media screen and (max-width: 992px) {
+  .tabs {
+    &__list {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    &__button {
+      padding: 0.3rem .5rem;
+    }
+
+    &__button span {
+      display: none;
+    }
+  }
+}
