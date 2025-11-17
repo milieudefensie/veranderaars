@@ -204,7 +204,8 @@ const Group: React.FC<GroupProps> = ({
           )}
         </FloatLayout>
 
-        {(hasRelatedEvents || pastCslEvents) && (
+        {((Array.isArray(currentRelatedEvents) && currentRelatedEvents.length > 0) ||
+          (Array.isArray(pastCslEvents) && pastCslEvents.length > 0)) && (
           <div className="related-section">
             <div className="container">
               <Tabs
@@ -235,7 +236,7 @@ const Group: React.FC<GroupProps> = ({
                       pastCslEvents.length > 0 ? (
                         <div
                           className={`grid-events inner ${
-                            pastCslEvents.length === 1 ? 'one' : pastCslEvents.length % 2 === 0 ? 'two' : 'three'
+                            pastCslEvents.length === 1 ? 'one' : pastCslEvents.length === 2 ? 'two' : 'three'
                           }`}
                         >
                           {pastCslEvents.map((e, i, arr) => (
@@ -275,10 +276,10 @@ export const PageQuery = graphql`
       filter: {
         cancelled_at: { eq: null }
         cms_status: { eq: "disable" }
+        start_at: { lte: $currentDate }
         location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
       }
-      sort: { fields: start_at, order: DESC }
-      limit: 5
+      sort: { fields: start_at, order: DESC } # limit: 5
     ) {
       edges {
         node {
