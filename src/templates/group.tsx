@@ -204,7 +204,8 @@ const Group: React.FC<GroupProps> = ({
           )}
         </FloatLayout>
 
-        {(hasRelatedEvents || pastCslEvents) && (
+        {((Array.isArray(currentRelatedEvents) && currentRelatedEvents.length > 0) ||
+          (Array.isArray(pastCslEvents) && pastCslEvents.length > 0)) && (
           <div className="related-section">
             <div className="container">
               <Tabs
