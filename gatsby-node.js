@@ -459,6 +459,7 @@ exports.createPages = ({ graphql, actions }) => {
               slug: group.node.slug,
               id: group.node.id,
               currentDate: new Date().toISOString().split('T')[0],
+              minDate2024: '2024-01-01T00:00:00Z',
 
               // latitude
               latitude: latitude,

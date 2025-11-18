@@ -258,7 +258,15 @@ const Group: React.FC<GroupProps> = ({
 export default Group;
 
 export const PageQuery = graphql`
-  query GroupById($id: String, $currentDate: Date!, $maxLat: Float, $minLat: Float, $maxLon: Float, $minLon: Float) {
+  query GroupById(
+    $id: String
+    $currentDate: Date!
+    $minDate2024: Date!
+    $maxLat: Float
+    $minLat: Float
+    $maxLon: Float
+    $minLon: Float
+  ) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -276,7 +284,7 @@ export const PageQuery = graphql`
       filter: {
         cancelled_at: { eq: null }
         cms_status: { eq: "disable" }
-        start_at: { lte: $currentDate }
+        start_at: { lte: $currentDate, gte: $minDate2024 }
         location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
       }
       sort: { fields: start_at, order: DESC } # limit: 5
