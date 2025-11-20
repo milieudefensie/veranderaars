@@ -267,7 +267,12 @@ export const PageQuery = graphql`
       ...CSLEventPage
     }
     relatedEvents: allExternalEvent(
-      filter: { cancelled_at: { eq: null }, show_in_agenda_list: { eq: true }, id: { ne: $id } }
+      filter: {
+        cancelled_at: { eq: null }
+        launched_at: { ne: null }
+        show_in_agenda_list: { eq: true }
+        id: { ne: $id }
+      }
       limit: 3
     ) {
       nodes {

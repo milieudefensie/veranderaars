@@ -377,7 +377,9 @@ export const PageQuery = graphql`
         }
       }
     }
-    allCSLEvents: allExternalEvent(filter: { cancelled_at: { eq: null }, show_in_agenda_list: { eq: true } }) {
+    allCSLEvents: allExternalEvent(
+      filter: { cancelled_at: { eq: null }, launched_at: { ne: null }, show_in_agenda_list: { eq: true } }
+    ) {
       edges {
         node {
           __typename
