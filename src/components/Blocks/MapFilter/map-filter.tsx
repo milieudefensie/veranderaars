@@ -42,7 +42,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
     configuration,
   } = useStaticQuery(graphql`
     query events {
-      cslEvents: allExternalEvent(filter: { cancelled_at: { eq: null } }) {
+      cslEvents: allExternalEvent(filter: { cancelled_at: { eq: null }, show_in_agenda_list: { eq: true } }) {
         edges {
           node {
             ...CSLEventCard

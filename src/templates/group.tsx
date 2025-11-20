@@ -298,6 +298,7 @@ export const PageQuery = graphql`
     allCSLEvents: allExternalEvent(
       filter: {
         cancelled_at: { eq: null }
+        show_in_agenda_list: { eq: true }
         cms_status: { eq: "active" }
         start_at: { gte: $currentDate }
         location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }

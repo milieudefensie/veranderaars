@@ -756,6 +756,7 @@ export const DatoCMS = graphql`
       style
     }
     cms_status
+    show_in_agenda_list
   }
 
   fragment CSLEventPage on ExternalEvent {
@@ -804,6 +805,7 @@ export const DatoCMS = graphql`
       style
     }
     cms_status
+    show_in_agenda_list
   }
 
   fragment HubspotBlock on DatoCmsHubspot {

@@ -41,6 +41,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       waiting_list_enabled: Boolean
       additional_image_sizes_url: [ImageCSLType]
       cms_status: String
+      show_in_agenda_list: Boolean
     }
     type ImageCSLType {
       url: String
@@ -103,6 +104,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   // console.log('New token:', accessToken);
 
   const allEvents = await getAllEvents(accessToken);
+  const allPublicEvents = await getAllPublicEvents();
   const now = new Date();
 
   const fetchAllAttendees = async (eventSlug) => {
@@ -168,6 +170,7 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       waiting_list_enabled: isWaitingListEnabled,
       rich_description: event.rich_description,
       cms_status: cmsStatus,
+      show_in_agenda_list: Boolean(allPublicEvents.find((pe) => pe.slug === event.slug)),
       internal: {
         type: 'ExternalEvent',
         contentDigest: createContentDigest(event),
@@ -204,6 +207,31 @@ const getAllEvents = async (accessToken) => {
   } while (currentPage);
 
   console.log(`[CSL Source] Total events fetched: ${events.length}`);
+  return events;
+};
+
+const getAllPublicEvents = async () => {
+  const baseUrl = `https://klimaatmars.milieudefensie.nl/api/local.json`;
+  const events = [];
+  let currentPage = 1;
+  let totalPages = 1;
+
+  do {
+    console.log(`[PUBLIC EVENTS] Fetching page ${currentPage} of events...`);
+    const response = await fetch(`${baseUrl}?page=${currentPage}`);
+    const data = await response.json();
+
+    if (!data || !data.meta) {
+      throw new Error('Invalid response structure');
+    }
+
+    events.push(...data.data);
+
+    totalPages = data.meta.total_pages ?? 1;
+    currentPage++;
+  } while (currentPage <= totalPages);
+
+  console.log(`[PUBLIC CSL Source] Total events fetched: ${events.length}`);
   return events;
 };
 
@@ -581,34 +609,4 @@ const scrapingFormInputs = async (event) => {
     console.error('Error on scraping:', error);
     throw error;
   }
-};
-
-// CSL Utils
-const getAllGoodEvents = async () => {
-  const cslPath = process.env.CSL_PATH;
-  const events = [];
-
-  let currentPage = 1;
-  let totalPages = 1;
-
-  do {
-    const result = await fetch(`${cslPath}/api/local.json?page=${currentPage}`, {
-      method: 'GET',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-    });
-    const resultData = await result.json();
-
-    if (!resultData || !resultData.meta) {
-      throw new Error('Invalid response structure');
-    }
-
-    const futureEvents = resultData.data;
-    events.push(...futureEvents);
-
-    const meta = resultData.meta;
-    totalPages = meta.total_pages;
-    currentPage += 1;
-  } while (currentPage <= totalPages);
-
-  return events;
 };
