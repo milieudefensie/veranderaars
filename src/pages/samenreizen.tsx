@@ -2,26 +2,75 @@ import * as React from 'react';
 import { graphql, PageProps } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
-import TravelTogether from '../components/Layout/travel-together/travel-together';
+import TravelTogether from '../components/Layout/travel-together/travel-together'; // @ts-ignore
 import { HelmetDatoCms } from 'gatsby-source-datocms';
 import { SignalGroupType } from '../types';
 
 const TravelTogetherPage: React.FC<PageProps> = ({ data }) => {
+  // @ts-ignore
   const signalGroups = data.signalGroups.nodes || [];
 
   return (
     <Layout>
+      {/* @ts-ignore */}
       <HelmetDatoCms seo={data.favicon.faviconMetaTags}>
         <title>Samenreizen</title>
       </HelmetDatoCms>
-
       <WrapperLayout variant={`white event-detail`}>
         <div className="container">
           <TravelTogether
             slug={'samenreizen'}
             othersSignalGroups={signalGroups.map((g: any) => g)}
-            customShareMessage
-            shareWpText=""
+            icon="train"
+            textLabels={{
+              header: 'Reis samen vanuit',
+              input: 'Ik reis vanuit',
+              search: 'Plan reis',
+              foundStep1: {
+                title: 'Ga in de chat groep',
+                subtitle: 'Reis samen vanuit',
+                text: 'Een veranderaar uit [city] heeft een Signal chat groep aangemaakt. In deze chat spreken jullie samen af hoe jullie gaan reizen.',
+                button: '💬 Open de Signal groep',
+              },
+              foundStep2: {
+                title: 'Nodig anderen uit en reis samen',
+                text: '<p>Stem met elkaar af hoe je samen reist. Voeg aan de beschrijving van de groep bijvoorbeeld toe welke trein je neemt, of deel een auto. 🚂</p><p>Je kent elkaar misschien nog niet. Stel jezelf voor en verwelkom nieuwe mensen. Je kan ook van tevoren bij iemand thuis samen wat eten en protestborden verven om elkaar te leren kennen. 🍕🪧</p>',
+                blockTitle: 'Nodig meer mensen uit:',
+                shareText: `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit [city]?
+
+                https://milieudefensie.nl/doe-mee/klimaatmars-2025
+                http://veranderaars.milieudefensie.nl/samenreizen`,
+                extraContent: {
+                  text: '<p>Vergeet niet om je aan te melden voor dit evenement</br>zodat je op de hoogte blijft van belangrijke updates:',
+                  button: '👉 Meld je aan voor evenement',
+                  url: 'https://milieudefensie.nl/doe-mee/klimaatmars-2025',
+                },
+              },
+              notFoundStep1: {
+                button: 'Signal-groep',
+                text: 'Signal-groep',
+                title: 'Maak een chat groep',
+                secondaryButton: '✅ Ik heb een groep chat aangemaakt',
+              },
+              notFoundStep2: {
+                text: '<strong>Kopieer de uitnodigingslink van je Signal-groep.</strong> Plak deze hieronder. Wij nodigen andere veranderaars uit [city] en omgeving uit om samen te reizen.',
+                bottomText:
+                  'Wij controleren de link en delen deze openbaar op deze website, zodat iedereen zich makkelijk kan aanmelden om samen te reizen. Je e-mail adres blijft prive. We sturen je eenmalig wat tips om je te helpen met je samenreisevenement.',
+              },
+              notFoundStep3: {
+                title: 'Stem af hoe je samen reist',
+                text: '<p>Bespreek met elkaar hoe jullie reizen: met de trein, of een (deel)auto. <br>Voeg in de groepsbeschrijving bijvoorbeeld toe: "We nemen trein om [tijd] vanaf [station]." 🚂</p><p>Leer elkaar kennen: stel jezelf voor, verwelkom nieuwe mensen, of spreek van tevoren bij iemand thuis af om samen te eten en vast wat protestborden te verven om in de sfeer te komen. 🍕🪧</p>',
+                blockTitle: 'Nodig meer mensen uit:',
+                shareText: `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit [city]?
+
+https://milieudefensie.nl/doe-mee/klimaatmars-2025
+http://veranderaars.milieudefensie.nl/samenreizen`,
+              },
+              shareText: `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit [city]?
+
+https://milieudefensie.nl/doe-mee/klimaatmars-2025
+http://veranderaars.milieudefensie.nl/samenreizen`,
+            }}
           />
 
           {signalGroups && signalGroups.length > 0 && (
