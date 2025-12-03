@@ -65,6 +65,11 @@ const TravelTogetherPage: React.FC<PageProps> = ({ data }) => {
 
 https://milieudefensie.nl/doe-mee/klimaatmars-2025
 http://veranderaars.milieudefensie.nl/samenreizen`,
+                extraContent: {
+                  text: '<p>Vergeet niet om je aan te melden voor dit evenement</br>zodat je op de hoogte blijft van belangrijke updates:',
+                  button: '👉 Meld je aan voor evenement',
+                  url: 'https://milieudefensie.nl/doe-mee/klimaatmars-2025',
+                },
               },
               shareText: `Ik ga hier samen met een paar andere mensen heen. Wie reist er nog meer met mij mee vanuit [city]?
 
