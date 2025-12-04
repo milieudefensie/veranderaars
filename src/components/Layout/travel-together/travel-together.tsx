@@ -371,9 +371,8 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
 
   useEffect(() => {
     if (!geoLoading && geoCity) {
-      // Set city without triggering suggestions
       setState((prev) => ({ ...prev, currentCity: geoCity }));
-      handleSearchSignalGroup(geoCity);
+      handleSearchSignalGroup(geoCity, true);
       setLoading((prev) => ({ ...prev, initial: false }));
     }
   }, [geoCity, geoLoading]);
@@ -407,7 +406,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
   }, []);
 
   const handleSearchSignalGroup = useCallback(
-    async (cityName?: string) => {
+    async (cityName?: string, isInitialLoad = false) => {
       try {
         setLoading((prev) => ({ ...prev, search: true }));
         const cityToSearch = normalize(cityName || state.currentCity);
@@ -423,7 +422,8 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
           signalGroupExists: searchResult || null,
           activeStep: 1,
           searchMade: true,
-          stepsWithConfetti: new Set(),
+          // stepsWithConfetti: new Set(),
+          stepsWithConfetti: !isInitialLoad && cityName ? new Set() : prev.stepsWithConfetti,
         }));
       } catch (error) {
         console.error('Search error:', error);
@@ -489,7 +489,8 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
       setState((prev) => {
         const isAdvancing = newStep > prev.activeStep;
         const hasNotShownConfetti = !prev.stepsWithConfetti.has(newStep);
-        const shouldShowConfetti = (forceConfetti || isAdvancing) && hasNotShownConfetti;
+        const isGoingBackwards = newStep < prev.activeStep;
+        const shouldShowConfetti = !isGoingBackwards && hasNotShownConfetti && (forceConfetti || isAdvancing);
 
         if (shouldShowConfetti) {
           triggerConfetti(newStep === 3 ? 'celebration' : 'normal');
@@ -860,7 +861,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
                   stepNumber={2}
                   title={textLabels.foundStep2.title}
                   isActive={state.activeStep === 2}
-                  onClick={() => changeStep(2, true)}
+                  onClick={() => changeStep(2)}
                 />
                 <div className="extra-content">
                   <p dangerouslySetInnerHTML={{ __html: textLabels.foundStep2.text }}>
