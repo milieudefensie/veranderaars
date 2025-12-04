@@ -336,7 +336,8 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
     showConfetti: false,
     confettiKey: 0,
     showSignalPopup: false,
-    stepsWithConfetti: new Set([1]),
+    // stepsWithConfetti: new Set([1]),
+    stepsWithConfetti: new Set(),
   });
 
   const [loading, setLoading] = useState<LoadingState>({
