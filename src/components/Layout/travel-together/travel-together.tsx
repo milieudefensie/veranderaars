@@ -104,9 +104,9 @@ type ConfettiIntensity = 'subtle' | 'normal' | 'celebration';
 
 // Constants
 const CONFETTI_CONFIG: Record<ConfettiIntensity, { force: number; duration: number; count: number; size: number }> = {
-  subtle: { force: 0.9, duration: 3500, count: 180, size: 16 },
-  normal: { force: 0.9, duration: 3500, count: 180, size: 16 },
-  celebration: { force: 1.5, duration: 5000, count: 300, size: 20 },
+  subtle: { force: 0.9, duration: 2000, count: 180, size: 16 },
+  normal: { force: 0.9, duration: 2000, count: 180, size: 16 },
+  celebration: { force: 0.9, duration: 2000, count: 300, size: 16 },
 };
 
 const CONFETTI_COLORS = [
@@ -336,8 +336,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
     showConfetti: false,
     confettiKey: 0,
     showSignalPopup: false,
-    // stepsWithConfetti: new Set([1]),
-    stepsWithConfetti: new Set(),
+    stepsWithConfetti: new Set(), // Iniciar vacío para permitir confetti en el primer paso
   });
 
   const [loading, setLoading] = useState<LoadingState>({
@@ -371,8 +370,9 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
 
   useEffect(() => {
     if (!geoLoading && geoCity) {
+      // Set city without triggering suggestions
       setState((prev) => ({ ...prev, currentCity: geoCity }));
-      handleSearchSignalGroup(geoCity, true);
+      handleSearchSignalGroup(geoCity, true); // Pasar true para indicar que es carga inicial
       setLoading((prev) => ({ ...prev, initial: false }));
     }
   }, [geoCity, geoLoading]);
@@ -422,7 +422,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
           signalGroupExists: searchResult || null,
           activeStep: 1,
           searchMade: true,
-          // stepsWithConfetti: new Set(),
+          // Solo resetear en búsquedas manuales, no en carga inicial
           stepsWithConfetti: !isInitialLoad && cityName ? new Set() : prev.stepsWithConfetti,
         }));
       } catch (error) {
@@ -472,6 +472,12 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
   }, [state.signalLink, state.email, state.city, slug]);
 
   const triggerConfetti = useCallback((intensity: ConfettiIntensity = 'normal') => {
+    // Limpiar cualquier timeout anterior
+    if (confettiTimeoutRef.current) {
+      clearTimeout(confettiTimeoutRef.current);
+      confettiTimeoutRef.current = null;
+    }
+
     setState((prev) => ({
       ...prev,
       showConfetti: true,
@@ -487,10 +493,14 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
   const changeStep = useCallback(
     (newStep: number, forceConfetti = false) => {
       setState((prev) => {
-        const isAdvancing = newStep > prev.activeStep;
         const hasNotShownConfetti = !prev.stepsWithConfetti.has(newStep);
-        const isGoingBackwards = newStep < prev.activeStep;
-        const shouldShowConfetti = !isGoingBackwards && hasNotShownConfetti && (forceConfetti || isAdvancing);
+        const isGoingForward = newStep > prev.activeStep; // Solo verificar si vamos hacia adelante
+
+        // Solo mostrar confetti si:
+        // 1. No se ha mostrado antes para este paso Y
+        // 2. Se fuerza con forceConfetti Y
+        // 3. Estamos yendo hacia adelante (paso actual < paso nuevo)
+        const shouldShowConfetti = hasNotShownConfetti && forceConfetti && isGoingForward;
 
         if (shouldShowConfetti) {
           triggerConfetti(newStep === 3 ? 'celebration' : 'normal');
@@ -644,7 +654,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
                   stepNumber={1}
                   title={textLabels.notFoundStep1.title}
                   isActive={state.activeStep === 1}
-                  onClick={() => changeStep(1)}
+                  onClick={() => changeStep(1, true)}
                 />
                 <div className="content">
                   <div>
@@ -655,7 +665,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
                       </a>{' '}
                       (werkt hetzelfde als WhatsApp). Voeg een paar mensen toe die je wilt uitnodigen.
                     </p>
-                    <button onClick={() => changeStep(2)}>{textLabels.notFoundStep1.secondaryButton}</button>
+                    <button onClick={() => changeStep(2, true)}>{textLabels.notFoundStep1.secondaryButton}</button>
                     <p className="help-text">
                       <span>
                         Kom je er niet uit? Stuur een e-mail naar{' '}
@@ -679,7 +689,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
                   stepNumber={2}
                   title="Deel de uitnodigingslink met ons"
                   isActive={state.activeStep === 2}
-                  onClick={() => changeStep(2)}
+                  onClick={() => changeStep(2, true)}
                 />
                 <div className="content">
                   <div>
@@ -770,7 +780,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
                   // title="Stem af hoe je samen reist"
                   title={textLabels.notFoundStep3.title}
                   isActive={state.activeStep === 3}
-                  onClick={() => changeStep(3)}
+                  onClick={() => changeStep(3, true)}
                 />
                 <div className="extra-content">
                   <p dangerouslySetInnerHTML={{ __html: textLabels.notFoundStep3.text }}>
@@ -805,7 +815,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
                   stepNumber={1}
                   title={textLabels.foundStep1.title}
                   isActive={state.activeStep === 1}
-                  onClick={() => changeStep(1)}
+                  onClick={() => changeStep(1, true)}
                 />
                 <div className="content first">
                   <div className="wrapper-steps">
@@ -861,7 +871,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
                   stepNumber={2}
                   title={textLabels.foundStep2.title}
                   isActive={state.activeStep === 2}
-                  onClick={() => changeStep(2)}
+                  onClick={() => changeStep(2, true)}
                 />
                 <div className="extra-content">
                   <p dangerouslySetInnerHTML={{ __html: textLabels.foundStep2.text }}>
