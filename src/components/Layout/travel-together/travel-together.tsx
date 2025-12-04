@@ -859,7 +859,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
                   stepNumber={2}
                   title={textLabels.foundStep2.title}
                   isActive={state.activeStep === 2}
-                  onClick={() => changeStep(2)}
+                  onClick={() => changeStep(2, true)}
                 />
                 <div className="extra-content">
                   <p dangerouslySetInnerHTML={{ __html: textLabels.foundStep2.text }}>
