@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback, useMemo, useRef, Suspense, lazy } from 'react';
+import React, { useEffect, useState, useCallback, useRef, Suspense, lazy, useMemo } from 'react';
+import { createRoot } from 'react-dom/client';
 import { QRCodeSVG } from 'qrcode.react';
 
 const ConfettiExplosion = lazy(() => import('react-confetti-explosion'));
@@ -336,7 +337,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
     showConfetti: false,
     confettiKey: 0,
     showSignalPopup: false,
-    stepsWithConfetti: new Set(), // Iniciar vacío para permitir confetti en el primer paso
+    stepsWithConfetti: new Set(),
   });
 
   const [loading, setLoading] = useState<LoadingState>({
@@ -355,7 +356,6 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
   const [isUserTyping, setIsUserTyping] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const confettiTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { city: geoCity, loading: geoLoading } = useGeolocation();
   const debouncedCity = useDebounce(state.currentCity, DEBOUNCE_DELAY);
@@ -370,9 +370,8 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
 
   useEffect(() => {
     if (!geoLoading && geoCity) {
-      // Set city without triggering suggestions
       setState((prev) => ({ ...prev, currentCity: geoCity }));
-      handleSearchSignalGroup(geoCity, true); // Pasar true para indicar que es carga inicial
+      handleSearchSignalGroup(geoCity, true);
       setLoading((prev) => ({ ...prev, initial: false }));
     }
   }, [geoCity, geoLoading]);
@@ -396,14 +395,6 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
       setShowSuggestions(false);
     }
   }, [debouncedCity, othersSignalGroups, isUserTyping]);
-
-  useEffect(() => {
-    return () => {
-      if (confettiTimeoutRef.current) {
-        clearTimeout(confettiTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const handleSearchSignalGroup = useCallback(
     async (cityName?: string, isInitialLoad = false) => {
@@ -472,34 +463,43 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
   }, [state.signalLink, state.email, state.city, slug]);
 
   const triggerConfetti = useCallback((intensity: ConfettiIntensity = 'normal') => {
-    // Limpiar cualquier timeout anterior
-    if (confettiTimeoutRef.current) {
-      clearTimeout(confettiTimeoutRef.current);
-      confettiTimeoutRef.current = null;
-    }
+    if (typeof window === 'undefined') return;
 
-    setState((prev) => ({
-      ...prev,
-      showConfetti: true,
-      confettiKey: prev.confettiKey + 1,
-    }));
+    const container = document.createElement('div');
+    container.className = 'confetti-container';
 
-    const config = CONFETTI_CONFIG[intensity] || CONFETTI_CONFIG.normal;
-    confettiTimeoutRef.current = setTimeout(() => {
-      setState((prev) => ({ ...prev, showConfetti: false }));
-    }, config.duration);
+    const wrapper = document.createElement('div');
+    wrapper.className = 'confetti-wrapper';
+    container.appendChild(wrapper);
+
+    document.body.appendChild(container);
+
+    const root = createRoot(wrapper);
+
+    root.render(
+      <Suspense fallback={null}>
+        <ConfettiExplosion
+          duration={CONFETTI_CONFIG[state.activeStep === 3 ? 'celebration' : 'normal'].duration}
+          particleCount={CONFETTI_CONFIG[state.activeStep === 3 ? 'celebration' : 'normal'].count}
+          width={windowDimensions.width}
+          height={windowDimensions.height}
+          colors={CONFETTI_COLORS}
+          particleSize={CONFETTI_CONFIG[state.activeStep === 3 ? 'celebration' : 'normal'].size}
+          onComplete={() => {
+            root.unmount();
+            container.remove();
+          }}
+        />
+      </Suspense>
+    );
   }, []);
 
   const changeStep = useCallback(
     (newStep: number, forceConfetti = false) => {
       setState((prev) => {
         const hasNotShownConfetti = !prev.stepsWithConfetti.has(newStep);
-        const isGoingForward = newStep > prev.activeStep; // Solo verificar si vamos hacia adelante
+        const isGoingForward = newStep > prev.activeStep;
 
-        // Solo mostrar confetti si:
-        // 1. No se ha mostrado antes para este paso Y
-        // 2. Se fuerza con forceConfetti Y
-        // 3. Estamos yendo hacia adelante (paso actual < paso nuevo)
         const shouldShowConfetti = hasNotShownConfetti && forceConfetti && isGoingForward;
 
         if (shouldShowConfetti) {
@@ -900,7 +900,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
       )}
 
       {/* Confetti */}
-      {state.showConfetti && (
+      {/* {state.showConfetti && (
         <Suspense fallback={null}>
           <div className="confetti-container">
             <div className="confetti-wrapper">
@@ -918,7 +918,7 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
             </div>
           </div>
         </Suspense>
-      )}
+      )} */}
 
       {/* Signal Modal */}
       <Suspense fallback={null}>
