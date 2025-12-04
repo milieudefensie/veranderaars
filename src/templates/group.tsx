@@ -8,7 +8,7 @@ import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/link';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import TagList from '../components/Global/Tag/tag-list'; // @ts-expect-error
-import { isArray, mapCmsEvents, mapCslEvents, mapCslEventsWithDates } from '../utils'; // @ts-expect-error
+import { isArray, mapCmsEvents, mapCslEvents, mapCslEventsWithDates, isEventFuture } from '../utils'; // @ts-expect-error
 import useCSLEvents from '../hooks/useCSLEvents';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
@@ -32,6 +32,7 @@ type GroupProps = PageProps<GroupTemplate> & {
 };
 
 const Group: React.FC<GroupProps> = ({
+  pageContext,
   data: {
     page,
     allEvents = { edges: [] },
@@ -77,6 +78,7 @@ const Group: React.FC<GroupProps> = ({
   const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
   const hasRelatedEvents = related || nearbyEvents.length > 0;
   const currentRelatedEvents = hasRelatedEvents ? [...(related ? relatedEvents : nearbyEvents)] : [];
+  const pastEvents = pastCslEvents.filter((e) => !isEventFuture(e));
 
   const hubspotFormSetGroupId = () => {
     if (!localGroupId || typeof document === 'undefined') {
@@ -93,6 +95,8 @@ const Group: React.FC<GroupProps> = ({
   };
 
   const withFormsSteps = isArray(formSteps);
+
+  // console.log({ pageContext, pastCslEvents, pastEvents });
 
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
@@ -233,13 +237,13 @@ const Group: React.FC<GroupProps> = ({
                   {
                     label: 'Afgelopen <span>evenementen</span>',
                     content:
-                      pastCslEvents.length > 0 ? (
+                      pastEvents.length > 0 ? (
                         <div
                           className={`grid-events inner ${
-                            pastCslEvents.length === 1 ? 'one' : pastCslEvents.length === 2 ? 'two' : 'three'
+                            pastEvents.length === 1 ? 'one' : pastEvents.length === 2 ? 'two' : 'three'
                           }`}
                         >
-                          {pastCslEvents.map((e, i, arr) => (
+                          {pastEvents.map((e, i, arr) => (
                             <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
                           ))}
                         </div>
@@ -266,6 +270,10 @@ export const PageQuery = graphql`
     $minLat: Float
     $maxLon: Float
     $minLon: Float
+    $maxLatPast: Float
+    $minLatPast: Float
+    $maxLonPast: Float
+    $minLonPast: Float
   ) {
     favicon: datoCmsSite {
       faviconMetaTags {
@@ -284,11 +292,14 @@ export const PageQuery = graphql`
       filter: {
         cancelled_at: { eq: null }
         launched_at: { ne: null }
-        cms_status: { eq: "disable" }
-        start_at: { lte: $currentDate, gte: $minDate2024 }
-        location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
+        # cms_status: { eq: "disable" }
+        start_at: { gte: $minDate2024 }
+        location: {
+          latitude: { lte: $maxLatPast, gte: $minLatPast }
+          longitude: { lte: $maxLonPast, gte: $minLonPast }
+        }
       }
-      sort: { fields: start_at, order: DESC } # limit: 5
+      sort: { fields: start_at, order: DESC }
     ) {
       edges {
         node {

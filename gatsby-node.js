@@ -472,6 +472,7 @@ exports.createPages = ({ graphql, actions }) => {
 
         // Group detail
         const RADIUS_KM = 10;
+        const RADIUS_KM_PAST_EVENTS = 100;
         const KM_PER_DEGREE_LAT = 111;
         const KM_PER_DEGREE_LNG = 111;
 
@@ -482,6 +483,9 @@ exports.createPages = ({ graphql, actions }) => {
 
           const latRange = RADIUS_KM / KM_PER_DEGREE_LAT;
           const lngRange = RADIUS_KM / (KM_PER_DEGREE_LNG * Math.cos((latitude * Math.PI) / 180));
+
+          const latRangePast = RADIUS_KM_PAST_EVENTS / KM_PER_DEGREE_LAT;
+          const lngRangePast = RADIUS_KM_PAST_EVENTS / (KM_PER_DEGREE_LNG * Math.cos((latitude * Math.PI) / 180));
 
           createPage({
             path: `/groep/${group.node.slug}`,
@@ -496,11 +500,17 @@ exports.createPages = ({ graphql, actions }) => {
               latitude: latitude,
               maxLat: latitude ? latitude + latRange : null,
               minLat: latitude ? latitude - latRange : null,
-
               // longitude
               longitude: longitude,
               maxLon: longitude ? longitude + lngRange : null,
               minLon: longitude ? longitude - lngRange : null,
+
+              // latitude past events
+              maxLatPast: latitude ? latitude + latRangePast : null,
+              minLatPast: latitude ? latitude - latRangePast : null,
+              // longitude past events
+              maxLonPast: longitude ? longitude + lngRangePast : null,
+              minLonPast: longitude ? longitude - lngRangePast : null,
             },
           });
         }
