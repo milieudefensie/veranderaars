@@ -122,7 +122,7 @@ export const SignalToolQuery = graphql`
         ...GatsbyDatoCmsFaviconMetaTags
       }
     }
-    signalGroups: allDatoCmsSignalGroup(sort: { internalName: ASC }) {
+    signalGroups: allDatoCmsSignalGroupTravelTogether(sort: { internalName: ASC }) {
       nodes {
         id
         internalName
