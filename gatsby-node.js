@@ -105,7 +105,6 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 
   const allEvents = await getAllEvents(accessToken);
   const allPublicEvents = await getAllPublicEvents();
-  const now = new Date();
 
   const fetchAllAttendees = async (eventSlug) => {
     let attendees = [];
@@ -127,13 +126,23 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   };
 
   const createEventNode = async (event) => {
-    const eventEnd = event.end_at ? new Date(event.end_at) : null;
-    const isActive = eventEnd && eventEnd >= now;
+    const now = new Date();
+    const isCancelled = Boolean(event.cancelled_at);
+
+    const start = event.start_at ? new Date(event.start_at) : null;
+    const end = event.end_at ? new Date(event.end_at) : null;
+    const hasEnded = end ? end < now : start ? start < now : true;
+    const isActive = !isCancelled && !hasEnded;
+
     const cmsStatus = isActive ? 'active' : 'disable';
 
     const shouldCreate = shouldCreateEvent(event);
     if (!shouldCreate) {
-      return console.log(`Event ${event.slug} not created.`);
+      return console.log(`Event ${event.slug} ignored by shouldCreateEvent.`);
+    }
+
+    if (isCancelled) {
+      return console.log(`Event ${event.slug} skipped (cancelled).`);
     }
 
     console.log(`[CSL Source] Creating: ${event.title} (${cmsStatus})`);
@@ -504,12 +513,12 @@ exports.createPages = ({ graphql, actions }) => {
               maxLon: longitude ? longitude + lngRange : null,
               minLon: longitude ? longitude - lngRange : null,
 
-              // latitude past events
-              maxLatPast: latitude ? latitude + latRangePast : null,
-              minLatPast: latitude ? latitude - latRangePast : null,
-              // longitude past events
-              maxLonPast: longitude ? longitude + lngRangePast : null,
-              minLonPast: longitude ? longitude - lngRangePast : null,
+              // // latitude past events
+              // maxLatPast: latitude ? latitude + latRangePast : null,
+              // minLatPast: latitude ? latitude - latRangePast : null,
+              // // longitude past events
+              // maxLonPast: longitude ? longitude + lngRangePast : null,
+              // minLonPast: longitude ? longitude - lngRangePast : null,
             },
           });
         }

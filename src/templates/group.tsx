@@ -270,10 +270,6 @@ export const PageQuery = graphql`
     $minLat: Float
     $maxLon: Float
     $minLon: Float
-    $maxLatPast: Float
-    $minLatPast: Float
-    $maxLonPast: Float
-    $minLonPast: Float
   ) {
     favicon: datoCmsSite {
       faviconMetaTags {
@@ -294,10 +290,7 @@ export const PageQuery = graphql`
         launched_at: { ne: null }
         # cms_status: { eq: "disable" }
         start_at: { gte: $minDate2024 }
-        location: {
-          latitude: { lte: $maxLatPast, gte: $minLatPast }
-          longitude: { lte: $maxLonPast, gte: $minLonPast }
-        }
+        location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
       }
       sort: { fields: start_at, order: DESC }
     ) {
