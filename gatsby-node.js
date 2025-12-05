@@ -105,7 +105,6 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
 
   const allEvents = await getAllEvents(accessToken);
   const allPublicEvents = await getAllPublicEvents();
-  const now = new Date();
 
   const fetchAllAttendees = async (eventSlug) => {
     let attendees = [];
@@ -127,12 +126,24 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   };
 
   const createEventNode = async (event) => {
-    const eventEnd = event.end_at ? new Date(event.end_at) : null;
-    const isActive = eventEnd && eventEnd >= now;
+    const now = new Date();
+    const isCancelled = Boolean(event.cancelled_at);
+
+    const start = event.start_at ? new Date(event.start_at) : null;
+    const end = event.end_at ? new Date(event.end_at) : null;
+    const hasEnded = end ? end < now : start ? start < now : true;
+    const isActive = !isCancelled && !hasEnded;
+
     const cmsStatus = isActive ? 'active' : 'disable';
 
     const shouldCreate = shouldCreateEvent(event);
-    if (!shouldCreate) return console.log(`Event ${event.slug} not created.`);
+    if (!shouldCreate) {
+      return console.log(`Event ${event.slug} ignored by shouldCreateEvent.`);
+    }
+
+    if (isCancelled) {
+      return console.log(`Event ${event.slug} skipped (cancelled).`);
+    }
 
     console.log(`[CSL Source] Creating: ${event.title} (${cmsStatus})`);
 
@@ -469,6 +480,7 @@ exports.createPages = ({ graphql, actions }) => {
 
         // Group detail
         const RADIUS_KM = 10;
+        const RADIUS_KM_PAST_EVENTS = 100;
         const KM_PER_DEGREE_LAT = 111;
         const KM_PER_DEGREE_LNG = 111;
 
@@ -479,6 +491,9 @@ exports.createPages = ({ graphql, actions }) => {
 
           const latRange = RADIUS_KM / KM_PER_DEGREE_LAT;
           const lngRange = RADIUS_KM / (KM_PER_DEGREE_LNG * Math.cos((latitude * Math.PI) / 180));
+
+          const latRangePast = RADIUS_KM_PAST_EVENTS / KM_PER_DEGREE_LAT;
+          const lngRangePast = RADIUS_KM_PAST_EVENTS / (KM_PER_DEGREE_LNG * Math.cos((latitude * Math.PI) / 180));
 
           createPage({
             path: `/groep/${group.node.slug}`,
@@ -493,11 +508,17 @@ exports.createPages = ({ graphql, actions }) => {
               latitude: latitude,
               maxLat: latitude ? latitude + latRange : null,
               minLat: latitude ? latitude - latRange : null,
-
               // longitude
               longitude: longitude,
               maxLon: longitude ? longitude + lngRange : null,
               minLon: longitude ? longitude - lngRange : null,
+
+              // // latitude past events
+              // maxLatPast: latitude ? latitude + latRangePast : null,
+              // minLatPast: latitude ? latitude - latRangePast : null,
+              // // longitude past events
+              // maxLonPast: longitude ? longitude + lngRangePast : null,
+              // minLonPast: longitude ? longitude - lngRangePast : null,
             },
           });
         }

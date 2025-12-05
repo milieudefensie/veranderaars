@@ -17,9 +17,10 @@ const CountDown: React.FC<CountDownProps> = ({ block }) => {
   const { t } = useTranslate();
   const { headline, date, successMessage, colorVariant } = block;
 
-  const expiryTimestamp = Date.parse(date);
+  // const expiryTimestamp = Date.parse(date);
+  const expiryTimestamp = new Date(date);
+
   const { seconds, minutes, hours, days, isRunning } = useTimer({
-    // @ts-expect-error
     expiryTimestamp,
     onExpire: () => console.warn('onExpire called'),
   });

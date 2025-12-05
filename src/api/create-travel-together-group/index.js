@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     const client = buildClient({ apiToken: process.env.DATO_API_INSERT_TOKEN });
 
     const record = await client.items.create({
-      item_type: { type: 'item_type', id: 'HSzzrRTYTRizxeD65hiQzA' },
+      item_type: { type: 'item_type', id: 'RJaNJAHpTris-8CkYRkbmQ' },
       internal_name: name,
       url: url,
       email: email,
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     });
 
     // Send email notification
-    await axios.post('https://hook.eu2.make.com/t10vrpfqy31h6fut8v8s717oythtqjdp', {
+    await axios.post('https://hook.eu2.make.com/fiya7w62jdc7h4p22kew76x5vqsc8q5o', {
       email,
       url,
     });
