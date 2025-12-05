@@ -65,6 +65,7 @@ interface TravelTogetherProps {
   othersSignalGroups: SignalGroup[];
   textLabels: TextLabels;
   icon: 'train' | 'cart';
+  travelTogetherApi?: boolean;
 }
 
 interface State {
@@ -325,7 +326,13 @@ const SignalIcon: React.FC = () => (
 );
 
 // Main component
-const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroups = [], textLabels, icon }) => {
+const TravelTogether: React.FC<TravelTogetherProps> = ({
+  slug,
+  othersSignalGroups = [],
+  textLabels,
+  icon,
+  travelTogetherApi,
+}) => {
   const [state, setState] = useState<State>({
     city: 'Utrecht',
     currentCity: 'Utrecht',
@@ -436,8 +443,10 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({ slug, othersSignalGroup
     setErrors({ validation: {}, submit: null });
     setLoading((prev) => ({ ...prev, submit: true }));
 
+    const apiUrl = travelTogetherApi ? '/api/create-travel-together-group' : '/api/create-signal-group';
+
     try {
-      const response = await fetch('/api/create-signal-group', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

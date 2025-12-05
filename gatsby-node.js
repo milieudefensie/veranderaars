@@ -130,10 +130,9 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     const eventEnd = event.end_at ? new Date(event.end_at) : null;
     const isActive = eventEnd && eventEnd >= now;
     const cmsStatus = isActive ? 'active' : 'disable';
-    const labels = event.labels || [];
 
     const shouldCreate = shouldCreateEvent(event);
-    if (!shouldCreate || labels.includes('exclude_in_agenda')) {
+    if (!shouldCreate) {
       return console.log(`Event ${event.slug} not created.`);
     }
 

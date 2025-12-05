@@ -70,6 +70,7 @@ http://veranderaars.milieudefensie.nl/albert-heijn-signal
 http://veranderaars.milieudefensie.nl/albert-heijn
 `,
             }}
+            travelTogetherApi
           />
 
           {signalGroups && signalGroups.length > 0 && (
