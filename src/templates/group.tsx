@@ -115,7 +115,7 @@ const Group: React.FC<GroupProps> = ({
       .filter((event) => !isEventFuture(event))
       .sort((a: any, b: any) => new Date(b.rawStartDate).getTime() - new Date(a.rawStartDate).getTime());
 
-    console.log({ upcomingEvents, pastEvents });
+    // console.log({ upcomingEvents, pastEvents });
   }
 
   const hubspotFormSetGroupId = () => {
@@ -296,15 +296,7 @@ const Group: React.FC<GroupProps> = ({
 export default Group;
 
 export const PageQuery = graphql`
-  query GroupById(
-    $id: String
-    $currentDate: Date!
-    $minDate2024: Date!
-    $maxLat: Float
-    $minLat: Float
-    $maxLon: Float
-    $minLon: Float
-  ) {
+  query GroupById($id: String, $minDate2024: Date!, $maxLat: Float, $minLat: Float, $maxLon: Float, $minLon: Float) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -331,7 +323,7 @@ export const PageQuery = graphql`
     allEvents: allDatoCmsEvent(
       filter: {
         closeEvent: { ne: true }
-        date: { gte: $currentDate }
+        date: { gte: $minDate2024 }
         coordinates: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
       }
       limit: 10

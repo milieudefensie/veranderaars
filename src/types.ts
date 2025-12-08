@@ -573,6 +573,7 @@ type Group = {
 type LocationType = {
   venue?: string;
   locality?: string;
+  query?: string;
 };
 
 export type SignalGroupType = {

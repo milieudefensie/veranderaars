@@ -86,13 +86,7 @@ const EventCardV2: React.FC<Props> = ({
           <h3>{title}</h3>
           <div className="type">
             <span className="type-child">
-              {isCslEvent
-                ? location?.locality || 'Online'
-                : beknopteAddress
-                  ? beknopteAddress
-                  : address
-                    ? address
-                    : type}
+              {isCslEvent ? location?.locality || location?.query || 'Online' : beknopteAddress || address || type}
             </span>
 
             {isLocalGroup && <span className="local-group">Door lokale groep</span>}
