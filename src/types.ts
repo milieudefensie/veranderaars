@@ -152,6 +152,8 @@ export type GroupTemplate = {
     organizer?: string;
     introduction?: string;
     alternativeHero?: boolean;
+    signalChat?: string;
+    formSteps?: any;
     registrationForm?: {
       formId: string;
       region: string;
