@@ -35,6 +35,7 @@ interface TextLabels {
       url: string;
     };
   };
+  notFoundIntroText: string;
   notFoundStep1: {
     title: string;
     text: string;
@@ -657,6 +658,13 @@ const TravelTogether: React.FC<TravelTogetherProps> = ({
           {!state.signalGroupExists ? (
             // City not found flow
             <div className="travel-steps no-exist-group">
+              {textLabels.notFoundIntroText && (
+                <div
+                  className="not-found-intro-text"
+                  dangerouslySetInnerHTML={{ __html: textLabels.notFoundIntroText }}
+                />
+              )}
+
               {/* Step 1 */}
               <div className={`step ${state.activeStep === 1 ? 'active' : ''}`}>
                 <StepHeader

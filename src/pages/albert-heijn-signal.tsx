@@ -43,6 +43,7 @@ http://veranderaars.milieudefensie.nl/albert-heijn-signal
 http://veranderaars.milieudefensie.nl/albert-heijn
                 `,
               },
+              notFoundIntroText: `Vind je nog geen Signalgroep bij jou in de buurt? Mail naar <a href="mailto:doemee@milieudefensie.nl">doemee@milieudefensie.nl</a>, wij kunnen je in contact brengen met anderen in jouw buurt. Je kunt ook zelf een nieuwe Signalgroep aanmaken:`,
               notFoundStep1: {
                 button: 'Signalgroep',
                 text: 'Signalgroep',

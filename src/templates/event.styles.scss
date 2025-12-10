@@ -674,6 +674,20 @@
 }
 
 .travel-steps {
+  .not-found-intro-text {
+    margin-bottom: 1.5rem;
+    color: red;
+
+    a {
+      font-size: inherit;
+      color: inherit;
+      // font-weight: bold;
+      text-decoration: none;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+
   .email-link {
     font-weight: inherit !important;
     color: inherit !important;
@@ -1155,6 +1169,11 @@
   }
 
   .travel-steps {
+
+    .not-found-intro-text {
+      font-size: 18px;
+    }
+
     .step {
       margin-bottom: 25px;
 
