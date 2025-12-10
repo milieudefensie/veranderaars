@@ -85,6 +85,7 @@
     font-weight: 500;
     margin-bottom: 24px;
     font-family: var(--nb-primary-font);
+    overflow-wrap: break-word;
   }
 
   .location-container {
@@ -673,6 +674,20 @@
 }
 
 .travel-steps {
+  .not-found-intro-text {
+    margin-bottom: 1.5rem;
+    color: red;
+
+    a {
+      font-size: inherit;
+      color: inherit;
+      // font-weight: bold;
+      text-decoration: none;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+
   .email-link {
     font-weight: inherit !important;
     color: inherit !important;
@@ -853,6 +868,7 @@
         line-height: 24px;
         font-style: italic;
         color: rgb(11, 9, 8);
+        white-space: pre-line;
       }
 
       .share-buttons {
@@ -1153,6 +1169,11 @@
   }
 
   .travel-steps {
+
+    .not-found-intro-text {
+      font-size: 18px;
+    }
+
     .step {
       margin-bottom: 25px;
 

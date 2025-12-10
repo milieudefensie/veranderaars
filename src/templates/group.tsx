@@ -8,7 +8,7 @@ import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/link';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import TagList from '../components/Global/Tag/tag-list'; // @ts-expect-error
-import { isArray, mapCmsEvents, mapCslEvents, mapCslEventsWithDates } from '../utils'; // @ts-expect-error
+import { isArray, mapCmsEvents, mapCslEvents, mapCslEventsWithDates, isEventFuture, formatCslEvents } from '../utils'; // @ts-expect-error
 import useCSLEvents from '../hooks/useCSLEvents';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
@@ -31,15 +31,38 @@ type GroupProps = PageProps<GroupTemplate> & {
   };
 };
 
+const RADIUS_KM = 10;
+
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // km
+  const toRad = (v: number) => (v * Math.PI) / 180;
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c;
+}
+
+const getEventCoords = (event: any) => {
+  return {
+    lat: event?.coordinates?.latitude ?? event?.location?.latitude ?? null,
+    lon: event?.coordinates?.longitude ?? event?.location?.longitude ?? null,
+  };
+};
+
+const isNearGroup = (event: any, groupLat: number, groupLon: number) => {
+  const { lat, lon } = getEventCoords(event);
+  if (!lat || !lon) return false;
+
+  return haversineDistance(groupLat, groupLon, lat, lon) <= RADIUS_KM;
+};
+
 const Group: React.FC<GroupProps> = ({
-  data: {
-    page,
-    allEvents = { edges: [] },
-    allCSLEvents = { edges: [] },
-    allPastCSLEvents = { edges: [] },
-    listGroup,
-    favicon,
-  },
+  data: { page, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, listGroup, favicon },
 }) => {
   const {
     seo,
@@ -68,15 +91,32 @@ const Group: React.FC<GroupProps> = ({
 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
-  const pastCslEvents = mapCslEventsWithDates(allPastCSLEvents);
   const { mergedEvents } = useCSLEvents(cmsEvents, cslEvents);
 
-  const groupHasCoordinates = Boolean(coordinates?.latitude && coordinates?.longitude);
-  const nearbyEvents = groupHasCoordinates ? mergedEvents : [];
+  const hasCoords = Boolean(coordinates?.latitude && coordinates?.longitude);
+  const groupLat = coordinates?.latitude;
+  const groupLon = coordinates?.longitude;
 
-  const related = Array.isArray(relatedEvents) && relatedEvents.length > 0;
-  const hasRelatedEvents = related || nearbyEvents.length > 0;
-  const currentRelatedEvents = hasRelatedEvents ? [...(related ? relatedEvents : nearbyEvents)] : [];
+  let upcomingEvents: any[] = [];
+  let pastEvents: any[] = [];
+
+  if (hasCoords && groupLat && groupLon) {
+    const nearbyEvents = mergedEvents.filter((event: any) => isNearGroup(event, groupLat, groupLon));
+
+    const relatedOrNearby = Array.isArray(relatedEvents) && relatedEvents.length > 0 ? relatedEvents : nearbyEvents;
+
+    upcomingEvents = [...relatedOrNearby].sort(
+      (a, b) => new Date(a.startDateToCompare).getTime() - new Date(b.startDateToCompare).getTime()
+    );
+
+    pastEvents = [...cmsEvents, ...cslEvents]
+      .map(formatCslEvents)
+      .filter((event) => isNearGroup(event, groupLat, groupLon))
+      .filter((event) => !isEventFuture(event))
+      .sort((a: any, b: any) => new Date(b.rawStartDate).getTime() - new Date(a.rawStartDate).getTime());
+
+    // console.log({ upcomingEvents, pastEvents });
+  }
 
   const hubspotFormSetGroupId = () => {
     if (!localGroupId || typeof document === 'undefined') {
@@ -96,6 +136,7 @@ const Group: React.FC<GroupProps> = ({
 
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
+      {/* @ts-ignore */}
       <SeoDatoCMS seo={seo} favicon={favicon} />
 
       <WrapperLayout variant={`white ${withFormsSteps ? 'event-detail' : ''}`}>
@@ -148,6 +189,7 @@ const Group: React.FC<GroupProps> = ({
               {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
               {registrationForm && (
                 <div className="form-wrapper">
+                  {/* @ts-ignore */}
                   <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
                 </div>
               )}
@@ -190,7 +232,7 @@ const Group: React.FC<GroupProps> = ({
                 <div>
                   <a className="wp-button stretched" href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
                     <span>Signal chat</span>
-                    <ReactSVG src={wpIcon} alt="Signal icon" />
+                    <ReactSVG src={wpIcon} />
                   </a>
                 </div>
               )}
@@ -204,8 +246,8 @@ const Group: React.FC<GroupProps> = ({
           )}
         </FloatLayout>
 
-        {((Array.isArray(currentRelatedEvents) && currentRelatedEvents.length > 0) ||
-          (Array.isArray(pastCslEvents) && pastCslEvents.length > 0)) && (
+        {((Array.isArray(upcomingEvents) && upcomingEvents.length > 0) ||
+          (Array.isArray(pastEvents) && pastEvents.length > 0)) && (
           <div className="related-section">
             <div className="container">
               <Tabs
@@ -214,17 +256,13 @@ const Group: React.FC<GroupProps> = ({
                   {
                     label: 'Aankomende <span>evenementen</span>',
                     content:
-                      currentRelatedEvents.length > 0 ? (
+                      upcomingEvents.length > 0 ? (
                         <div
                           className={`grid-events inner ${
-                            currentRelatedEvents.length === 1
-                              ? 'one'
-                              : currentRelatedEvents.length % 2 === 0
-                                ? 'two'
-                                : 'three'
+                            upcomingEvents.length === 1 ? 'one' : upcomingEvents.length % 2 === 0 ? 'two' : 'three'
                           }`}
                         >
-                          {currentRelatedEvents.map((e, i, arr) => (
+                          {upcomingEvents.map((e, i, arr) => (
                             <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
                           ))}
                         </div>
@@ -233,13 +271,13 @@ const Group: React.FC<GroupProps> = ({
                   {
                     label: 'Afgelopen <span>evenementen</span>',
                     content:
-                      pastCslEvents.length > 0 ? (
+                      pastEvents.length > 0 ? (
                         <div
                           className={`grid-events inner ${
-                            pastCslEvents.length === 1 ? 'one' : pastCslEvents.length === 2 ? 'two' : 'three'
+                            pastEvents.length === 1 ? 'one' : pastEvents.length === 2 ? 'two' : 'three'
                           }`}
                         >
-                          {pastCslEvents.map((e, i, arr) => (
+                          {pastEvents.map((e: any, i: number, arr: any[]) => (
                             <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
                           ))}
                         </div>
@@ -258,15 +296,7 @@ const Group: React.FC<GroupProps> = ({
 export default Group;
 
 export const PageQuery = graphql`
-  query GroupById(
-    $id: String
-    $currentDate: Date!
-    $minDate2024: Date!
-    $maxLat: Float
-    $minLat: Float
-    $maxLon: Float
-    $minLon: Float
-  ) {
+  query GroupById($id: String, $minDate2024: Date!, $maxLat: Float, $minLat: Float, $maxLon: Float, $minLon: Float) {
     favicon: datoCmsSite {
       faviconMetaTags {
         ...GatsbyDatoCmsFaviconMetaTags
@@ -280,32 +310,9 @@ export const PageQuery = graphql`
       id
       slug
     }
-    allPastCSLEvents: allExternalEvent(
-      filter: {
-        cancelled_at: { eq: null }
-        launched_at: { ne: null }
-        cms_status: { eq: "disable" }
-        start_at: { lte: $currentDate, gte: $minDate2024 }
-        location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
-      }
-      sort: { fields: start_at, order: DESC } # limit: 5
-    ) {
-      edges {
-        node {
-          ...CSLEventCard
-        }
-      }
-    }
     allCSLEvents: allExternalEvent(
-      filter: {
-        cancelled_at: { eq: null }
-        launched_at: { ne: null }
-        show_in_agenda_list: { eq: true }
-        cms_status: { eq: "active" }
-        start_at: { gte: $currentDate }
-        location: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
-      }
-      limit: 5
+      filter: { cancelled_at: { eq: null }, launched_at: { ne: null }, start_at: { gte: $minDate2024 } }
+      sort: { fields: start_at, order: DESC }
     ) {
       edges {
         node {
@@ -316,7 +323,7 @@ export const PageQuery = graphql`
     allEvents: allDatoCmsEvent(
       filter: {
         closeEvent: { ne: true }
-        date: { gte: $currentDate }
+        date: { gte: $minDate2024 }
         coordinates: { latitude: { lte: $maxLat, gte: $minLat }, longitude: { lte: $maxLon, gte: $minLon } }
       }
       limit: 10

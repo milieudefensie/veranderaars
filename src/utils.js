@@ -1,4 +1,3 @@
-import { on } from 'events';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -397,7 +396,6 @@ export const mapCslEvents = (events) => {
 
 export const mapCslEventsWithDates = (events) => {
   const arr = events.edges.map((e) => formatCslEvents(e.node));
-  // console.log({ events, arr });
 
   return Array.isArray(arr)
     ? arr.map((raw) => ({
