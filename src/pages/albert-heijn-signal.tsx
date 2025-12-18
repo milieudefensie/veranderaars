@@ -14,7 +14,7 @@ const SignalToolPage: React.FC<PageProps> = ({ data }) => {
     <Layout>
       {/* @ts-ignore */}
       <HelmetDatoCms seo={data.favicon.faviconMetaTags}>
-        <title>Albert Heijn ignal</title>
+        <title>Albert Heijn Signal</title>
       </HelmetDatoCms>
 
       <WrapperLayout variant={`white event-detail`}>
