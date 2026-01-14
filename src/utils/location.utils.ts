@@ -1,5 +1,38 @@
 export async function getCurrentUserCity() {
   try {
+    const postalCodeLocalStorage = localStorage.getItem('user_postal_code');
+    if (postalCodeLocalStorage) {
+      // console.log('Fetching zip code from storage. Value: ', postalCodeLocalStorage);
+
+      const postalCodeResponse = await fetch(
+        `https://nominatim.openstreetmap.org/search?postalcode=${postalCodeLocalStorage}&countrycodes=NL&format=json&limit=1&accept-language=nl`,
+        {
+          headers: { 'Accept-Language': 'nl' },
+        }
+      );
+
+      const postalCodeData = await postalCodeResponse.json();
+      const postalData = postalCodeData[0];
+
+      const latitude = postalData.lat;
+      const longitude = postalData.lon;
+
+      const reverseResponse = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      );
+
+      const reverseData = await reverseResponse.json();
+      const address = reverseData.address;
+
+      // console.log({ address });
+
+      return {
+        city: address.city || address.town || address.village || address.municipality || '',
+        latitude,
+        longitude,
+      };
+    }
+
     if ('geolocation' in navigator) {
       const position = await new Promise((resolve, reject) =>
         navigator.geolocation.getCurrentPosition(resolve, reject, {
@@ -7,6 +40,7 @@ export async function getCurrentUserCity() {
         })
       );
 
+      // @ts-ignore
       const { latitude, longitude } = position.coords;
 
       const geoRes = await fetch(
@@ -28,7 +62,7 @@ export async function getCurrentUserCity() {
       }
     }
 
-    // 3️⃣ Fallback: usar IP si el usuario no dio permiso o no hay geolocalización
+    // Fallback
     const ipRes = await fetch('https://ipwho.is/');
     const ipData = await ipRes.json();
 

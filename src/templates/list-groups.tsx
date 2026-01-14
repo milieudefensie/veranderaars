@@ -5,7 +5,6 @@ import SeoDatoCMS from '../components/Layout/seo-datocms';
 import Map from '../components/Global/Map/map';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
 import { GenericCollectionCard } from '../components/Global/event-collection-card/event-collection-card';
-import BlockTestimonial from '../components/Blocks/BlockTestimonial/block-testimonial';
 import GroupCard from '../components/Blocks/HighlightGroup/group-card';
 import { distanceKm, getCurrentUserCity } from '../utils/location.utils'; // @ts-ignore
 import { getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
