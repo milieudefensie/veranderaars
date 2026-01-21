@@ -57,8 +57,8 @@ export async function getCurrentUserCity() {
 
         if (city) {
           localStorage.setItem('userCity', city);
-          localStorage.setItem('userLatitude', String(latitude));
-          localStorage.setItem('userLongitude', String(longitude));
+          // localStorage.setItem('userLatitude', String(latitude));
+          // localStorage.setItem('userLongitude', String(longitude));
 
           return { city, latitude, longitude };
         }
@@ -71,8 +71,8 @@ export async function getCurrentUserCity() {
 
     if (ipData && ipData.city) {
       localStorage.setItem('userCity', ipData.city);
-      localStorage.setItem('userLatitude', ipData.latitude);
-      localStorage.setItem('userLongitude', ipData.longitude);
+      // localStorage.setItem('userLatitude', ipData.latitude);
+      // localStorage.setItem('userLongitude', ipData.longitude);
 
       return {
         city: ipData.city,
@@ -103,8 +103,8 @@ export async function getCurrentUserCity_OLD() {
     // Set in storage
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       localStorage.setItem('userCity', data.city);
-      localStorage.setItem('userLatitude', data.latitude);
-      localStorage.setItem('userLongitude', data.longitude);
+      // localStorage.setItem('userLatitude', data.latitude);
+      // localStorage.setItem('userLongitude', data.longitude);
     }
 
     return {
