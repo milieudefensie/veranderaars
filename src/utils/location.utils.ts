@@ -34,31 +34,34 @@ export async function getCurrentUserCity() {
     }
 
     if ('geolocation' in navigator) {
-      const position = await new Promise((resolve, reject) =>
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: true,
-        })
-      );
+      const position = await new Promise<GeolocationPosition | null>((resolve) =>
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve(pos),
+          () => resolve(null),
+          {
+            enableHighAccuracy: true,
+          }
+        )
+      );      
 
-      // @ts-ignore
-      const { latitude, longitude } = position.coords;
+      if (position) {
+        const { latitude, longitude } = position.coords;
 
-      const geoRes = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-      );
-      const geoData = await geoRes.json();
+        const geoRes = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+        );
+        const geoData = await geoRes.json();
 
-      const city =
-        geoData.address.city || geoData.address.town || geoData.address.village || geoData.address.county || null;
+        const city =
+          geoData.address.city || geoData.address.town || geoData.address.village || geoData.address.county || null;
 
-      console.log({ position, city });
+        if (city) {
+          localStorage.setItem('userCity', city);
+          localStorage.setItem('userLatitude', String(latitude));
+          localStorage.setItem('userLongitude', String(longitude));
 
-      if (city) {
-        localStorage.setItem('userCity', city);
-        localStorage.setItem('userLatitude', latitude);
-        localStorage.setItem('userLongitude', longitude);
-
-        return { city, latitude, longitude };
+          return { city, latitude, longitude };
+        }
       }
     }
 
