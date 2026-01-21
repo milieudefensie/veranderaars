@@ -253,6 +253,14 @@ const Form: React.FC<FormProps> = ({
         setErrorMsg(response.message);
         return;
       } else {
+
+        // Save postal code in local storage
+        try {
+          localStorage.setItem('user_postal_code', formData.postcode);
+        } catch (err) {
+          console.warn('Could not save postal code', err);
+        }
+
         if (!conferenceUrl) {
           if (isWaitingList) {
             navigate('/aanmelding-wachtlijst/');
