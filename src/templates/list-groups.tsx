@@ -3,9 +3,9 @@ import { graphql } from 'gatsby';
 import Layout from '../components/Layout/layout';
 import SeoDatoCMS from '../components/Layout/seo-datocms';
 import Map from '../components/Global/Map/map';
+import Spinner from '../components/Global/Spinner/spinner';
 import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/structured-text-default';
 import { GenericCollectionCard } from '../components/Global/event-collection-card/event-collection-card';
-import BlockTestimonial from '../components/Blocks/BlockTestimonial/block-testimonial';
 import GroupCard from '../components/Blocks/HighlightGroup/group-card';
 import { distanceKm, getCurrentUserCity } from '../utils/location.utils'; // @ts-ignore
 import { getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
@@ -25,6 +25,7 @@ const ListGroups: React.FC<any> = ({
 
   const [searchValue, setSearchValue] = useState('');
   const [userCoords, setUserCoords] = useState<{ lat: number; lng: number; city: string } | null>(null);
+  const [userCityLoading, setUserCityLoading] = useState(false);
   const [nearestGroup, setNearestGroup] = useState<any | null>(null);
   const [searchResultGroup, setSearchResultGroup] = useState<any | null>(null);
   const [notFoundCity, setNotFoundCity] = useState<string | null>(null);
@@ -38,15 +39,30 @@ const ListGroups: React.FC<any> = ({
   const suggestionsRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
-    getCurrentUserCity().then((cityData) => {
-      if (cityData) {
-        setUserCoords({
-          lat: cityData.latitude,
-          lng: cityData.longitude,
-          city: cityData.city,
-        });
-      }
-    });
+    let cancelled = false;
+    setUserCityLoading(true);
+
+    getCurrentUserCity()
+      .then((cityData) => {
+        if (cancelled) return;
+        if (cityData) {
+          setUserCoords({
+            lat: cityData.latitude,
+            lng: cityData.longitude,
+            city: cityData.city,
+          });
+        }
+      })
+      .catch(() => {
+        console.log('Geolocation/IP lookup failed');
+      })
+      .finally(() => {
+        if (!cancelled) setUserCityLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -82,7 +98,7 @@ const ListGroups: React.FC<any> = ({
     if (userCoords && localGroups.length) {
       let best = null;
       let bestDist = Infinity;
-      for (const g of localGroups) {
+      for (const g of localGroups as any[]) {
         if (!g.coordinates || !g.coordinates.latitude || !g.coordinates.longitude) continue;
         const d = distanceKm(userCoords.lat, userCoords.lng, g.coordinates.latitude, g.coordinates.longitude);
         if (d < bestDist) {
@@ -112,7 +128,7 @@ const ListGroups: React.FC<any> = ({
       return;
     }
 
-    const match = localGroups.find((g) => (g.title || '').toLowerCase() === searchQuery.toLowerCase());
+    const match = localGroups.find((g: any) => (g.title || '').toLowerCase() === searchQuery.toLowerCase());
     if (match) {
       setSearchResultGroup(match);
       setNotFoundCity(null);
@@ -140,24 +156,24 @@ const ListGroups: React.FC<any> = ({
     const gLng = group.coordinates.longitude;
 
     const nearbyEvents = allEventsList
-      .filter((ev) => ev.coordinates && ev.coordinates.latitude && ev.coordinates.longitude)
-      .map((ev) => {
+      .filter((ev: any) => ev.coordinates && ev.coordinates.latitude && ev.coordinates.longitude)
+      .map((ev: any) => {
         const evLat = ev.coordinates.latitude;
         const evLng = ev.coordinates.longitude;
         const d = distanceKm(gLat, gLng, evLat, evLng);
 
         return { ev, distance: d };
       })
-      .filter(({ distance }) => distance <= RADIUS_KM)
-      .sort((a, b) => a.distance - b.distance)
+      .filter(({ distance }: any) => distance <= RADIUS_KM)
+      .sort((a: any, b: any) => a.distance - b.distance)
       .slice(0, 3)
-      .sort((a, b) => {
+      .sort((a: any, b: any) => {
         const dateA = a.ev.startDateToCompare?.isValid ? a.ev.startDateToCompare.toMillis() : 0;
         const dateB = b.ev.startDateToCompare?.isValid ? b.ev.startDateToCompare.toMillis() : 0;
 
         return dateA - dateB;
       })
-      .map(({ ev }) => ev);
+      .map(({ ev }: any) => ev);
 
     return nearbyEvents;
   };
@@ -190,7 +206,7 @@ const ListGroups: React.FC<any> = ({
           >
             <div className="search-engine-header">
               <span className="help">Woonplaats</span>
-              <span className="ip">Locatie op basis van je IP</span>
+              <span className="ip">Locatie op basis van je IP{userCityLoading ? '…' : ''}</span>
             </div>
 
             <div className="search-engine-row" style={{ position: 'relative' }}>
@@ -198,6 +214,7 @@ const ListGroups: React.FC<any> = ({
                 type="text"
                 name="city"
                 autoComplete="off"
+                disabled={userCityLoading}
                 placeholder={userCoords ? userCoords.city : 'Woonplaats'}
                 value={searchValue}
                 onChange={(e) => {
@@ -207,8 +224,8 @@ const ListGroups: React.FC<any> = ({
 
                   if (value.length > 1 && localGroups.length > 0) {
                     const filtered = localGroups
-                      .map((g) => g.title)
-                      .filter((title) => title.toLowerCase().includes(value.toLowerCase()));
+                      .map((g: any) => g.title)
+                      .filter((title: any) => title.toLowerCase().includes(value.toLowerCase()));
                     setCitySuggestions(filtered);
                     setShowSuggestions(true);
                   } else {
@@ -248,6 +265,12 @@ const ListGroups: React.FC<any> = ({
                 }}
                 className="search-engine-input"
               />
+
+              {userCityLoading && (
+                <div className="user-city-spinner" aria-label="Locatie bepalen">
+                  <Spinner />
+                </div>
+              )}
 
               {showSuggestions && citySuggestions.length > 0 && (
                 <ul className="city-suggestions" ref={suggestionsRef}>
@@ -322,7 +345,7 @@ const ListGroups: React.FC<any> = ({
           <div className="list-groups-block" ref={allGroupsRef}>
             <h3>Alle lokale groepen</h3>
             <div className="groups-items">
-              {localGroups.map((group) => (
+              {localGroups.map((group: any) => (
                 <GroupCard key={group.id} group={group} />
               ))}
             </div>

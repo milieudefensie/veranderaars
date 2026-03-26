@@ -51,11 +51,29 @@
       }
     }
 
+    .search-engine-row {
+      .user-city-spinner {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+
+        .loader {
+          width: 18px;
+          height: 18px;
+          border-width: 2px;
+          border-color: rgba(0, 0, 0, 0.9);
+          border-bottom-color: transparent;
+        }
+      }
+    }
+
     .search-engine-input {
       width: 100%;
       height: 40px;
       padding-left: 12px;
-      padding-right: 12px;
+      padding-right: 40px;
       font-size: 16px;
       font-weight: 400;
       line-height: 24px;

@@ -74,6 +74,22 @@ const HubspotForm: React.FC<HubspotFormProps> = ({
     setupPostalCodeValidation(formWrapper, submitBtn);
     addRecaptchaText(formWrapper);
 
+    // Submit listener
+    submitBtn?.addEventListener('click', (e) => {
+      const zipInput = formWrapper.querySelector<HTMLInputElement>('input[name="zip"]');
+      if (zipInput?.value.trim()) {
+        const zip = zipInput?.value.trim();
+
+        if (!zip) return;
+
+        try {
+          localStorage.setItem('user_postal_code', zip);
+        } catch (err) {
+          console.warn('Could not save postal code', err);
+        }
+      }
+    });
+
     // Placeholders
     if (showPlaceholder) {
       const setPlaceholder = (input: HTMLInputElement | null, text: string) => {

@@ -114,8 +114,6 @@ const Group: React.FC<GroupProps> = ({
       .filter((event) => isNearGroup(event, groupLat, groupLon))
       .filter((event) => !isEventFuture(event))
       .sort((a: any, b: any) => new Date(b.rawStartDate).getTime() - new Date(a.rawStartDate).getTime());
-
-    // console.log({ upcomingEvents, pastEvents });
   }
 
   const hubspotFormSetGroupId = () => {
