@@ -608,13 +608,17 @@ const scrapingFormInputs = async (event) => {
     });
 
     const page = await browser.newPage();
-    await page.goto(url);
+    await page.goto(url, { waitUntil: 'networkidle2' });
+
+    await page.waitForSelector('.attend-event-form input', { timeout: 15_000 });
 
     const inputs = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('.attend-event-form input')).map((input) => input.outerHTML);
     });
-    await browser.close();
 
+    // console.log('Inputs:', inputs);
+
+    await browser.close();
     return inputs;
   } catch (error) {
     console.error('Error on scraping:', error);
