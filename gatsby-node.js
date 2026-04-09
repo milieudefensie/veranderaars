@@ -599,8 +599,9 @@ const scrapingFormInputs = async (event) => {
   const url = `https://lokaal.milieudefensie.nl/events/${event.slug}`;
   console.log('Start web scraping. URL: ', url);
 
+  let browser;
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: chromium.path,
@@ -610,18 +611,83 @@ const scrapingFormInputs = async (event) => {
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2' });
 
-    await page.waitForSelector('.attend-event-form input', { timeout: 15_000 });
+    // Many event pages load the sign-up form only after clicking "Aanmelden".
+    // Also, a cookie consent overlay may block interactions in headless mode.
+    await page
+      .evaluate(() => {
+        const buttons = Array.from(document.querySelectorAll('button'));
+        const cookieBtn = buttons.find((b) => /cookies/i.test((b.textContent || '').trim()));
+        const essential = buttons.find((b) => (b.textContent || '').trim() === 'Alleen essentiële cookies');
+        const acceptAll = buttons.find((b) => (b.textContent || '').trim() === 'Aanvaard alle cookies');
+        // Prefer "essential" to keep behaviour minimal.
+        (essential || acceptAll || cookieBtn)?.click?.();
+      })
+      .catch(() => {});
+
+    // Click the CTA that reveals the attendee form (when present).
+    await page
+      .evaluate(() => {
+        const btn =
+          document.querySelector('.btn-show-signature-form') ||
+          Array.from(document.querySelectorAll('button')).find((b) =>
+            /aanmelden|inschrijven|meld je aan/i.test((b.textContent || '').trim())
+          );
+        btn?.click?.();
+      })
+      .catch(() => {});
+
+    // Old selector (legacy) + new selector (attendee form revealed by CTA)
+    const formInputSelector = 'input[name^="attendee["], #attendee-first-name-field, .attend-event-form input';
+    const timeoutMs = 15_000;
+
+    try {
+      await page.waitForSelector(formInputSelector, { timeout: timeoutMs });
+    } catch (waitError) {
+      // Some event pages don't expose an attend form (or markup changes / interstitials).
+      // Scraping is best-effort; don't fail the Gatsby build for a single event.
+      const finalUrl = page.url?.() || url;
+      let title = '';
+      try {
+        title = await page.title();
+      } catch (_) {
+        // ignore
+      }
+      console.warn(
+        `[CSL Source] Scraping skipped for "${event?.slug}" (missing selector ${formInputSelector} after ${timeoutMs}ms). Final URL: ${finalUrl}${
+          title ? ` | Title: ${title}` : ''
+        }`
+      );
+      return [];
+    }
 
     const inputs = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll('.attend-event-form input')).map((input) => input.outerHTML);
+      const selectors = [
+        // New attendee form (revealed by CTA)
+        'input[name^="attendee["]',
+        // Legacy form selector
+        '.attend-event-form input',
+      ];
+
+      const nodes = selectors.flatMap((sel) => Array.from(document.querySelectorAll(sel)));
+      const deduped = Array.from(new Set(nodes.map((n) => n.outerHTML)));
+      return deduped;
     });
 
     // console.log('Inputs:', inputs);
 
-    await browser.close();
     return inputs;
   } catch (error) {
-    console.error('Error on scraping:', error);
-    throw error;
+    // Best-effort: never hard-fail builds due to scraping flakiness.
+    console.warn(`[CSL Source] Scraping error for "${event?.slug}". Continuing without inputs.`);
+    console.warn(error);
+    return [];
+  } finally {
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (_) {
+        // ignore
+      }
+    }
   }
 };
