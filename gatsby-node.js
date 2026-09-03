@@ -86,6 +86,43 @@ exports.createSchemaCustomization = ({ actions }) => {
   `;
   createTypes(externalEvent);
 
+  const qomonEvent = `
+    type QomonEvent implements Node {
+      id: ID!
+      slug: String!
+      title: String!
+      description: String
+      start_at: Date
+      end_at: Date
+      start_in_zone: String
+      end_in_zone: String
+      image_url: String
+      max_attendees_count: Int
+      externalLink: String
+      labels: [String!]!
+      location: Location
+      created_by: Int
+      created_by_details: QomonCreatedByDetails
+      public: Boolean
+      status: String
+      type_data: String
+      model: ModelRef
+      internal: Internal
+    }
+    type QomonCreatedByDetails {
+      first_name: String
+      last_name: String
+      email: String
+      phone: String
+      avatar: String
+      status: String
+    }
+    type ModelRef {
+      apiKey: String
+    }
+  `;
+  createTypes(qomonEvent);
+
   const typeDefs = `
     type DatoCmsRedirect implements Node {
       sourcePath: String!
@@ -98,6 +135,8 @@ exports.createSchemaCustomization = ({ actions }) => {
 };
 
 exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
+  await sourceQomonEvents({ createNode, createContentDigest });
+
   const clientId = process.env.CSL_CLIENT_ID;
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
@@ -265,6 +304,103 @@ const getAllPublicEvents = async () => {
 
   console.log(`[PUBLIC CSL Source] Total events fetched: ${events.length}`);
   return events;
+};
+
+const sourceQomonEvents = async ({ createNode, createContentDigest }) => {
+  const qomonApiKey = process.env.QOMON_API_KEY;
+  const qomonApiBase = process.env.QOMON_API_BASE || 'https://incoming.qomon.app';
+
+  if (!qomonApiKey) {
+    console.warn('[Qomon Source] QOMON_API_KEY missing. Skipping Qomon events source.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${qomonApiBase}/actions`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${qomonApiKey}`,
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      console.warn(`[Qomon Source] Request failed (${response.status}): ${body}`);
+      return;
+    }
+
+    const payload = await response.json();
+    const actionAggregates = Array.isArray(payload?.data?.ActionsAggreg) ? payload.data.ActionsAggreg : [];
+    const actions = actionAggregates
+      .map((item) => item?.Action)
+      .filter(Boolean)
+      .filter((action) => action.type_data === 'event' && action.public === true && action.status === 'todo');
+
+    for (const action of actions) {
+      const address = Array.isArray(action.Addresses) ? action.Addresses[0] : null;
+      const latitude = parseFloat(address?.latitude);
+      const longitude = parseFloat(address?.longitude);
+      const hasCoordinates = Number.isFinite(latitude) && Number.isFinite(longitude);
+      const start = action.start || action.CreatedAt || null;
+      const end = action.end || action.start || null;
+
+      const sourceSlug = action.site_slug || action.name || String(action.ID);
+      const safeSlug = sourceSlug
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      const slug = safeSlug || `qomon-${action.ID}`;
+
+      createNode({
+        id: `qomon-${action.ID}`,
+        slug,
+        title: action.name || 'Untitled event',
+        description: action.pitch || '',
+        start_at: start ? new Date(start).toISOString().split('T')[0] : null,
+        end_at: end ? new Date(end).toISOString().split('T')[0] : null,
+        start_in_zone: start,
+        end_in_zone: end,
+        image_url: typeof action.cover_img === 'string' ? action.cover_img : null,
+        max_attendees_count: action.maximum_capacity || null,
+        externalLink: action.registration_link || null,
+        labels: [],
+        location: {
+          latitude: hasCoordinates ? latitude : null,
+          longitude: hasCoordinates ? longitude : null,
+          postal_code: address?.postalcode || null,
+          country: address?.country || null,
+          region: address?.state || null,
+          locality: address?.city || null,
+          query: [address?.street, address?.housenumber, address?.postalcode, address?.city]
+            .filter(Boolean)
+            .join(' ')
+            .trim(),
+          street: address?.street || null,
+          street_number: address?.housenumber || null,
+          venue: address?.building || null,
+          created_at: null,
+        },
+        created_by: action.created_by || null,
+        created_by_details: action.created_by_details || null,
+        public: action.public,
+        status: action.status,
+        type_data: action.type_data,
+        model: { apiKey: 'QomonEvent' },
+        internal: {
+          type: 'QomonEvent',
+          contentDigest: createContentDigest(action),
+        },
+      });
+    }
+
+    console.log(`[Qomon Source] Finished creating ${actions.length} events.`);
+  } catch (error) {
+    console.warn('[Qomon Source] Failed to source Qomon events. Continuing without them.');
+    console.warn(error);
+  }
 };
 
 exports.createPages = ({ graphql, actions }) => {

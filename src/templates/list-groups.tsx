@@ -8,19 +8,27 @@ import StructuredTextDefault from '../components/Blocks/StructuredTextDefault/st
 import { GenericCollectionCard } from '../components/Global/event-collection-card/event-collection-card';
 import GroupCard from '../components/Blocks/HighlightGroup/group-card';
 import { distanceKm, getCurrentUserCity } from '../utils/location.utils'; // @ts-ignore
-import { getCombinedEvents, mapCmsEvents, mapCslEvents } from '../utils';
+import { getCombinedEvents, mapCmsEvents, mapCslEvents, mapQomonEvents } from '../utils';
 
 import './list-basic.styles.scss';
 
 const ListGroups: React.FC<any> = ({
   pageContext,
-  data: { page, allGroups = { edges: [] }, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, favicon },
+  data: {
+    page,
+    allGroups = { edges: [] },
+    allEvents = { edges: [] },
+    allCSLEvents = { edges: [] },
+    allQomonEvents = { edges: [] },
+    favicon,
+  },
 }) => {
   const { seo, title, introduction, content } = page;
 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
-  const allEventsList = getCombinedEvents(cmsEvents, cslEvents, true, pageContext?.cslEventsHidden);
+  const qomonEvents = mapQomonEvents(allQomonEvents);
+  const allEventsList = getCombinedEvents(cmsEvents, cslEvents, qomonEvents, true, pageContext?.cslEventsHidden);
   const localGroups = Array.isArray(allGroups.edges) ? allGroups.edges.map((raw: any) => raw.node) : [];
 
   const [searchValue, setSearchValue] = useState('');
@@ -437,6 +445,30 @@ export const PageQuery = graphql`
           additional_image_sizes_url {
             url
             style
+          }
+        }
+      }
+    }
+    allQomonEvents: allQomonEvent {
+      edges {
+        node {
+          id
+          slug
+          title
+          description
+          start_at
+          end_at
+          start_in_zone
+          end_in_zone
+          image_url
+          externalLink
+          labels
+          location {
+            latitude
+            longitude
+            locality
+            query
+            region
           }
         }
       }

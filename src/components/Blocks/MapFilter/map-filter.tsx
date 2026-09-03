@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MapWrapper from '../../Global/Map/map';
 import { graphql, useStaticQuery } from 'gatsby'; // @ts-expect-error
-import { mapCmsEvents, mapCslEvents } from '../../../utils'; // @ts-expect-error
+import { mapCmsEvents, mapCslEvents, mapQomonEvents } from '../../../utils'; // @ts-expect-error
 import useCSLEvents from '../../../hooks/useCSLEvents';
 import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
 import { EventType } from '../../../types';
@@ -38,6 +38,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
   const {
     allDatoCmsEvent: events,
     cslEvents,
+    qomonEvents,
     collections,
     configuration,
   } = useStaticQuery(graphql`
@@ -48,6 +49,30 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
         edges {
           node {
             ...CSLEventCard
+          }
+        }
+      }
+      qomonEvents: allQomonEvent {
+        edges {
+          node {
+            id
+            slug
+            title
+            description
+            start_at
+            end_at
+            start_in_zone
+            end_in_zone
+            image_url
+            externalLink
+            labels
+            location {
+              latitude
+              longitude
+              locality
+              query
+              region
+            }
           }
         }
       }
@@ -99,7 +124,8 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
 
   const cmsEvents = mapCmsEvents(events);
   const cslEventsMapped = mapCslEvents(cslEvents);
-  const { mergedEvents } = useCSLEvents(cmsEvents, cslEventsMapped);
+  const qomonEventsMapped = mapQomonEvents(qomonEvents);
+  const { mergedEvents } = useCSLEvents(cmsEvents, [...cslEventsMapped, ...qomonEventsMapped]);
 
   const filteredEvents = mergedEvents.filter((e: any) => {
     if (!labelsInCsl && !filterBy?.id && !cslCalendarName) return true;

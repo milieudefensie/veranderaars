@@ -409,6 +409,40 @@ export const mapCslEvents = (events) => {
     : [];
 };
 
+export const mapQomonEvents = (events) => {
+  return Array.isArray(events.edges)
+    ? events.edges.map((raw) => ({
+        ...raw.node,
+        id: raw.node.id || `qomon-${raw.node.slug}`,
+        slug: raw.node.slug,
+        title: raw.node.title,
+        introduction: raw.node.description || '',
+        rawDate: raw.node.start_at,
+        date: raw.node.start_at,
+        hourStart: raw.node.start_in_zone ? convertTime(raw.node.start_in_zone) : null,
+        hourEnd: raw.node.end_in_zone ? convertTime(raw.node.end_in_zone) : null,
+        startInZone: raw.node.start_in_zone,
+        endInZone: raw.node.end_in_zone,
+        coordinates: {
+          latitude: Number.isFinite(parseFloat(raw.node.location?.latitude))
+            ? parseFloat(parseFloat(raw.node.location?.latitude).toFixed(6))
+            : null,
+          longitude: Number.isFinite(parseFloat(raw.node.location?.longitude))
+            ? parseFloat(parseFloat(raw.node.location?.longitude).toFixed(6))
+            : null,
+        },
+        location: raw.node.location,
+        address: raw.node.location?.query,
+        region: raw.node.location?.region || raw.node.location?.locality,
+        image: { url: raw.node.image_url },
+        externalLink: raw.node.externalLink,
+        labels: raw.node.labels || [],
+        model: { apiKey: 'QomonEvent' },
+        type: 'QOMON',
+      }))
+    : [];
+};
+
 export const mapCslEventsWithDates = (events) => {
   const arr = events.edges.map((e) => formatCslEvents(e.node));
 
@@ -527,13 +561,13 @@ function dedupeEventsBySlug(events) {
   });
 }
 
-export function getCombinedEvents(cmsEvents, cslEvents, hideInAgendaPage = false, slugsOfHiddenCSLEvents = null) {
+export function getCombinedEvents(cmsEvents, cslEvents, qomonEvents = [], hideInAgendaPage = false, slugsOfHiddenCSLEvents = null) {
   const currentDateTime = DateTime.now().setZone(ZONE);
   const hiddenSlugs = slugsOfHiddenCSLEvents ? slugsOfHiddenCSLEvents.split(',') : [];
 
   const formattedCsl = cslEvents.map(formatCslEvents);
 
-  const combinedEvents = [...cmsEvents, ...formattedCsl]
+  const combinedEvents = [...cmsEvents, ...formattedCsl, ...qomonEvents]
     .filter((event) => shouldIncludeEvent(event, hiddenSlugs, hideInAgendaPage))
     .map((event) => {
       let startDate, endDate;
