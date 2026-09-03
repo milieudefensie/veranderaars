@@ -414,6 +414,11 @@ exports.createPages = ({ graphql, actions }) => {
         // create the pages
         const pages = result.data?.pages.edges;
         for (const page of pages) {
+          if (!page.node.slug || !page.node.slug.trim()) {
+            console.warn(`Skipping basic page without a slug: ${page.node.id}`);
+            continue;
+          }
+
           createPage({
             path: page.node.slug,
             component: page.node.slug === 'whatsapp' ? templates.pageWhatsAppGroups : templates.page,
