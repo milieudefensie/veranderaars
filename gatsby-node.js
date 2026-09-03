@@ -3,6 +3,7 @@ const chromium = require('chromium');
 const path = require(`path`);
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+const isPreviewEnvironment = process.env.DATO_PREVIEW === 'true';
 
 // node source from CSL
 exports.createSchemaCustomization = ({ actions }) => {
@@ -151,7 +152,11 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     let isWaitingListEnabled = false;
 
     if (isActive) {
-      cslInputs = await scrapingFormInputs(event);
+      if (isPreviewEnvironment) {
+        console.log(`[CSL Source] Skipping form scraping for preview event ${event.slug}.`);
+      } else {
+        cslInputs = await scrapingFormInputs(event);
+      }
 
       if (event.max_attendees_count) {
         const attending = await fetchAllAttendees(event.slug);
@@ -414,6 +419,11 @@ exports.createPages = ({ graphql, actions }) => {
         // create the pages
         const pages = result.data?.pages.edges;
         for (const page of pages) {
+          if (!page.node.slug || !page.node.slug.trim()) {
+            console.warn(`Skipping basic page without a slug: ${page.node.id}`);
+            continue;
+          }
+
           createPage({
             path: page.node.slug,
             component: page.node.slug === 'whatsapp' ? templates.pageWhatsAppGroups : templates.page,
