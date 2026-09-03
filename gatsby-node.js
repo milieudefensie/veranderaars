@@ -5,6 +5,18 @@ require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 const isPreviewEnvironment = process.env.DATO_PREVIEW === 'true';
 
+const getCslImageSizes = (mainImage) => {
+  const sizes = mainImage?.urls || mainImage?.url;
+
+  if (!sizes || typeof sizes !== 'object') {
+    return [];
+  }
+
+  return Object.entries(sizes)
+    .filter(([, url]) => typeof url === 'string' && url.length > 0)
+    .map(([style, url]) => ({ style, url }));
+};
+
 // node source from CSL
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions;
@@ -184,6 +196,10 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
       web_conference_url: event.web_conference_url,
       max_attendees_count: event.max_attendees_count,
       waiting_list_enabled: isWaitingListEnabled,
+      image_url: event.image_url || getCslImageSizes(event.main_image).find((image) => image.style === 'original')?.url,
+      additional_image_sizes_url: event.additional_image_sizes_url?.length
+        ? event.additional_image_sizes_url
+        : getCslImageSizes(event.main_image),
       rich_description: event.rich_description,
       cms_status: cmsStatus,
       show_in_agenda_list: Boolean(allPublicEvents.find((pe) => pe.slug === event.slug)),

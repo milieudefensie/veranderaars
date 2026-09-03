@@ -379,6 +379,21 @@ export const mapCmsEvents = (allEvents) => {
     : [];
 };
 
+const getCslImageSizes = (mainImage) => {
+  const sizes = mainImage?.urls || mainImage?.url;
+
+  if (!sizes || typeof sizes !== 'object') {
+    return [];
+  }
+
+  return Object.entries(sizes)
+    .filter(([, url]) => typeof url === 'string' && url.length > 0)
+    .map(([style, url]) => ({ style, url }));
+};
+
+const getCslImageUrl = (event) =>
+  event.image_url || getCslImageSizes(event.main_image).find((image) => image.style === 'original')?.url;
+
 export const mapCslEvents = (events) => {
   return Array.isArray(events.edges)
     ? events.edges.map((raw) => ({
@@ -389,7 +404,7 @@ export const mapCslEvents = (events) => {
         },
         model: { apiKey: 'ExternalEvent' },
         type: 'CSL',
-        image: { url: raw.node.image_url },
+        image: { url: getCslImageUrl(raw.node) },
       }))
     : [];
 };
@@ -406,7 +421,7 @@ export const mapCslEventsWithDates = (events) => {
         },
         model: { apiKey: 'ExternalEvent' },
         type: 'CSL',
-        image: { url: raw.image_url },
+        image: { url: getCslImageUrl(raw) },
         startDateToCompare: raw.start_in_zone
           ? DateTime.fromFormat(raw.start_in_zone, "yyyy-MM-dd'T'HH:mm:ssZZ")
           : null,
@@ -438,7 +453,7 @@ export const formatCslEvents = (e) => {
     slug: e.slug,
     url: e.url,
     title: e.title,
-    image: { url: e.image_url },
+    image: { url: getCslImageUrl(e) },
     labels: e.labels || [],
     type: e.type,
     model: e.model,
@@ -447,7 +462,9 @@ export const formatCslEvents = (e) => {
     max_attendees_count: e.max_attendees_count,
     model: { apiKey: 'ExternalEvent' },
     type: 'CSL',
-    additional_image_sizes_url: e.additional_image_sizes_url,
+    additional_image_sizes_url: e.additional_image_sizes_url?.length
+      ? e.additional_image_sizes_url
+      : getCslImageSizes(e.main_image),
     cms_status: e.cms_status,
   };
 };
