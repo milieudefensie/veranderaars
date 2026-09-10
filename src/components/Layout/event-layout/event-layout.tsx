@@ -18,6 +18,7 @@ import {
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';
 import { Link } from 'gatsby';
+import { geocodeCityName } from '../../../utils/location.utils';
 
 import './styles.scss';
 
@@ -49,9 +50,30 @@ const EventLayout: React.FC<Props> = ({
 
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [mobileDevice, setMobileDevice] = useState(false);
+  const [initialCenter, setInitialCenter] = useState<{ latitude: number; longitude: number; zoom?: number } | null>(
+    null
+  );
 
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
   const shownEventIds = new Set<string>();
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const locatie = new URLSearchParams(window.location.search).get('locatie');
+    if (!locatie) return;
+
+    geocodeCityName(locatie).then((result: any) => {
+      if (!result) return;
+
+      const latitude = parseFloat(String(result.latitude));
+      const longitude = parseFloat(String(result.longitude));
+
+      if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+        setInitialCenter({ latitude, longitude, zoom: 12 });
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -217,7 +239,13 @@ const EventLayout: React.FC<Props> = ({
         )}
         <div className="map-container">
           {/* @ts-ignore */}
-          <Map data={events} mobileView={mobileShowMap} setMobileView={setMobileShowMap} extraLogic={handleOnMobile} />
+          <Map
+            data={events}
+            mobileView={mobileShowMap}
+            setMobileView={setMobileShowMap}
+            extraLogic={handleOnMobile}
+            initialCenter={initialCenter}
+          />
           <div className="alert-container">
             <HelpIcon />
             <span>

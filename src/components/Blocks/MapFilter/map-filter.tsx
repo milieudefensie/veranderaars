@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import MapWrapper from '../../Global/Map/map';
 import { graphql, useStaticQuery } from 'gatsby'; // @ts-expect-error
-import { mapCmsEvents, mapCslEvents } from '../../../utils'; // @ts-expect-error
+import { mapCmsEvents, mapCslEvents, mapQomonEvents } from '../../../utils'; // @ts-expect-error
 import useCSLEvents from '../../../hooks/useCSLEvents';
 import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
 import { EventType } from '../../../types';
+import { geocodeCityName } from '../../../utils/location.utils';
 
 import './styles.scss';
 
@@ -24,6 +25,9 @@ interface MapFilterProps {
 const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [mobileDevice, setMobileDevice] = useState(false);
+  const [initialCenter, setInitialCenter] = useState<{ latitude: number; longitude: number; zoom?: number } | null>(
+    null
+  );
   const {
     filterBy = {},
     labelsInCsl,
@@ -38,6 +42,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
   const {
     allDatoCmsEvent: events,
     cslEvents,
+    qomonEvents,
     collections,
     configuration,
   } = useStaticQuery(graphql`
@@ -48,6 +53,30 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
         edges {
           node {
             ...CSLEventCard
+          }
+        }
+      }
+      qomonEvents: allQomonEvent {
+        edges {
+          node {
+            id
+            slug
+            title
+            description
+            start_at
+            end_at
+            start_in_zone
+            end_in_zone
+            image_url
+            externalLink
+            labels
+            location {
+              latitude
+              longitude
+              locality
+              query
+              region
+            }
           }
         }
       }
@@ -99,7 +128,8 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
 
   const cmsEvents = mapCmsEvents(events);
   const cslEventsMapped = mapCslEvents(cslEvents);
-  const { mergedEvents } = useCSLEvents(cmsEvents, cslEventsMapped);
+  const qomonEventsMapped = mapQomonEvents(qomonEvents);
+  const { mergedEvents } = useCSLEvents(cmsEvents, [...cslEventsMapped, ...qomonEventsMapped]);
 
   const filteredEvents = mergedEvents.filter((e: any) => {
     if (!labelsInCsl && !filterBy?.id && !cslCalendarName) return true;
@@ -118,6 +148,26 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
 
     return e.tags?.some((t: any) => t.id === filterBy?.id);
   });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const applyCenter = (lat: unknown, lng: unknown) => {
+      const latitude = parseFloat(String(lat));
+      const longitude = parseFloat(String(lng));
+
+      if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+        setInitialCenter({ latitude, longitude, zoom: 12 });
+      }
+    };
+
+    const locatie = new URLSearchParams(window.location.search).get('locatie');
+    if (!locatie) return;
+
+    geocodeCityName(locatie).then((result: any) => {
+      if (result) applyCenter(result.latitude, result.longitude);
+    });
+  }, []);
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -185,6 +235,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
           mobileView={mobileShowMap}
           setMobileView={setMobileShowMap}
           extraLogic={handleOnMobile}
+          initialCenter={initialCenter}
         />
       )}
 

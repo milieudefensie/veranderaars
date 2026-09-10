@@ -36,7 +36,6 @@ const EventCardV2: React.FC<Props> = ({
     image_url,
     additional_image_sizes_url,
     externalLink,
-    url,
     __typename,
     type,
     location,
@@ -48,6 +47,7 @@ const EventCardV2: React.FC<Props> = ({
   } = event || {};
 
   const isCslEvent = __typename === 'ExternalEvent' || type === 'CSL';
+  const isQomonEvent = __typename === 'QomonEvent' || type === 'QOMON';
   let mainImage = Array.isArray(additional_image_sizes_url)
     ? additional_image_sizes_url.find((i) => i.style === 'original')?.url
     : null;
@@ -86,7 +86,9 @@ const EventCardV2: React.FC<Props> = ({
           <h3>{title}</h3>
           <div className="type">
             <span className="type-child">
-              {isCslEvent ? location?.locality || location?.query || 'Online' : beknopteAddress || address || type}
+              {isCslEvent || isQomonEvent
+                ? location?.locality || location?.query || 'Online'
+                : beknopteAddress || address || type}
             </span>
 
             {isLocalGroup && <span className="local-group">Door lokale groep</span>}
@@ -108,12 +110,23 @@ const EventCardV2: React.FC<Props> = ({
   if (externalLink) {
     return (
       <a
-        href={externalLink || url}
-        target={`${externalLink ? '' : '_blank'}`}
+        href={externalLink}
+        target="_blank"
+        rel="noopener noreferrer"
         className={`ui-event-card-v2 ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'} ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} ${extraClassName ? extraClassName : ''}`}
       >
         {cardContent()}
       </a>
+    );
+  }
+
+  if (isQomonEvent) {
+    return (
+      <div
+        className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} ${extraClassName ? extraClassName : ''}`}
+      >
+        {cardContent()}
+      </div>
     );
   }
 
