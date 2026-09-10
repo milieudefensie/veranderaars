@@ -40,7 +40,7 @@ const MapPopup: React.FC<MapPopupProps> = ({ card, cards, linkTitle = 'Meld je a
   if (Array.isArray(cards) && cards.length > 1) {
     return (
       <article className={`map-popup cluster-list ${cardType ? cardType : ''}`}>
-        <h2>{t('multiple_events_here') || 'Meerdere evenementen op deze locatie'}</h2>
+        <h2>{t('multiple_events_here')}</h2>
         <ul className="cluster-list-items">
           {cards.map((c: any) => {
             const isCslEvent = c.type === 'CSL';
