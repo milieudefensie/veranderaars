@@ -234,18 +234,20 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
                       height: `${10 + (pointCount / pins.length) * 20}px`,
                     }}
                     onClick={() => {
-                      // Events within ~50m of each other would still overlap even at max zoom,
-                      // so there's no useful amount of zooming in for them - show a list instead.
-                      const TOO_CLOSE_TO_SEPARATE_DEGREES = 0.0005;
+                      const COORD_EPSILON = 1e-6; // ~0.1m, well below any real distinct address
                       const leaves = supercluster.getLeaves(cluster.id, Infinity);
-                      const leafLngs = leaves.map((leaf: any) => leaf.geometry.coordinates[0]);
-                      const leafLats = leaves.map((leaf: any) => leaf.geometry.coordinates[1]);
-                      const lngSpread = Math.max(...leafLngs) - Math.min(...leafLngs);
-                      const latSpread = Math.max(...leafLats) - Math.min(...leafLats);
-                      const tooCloseToSeparate =
-                        lngSpread < TOO_CLOSE_TO_SEPARATE_DEGREES && latSpread < TOO_CLOSE_TO_SEPARATE_DEGREES;
+                      const allSameCoords = leaves.every((leaf: any) => {
+                        const [leafLongitude, leafLatitude] = leaf.geometry.coordinates;
+                        return (
+                          Math.abs(leafLongitude - longitude) < COORD_EPSILON &&
+                          Math.abs(leafLatitude - latitude) < COORD_EPSILON
+                        );
+                      });
 
-                      if (tooCloseToSeparate) {
+                      const expansionZoom = Math.min(supercluster.getClusterExpansionZoom(cluster.id), 20);
+                      const cannotExpandFurther = expansionZoom <= (viewport.zoom ?? 0);
+
+                      if (allSameCoords || cannotExpandFurther) {
                         setSelectedMarker({
                           geometry: cluster.geometry,
                           properties: { isClusterList: true, leaves: leaves.map((leaf: any) => leaf.properties) },
@@ -253,13 +255,12 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
                         return;
                       }
 
-                      // Fit the map to exactly the area these events cover, instead of guessing a
-                      // zoom level - this avoids zooming in so far that some events end up off-screen.
-                      const bounds: [[number, number], [number, number]] = [
-                        [Math.min(...leafLngs), Math.min(...leafLats)],
-                        [Math.max(...leafLngs), Math.max(...leafLats)],
-                      ];
-                      mapRef.current?.getMap().fitBounds(bounds, { padding: 60, maxZoom: 20, duration: 500 });
+                      setViewport({
+                        ...viewport,
+                        latitude,
+                        longitude,
+                        zoom: expansionZoom,
+                      });
                     }}
                   >
                     {pointCount}
