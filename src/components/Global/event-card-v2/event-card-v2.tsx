@@ -36,7 +36,6 @@ const EventCardV2: React.FC<Props> = ({
     image_url,
     additional_image_sizes_url,
     externalLink,
-    url,
     __typename,
     type,
     location,
@@ -108,12 +107,25 @@ const EventCardV2: React.FC<Props> = ({
   if (externalLink) {
     return (
       <a
-        href={externalLink || url}
-        target={`${externalLink ? '' : '_blank'}`}
+        href={externalLink}
+        target="_blank"
+        rel="noopener noreferrer"
         className={`ui-event-card-v2 ${isHighlighted ? 'highlighted' : ''} ${withImage ? '' : 'no-image'} ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} ${extraClassName ? extraClassName : ''}`}
       >
         {cardContent()}
       </a>
+    );
+  }
+
+  const isQomonEvent = event?.__typename === 'QomonEvent' || type === 'QOMON';
+
+  if (isQomonEvent) {
+    return (
+      <div
+        className={`ui-event-card-v2 ${vertical ? 'vertical-layout' : ''} ${lessInfo ? 'less-info' : ''} ${extraClassName ? extraClassName : ''}`}
+      >
+        {cardContent()}
+      </div>
     );
   }
 

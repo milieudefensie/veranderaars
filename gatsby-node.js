@@ -363,9 +363,17 @@ const sourceQomonEvents = async ({ createNode, createContentDigest }) => {
         end_at: end ? new Date(end).toISOString().split('T')[0] : null,
         start_in_zone: start,
         end_in_zone: end,
-        image_url: typeof action.cover_img === 'string' ? action.cover_img : null,
+        image_url:
+          typeof action.cover_img === 'string'
+            ? action.cover_img
+            : typeof action.cover_img?.url === 'string'
+              ? action.cover_img.url
+              : null,
         max_attendees_count: action.maximum_capacity || null,
-        externalLink: action.registration_link || null,
+        externalLink:
+          action.registration_link ||
+          action.broadcast_link ||
+          (action.site_slug ? `https://action.qomon.org/${action.site_slug}/` : null),
         labels: [],
         location: {
           latitude: hasCoordinates ? latitude : null,
