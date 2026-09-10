@@ -7,32 +7,93 @@ import { useTranslate } from '@tolgee/react';
 
 import './styles.scss';
 
-interface MapPopupProps {
-  card: {
-    slug: string;
-    title: string;
-    rawDate: string | null;
-    hourStart: string;
-    hourEnd: string | null;
-    address: string | null;
-    signalChat: string | null;
-    image: {
-      url: string;
-    };
-    tags: string[];
-    type: string;
-    whatsappGroup: string | null;
-    url: string | null;
-    externalLink: string | null;
-    startInZone: string | null;
-    endInZone: string | null;
+interface MapPopupCard {
+  slug: string;
+  title: string;
+  rawDate: string | null;
+  hourStart: string;
+  hourEnd: string | null;
+  address: string | null;
+  signalChat: string | null;
+  image: {
+    url: string;
   };
+  tags: string[];
+  type: string;
+  whatsappGroup: string | null;
+  url: string | null;
+  externalLink: string | null;
+  startInZone: string | null;
+  endInZone: string | null;
+}
+
+interface MapPopupProps {
+  card?: MapPopupCard;
+  cards?: MapPopupCard[];
   linkTitle?: string;
   cardType?: string;
 }
 
-const MapPopup: React.FC<MapPopupProps> = ({ card, linkTitle = 'Meld je aan', cardType = 'default' }) => {
+const MapPopup: React.FC<MapPopupProps> = ({ card, cards, linkTitle = 'Meld je aan', cardType = 'default' }) => {
   const { t } = useTranslate();
+
+  if (Array.isArray(cards) && cards.length > 1) {
+    return (
+      <article className={`map-popup cluster-list ${cardType ? cardType : ''}`}>
+        <h2>{t('multiple_events_here') || 'Meerdere evenementen op deze locatie'}</h2>
+        <ul className="cluster-list-items">
+          {cards.map((c: any) => {
+            const isCslEvent = c.type === 'CSL';
+            const dateLabel = isCslEvent
+              ? c.startInZone && formatDateCSL(c.startInZone)
+              : c.rawDate && formatDate(c.rawDate);
+
+            const content = (
+              <>
+                <strong>{c.title}</strong>
+                {dateLabel && <span>{dateLabel}</span>}
+              </>
+            );
+
+            if (c.externalLink) {
+              return (
+                <li key={c.id || c.slug}>
+                  <a href={c.externalLink} target="_blank" rel="noopener noreferrer">
+                    {content}
+                  </a>
+                </li>
+              );
+            }
+
+            if (isCslEvent) {
+              return (
+                <li key={c.id || c.slug}>
+                  <Link to={`/lokaal/${c.slug}`}>{content}</Link>
+                </li>
+              );
+            }
+
+            if (c.type === 'QOMON') {
+              return (
+                <li key={c.id || c.slug} className="not-clickable">
+                  {content}
+                </li>
+              );
+            }
+
+            return (
+              <li key={c.id || c.slug}>
+                <Link to={c as any}>{content}</Link>
+              </li>
+            );
+          })}
+        </ul>
+      </article>
+    );
+  }
+
+  const singleCard = card || cards?.[0];
+  if (!singleCard) return null;
 
   const {
     slug,
@@ -50,7 +111,7 @@ const MapPopup: React.FC<MapPopupProps> = ({ card, linkTitle = 'Meld je aan', ca
     externalLink,
     startInZone,
     endInZone,
-  } = card;
+  } = singleCard;
   const isCslEvent = type === 'CSL';
   const withTags = Array.isArray(tags) && tags.length > 0;
 
@@ -95,7 +156,7 @@ const MapPopup: React.FC<MapPopupProps> = ({ card, linkTitle = 'Meld je aan', ca
         </a>
       ) : cardType === 'signal' ? (
         <Cta
-          cta={{ ...card, title: 'Open Signal', isButton: true, style: 'primary' }}
+          cta={{ ...singleCard, title: 'Open Signal', isButton: true, style: 'primary' }}
           customVariant={'orange'}
           predefinedUrl={signalChat}
         />
@@ -104,16 +165,17 @@ const MapPopup: React.FC<MapPopupProps> = ({ card, linkTitle = 'Meld je aan', ca
           {t('sign_up')}
         </Link>
       ) : externalLink ? (
-        <a
-          href={externalLink || url}
-          target={`${externalLink ? '' : '_blank'}`}
-          className="custom-btn custom-btn-primary"
-        >
+        <a href={externalLink} target="_blank" rel="noopener noreferrer" className="custom-btn custom-btn-primary">
           {t('sign_up')}
         </a>
       ) : (
         <Cta
-          cta={{ ...card, title: cardType === 'group' ? 'Bekijk groep' : linkTitle, isButton: true, style: 'primary' }}
+          cta={{
+            ...singleCard,
+            title: cardType === 'group' ? 'Bekijk groep' : linkTitle,
+            isButton: true,
+            style: 'primary',
+          }}
           customVariant={cardType === 'group' ? 'group-v2' : ''}
         />
       )}

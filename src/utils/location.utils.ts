@@ -1,3 +1,28 @@
+export async function geocodeCityName(cityName: string) {
+  try {
+    const query = cityName?.trim();
+    if (!query) return null;
+
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(query)}&countrycodes=NL&format=json&limit=1&accept-language=nl`,
+      { headers: { 'Accept-Language': 'nl' } }
+    );
+    const data = await response.json();
+    const match = data?.[0];
+
+    if (!match) return null;
+
+    return {
+      city: query,
+      latitude: parseFloat(match.lat),
+      longitude: parseFloat(match.lon),
+    };
+  } catch (error) {
+    console.error('Error geocoding city name:', error);
+    return null;
+  }
+}
+
 export async function getCurrentUserCity() {
   try {
     const postalCodeLocalStorage = localStorage.getItem('user_postal_code');

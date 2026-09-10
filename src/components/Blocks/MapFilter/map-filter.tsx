@@ -5,6 +5,7 @@ import { mapCmsEvents, mapCslEvents, mapQomonEvents } from '../../../utils'; // 
 import useCSLEvents from '../../../hooks/useCSLEvents';
 import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
 import { EventType } from '../../../types';
+import { getCurrentUserCity, geocodeCityName } from '../../../utils/location.utils';
 
 import './styles.scss';
 
@@ -24,6 +25,9 @@ interface MapFilterProps {
 const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [mobileDevice, setMobileDevice] = useState(false);
+  const [initialCenter, setInitialCenter] = useState<{ latitude: number; longitude: number; zoom?: number } | null>(
+    null
+  );
   const {
     filterBy = {},
     labelsInCsl,
@@ -146,6 +150,32 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
   });
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const applyCenter = (lat: unknown, lng: unknown) => {
+      const latitude = parseFloat(String(lat));
+      const longitude = parseFloat(String(lng));
+
+      if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+        setInitialCenter({ latitude, longitude, zoom: 12 });
+      }
+    };
+
+    const locatie = new URLSearchParams(window.location.search).get('locatie');
+
+    if (locatie) {
+      geocodeCityName(locatie).then((result: any) => {
+        if (result) applyCenter(result.latitude, result.longitude);
+      });
+      return;
+    }
+
+    getCurrentUserCity().then((result: any) => {
+      if (result) applyCenter(result.latitude, result.longitude);
+    });
+  }, []);
+
+  useEffect(() => {
     const handleWindowResize = () => {
       const htmlElement = document.documentElement;
       const navbar = document.querySelector('#header-mobile-wrapper') as HTMLElement;
@@ -211,6 +241,7 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
           mobileView={mobileShowMap}
           setMobileView={setMobileShowMap}
           extraLogic={handleOnMobile}
+          initialCenter={initialCenter}
         />
       )}
 
