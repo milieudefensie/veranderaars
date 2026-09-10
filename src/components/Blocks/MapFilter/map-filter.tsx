@@ -5,7 +5,7 @@ import { mapCmsEvents, mapCslEvents, mapQomonEvents } from '../../../utils'; // 
 import useCSLEvents from '../../../hooks/useCSLEvents';
 import EventCardV2 from '../../Global/event-card-v2/event-card-v2';
 import { EventType } from '../../../types';
-import { getCurrentUserCity, geocodeCityName } from '../../../utils/location.utils';
+import { geocodeCityName } from '../../../utils/location.utils';
 
 import './styles.scss';
 
@@ -162,15 +162,9 @@ const MapFilter: React.FC<MapFilterProps> = ({ block }) => {
     };
 
     const locatie = new URLSearchParams(window.location.search).get('locatie');
+    if (!locatie) return;
 
-    if (locatie) {
-      geocodeCityName(locatie).then((result: any) => {
-        if (result) applyCenter(result.latitude, result.longitude);
-      });
-      return;
-    }
-
-    getCurrentUserCity().then((result: any) => {
+    geocodeCityName(locatie).then((result: any) => {
       if (result) applyCenter(result.latitude, result.longitude);
     });
   }, []);
