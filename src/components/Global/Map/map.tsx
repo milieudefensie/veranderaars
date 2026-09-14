@@ -46,7 +46,12 @@ interface MapWrapperProps {
   setMobileView: React.Dispatch<React.SetStateAction<boolean>>;
   floatButton?: any;
   extraLogic?: () => void;
+  initialCenter?: { latitude: number; longitude: number; zoom?: number } | null;
 }
+
+const DEFAULT_LATITUDE = 52.25;
+const DEFAULT_LONGITUDE = 4.9041;
+const DEFAULT_ZOOM = 6.65;
 
 const MapWrapper: React.FC<MapWrapperProps> = ({
   title,
@@ -56,14 +61,16 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
   setMobileView,
   floatButton = null,
   extraLogic = null,
+  initialCenter = null,
 }) => {
   const { t } = useTranslate();
   const mapRef = useRef<any>(null);
+  const appliedInitialCenterRef = useRef(false);
 
   const [viewport, setViewport] = useState<MapProps>({
-    latitude: 52.25,
-    longitude: 4.9041,
-    zoom: 6.65,
+    latitude: initialCenter?.latitude ?? DEFAULT_LATITUDE,
+    longitude: initialCenter?.longitude ?? DEFAULT_LONGITUDE,
+    zoom: initialCenter?.zoom ?? DEFAULT_ZOOM,
     interactive: true,
     scrollZoom: true,
   });
@@ -72,6 +79,19 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
   const [isMobileDevice, setIsMobileDevice] = useState<boolean>(false);
   const [scroll, setScroll] = useState<number | null>(null);
 
+  useEffect(() => {
+    if (initialCenter && !appliedInitialCenterRef.current) {
+      appliedInitialCenterRef.current = true;
+      setViewport((prev) => ({
+        ...prev,
+        latitude: initialCenter.latitude,
+        longitude: initialCenter.longitude,
+        zoom: initialCenter.zoom ?? 12,
+      }));
+      mapRef.current?.resize();
+    }
+  }, [initialCenter]);
+
   const resizeMapOnMobile = () => {
     const isMobile = window.innerWidth <= 992;
     const isExtraMobile = window.innerWidth <= 767;
@@ -79,7 +99,9 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
 
     if (isMobile) {
       if (mobileView) {
-        setViewport((prev) => ({ ...prev, zoom: 6.26, longitude: 5.5, latitude: 52 }));
+        setViewport((prev) =>
+          appliedInitialCenterRef.current ? prev : { ...prev, zoom: 6.26, longitude: 5.5, latitude: 52 }
+        );
         mapRef.current?.resize();
         return;
       }
@@ -212,7 +234,27 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
                       height: `${10 + (pointCount / pins.length) * 20}px`,
                     }}
                     onClick={() => {
+                      const COORD_EPSILON = 1e-6; // ~0.1m, well below any real distinct address
+                      const leaves = supercluster.getLeaves(cluster.id, Infinity);
+                      const allSameCoords = leaves.every((leaf: any) => {
+                        const [leafLongitude, leafLatitude] = leaf.geometry.coordinates;
+                        return (
+                          Math.abs(leafLongitude - longitude) < COORD_EPSILON &&
+                          Math.abs(leafLatitude - latitude) < COORD_EPSILON
+                        );
+                      });
+
                       const expansionZoom = Math.min(supercluster.getClusterExpansionZoom(cluster.id), 20);
+                      const cannotExpandFurther = expansionZoom <= (viewport.zoom ?? 0);
+
+                      if (allSameCoords || cannotExpandFurther) {
+                        setSelectedMarker({
+                          geometry: cluster.geometry,
+                          properties: { isClusterList: true, leaves: leaves.map((leaf: any) => leaf.properties) },
+                        });
+                        return;
+                      }
+
                       setViewport({
                         ...viewport,
                         latitude,
@@ -266,7 +308,7 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
 
           {selectedMarker && (
             <Popup
-              key={selectedMarker.properties.id}
+              key={selectedMarker.properties.id || 'cluster-list'}
               longitude={selectedMarker.geometry.coordinates[0]}
               latitude={selectedMarker.geometry.coordinates[1]}
               closeOnClick={false}
@@ -277,7 +319,11 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
                 }
               }}
             >
-              <MapPopup cardType={type} card={selectedMarker.properties} />
+              {selectedMarker.properties.isClusterList ? (
+                <MapPopup cardType={type} cards={selectedMarker.properties.leaves} />
+              ) : (
+                <MapPopup cardType={type} card={selectedMarker.properties} />
+              )}
             </Popup>
           )}
 

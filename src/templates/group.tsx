@@ -8,7 +8,15 @@ import { ReactSVG } from 'react-svg';
 import Link from '../components/Global/Link/link';
 import WrapperLayout from '../components/Layout/WrapperLayout/wrapper-layout';
 import TagList from '../components/Global/Tag/tag-list'; // @ts-expect-error
-import { isArray, mapCmsEvents, mapCslEvents, mapCslEventsWithDates, isEventFuture, formatCslEvents } from '../utils'; // @ts-expect-error
+import {
+  isArray,
+  mapCmsEvents,
+  mapCslEvents,
+  mapQomonEvents,
+  mapCslEventsWithDates,
+  isEventFuture,
+  formatCslEvents,
+} from '../utils'; // @ts-expect-error
 import useCSLEvents from '../hooks/useCSLEvents';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
@@ -62,7 +70,7 @@ const isNearGroup = (event: any, groupLat: number, groupLon: number) => {
 };
 
 const Group: React.FC<GroupProps> = ({
-  data: { page, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, listGroup, favicon },
+  data: { page, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, allQomonEvents = { edges: [] }, listGroup, favicon },
 }) => {
   const {
     seo,
@@ -91,7 +99,8 @@ const Group: React.FC<GroupProps> = ({
 
   const cmsEvents = mapCmsEvents(allEvents);
   const cslEvents = mapCslEvents(allCSLEvents);
-  const { mergedEvents } = useCSLEvents(cmsEvents, cslEvents);
+  const qomonEvents = mapQomonEvents(allQomonEvents);
+  const { mergedEvents } = useCSLEvents(cmsEvents, [...cslEvents, ...qomonEvents]);
 
   const hasCoords = Boolean(coordinates?.latitude && coordinates?.longitude);
   const groupLat = coordinates?.latitude;
@@ -315,6 +324,30 @@ export const PageQuery = graphql`
       edges {
         node {
           ...CSLEventCard
+        }
+      }
+    }
+    allQomonEvents: allQomonEvent {
+      edges {
+        node {
+          id
+          slug
+          title
+          description
+          start_at
+          end_at
+          start_in_zone
+          end_in_zone
+          image_url
+          externalLink
+          labels
+          location {
+            latitude
+            longitude
+            locality
+            query
+            region
+          }
         }
       }
     }
