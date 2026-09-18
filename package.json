@@ -5,6 +5,9 @@
   "engines": {
     "node": "20.x"
   },
+  "resolutions": {
+    "@mapbox/jsonlint-lines-primitives": "2.0.2"
+  },
   "description": "milieudefensie",
   "author": "Tectonica",
   "keywords": [
