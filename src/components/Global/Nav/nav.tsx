@@ -51,7 +51,7 @@ const MobileNavbar = ({
           {/* Mobile Header - Closed State */}
           <div className={`MobileHeader MobileHeader-closed ${isMobileMenuOpen ? 'hidden' : ''}`}>
             <Link className="Header-logo-link Header-logo-link-mobile" to="https://milieudefensie.nl/">
-              <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" />
+              <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" width="240" height="97" />
             </Link>
             <div className="MobileHeader-menuContainer">
               {items.mainLinks.map((link) => (
@@ -62,13 +62,22 @@ const MobileNavbar = ({
               <a
                 href="#"
                 className="button small black"
+                aria-label="Menu"
+                aria-expanded={isMobileMenuOpen}
                 onClick={(e) => {
                   e.preventDefault();
                   toggleMobileMenu();
                 }}
               >
                 <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
                     <path d="M4 18L20 18" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
                     <path d="M4 12L20 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
                     <path d="M4 6L20 6" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
@@ -85,7 +94,7 @@ const MobileNavbar = ({
       <div ref={menuRef} className="NavigationMobile" style={{ display: isMobileMenuOpen ? 'block' : 'none' }}>
         <div className={`MobileHeader MobileHeader-open ${!isMobileMenuOpen ? 'hidden' : ''}`}>
           <Link className="Header-logo-link Header-logo-link-desktop" to="https://milieudefensie.nl/">
-            <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" />
+            <img src={headerUpdatedLogo} alt="Logo Milieudefensie" className="Header-logo" width="240" height="97" />
           </Link>
 
           <a

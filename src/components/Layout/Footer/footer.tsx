@@ -165,14 +165,14 @@ const Footer: React.FC<FooterProps> = ({ isLanding = false, customLogo = null })
             <Link className="wp-button" to={data.configuration.whatsappPage}>
               <div className="wp-btn">
                 <span>{t('signal_chat')}</span>
-                <ReactSVG src={wpIcon} />
+                <ReactSVG src={wpIcon} aria-hidden="true" />
               </div>
             </Link>
           ) : data.configuration?.whatsappGroup ? (
             <a className="wp-button" href={data.configuration.whatsappGroup} target="_blank" rel="noopener noreferrer">
               <div className="wp-btn">
                 <span>{t('signal_chat')}</span>
-                <ReactSVG src={wpIcon} />
+                <ReactSVG src={wpIcon} aria-hidden="true" />
               </div>
             </a>
           ) : null}

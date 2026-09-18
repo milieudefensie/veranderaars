@@ -37,7 +37,7 @@ const Share: React.FC<ShareBlockProps> = ({ block }) => {
       {whatsappGroup && (
         <a className="wp-button" href={whatsappGroup} target="_blank" rel="noopener noreferrer">
           <span>{t('join_whatsapp')}</span>
-          <ReactSVG src={wpIcon} />
+          <ReactSVG src={wpIcon} aria-hidden="true" />
         </a>
       )}
     </div>

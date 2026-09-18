@@ -208,23 +208,24 @@ interface CitySuggestionsProps {
 }
 
 const CitySuggestions: React.FC<CitySuggestionsProps> = ({ suggestions, onSelect, show }) => {
-  if (!show || suggestions.length === 0) return null;
+  const visible = show && suggestions.length > 0;
 
   return (
-    <ul className="city-suggestions" role="listbox">
-      {suggestions.map((suggestion, index) => (
-        <li
-          key={`${suggestion}-${index}`}
-          className="city-suggestion-item"
-          role="option"
-          tabIndex={0}
-          onClick={() => onSelect(suggestion)}
-          onKeyDown={(e) => e.key === 'Enter' && onSelect(suggestion)}
-          onMouseDown={(e) => e.preventDefault()}
-        >
-          {suggestion}
-        </li>
-      ))}
+    <ul id="city-suggestions" className="city-suggestions" role="listbox" hidden={!visible}>
+      {visible &&
+        suggestions.map((suggestion, index) => (
+          <li
+            key={`${suggestion}-${index}`}
+            className="city-suggestion-item"
+            role="option"
+            tabIndex={0}
+            onClick={() => onSelect(suggestion)}
+            onKeyDown={(e) => e.key === 'Enter' && onSelect(suggestion)}
+            onMouseDown={(e) => e.preventDefault()}
+          >
+            {suggestion}
+          </li>
+        ))}
     </ul>
   );
 };
