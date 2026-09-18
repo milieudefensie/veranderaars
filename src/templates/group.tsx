@@ -239,7 +239,7 @@ const Group: React.FC<GroupProps> = ({
                 <div>
                   <a className="wp-button stretched" href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
                     <span>Signal chat</span>
-                    <ReactSVG src={wpIcon} />
+                    <ReactSVG src={wpIcon} aria-hidden="true" />
                   </a>
                 </div>
               )}
@@ -257,6 +257,7 @@ const Group: React.FC<GroupProps> = ({
           (Array.isArray(pastEvents) && pastEvents.length > 0)) && (
           <div className="related-section">
             <div className="container">
+              <h2 className="visually-hidden">Evenementen</h2>
               <Tabs
                 variant="underlined"
                 tabs={[
