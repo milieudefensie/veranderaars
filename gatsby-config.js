@@ -24,7 +24,7 @@ module.exports = {
         ...(isPreviewEnvironment && process.env.DATO_ENVIRONMENT
           ? { environment: process.env.DATO_ENVIRONMENT }
           : {}),
-        disableLiveReload: !isPreviewEnvironment,
+        disableLiveReload: true,
       },
     },
     {
@@ -38,8 +38,6 @@ module.exports = {
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     'gatsby-plugin-sass',
-    // 'gatsby-plugin-advanced-sitemap',
-    // 'gatsby-plugin-react-helmet',
     `gatsby-plugin-netlify`,
     {
       resolve: `gatsby-source-filesystem`,

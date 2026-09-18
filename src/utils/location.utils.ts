@@ -112,53 +112,6 @@ export async function getCurrentUserCity() {
   return null;
 }
 
-export async function getCurrentUserCity_OLD() {
-  try {
-    const mockData = {
-      city: 'Bovenkarspel',
-      longitude: 51.3768553,
-      latitude: 3.6460621,
-    };
-
-    return mockData;
-
-    const response = await fetch('https://api.ipwho.org/me'); // https://ipapi.co/json/
-    const { data } = await response.json();
-
-    // Set in storage
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      localStorage.setItem('userCity', data.city);
-      // localStorage.setItem('userLatitude', data.latitude);
-      // localStorage.setItem('userLongitude', data.longitude);
-    }
-
-    return {
-      city: data.city,
-      latitude: data.latitude,
-      longitude: data.longitude,
-    };
-  } catch (error) {
-    console.error('Error fetching user city:', error);
-
-    // Get from storage
-    if (
-      typeof window !== 'undefined' &&
-      typeof localStorage !== 'undefined' &&
-      localStorage.getItem('userCity') &&
-      localStorage.getItem('userLatitude') &&
-      localStorage.getItem('userLongitude')
-    ) {
-      return {
-        city: localStorage.getItem('userCity'),
-        latitude: localStorage.getItem('userLatitude'),
-        longitude: localStorage.getItem('userLongitude'),
-      };
-    }
-
-    return null;
-  }
-}
-
 export const distanceKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const toRad = (v: number) => (v * Math.PI) / 180;
   const R = 6371; // km

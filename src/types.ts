@@ -49,33 +49,6 @@ export type CategorizedEvents = {
   restOfMonth: EventType[];
 };
 
-// Templates
-export type CSLEventTemplate = {
-  page: {
-    title: string;
-    slug: string;
-    image_url?: string;
-    additional_image_sizes_url?: { style: string; url: string }[];
-    description: string;
-    rich_description?: string;
-    start_in_zone?: string;
-    end_in_zone?: string;
-    location?: LocationType;
-    inputs?: any[];
-    hiddenAddress?: boolean;
-    web_conference_url?: string;
-    waiting_list_enabled?: boolean;
-    max_attendees_count?: number;
-  };
-  listEvent?: {
-    id: string;
-    slug: string;
-  };
-  favicon: {
-    faviconMetaTags: any;
-  };
-};
-
 export type EventType = {
   id: string;
   __typename?: string;
@@ -109,35 +82,6 @@ export type EventType = {
   max_attendees_count: number;
   rawStartDate?: string;
   cms_status?: string;
-};
-
-export type EventTemplate = {
-  favicon: {
-    faviconMetaTags: any;
-  };
-  listEvent?: {
-    slug: string;
-  };
-  page: {
-    seo: any;
-    title: string;
-    introduction?: string;
-    hourStart?: string;
-    hourEnd?: string;
-    date?: string;
-    address?: string;
-    registrationForm?: any;
-    formBackgroundColor?: string;
-    shareMessage?: string;
-    image?: any;
-    content?: {
-      value: any;
-    };
-    tags?: Array<{
-      id: string;
-      title: string;
-    }>;
-  };
 };
 
 export type GroupTemplate = {
@@ -392,50 +336,6 @@ export type HomepageTemplate = {
       columns?: number;
     };
     blocks?: any[];
-  };
-};
-
-export type ListGroupTemplate = {
-  page: {
-    id: string;
-    title: string;
-    slug: string;
-    content?: {
-      value: any;
-      blocks: any[];
-    };
-    seo?: {
-      tags: any;
-    };
-  };
-  allGroups: {
-    edges: {
-      node: {
-        id: string;
-        title: string;
-        slug: string;
-        coordinates: {
-          latitude: number;
-          longitude: number;
-        };
-        model: {
-          apiKey: string;
-        };
-        image: {
-          url: string;
-          gatsbyImageData: GatsbyImageProps;
-        };
-        tags: {
-          id: string;
-          title: string;
-        }[];
-      };
-    }[];
-  };
-  favicon: {
-    faviconMetaTags: {
-      tags: any;
-    };
   };
 };
 
