@@ -113,7 +113,7 @@ const Event = ({ pageContext, data: { page, favicon } }) => {
               <h1>{finalTitle}</h1>
               {address && (
                 <div className="location-container">
-                  <h3>{address}</h3>
+                  <h2>{address}</h2>
                 </div>
               )}
               <div className="desktop-form">
