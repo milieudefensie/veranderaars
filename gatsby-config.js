@@ -24,7 +24,7 @@ module.exports = {
         ...(isPreviewEnvironment && process.env.DATO_ENVIRONMENT
           ? { environment: process.env.DATO_ENVIRONMENT }
           : {}),
-        disableLiveReload: true,
+        disableLiveReload: !isPreviewEnvironment,
       },
     },
     {
