@@ -18,7 +18,7 @@ import {
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';
 import { Link } from 'gatsby';
-import { geocodeCityName, distanceKm } from '../../../utils/location.utils';
+import { geocodeCityName } from '../../../utils/location.utils';
 
 import './styles.scss';
 
@@ -52,18 +52,31 @@ const EventLayout: React.FC<Props> = ({
   const [initialCenter, setInitialCenter] = useState<{ latitude: number; longitude: number; zoom?: number } | null>(
     null
   );
+  const [locatieFilter, setLocatieFilter] = useState<string | null>(null);
 
-  // When a ?locatie= location is set, only show events within a reasonable
-  // distance of it, instead of the full nationwide list.
-  const LOCATION_FILTER_RADIUS_KM = 25;
-  const allEvents: EventType[] = initialCenter
-    ? events.filter((event: any) => {
-        const lat = event.coordinates?.latitude;
-        const lng = event.coordinates?.longitude;
-        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
-        return distanceKm(initialCenter.latitude, initialCenter.longitude, lat, lng) <= LOCATION_FILTER_RADIUS_KM;
-      })
-    : [...events];
+  // When a ?locatie= location is set, only show events whose own location text
+  // (region/locality/address) matches it, instead of the full nationwide list.
+  const isWithinLocationFilter = (event: any): boolean => {
+    if (!locatieFilter || !event) return true;
+
+    const needle = locatieFilter.trim().toLowerCase();
+    if (!needle) return true;
+
+    const haystacks: string[] = [event.region, event.location?.locality, event.location?.region, event.address, event.beknopteAddress]
+      .filter((value): value is string => typeof value === 'string' && value.length > 0)
+      .map((value) => value.toLowerCase());
+
+    return haystacks.some((haystack) => haystack.includes(needle) || needle.includes(haystack));
+  };
+
+  const allEvents: EventType[] = events.filter(isWithinLocationFilter);
+  const filteredHighlightedEvent = isWithinLocationFilter(highlightedEvent) ? highlightedEvent : undefined;
+  const filteredFeaturedCollection = featuredCollection
+    ? { ...featuredCollection, relatedEvents: (featuredCollection.relatedEvents || []).filter(isWithinLocationFilter) }
+    : featuredCollection;
+  const filteredExtraCollection = extraCollection
+    ? extraCollection.map((c) => ({ ...c, relatedEvents: (c.relatedEvents || []).filter(isWithinLocationFilter) }))
+    : extraCollection;
 
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
   const shownEventIds = new Set<string>();
@@ -73,6 +86,8 @@ const EventLayout: React.FC<Props> = ({
 
     const locatie = new URLSearchParams(window.location.search).get('locatie');
     if (!locatie) return;
+
+    setLocatieFilter(locatie);
 
     geocodeCityName(locatie).then((result: any) => {
       if (!result) return;
@@ -235,23 +250,23 @@ const EventLayout: React.FC<Props> = ({
       </header>
 
       <div className="container negative-margin">
-        {featuredCollection && (
+        {filteredFeaturedCollection && (
           <div className="featured-collection">
             <EventCollectionCard
-              collection={featuredCollection}
-              calendarEvents={getCalendarEventsForCollection(featuredCollection, allEvents)}
+              collection={filteredFeaturedCollection}
+              calendarEvents={getCalendarEventsForCollection(filteredFeaturedCollection, allEvents)}
             />
           </div>
         )}
-        {highlightedEvent && (
+        {filteredHighlightedEvent && (
           <div className="highlight-event-container">
-            <EventCardV2 event={highlightedEvent} isLocalGroup={isLocalGroupOrganizer(highlightedEvent)} />
+            <EventCardV2 event={filteredHighlightedEvent} isLocalGroup={isLocalGroupOrganizer(filteredHighlightedEvent)} />
           </div>
         )}
         <div className="map-container">
           {/* @ts-ignore */}
           <Map
-            data={events}
+            data={allEvents as any}
             mobileView={mobileShowMap}
             setMobileView={setMobileShowMap}
             extraLogic={handleOnMobile}
@@ -275,15 +290,15 @@ const EventLayout: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        {extraCollection && extraCollection.length > 0 && (
+        {filteredExtraCollection && filteredExtraCollection.length > 0 && (
           <div>
             <h2 className="heading">{t('featured_events')}</h2>
 
-            <div className={`event-collection grid-events ${extraCollection.length > 1 ? 'two' : 'one'}`}>
-              {extraCollection?.map((c) => (
+            <div className={`event-collection grid-events ${filteredExtraCollection.length > 1 ? 'two' : 'one'}`}>
+              {filteredExtraCollection?.map((c) => (
                 <EventCollectionCard
                   collection={c}
-                  vertical={extraCollection.length > 1}
+                  vertical={filteredExtraCollection.length > 1}
                   calendarEvents={getCalendarEventsForCollection(c, allEvents)}
                 />
               ))}
