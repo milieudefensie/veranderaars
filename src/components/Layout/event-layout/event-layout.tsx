@@ -18,7 +18,7 @@ import {
 import { DateTime } from 'luxon';
 import { useTranslate } from '@tolgee/react';
 import { Link } from 'gatsby';
-import { geocodeCityName } from '../../../utils/location.utils';
+import { geocodeCityName, distanceKm } from '../../../utils/location.utils';
 
 import './styles.scss';
 
@@ -46,13 +46,24 @@ const EventLayout: React.FC<Props> = ({
   configuration,
 }) => {
   const { t } = useTranslate();
-  const allEvents: EventType[] = [...events];
 
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [mobileDevice, setMobileDevice] = useState(false);
   const [initialCenter, setInitialCenter] = useState<{ latitude: number; longitude: number; zoom?: number } | null>(
     null
   );
+
+  // When a ?locatie= location is set, only show events within a reasonable
+  // distance of it, instead of the full nationwide list.
+  const LOCATION_FILTER_RADIUS_KM = 25;
+  const allEvents: EventType[] = initialCenter
+    ? events.filter((event: any) => {
+        const lat = event.coordinates?.latitude;
+        const lng = event.coordinates?.longitude;
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+        return distanceKm(initialCenter.latitude, initialCenter.longitude, lat, lng) <= LOCATION_FILTER_RADIUS_KM;
+      })
+    : [...events];
 
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
   const shownEventIds = new Set<string>();
