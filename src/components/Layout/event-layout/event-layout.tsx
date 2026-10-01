@@ -46,13 +46,37 @@ const EventLayout: React.FC<Props> = ({
   configuration,
 }) => {
   const { t } = useTranslate();
-  const allEvents: EventType[] = [...events];
 
   const [mobileShowMap, setMobileShowMap] = useState(false);
   const [mobileDevice, setMobileDevice] = useState(false);
   const [initialCenter, setInitialCenter] = useState<{ latitude: number; longitude: number; zoom?: number } | null>(
     null
   );
+  const [locatieFilter, setLocatieFilter] = useState<string | null>(null);
+
+  // When a ?locatie= location is set, only show events whose own location text
+  // (region/locality/address) matches it, instead of the full nationwide list.
+  const isWithinLocationFilter = (event: any): boolean => {
+    if (!locatieFilter || !event) return true;
+
+    const needle = locatieFilter.trim().toLowerCase();
+    if (!needle) return true;
+
+    const haystacks: string[] = [event.region, event.location?.locality, event.location?.region, event.address, event.beknopteAddress]
+      .filter((value): value is string => typeof value === 'string' && value.length > 0)
+      .map((value) => value.toLowerCase());
+
+    return haystacks.some((haystack) => haystack.includes(needle) || needle.includes(haystack));
+  };
+
+  const allEvents: EventType[] = events.filter(isWithinLocationFilter);
+  const filteredHighlightedEvent = isWithinLocationFilter(highlightedEvent) ? highlightedEvent : undefined;
+  const filteredFeaturedCollection = featuredCollection
+    ? { ...featuredCollection, relatedEvents: (featuredCollection.relatedEvents || []).filter(isWithinLocationFilter) }
+    : featuredCollection;
+  const filteredExtraCollection = extraCollection
+    ? extraCollection.map((c) => ({ ...c, relatedEvents: (c.relatedEvents || []).filter(isWithinLocationFilter) }))
+    : extraCollection;
 
   const futureEvents = getEventsGroupedByFutureMonths(allEvents);
   const shownEventIds = new Set<string>();
@@ -62,6 +86,8 @@ const EventLayout: React.FC<Props> = ({
 
     const locatie = new URLSearchParams(window.location.search).get('locatie');
     if (!locatie) return;
+
+    setLocatieFilter(locatie);
 
     geocodeCityName(locatie).then((result: any) => {
       if (!result) return;
@@ -224,23 +250,23 @@ const EventLayout: React.FC<Props> = ({
       </header>
 
       <div className="container negative-margin">
-        {featuredCollection && (
+        {filteredFeaturedCollection && (
           <div className="featured-collection">
             <EventCollectionCard
-              collection={featuredCollection}
-              calendarEvents={getCalendarEventsForCollection(featuredCollection, allEvents)}
+              collection={filteredFeaturedCollection}
+              calendarEvents={getCalendarEventsForCollection(filteredFeaturedCollection, allEvents)}
             />
           </div>
         )}
-        {highlightedEvent && (
+        {filteredHighlightedEvent && (
           <div className="highlight-event-container">
-            <EventCardV2 event={highlightedEvent} isLocalGroup={isLocalGroupOrganizer(highlightedEvent)} />
+            <EventCardV2 event={filteredHighlightedEvent} isLocalGroup={isLocalGroupOrganizer(filteredHighlightedEvent)} />
           </div>
         )}
         <div className="map-container">
           {/* @ts-ignore */}
           <Map
-            data={events}
+            data={allEvents as any}
             mobileView={mobileShowMap}
             setMobileView={setMobileShowMap}
             extraLogic={handleOnMobile}
@@ -264,15 +290,15 @@ const EventLayout: React.FC<Props> = ({
             </span>
           </div>
         </div>
-        {extraCollection && extraCollection.length > 0 && (
+        {filteredExtraCollection && filteredExtraCollection.length > 0 && (
           <div>
             <h2 className="heading">{t('featured_events')}</h2>
 
-            <div className={`event-collection grid-events ${extraCollection.length > 1 ? 'two' : 'one'}`}>
-              {extraCollection?.map((c) => (
+            <div className={`event-collection grid-events ${filteredExtraCollection.length > 1 ? 'two' : 'one'}`}>
+              {filteredExtraCollection?.map((c) => (
                 <EventCollectionCard
                   collection={c}
-                  vertical={extraCollection.length > 1}
+                  vertical={filteredExtraCollection.length > 1}
                   calendarEvents={getCalendarEventsForCollection(c, allEvents)}
                 />
               ))}
