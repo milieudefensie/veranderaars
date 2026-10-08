@@ -31,6 +31,8 @@ interface FormStepsProps {
   descriptionAsHtml?: boolean;
   noStyle?: boolean;
   showPlaceholder?: boolean;
+  hideForm?: boolean;
+  cta?: React.ReactNode;
 }
 
 const FormSteps: React.FC<FormStepsProps> = ({
@@ -47,6 +49,8 @@ const FormSteps: React.FC<FormStepsProps> = ({
   descriptionAsHtml = false,
   noStyle = false,
   showPlaceholder = false,
+  hideForm = false,
+  cta,
 }) => {
   const location = useLocation();
   const { forms = [] } = form[0] || {};
@@ -60,7 +64,9 @@ const FormSteps: React.FC<FormStepsProps> = ({
     return 0;
   };
 
-  const [currentStep, setCurrentStep] = useState<number>(getInitialStep);
+  const [step, setCurrentStep] = useState<number>(getInitialStep);
+  // Without the form there are no further steps to show
+  const currentStep = hideForm ? 0 : step;
   const [email, setEmail] = useState<string | null>(null);
 
   const isFirstStep = currentStep === 0;
@@ -125,7 +131,9 @@ const FormSteps: React.FC<FormStepsProps> = ({
             />
           )}
 
-          {Array.isArray(forms) && forms.length > 0 && forms[currentStep] && (
+          {hideForm && cta && <div className="form-steps-cta">{cta}</div>}
+
+          {!hideForm && Array.isArray(forms) && forms.length > 0 && forms[currentStep] && (
             <HubspotForm
               key={forms[currentStep]?.id}
               {...forms[currentStep]}
@@ -143,14 +151,16 @@ const FormSteps: React.FC<FormStepsProps> = ({
           <img src={bgImageUrl} alt={`${title}`} />
         </div>
       </div>
-      <div
-        className={`legal-text ${isFirstStep ? 'first-step' : 'second-step'}`}
-        dangerouslySetInnerHTML={{
-          __html:
-            forms[currentStep]?.disclaimerText ||
-            `<p>We houden je op de hoogte over onze beweging en acties bij jou in de buurt via je ingevulde e-mailadres. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze <a href="http://milieudefensie.nl/over-ons/cookies-en-privacy">privacybepaling</a> voor alle details. Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google <a href="https://policies.google.com/privacy">privacybeleid</a> en <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.</p>`,
-        }}
-      />
+      {!hideForm && (
+        <div
+          className={`legal-text ${isFirstStep ? 'first-step' : 'second-step'}`}
+          dangerouslySetInnerHTML={{
+            __html:
+              forms[currentStep]?.disclaimerText ||
+              `<p>We houden je op de hoogte over onze beweging en acties bij jou in de buurt via je ingevulde e-mailadres. Als je je nummer deelt kunnen we je bellen of een WhatsApp-berichtje sturen om je op weg te helpen. Lees onze <a href="http://milieudefensie.nl/over-ons/cookies-en-privacy">privacybepaling</a> voor alle details. Deze website wordt beschermd tegen spam door reCAPTCHA, dus het Google <a href="https://policies.google.com/privacy">privacybeleid</a> en <a href="https://policies.google.com/terms">voorwaarden</a> zijn van toepassing.</p>`,
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import FormSteps from '../FormSteps/FormSteps';
+import { HUBSPOT_FORMS_ENABLED } from '../../Blocks/HubspotForm/config';
 
 import './index.scss';
 
@@ -16,7 +17,13 @@ const HomeHero: React.FC<HomeHeroProps> = ({ title, subtitle, image, form = null
 
   return (
     <div id="hero-homepage" className="wrapper-hero">
-      <FormSteps title={title} description={subtitle} form={form} bgImageUrl={bgImageUrl} />
+      <FormSteps
+        title={title}
+        description={subtitle}
+        form={form}
+        bgImageUrl={bgImageUrl}
+        hideForm={!HUBSPOT_FORMS_ENABLED}
+      />
     </div>
   );
 };

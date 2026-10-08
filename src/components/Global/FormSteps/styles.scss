@@ -339,3 +339,37 @@
     max-width: 696px;
   }
 }
+.ui-form-steps2 .metadata .form-steps-cta {
+  margin-top: 20px;
+  display: flex;
+
+  .wp-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 2px solid var(--dark);
+    border-radius: 5px;
+    background-color: var(--white);
+    color: var(--dark);
+    cursor: pointer;
+    font-family: var(--nb-secondary-font);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 120%;
+    text-decoration: none;
+
+    &:hover {
+      background-color: var(--dark);
+      color: var(--white);
+
+      svg rect {
+        fill: var(--dark);
+      }
+
+      svg path {
+        fill: var(--white);
+      }
+    }
+  }
+}

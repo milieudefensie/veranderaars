@@ -2,6 +2,7 @@ import React from 'react';
 import HubspotForm from '../HubspotForm/HubspotForm'; // @ts-expect-error
 import formVector from '../../Icons/new-form-icon.svg';
 import FormSteps from '../../Global/FormSteps/FormSteps';
+import { HUBSPOT_FORMS_ENABLED } from '../HubspotForm/config';
 import { useEffect } from 'react';
 
 import './styles.scss';
@@ -28,7 +29,13 @@ interface FormBlockProps {
   isHomepage?: boolean;
 }
 
-const FormBlock: React.FC<FormBlockProps> = ({ block, isHomepage = false }) => {
+const FormBlock: React.FC<FormBlockProps> = (props) => {
+  if (!HUBSPOT_FORMS_ENABLED) return null;
+
+  return <HubspotFormBlock {...props} />;
+};
+
+const HubspotFormBlock: React.FC<FormBlockProps> = ({ block, isHomepage = false }) => {
   const { title, description, hubspot, formSteps, variant = null } = block;
 
   useEffect(() => {
