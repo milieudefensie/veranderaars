@@ -156,6 +156,32 @@ const Group: React.FC<GroupProps> = ({
     </a>
   ) : null;
 
+  // Group contact details shown inside the hero, next to the Signal chat button
+  const heroContact =
+    email || organizer || signalChatButton ? (
+      <>
+        {(email || organizer) && (
+          <div className="contact-info">
+            {email && (
+              <span>
+                <img src={emailIcon} alt="Email icon" width={24} height={24} />
+                <a href={`mailto:${email}`}>{email}</a>
+              </span>
+            )}
+
+            {organizer && (
+              <span>
+                <img src={organizerIcon} alt="Organizer icon" width={24} height={24} />
+                <span>Lokale organizer: {organizer}</span>
+              </span>
+            )}
+          </div>
+        )}
+
+        {signalChatButton}
+      </>
+    ) : null;
+
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
       {/* @ts-ignore */}
@@ -187,7 +213,7 @@ const Group: React.FC<GroupProps> = ({
             }
             extraLogic={hubspotFormSetGroupId}
             hideForm={!HUBSPOT_FORMS_ENABLED}
-            cta={signalChatButton}
+            cta={heroContact}
           />
         ) : (
           <HeroBasic image={image} overlay={false} />
@@ -222,8 +248,8 @@ const Group: React.FC<GroupProps> = ({
             </>
           )}
 
-          {/* Brief information */}
-          {(email || signalChat || organizer) && (
+          {/* Brief information (shown in the hero when the group uses form steps) */}
+          {!withFormsSteps && (email || signalChat || organizer) && (
             <div className="brief-information">
               <div className="metadata">
                 {email && (

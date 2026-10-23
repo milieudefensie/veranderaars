@@ -131,8 +131,6 @@ const FormSteps: React.FC<FormStepsProps> = ({
             />
           )}
 
-          {hideForm && cta && <div className="form-steps-cta">{cta}</div>}
-
           {!hideForm && Array.isArray(forms) && forms.length > 0 && forms[currentStep] && (
             <HubspotForm
               key={forms[currentStep]?.id}
@@ -146,6 +144,8 @@ const FormSteps: React.FC<FormStepsProps> = ({
               showPlaceholder={showPlaceholder}
             />
           )}
+
+          {isFirstStep && cta && <div className="form-steps-cta">{cta}</div>}
         </div>
         <div className="image-container">
           <img src={bgImageUrl} alt={`${title}`} />
