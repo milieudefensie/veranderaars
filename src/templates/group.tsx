@@ -20,6 +20,7 @@ import {
 import useCSLEvents from '../hooks/useCSLEvents';
 import FormSteps from '../components/Global/FormSteps/FormSteps';
 import HubspotForm from '../components/Blocks/HubspotForm/HubspotForm';
+import { HUBSPOT_FORMS_ENABLED } from '../components/Blocks/HubspotForm/config';
 import HeroBasic from '../components/Global/HeroBasic/hero-basic';
 // @ts-expect-error
 import emailIcon from '../components/Icons/email.svg'; // @ts-expect-error
@@ -70,7 +71,14 @@ const isNearGroup = (event: any, groupLat: number, groupLon: number) => {
 };
 
 const Group: React.FC<GroupProps> = ({
-  data: { page, allEvents = { edges: [] }, allCSLEvents = { edges: [] }, allQomonEvents = { edges: [] }, listGroup, favicon },
+  data: {
+    page,
+    allEvents = { edges: [] },
+    allCSLEvents = { edges: [] },
+    allQomonEvents = { edges: [] },
+    listGroup,
+    favicon,
+  },
 }) => {
   const {
     seo,
@@ -141,6 +149,39 @@ const Group: React.FC<GroupProps> = ({
 
   const withFormsSteps = isArray(formSteps);
 
+  const signalChatButton = signalChat ? (
+    <a className="wp-button stretched" href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
+      <span>Signal chat</span>
+      <ReactSVG src={wpIcon} aria-hidden="true" />
+    </a>
+  ) : null;
+
+  // Group contact details shown inside the hero, next to the Signal chat button
+  const heroContact =
+    email || organizer || signalChatButton ? (
+      <>
+        {(email || organizer) && (
+          <div className="contact-info">
+            {email && (
+              <span>
+                <img src={emailIcon} alt="Email icon" width={24} height={24} />
+                <a href={`mailto:${email}`}>{email}</a>
+              </span>
+            )}
+
+            {organizer && (
+              <span>
+                <img src={organizerIcon} alt="Organizer icon" width={24} height={24} />
+                <span>Lokale organizer: {organizer}</span>
+              </span>
+            )}
+          </div>
+        )}
+
+        {signalChatButton}
+      </>
+    ) : null;
+
   return (
     <Layout heroBgColor={image ? '' : 'green'}>
       {/* @ts-ignore */}
@@ -171,6 +212,8 @@ const Group: React.FC<GroupProps> = ({
               </>
             }
             extraLogic={hubspotFormSetGroupId}
+            hideForm={!HUBSPOT_FORMS_ENABLED}
+            cta={heroContact}
           />
         ) : (
           <HeroBasic image={image} overlay={false} />
@@ -194,17 +237,19 @@ const Group: React.FC<GroupProps> = ({
 
               {title && <h1 className="main-heading title-hero-alternative">{title}</h1>}
               {introduction && <div className="alt-introduction" dangerouslySetInnerHTML={{ __html: introduction }} />}
-              {registrationForm && (
-                <div className="form-wrapper">
-                  {/* @ts-ignore */}
-                  <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
-                </div>
-              )}
+              {HUBSPOT_FORMS_ENABLED
+                ? registrationForm && (
+                    <div className="form-wrapper">
+                      {/* @ts-ignore */}
+                      <HubspotForm {...registrationForm} style="event" extraLogic={hubspotFormSetGroupId} />
+                    </div>
+                  )
+                : signalChatButton && <div className="form-wrapper">{signalChatButton}</div>}
             </>
           )}
 
-          {/* Brief information */}
-          {(email || signalChat || organizer) && (
+          {/* Brief information (shown in the hero when the group uses form steps) */}
+          {!withFormsSteps && (email || signalChat || organizer) && (
             <div className="brief-information">
               <div className="metadata">
                 {email && (
@@ -235,14 +280,7 @@ const Group: React.FC<GroupProps> = ({
                 )}
               </div>
 
-              {signalChat && (
-                <div>
-                  <a className="wp-button stretched" href={`${signalChat}`} target="_blank" rel="noopener noreferrer">
-                    <span>Signal chat</span>
-                    <ReactSVG src={wpIcon} aria-hidden="true" />
-                  </a>
-                </div>
-              )}
+              {signalChatButton && <div>{signalChatButton}</div>}
             </div>
           )}
 
