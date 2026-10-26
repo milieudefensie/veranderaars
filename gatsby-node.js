@@ -141,22 +141,53 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   const clientSecret = process.env.CSL_CLIENT_SECRET;
   const cslPath = process.env.CSL_PATH;
 
-  const encodedCredentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-  const tokenResponse = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${encodedCredentials}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  });
+  if (!clientId || !clientSecret || !cslPath) {
+    console.warn('[CSL Source] CSL_CLIENT_ID, CSL_CLIENT_SECRET or CSL_PATH missing. Skipping CSL events source.');
+    return;
+  }
 
-  const { access_token: accessToken } = await tokenResponse.json();
+  let accessToken;
+  try {
+    const encodedCredentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const tokenResponse = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${encodedCredentials}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    if (!tokenResponse.ok) {
+      const body = await tokenResponse.text();
+      console.warn(`[CSL Source] Failed to obtain access token (${tokenResponse.status}): ${body}`);
+      console.warn('[CSL Source] Skipping CSL events source.');
+      return;
+    }
+
+    ({ access_token: accessToken } = await tokenResponse.json());
+
+    if (!accessToken) {
+      console.warn('[CSL Source] Token response did not include an access_token. Skipping CSL events source.');
+      return;
+    }
+  } catch (error) {
+    console.warn(`[CSL Source] Error while authenticating: ${error.message}`);
+    console.warn('[CSL Source] Skipping CSL events source.');
+    return;
+  }
+
   const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json' };
 
-  // console.log('New token:', accessToken);
-
-  const allEvents = await getAllEvents(accessToken);
-  const allPublicEvents = await getAllPublicEvents();
+  let allEvents;
+  let allPublicEvents;
+  try {
+    allEvents = await getAllEvents(accessToken, cslPath);
+    allPublicEvents = await getAllPublicEvents(cslPath);
+  } catch (error) {
+    console.warn(`[CSL Source] Error while fetching events: ${error.message}`);
+    console.warn('[CSL Source] Skipping CSL events source.');
+    return;
+  }
 
   const fetchAllAttendees = async (eventSlug) => {
     let attendees = [];
@@ -256,8 +287,8 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   console.log(`[CSL Source] Finished creating ${allEvents.length} events.`);
 };
 
-const getAllEvents = async (accessToken) => {
-  const baseUrl = `https://klimaatmars.milieudefensie.nl/api/v1/events/?access_token=${accessToken}`;
+const getAllEvents = async (accessToken, cslPath) => {
+  const baseUrl = `${cslPath}/api/v1/events/?access_token=${accessToken}`;
   const events = [];
   let currentPage = 1;
   let totalPages = 1;
@@ -265,6 +296,12 @@ const getAllEvents = async (accessToken) => {
   do {
     console.log(`Fetching page ${currentPage} of events...`);
     const response = await fetch(`${baseUrl}&page=${currentPage}`);
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`CSL events request failed (${response.status}): ${body}`);
+    }
+
     const data = await response.json();
 
     if (!data || !data.meta) {
@@ -281,8 +318,8 @@ const getAllEvents = async (accessToken) => {
   return events;
 };
 
-const getAllPublicEvents = async () => {
-  const baseUrl = `https://klimaatmars.milieudefensie.nl/api/local.json`;
+const getAllPublicEvents = async (cslPath) => {
+  const baseUrl = `${cslPath}/api/local.json`;
   const events = [];
   let currentPage = 1;
   let totalPages = 1;
@@ -290,6 +327,12 @@ const getAllPublicEvents = async () => {
   do {
     console.log(`[PUBLIC EVENTS] Fetching page ${currentPage} of events...`);
     const response = await fetch(`${baseUrl}?page=${currentPage}`);
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`CSL public events request failed (${response.status}): ${body}`);
+    }
+
     const data = await response.json();
 
     if (!data || !data.meta) {
@@ -557,11 +600,12 @@ exports.createPages = ({ graphql, actions }) => {
         if (result.errors) {
           console.log(result.errors);
           reject(result.errors);
+          return;
         }
 
-        const cslHighlightedEvent = result.data?.configuration.slugOfHighlightedEvent;
-        const cslHighlightedEventAgenda = result.data?.configuration.slugOfHighlightedEventAgenda;
-        const cslSlugsOfEventsHidden = result.data?.configuration.eventsHidden;
+        const cslHighlightedEvent = result.data?.configuration?.slugOfHighlightedEvent;
+        const cslHighlightedEventAgenda = result.data?.configuration?.slugOfHighlightedEventAgenda;
+        const cslSlugsOfEventsHidden = result.data?.configuration?.eventsHidden;
 
         // Create homepage
         createPage({
@@ -629,7 +673,7 @@ exports.createPages = ({ graphql, actions }) => {
             context: {
               slug: event.slug,
               id: event.id,
-              heroImage: result.data?.configuration.cslGenericImage,
+              heroImage: result.data?.configuration?.cslGenericImage,
             },
           });
         }
