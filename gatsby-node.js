@@ -639,8 +639,8 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list events
-        const listEvents = result.data?.listEvents || [];
-        if (listEvents) {
+        const listEvents = result.data?.listEvents;
+        if (listEvents?.slug) {
           createPage({
             path: listEvents.slug,
             component: templates.listEvents,
@@ -651,6 +651,8 @@ exports.createPages = ({ graphql, actions }) => {
               cslEventsHidden: cslSlugsOfEventsHidden,
             },
           });
+        } else {
+          console.warn('[DatoCMS] "List Event" record is missing a slug. Skipping listEvents page.');
         }
 
         const events = result.data?.events.edges;
@@ -679,8 +681,8 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list groups
-        const listGroups = result.data?.listGroups || [];
-        if (listGroups) {
+        const listGroups = result.data?.listGroups;
+        if (listGroups?.slug) {
           createPage({
             path: listGroups.slug,
             component: templates.listGroups,
@@ -690,6 +692,8 @@ exports.createPages = ({ graphql, actions }) => {
               cslEventsHidden: cslSlugsOfEventsHidden,
             },
           });
+        } else {
+          console.warn('[DatoCMS] "List Group" record is missing a slug. Skipping listGroups page.');
         }
 
         // Group detail
@@ -728,8 +732,8 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list tools
-        const listTools = result.data?.listTools || [];
-        if (listTools) {
+        const listTools = result.data?.listTools;
+        if (listTools?.slug) {
           createPage({
             path: listTools.slug,
             component: templates.listTools,
@@ -737,6 +741,8 @@ exports.createPages = ({ graphql, actions }) => {
               slug: listTools.slug,
             },
           });
+        } else {
+          console.warn('[DatoCMS] "List Tool" record is missing a slug. Skipping listTools page.');
         }
 
         const tools = result.data?.tools.edges;
@@ -752,8 +758,8 @@ exports.createPages = ({ graphql, actions }) => {
         }
 
         // list WhatsApp Groups
-        const listWhatsAppGroups = result.data?.listWhatsAppGroups || [];
-        if (listWhatsAppGroups) {
+        const listWhatsAppGroups = result.data?.listWhatsAppGroups;
+        if (listWhatsAppGroups?.slug) {
           createPage({
             path: listWhatsAppGroups.slug,
             component: templates.listWhatsAppGroups,
@@ -761,11 +767,13 @@ exports.createPages = ({ graphql, actions }) => {
               slug: listWhatsAppGroups.slug,
             },
           });
+        } else {
+          console.warn('[DatoCMS] "List Group Whatsapp Community" record is missing a slug. Skipping listWhatsAppGroups page.');
         }
 
         // list Signal Groups
-        const listSignalGroups = result.data?.listSignalGroups || [];
-        if (listSignalGroups) {
+        const listSignalGroups = result.data?.listSignalGroups;
+        if (listSignalGroups?.slug) {
           createPage({
             path: listSignalGroups.slug,
             component: templates.listSignalGroups,
@@ -773,6 +781,8 @@ exports.createPages = ({ graphql, actions }) => {
               slug: listSignalGroups.slug,
             },
           });
+        } else {
+          console.warn('[DatoCMS] "List Signal Group" record is missing a slug. Skipping listSignalGroups page.');
         }
 
         const redirects = result.data.redirects.edges;
