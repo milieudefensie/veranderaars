@@ -7,25 +7,18 @@ export default async function handler(req, res) {
     let currentPage = 1;
     let totalPages = 0;
 
-    const clientId = process.env.CSL_CLIENT_ID;
-    const clientSecret = process.env.CSL_CLIENT_SECRET;
+    const apiKey = process.env.CSL_API_KEY;
     const cslPath = process.env.CSL_PATH;
-    const credentials = `${clientId}:${clientSecret}`;
-    const encodedCredentials = Buffer.from(credentials).toString('base64');
-    const accessToken = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${encodedCredentials}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-    const receivedToken = await accessToken.json();
 
     do {
-      const response = await fetch(
-        `${cslPath}/api/v1/events/${slug}/attendees?access_token=${receivedToken.access_token}&page=${currentPage}`,
-        { method: 'GET', headers: { Accept: 'application/json', 'Content-Type': 'application/json' } }
-      );
+      const response = await fetch(`${cslPath}/api/v1/events/${slug}/attendees?page=${currentPage}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+      });
 
       const data = await response.json();
       allAttendees = allAttendees.concat(data.attendees);
