@@ -1,7 +1,6 @@
 const axios = require('axios');
 
-const clientId = process.env.CSL_CLIENT_ID;
-const clientSecret = process.env.CSL_CLIENT_SECRET;
+const apiKey = process.env.CSL_API_KEY;
 const allowedOrigins = ['http://localhost:8000', 'https://veranderaars.milieudefensie.nl'];
 
 const ERROR_MSG = {
@@ -28,15 +27,6 @@ export default async function handler(req, res) {
     // return res.status(403).json({ error: 'Access denied' });
   }
 
-  const credentials = `${clientId}:${clientSecret}`;
-  const encodedCredentials = Buffer.from(credentials).toString('base64');
-
-  const tokenResponse = await axios.post(`${process.env.CSL_PATH}/oauth/token`, null, {
-    headers: { Authorization: `Basic ${encodedCredentials}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-    params: { grant_type: 'client_credentials' },
-  });
-  const accessToken = tokenResponse.data.access_token;
-
   try {
     const attendeeInfo = req.body;
     const { slug, firstName, lastName, email, postcode, phone, consent_email, waiting_list } = attendeeInfo;
@@ -59,7 +49,7 @@ export default async function handler(req, res) {
 
     await axios
       .post(`${process.env.CSL_PATH}/api/v1/events/${slug}/attendees`, body, {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${apiKey}` },
       })
       .then((response) => {
         if (response.status !== 200) {

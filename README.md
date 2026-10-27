@@ -41,8 +41,7 @@ A modern, multilingual website built with Gatsby.js and React. This project leve
     DATO_API_TOKEN=
     DATO_ENVIRONMENT=
     REACT_MAPBOX_TOKEN=
-    CSL_CLIENT_ID=
-    CSL_CLIENT_SECRET=
+    CSL_API_KEY=
     CSL_PATH=
     GOOGLE_SHEETS_CLIENT_EMAIL=
     GOOGLE_SHEETS_PRIVATE_KEY=
@@ -61,9 +60,8 @@ A modern, multilingual website built with Gatsby.js and React. This project leve
    | `DATO_API_TOKEN`             | DatoCMS API read-only token                           | `c63a5e...`                                  |
    | `DATO_ENVIRONMENT`           | DatoCMS environment name (optional)                   | `main`                                       |
    | `REACT_MAPBOX_TOKEN`         | Mapbox API access token for map components            | `pk.eyJ1Ijoi...`                             |
-   | `CSL_CLIENT_ID`              | Client ID for CSL external service (e.g., OAuth)      | `csl-client-id`                              |
-   | `CSL_CLIENT_SECRET`          | Client secret for CSL                                 | `csl-client-secret`                          |
-   | `CSL_PATH`                   | Endpoint or path used for CSL integration             | `/api/csl`                                   |
+   | `CSL_API_KEY`                | ControlShiftLabs API key (Settings > Integrations > API Keys), sent as `Authorization: Bearer` | `cs_aBcDeFgHiJ0123456789kLmNoPqRsT` |
+   | `CSL_PATH`                   | Base URL of the CSL instance                          | `https://klimaatmars.milieudefensie.nl`      |
    | `GOOGLE_SHEETS_CLIENT_EMAIL` | Service account email for accessing Google Sheets API | `my-service@project.iam.gserviceaccount.com` |
    | `GOOGLE_SHEETS_PRIVATE_KEY`  | Private key for Google Sheets API (escaped with `\n`) | `-----BEGIN PRIVATE KEY-----\n...`           |
    | `SPREADSHEET_ID`             | ID of the target Google Spreadsheet                   | `1BxiMVs0XRA5n...`                           |
