@@ -137,51 +137,24 @@ exports.createSchemaCustomization = ({ actions }) => {
 exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) => {
   await sourceQomonEvents({ createNode, createContentDigest });
 
-  const clientId = process.env.CSL_CLIENT_ID;
-  const clientSecret = process.env.CSL_CLIENT_SECRET;
+  const apiKey = process.env.CSL_API_KEY;
   const cslPath = process.env.CSL_PATH;
 
-  if (!clientId || !clientSecret || !cslPath) {
-    console.warn('[CSL Source] CSL_CLIENT_ID, CSL_CLIENT_SECRET or CSL_PATH missing. Skipping CSL events source.');
+  if (!apiKey || !cslPath) {
+    console.warn('[CSL Source] CSL_API_KEY or CSL_PATH missing. Skipping CSL events source.');
     return;
   }
 
-  let accessToken;
-  try {
-    const encodedCredentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-    const tokenResponse = await fetch(`${cslPath}/oauth/token?grant_type=client_credentials`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${encodedCredentials}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-
-    if (!tokenResponse.ok) {
-      const body = await tokenResponse.text();
-      console.warn(`[CSL Source] Failed to obtain access token (${tokenResponse.status}): ${body}`);
-      console.warn('[CSL Source] Skipping CSL events source.');
-      return;
-    }
-
-    ({ access_token: accessToken } = await tokenResponse.json());
-
-    if (!accessToken) {
-      console.warn('[CSL Source] Token response did not include an access_token. Skipping CSL events source.');
-      return;
-    }
-  } catch (error) {
-    console.warn(`[CSL Source] Error while authenticating: ${error.message}`);
-    console.warn('[CSL Source] Skipping CSL events source.');
-    return;
-  }
-
-  const jsonHeaders = { Accept: 'application/json', 'Content-Type': 'application/json' };
+  const jsonHeaders = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  };
 
   let allEvents;
   let allPublicEvents;
   try {
-    allEvents = await getAllEvents(accessToken, cslPath);
+    allEvents = await getAllEvents(apiKey, cslPath);
     allPublicEvents = await getAllPublicEvents(cslPath);
   } catch (error) {
     console.warn(`[CSL Source] Error while fetching events: ${error.message}`);
@@ -195,10 +168,10 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     let hasMore = true;
 
     while (hasMore) {
-      const res = await fetch(
-        `${cslPath}/api/v1/events/${eventSlug}/attendees?access_token=${accessToken}&page=${currentPage}`,
-        { method: 'GET', headers: jsonHeaders }
-      );
+      const res = await fetch(`${cslPath}/api/v1/events/${eventSlug}/attendees?page=${currentPage}`, {
+        method: 'GET',
+        headers: jsonHeaders,
+      });
       const data = await res.json();
       attendees = attendees.concat(data.attendees);
       currentPage = data.meta.next_page;
@@ -287,15 +260,17 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
   console.log(`[CSL Source] Finished creating ${allEvents.length} events.`);
 };
 
-const getAllEvents = async (accessToken, cslPath) => {
-  const baseUrl = `${cslPath}/api/v1/events/?access_token=${accessToken}`;
+const getAllEvents = async (apiKey, cslPath) => {
+  const baseUrl = `${cslPath}/api/v1/events/`;
   const events = [];
   let currentPage = 1;
   let totalPages = 1;
 
   do {
     console.log(`Fetching page ${currentPage} of events...`);
-    const response = await fetch(`${baseUrl}&page=${currentPage}`);
+    const response = await fetch(`${baseUrl}?page=${currentPage}`, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
 
     if (!response.ok) {
       const body = await response.text();
@@ -768,7 +743,9 @@ exports.createPages = ({ graphql, actions }) => {
             },
           });
         } else {
-          console.warn('[DatoCMS] "List Group Whatsapp Community" record is missing a slug. Skipping listWhatsAppGroups page.');
+          console.warn(
+            '[DatoCMS] "List Group Whatsapp Community" record is missing a slug. Skipping listWhatsAppGroups page.'
+          );
         }
 
         // list Signal Groups
