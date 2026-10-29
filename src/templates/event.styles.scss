@@ -18,11 +18,14 @@
     align-items: flex-start;
 
     picture {
+      width: 100%;
       border-radius: 8px;
       overflow: hidden;
     }
 
     img {
+      display: block;
+      width: 100%;
       height: auto;
       max-width: 100%;
       object-fit: cover;

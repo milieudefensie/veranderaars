@@ -4,14 +4,16 @@ export default async function handler(req, res) {
   try {
     let isWaitingListEnabled = false;
     let allAttendees = [];
-    let currentPage = 1;
-    let totalPages = 0;
+    let sinceId = null;
+    let hasMore = true;
 
     const apiKey = process.env.CSL_API_KEY;
     const cslPath = process.env.CSL_PATH;
 
-    do {
-      const response = await fetch(`${cslPath}/api/v1/events/${slug}/attendees?page=${currentPage}`, {
+    // CSL attendees endpoint only supports cursor pagination (since_id); `page` returns 400.
+    while (hasMore) {
+      const query = sinceId ? `?since_id=${sinceId}` : '';
+      const response = await fetch(`${cslPath}/api/v1/events/${slug}/attendees${query}`, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -20,11 +22,16 @@ export default async function handler(req, res) {
         },
       });
 
+      if (!response.ok) {
+        const body = await response.text();
+        throw new Error(`CSL attendees request failed (${response.status}): ${body}`);
+      }
+
       const data = await response.json();
-      allAttendees = allAttendees.concat(data.attendees);
-      currentPage = data.meta.next_page;
-      totalPages = data.meta.total_pages;
-    } while (currentPage);
+      allAttendees = allAttendees.concat(data.attendees || []);
+      sinceId = data.meta?.next_since_id;
+      hasMore = Boolean(data.meta?.has_more && sinceId);
+    }
 
     const attendeesWithAttendingStatus = allAttendees.filter((attendee) => attendee.attending_status === 'attending');
     if (max_attendees_count && attendeesWithAttendingStatus.length >= max_attendees_count) {
@@ -38,6 +45,7 @@ export default async function handler(req, res) {
       .status(200)
       .json({ isWaitingListActive: isWaitingListEnabled, attendeesCount: attendeesWithAttendingStatus.length });
   } catch (error) {
-    return res.status(200).json({ message: error.message });
+    console.error(`[get-csl-attendees] ${slug}: ${error.message}`);
+    return res.status(502).json({ message: error.message });
   }
 }
