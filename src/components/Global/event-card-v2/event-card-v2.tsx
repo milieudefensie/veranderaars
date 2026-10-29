@@ -15,6 +15,7 @@ type Props = {
   collection?: EventCollectionType[];
   isLocalGroup?: boolean;
   extraClassName?: string;
+  ctaTitle?: string;
 };
 
 const PLACEHOLDER_IMAGE = 'https://www.datocms-assets.com/115430/1712234204-pattern-2500.png';
@@ -28,6 +29,7 @@ const EventCardV2: React.FC<Props> = ({
   collection,
   isLocalGroup = false,
   extraClassName,
+  ctaTitle = 'Meld je aan',
 }) => {
   const {
     title,
@@ -101,7 +103,7 @@ const EventCardV2: React.FC<Props> = ({
         {cta ? (
           <Cta cta={cta} isButton customVariant={isHighlighted ? 'full-green' : 'outline'} />
         ) : (
-          <Cta externalTitle="Meld je aan" isButton customVariant={isHighlighted ? 'full-green' : 'outline'} off />
+          <Cta externalTitle={ctaTitle} isButton customVariant={isHighlighted ? 'full-green' : 'outline'} off />
         )}
       </div>
     </>

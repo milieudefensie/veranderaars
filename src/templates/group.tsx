@@ -324,7 +324,7 @@ const Group: React.FC<GroupProps> = ({
                           }`}
                         >
                           {pastEvents.map((e: any, i: number, arr: any[]) => (
-                            <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} />
+                            <EventCardV2 key={e.id} event={e} vertical={arr.length > 1} ctaTitle="Meer info" />
                           ))}
                         </div>
                       ) : null,
