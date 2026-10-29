@@ -327,6 +327,7 @@ const getAllPublicEvents = async (cslPath) => {
 const sourceQomonEvents = async ({ createNode, createContentDigest }) => {
   const qomonApiKey = process.env.QOMON_API_KEY;
   const qomonApiBase = process.env.QOMON_API_BASE || 'https://incoming.qomon.app';
+  const qomonSiteBase = process.env.QOMON_SITE_BASE || 'https://milieudefensie.qomon.org/action';
 
   if (!qomonApiKey) {
     console.warn('[Qomon Source] QOMON_API_KEY missing. Skipping Qomon events source.');
@@ -391,7 +392,7 @@ const sourceQomonEvents = async ({ createNode, createContentDigest }) => {
         externalLink:
           action.registration_link ||
           action.broadcast_link ||
-          (action.site_slug ? `https://action.qomon.org/${action.site_slug}/` : null),
+          (action.site_slug ? `${qomonSiteBase}/${action.site_slug}/` : null),
         labels: [],
         location: {
           latitude: hasCoordinates ? latitude : null,
