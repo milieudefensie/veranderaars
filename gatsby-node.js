@@ -162,20 +162,33 @@ exports.sourceNodes = async ({ actions: { createNode }, createContentDigest }) =
     return;
   }
 
+  // CSL attendees endpoint only supports cursor pagination (since_id); `page` returns 400.
   const fetchAllAttendees = async (eventSlug) => {
     let attendees = [];
-    let currentPage = 1;
+    let sinceId = null;
     let hasMore = true;
 
-    while (hasMore) {
-      const res = await fetch(`${cslPath}/api/v1/events/${eventSlug}/attendees?page=${currentPage}`, {
-        method: 'GET',
-        headers: jsonHeaders,
-      });
-      const data = await res.json();
-      attendees = attendees.concat(data.attendees);
-      currentPage = data.meta.next_page;
-      hasMore = !!currentPage;
+    try {
+      while (hasMore) {
+        const query = sinceId ? `?since_id=${sinceId}` : '';
+        const res = await fetch(`${cslPath}/api/v1/events/${eventSlug}/attendees${query}`, {
+          method: 'GET',
+          headers: jsonHeaders,
+        });
+
+        if (!res.ok) {
+          const body = await res.text();
+          throw new Error(`CSL attendees request failed (${res.status}): ${body}`);
+        }
+
+        const data = await res.json();
+        attendees = attendees.concat(data.attendees || []);
+        sinceId = data.meta?.next_since_id;
+        hasMore = Boolean(data.meta?.has_more && sinceId);
+      }
+    } catch (error) {
+      console.warn(`[CSL Source] Could not fetch attendees for ${eventSlug}: ${error.message}`);
+      return [];
     }
 
     return attendees.filter((a) => a.attending_status === 'attending');
