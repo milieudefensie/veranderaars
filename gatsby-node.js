@@ -355,6 +355,28 @@ const sourceQomonEvents = async ({ createNode, createContentDigest }) => {
       .filter(Boolean)
       .filter((action) => action.type_data === 'event' && action.public === true && action.status === 'todo');
 
+    // TEMP DEBUG (remove after investigation): dump the fields relevant to the
+    // externalLink fallback so we can see why some action.qomon.org links 404.
+    console.log(`[QOMON DEBUG] ${actions.length} actions passed the event/public/todo filter.`);
+    actions.forEach((action) => {
+      console.log(
+        '[QOMON DEBUG]',
+        JSON.stringify({
+          name: action.name,
+          site_id: action.site_id,
+          site_slug: action.site_slug,
+          site_state: action.site_state,
+          status: action.status,
+          public: action.public,
+          type_data: action.type_data,
+          start: action.start,
+          end: action.end,
+          registration_link: action.registration_link || null,
+          broadcast_link: action.broadcast_link || null,
+        })
+      );
+    });
+
     for (const action of actions) {
       const address = Array.isArray(action.Addresses) ? action.Addresses[0] : null;
       const latitude = parseFloat(address?.latitude);
